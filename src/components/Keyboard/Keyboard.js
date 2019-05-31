@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Box, Flex } from '@rebass/grid';
 import Space from '@rebass/space';
 import Layer from '@material-ui/core/Box';
-import { Key, KeyCap, KeyChar, Span, KeyWrapper } from '../Key/Key.styles';
+import { KeyContainer, KeyCap, KeyChar, Span, KeyWrapper, Key } from '../Key/Key.styles';
 import styled from 'styled-components';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -42,7 +42,7 @@ const Button = styled.a`
   transition: background-color 2s, color 300ms;
 
   &:hover:after {
-    content: " ";
+    content: ' ';
     color: white;
     background-color: red;
   }
@@ -51,50 +51,41 @@ const Button = styled.a`
 const keyPress = () => {};
 
 const Highlight = styled(Layer)`
-
   flex-wrap: wrap;
 
-
   border-radius: inherit;
-  top:1px;
+  top: 1px;
   padding: 0;
   margin: 0;
 
-
   position: absolute;
   height: 100%;
-  width:inherit;
-
+  width: inherit;
 `;
-Highlight.defaultProps = {
-
-}
+Highlight.defaultProps = {};
 
 const KeyboardContainer = () => {
   const keyboardStyles = useKeyboardStyle();
   const [cmds, setCmds] = useState({});
+  const Context = React.createContext();
+
+  const activeColor = '#b0f4e6';
+  const [keyColor, changeColor] = useState('#f9f9f9');
+  const keyClick = () => {
+    changeColor('#b0f4e6');
+  };
   const renderRow = row => {
     return Object.keys(row).map((keyName, i) => (
       <Key
-        onClick={() => keyPress()}
+        onClick={() => keyClick()}
         label={row[keyName][0]}
         key={row[keyName]}
         wt={`${row[keyName][1]}`}
         ht={`${keySize}`}
         m={'1px'}
-      >
-
-      <Highlight zIndex="10"/>
-      <KeyCap>
-            <KeyChar>
-              <Layer zIndex="2" position="absolute" margin="10px">
-                {row[keyName][0]}
-              </Layer>
-              <Span wt={`${row[keyName][1]}`} ht={`${keySize}`} marginTop="1px" />
-            </KeyChar>
-          </KeyCap>
-
-      </Key>
+        color={keyColor}
+        keySize={keySize}
+      />
     ));
   };
 
