@@ -1,17 +1,31 @@
 {
   "name": "comp-env",
   "version": "0.1.0",
+  "main": "src/index.js",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.0.0",
+    "@material-ui/styles": "^4.0.0",
+    "@rebass/grid": "^6.0.0",
+    "@rebass/space": "^2.0.0-0",
+    "@xstyled/styled-components": "^1.0.4",
+    "polished": "^3.3.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.1",
+    "react-spring": "^8.0.20",
+    "reakit": "^1.0.0-beta.1",
+    "resize-observer-polyfill": "^1.5.1",
+    "styled-components": "^4.2.0",
+    "styled-system": "^4.2.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cosmos": "cosmos",
+    "cosmos:export": "cosmos-export"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -27,5 +41,19 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@styled-system/babel-plugin": "0.0.20",
+    "babel-plugin-styled-components": "^1.10.0",
+    "purposefile": "^1.1.0",
+    "react-cosmos": "^5.0.0-alpha.8"
+  },
+  "guppy": {
+    "id": "9a2b1b80-7cd7-11e9-8aeb-eb27c697c413",
+    "name": "comp-env",
+    "type": "create-react-app",
+    "color": "#AA00FF",
+    "icon": null,
+    "createdAt": 1558560105785
   }
 }
