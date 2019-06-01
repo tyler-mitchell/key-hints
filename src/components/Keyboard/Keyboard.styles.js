@@ -45,7 +45,7 @@ export const useKeyboardStyle = makeStyles({
     boxShadow: '0 0 0 4px hsl(0, 0%, 60%), 0 0 0 5px hsl(0, 0%, 90%), 0 0 0 3px hsl(0, 0%, 80%);'
   },
   key: {
-    
+
     position: 'absolute',
     top: '0',
     bottom: '0',

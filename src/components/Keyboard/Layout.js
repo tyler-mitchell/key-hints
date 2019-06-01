@@ -49,62 +49,61 @@ export const firstRow = {
   Backspace: ['⌫ Backspace', backspaceSize]
 };
 export const secondRow = {
-  Digit1: ['Tab ⇄ ', tabSize],
-  Digit2: ['Q', regularSize],
-  Digit3: ['W', regularSize],
-  Digit4: ['E', regularSize],
-  Digit5: ['R', regularSize],
-  Digit6: ['T', regularSize],
-  Digit7: ['Y', regularSize],
-  Digit8: ['U', regularSize],
-  Digit9: ['I', regularSize],
-  Digit0: ['O', regularSize],
-  Minus: ['P', regularSize],
-  Equal: ['[', regularSize],
-  Backquote: [']', regularSize],
-  Backspace: ['\\', backslashSize]
+  Tab: ['Tab ⇄ ', tabSize],
+  KeyQ: ['Q', regularSize],
+  KeyW: ['W', regularSize],
+  KeyE: ['E', regularSize],
+  KeyR: ['R', regularSize],
+  KeyT: ['T', regularSize],
+  KeyY: ['Y', regularSize],
+  KeyU: ['U', regularSize],
+  KeyI: ['I', regularSize],
+  KeyO: ['O', regularSize],
+  KeyP: ['P', regularSize],
+  BracketLeft: ['[', regularSize],
+  BracketRight: [']', regularSize],
+  Backslash: ['\\', backslashSize]
 };
 export const thirdRow = {
-  Digit1: ['⇪ Caps Lock', capslockSize],
-  Digit2: ['A', regularSize],
-  Digit3: ['S', regularSize],
-  Digit4: ['D', regularSize],
-  Digit5: ['F', regularSize],
-  Digit6: ['G', regularSize],
-  Digit7: ['H', regularSize],
-  Digit8: ['J', regularSize],
-  Digit9: ['K', regularSize],
-  Digit0: ['L', regularSize],
-  Minus: [';', regularSize],
-  Equal: ["'", regularSize],
-  Backquote: ['Enter ⏎', enterSize]
+  CapsLock: ['⇪ Caps Lock', capslockSize],
+  KeyA: ['A', regularSize],
+  KeyS: ['S', regularSize],
+  KeyD: ['D', regularSize],
+  KeyF: ['F', regularSize],
+  KeyG: ['G', regularSize],
+  KeyH: ['H', regularSize],
+  KeyJ: ['J', regularSize],
+  KeyK: ['K', regularSize],
+  KeyL: ['L', regularSize],
+  Semicolon: [';', regularSize],
+  Quote: ["'", regularSize],
+  Enter: ['Enter ⏎', enterSize]
 };
 
 export const fourthRow = {
-  Digit1: ['⇧ Shift', shiftSize],
-  Digit2: ['Z', regularSize],
-  Digit3: ['X', regularSize],
-  Digit4: ['C', regularSize],
-  Digit5: ['F', regularSize],
-  Digit6: ['H', regularSize],
-  Digit7: ['J', regularSize],
-  Digit8: ['K', regularSize],
-  Digit9: ['L', regularSize],
-  Digit0: [';', regularSize],
-  Minus: ["'", regularSize],
-  Equal: ['⇧ Shift', rshiftSize]
+  Shiftleft: ['⇧ Shift', shiftSize],
+  KeyZ: ['Z', regularSize],
+  KeyX: ['X', regularSize],
+  KeyC: ['C', regularSize],
+  KeyF: ['V', regularSize],
+  KeyH: ['B', regularSize],
+  KeyJ: ['N', regularSize],
+  KeyK: ['M', regularSize],
+  Comma: [',', regularSize],
+  Period: ['.', regularSize],
+  Slash: ['/', regularSize],
+  ShiftRight: ['⇧ Shift', rshiftSize]
 };
 export const fifthRow = {
-  Digit1: ['Ctrl', specialSize],
-  Digit2: ['\u229E', specialSize],
-  Digit3: ['Alt', specialSize],
-  Digit4: ['', spaceSize],
-  Digit5: ['Alt', specialSize],
-  Digit6: ['Fn', specialSize],
-  Digit7: ['≣', specialSize],
-  Digit9: ['Ctrl', specialSize]
+  ControlLeft: ['Ctrl', specialSize],
+  MetaLeft: ['\u229E', specialSize],
+  AltLeft: ['Alt', specialSize],
+  Space: ['', spaceSize],
+  AltRight: ['Alt', specialSize],
+  Fn: ['Fn', specialSize],
+  ContextMenu: ['≣', specialSize],
+  ControlRight: ['Ctrl', specialSize]
 };
-
 export default {
   firstRow,
   secondRow,

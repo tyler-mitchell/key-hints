@@ -4,6 +4,7 @@ import { Box } from '@rebass/grid';
 import { shade, linearGradient, lighten } from 'polished';
 import Layer from '@material-ui/core/Box';
 
+
 const Column = props => <Box {...props} />;
 
 export const KeyContainer = styled(Column)`
@@ -38,9 +39,11 @@ export const KeyContainer = styled(Column)`
   transition: 0.4s filter ease;
   position: relative;
   z-index: -1;
+  background-color: ${props => shade(0.02, props.color)};
+
 
   &:hover {
-    background: inherit;
+    /* background: inherit; */
     filter: invert(8%) contrast(145%);
   }
 `;
@@ -48,13 +51,13 @@ export const KeyContainer = styled(Column)`
 KeyContainer.defaultProps = {};
 
 export const KeyCap = styled.div`
-  background-image: linear-gradient(
+  /* background-image: linear-gradient(
     0 0,
     rgba(255, 255, 255, 0.2) 0%,
     rgba(255, 255, 255, 0.2) 37%,
     rgba(255, 255, 255, 0.8) 45%,
     rgba(255, 255, 255, 0) 50%
-  );
+  ); */
   border-radius: 1px;
   transition: all 0.3s;
 `;
@@ -70,7 +73,7 @@ export const KeyChar = styled('Layer')`
 export const Span = styled('div')`
   top: 0;
   padding-top: 5px;
-  border-radius: 10px 10px 10px 10px;
+  border-radius: 8px;
   height: ${props => props.ht * 0.7}px;
   width: ${props => props.wt - 18}px;
   background-image: ${props =>
@@ -81,14 +84,15 @@ export const Span = styled('div')`
     })};
 `;
 
-export const Key = ({ label, key, wt, ht, m, color, }) => {
-  // TODO: Fix color toggle not working when border is clicked
-  
-  const [keyColor, changeColor] = React.useState('#f9f9f9');
+export const Key = ({ label, key, wt, ht, m }) => {
+
+  const defaultColor = '#f9f9f9';
+  const activeColor = '#52616b';
+  const [keyColor, changeColor] = React.useState(defaultColor);
   const [active, toggleButton] = React.useState(true);
   const keyClicked = () => {
     toggleButton(!active);
-    active ? changeColor("#b0f4e6") : changeColor('#f9f9f9')
+    active ? changeColor(activeColor) : changeColor(defaultColor)
   }
   return (
     <React.Fragment>

@@ -83,7 +83,6 @@ const KeyboardContainer = () => {
         wt={`${row[keyName][1]}`}
         ht={`${keySize}`}
         m={'1px'}
-        color={keyColor}
         keySize={keySize}
       />
     ));
@@ -92,7 +91,7 @@ const KeyboardContainer = () => {
   return (
     <ThemeProvider theme={theme}>
       <Flex className={keyboardStyles.app} justifyContent={'center'}>
-        <Button>Hello World</Button>
+        
         <Box className={keyboardStyles.root}>
           <Box className={keyboardStyles.frame} width={`${mw}`} alignItems="stretch">
             <Row zIndex={1}>{renderRow(firstRow)}</Row>
