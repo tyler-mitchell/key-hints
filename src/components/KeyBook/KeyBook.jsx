@@ -4,16 +4,7 @@ import PropTypes from 'prop-types';
 
 const KeyBook = (props) => (
   <div className="KeyBookWrapper">
-    Test content
+    <KeySheet></KeySheet>
   </div>
 );
-
-KeyBook.propTypes = {
-  // bla: PropTypes.string,
-};
-
-KeyBook.defaultProps = {
-  // bla: 'test',
-};
-
 export default KeyBook;

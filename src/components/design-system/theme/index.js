@@ -33,6 +33,7 @@ const theme = {
         '#5aa7de',
       ]
     }
+
   },
 
   palette: {

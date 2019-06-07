@@ -1,4 +1,3 @@
-
 // const keySize = 55;
 // const tabSize = 1.5 * keySize;
 // const regularSize = 1 * keySize;
@@ -11,8 +10,7 @@
 // const capslockSize = 1.77 * keySize;
 // const backspaceSize = 2 * keySize;
 
-
-export const keySize = 80;
+export const keySize = 75;
 export const mw = keySize * 15;
 
 const regularSize = 1 * keySize;
@@ -30,7 +28,6 @@ const rshiftSize = 2.795 * keySize;
 
 const spaceSize = 6.35 * keySize;
 const specialSize = 1.257 * keySize;
-
 
 export const firstRow = {
   Backquote: ['` ∼', regularSize],

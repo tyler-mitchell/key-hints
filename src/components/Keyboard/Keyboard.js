@@ -11,11 +11,12 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { firstRow, secondRow, thirdRow, fourthRow, fifthRow, keySize, mw } from './Layout';
-
-import { Row, useKeyboardStyle } from './Keyboard.styles';
+import {BufferContext} from '../KeyBuffer/BufferContext'
+import { Row, useKeyboardStyle, InnerFrame, Cover} from './Keyboard.styles';
 // import styled from '@xstyled/styled-components'
 import { ThemeProvider } from 'styled-components';
 import { tint, shade, linearGradient, lighten } from 'polished';
+import Container from '@material-ui/core/Container';
 
 const theme = {
   colors: {
@@ -66,20 +67,15 @@ Highlight.defaultProps = {};
 
 const KeyboardContainer = () => {
   const keyboardStyles = useKeyboardStyle();
-  const [cmds, setCmds] = useState({});
-  const Context = React.createContext();
 
-  const activeColor = '#b0f4e6';
-  const [keyColor, changeColor] = useState('#f9f9f9');
-  const keyClick = () => {
-    changeColor('#b0f4e6');
-  };
+
+
   const renderRow = row => {
     return Object.keys(row).map((keyName, i) => (
       <Key
-        onClick={() => keyClick()}
+
         label={row[keyName][0]}
-        key={row[keyName]}
+        key={keyName}
         wt={`${row[keyName][1]}`}
         ht={`${keySize}`}
         m={'1px'}
@@ -89,20 +85,29 @@ const KeyboardContainer = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Flex className={keyboardStyles.app} justifyContent={'center'}>
-        
-        <Box className={keyboardStyles.root}>
-          <Box className={keyboardStyles.frame} width={`${mw}`} alignItems="stretch">
-            <Row zIndex={1}>{renderRow(firstRow)}</Row>
-            <Row zIndex={2}>{renderRow(secondRow)}</Row>
-            <Row zIndex={3}>{renderRow(thirdRow)}</Row>
-            <Row zIndex={4}>{renderRow(fourthRow)}</Row>
-            <Row zIndex={5}>{renderRow(fifthRow)}</Row>
-          </Box>
-        </Box>
-      </Flex>
-    </ThemeProvider>
+      <React.Fragment>
+         {/* <ThemeProvider theme={theme}> */}
+
+          {/* <Flex  className={keyboardStyles.app} >
+
+            <Flex className={keyboardStyles.root}> */}
+
+              {/* <Frame className={keyboardStyles.frame} width={`${mw}`} > */}
+              <Cover>
+                <InnerFrame>
+                  <Row zIndex={1}>{renderRow(firstRow)}</Row>
+                  <Row zIndex={2}>{renderRow(secondRow)}</Row>
+                  <Row zIndex={3}>{renderRow(thirdRow)}</Row>
+                  <Row zIndex={4}>{renderRow(fourthRow)}</Row>
+                  <Row zIndex={5}>{renderRow(fifthRow)}</Row>
+                </InnerFrame>
+              </Cover>
+
+            {/* </Flex>
+          </Flex> */}
+
+        {/* </ThemeProvider> */}
+      </React.Fragment>
   );
 };
 

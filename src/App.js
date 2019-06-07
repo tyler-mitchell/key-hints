@@ -4,8 +4,7 @@ import './App.css';
 
 import { ThemeProvider } from '@xstyled/styled-components';
 import { useStyles } from './components/design-system/styles';
-
-
+import { KeySheet } from './components/KeySheet/KeySheet';
 // Local
 import Keyboard from './components/Keyboard';
 import theme from './components/design-system/theme/index';
@@ -30,6 +29,8 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
 import KeyBuffer from './components/KeyBuffer';
+
+import { BufferProvider } from './components/KeyBuffer/BufferContext';
 
 function App() {
   const style = useStyles();
@@ -63,11 +64,9 @@ function App() {
       </AppBar>
       {/* Side Drawer */}
       <Drawer
-        variant="permanent"
         classes={{
           paper: clsx(style.drawerPaper, !open && style.drawerPaperClose)
         }}
-        open={open}
       >
         <div className={style.toolbarIcon}>
           <IconButton onClick={handleDrawerClose}>{}</IconButton>
@@ -80,23 +79,24 @@ function App() {
       {/* ⭐ MAIN APP */}
       <main className={style.content}>
         <div className={style.appBarSpacer} />
-        <Container maxWidth="lg" className={style.container}  >
-          {/* SVG - Animated */}
-          <Box zIndex={-1} position="absolute" top="125px" left="75px">
-            <img src={logo} className="App-logo" alt="logo" />
-          </Box>
+        <Container maxWidth="lg" className={style.container}>
+          <Grid container direction="column" justify="center" spacing={2} alignItems="center">
+            <BufferProvider>
+              <Grid item xs={12}>
+                {/* Keyboard */}
 
-          <Grid container direction={'row'} justify="center" spacing={3}>
-              {/* Buffer */}
-
-
-            <Grid item xs={12}>
-              <KeyBuffer items={'Lorem ipsum dolor sit'.split(' ')} />
-            </Grid>
-            <Grid item xs={12}>
-              {/* Keyboard */}
-              <Keyboard className={style.keyboardContainer} />
-            </Grid>
+                <Keyboard className={style.keyboardContainer} />
+              </Grid>
+              <Grid item xs={12}>
+                {/* Buffer */}
+                {/* <KeyBuffer items={'Ctrl Shift S'.split(' ')} /> */}
+              </Grid>
+            </BufferProvider>
+          </Grid>
+          <Grid container direction="row" xs={12} spacing={3}>
+            <Grid item xs={4}><KeySheet/></Grid>
+            <Grid item xs={4}><KeySheet/></Grid>
+            <Grid item xs={4}><KeySheet/></Grid>
           </Grid>
         </Container>
       </main>
