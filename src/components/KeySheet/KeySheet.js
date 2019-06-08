@@ -20,6 +20,10 @@ import Select from '@material-ui/core/Select';
 import clsx from 'clsx';
 import range from 'lodash/range';
 
+import { VS_Code } from './SheetData';
+import styled from 'styled-components';
+import Grid from '@material-ui/core/Grid';
+
 const useStyles = makeStyles({
   app: {
     display: 'flex',
@@ -47,6 +51,8 @@ const useStyles = makeStyles({
     backgroundColor: '#eee'
   }
 });
+
+
 
 // list highlight text color: #1fe3ac
 // list highlight background color: #d3f9ee
@@ -76,17 +82,68 @@ Row.propTypes = {
   index: PropTypes.number,
   style: PropTypes.object
 };
+const KBD = styled.kbd`
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: #333;
+  line-height: 1.4;
+  text-shadow: 0 1px 0 #fff;
+  display: inline-block;
+  white-space: nowrap;
+  box-shadow: 1px 0 1px 0 #eee, 0 2px 0 2px #ccc, 0 2px 0 3px #444;
+  border-radius: 3px;
+  box-sizing: border-box;
+  position: relative;
+  margin: 0.5em 2em 1em 0;
+      padding: 0.9em 0;
+      width: 3em;
 
-export const KeySheet = () => {
+  text-align: center;
+  margin: 0.5em 2em 1em 0;
+  &::after {
+      content: "+";
+      display: block;
+      padding: 0 0 0 0.8em;
+      position: absolute;
+      left: 100%;
+      top: 0.9em;
+    }
+
+`;
+const KWrap = styled.div`
+  & > ${KBD}:last-child::after {
+      content: "";
+      display: none;
+      padding: 0;
+      position: static;
+    }
+`;
+
+
+const ShortcutItem = styled(ListItem)`
+  &:nth-child(odd)  {
+       background: #f7f7f7;
+    }
+`;
+
+
+
+export const KeySheet = (props) => {
+
+  const {category} = props;
+
+
+
   const classes = useStyles();
   const listRef = React.useRef(null);
   const [selection, setSelection] = React.useState(null);
   const items = range(1000).map(i => <div>item #{i}</div>);
+  const [activeKeys, setActiveKeys] = React.useState(null);
   return (
     <React.Fragment>
       <Card>
         <CardHeader
-          title="Basic Editing"
+          title={category}
           action={
             <IconButton>
               <MoreHorizIcon />
@@ -97,24 +154,32 @@ export const KeySheet = () => {
           <div className={classes.root}>
             <FixedSizeList
               height={400}
-              width={360}
               itemSize={46}
-              itemCount={200}
+              itemCount={VS_Code.length}
               outerElementType={List}
-              text="hello world"
               ref={listRef}
             >
               {({ index, style }) => {
                 const item = items[index];
                 return (
-                  <ListItem
-
+                  <ShortcutItem
                     selected={index === selection}
                     style={style}
                     onClick={() => setSelection(index)}
+                    divider
+                    dense
                   >
-                    Hello
-                  </ListItem>
+                    <ListItemText primary={`${VS_Code[index].description}`} secondary/>
+
+                    {/* <ListItemText primary={`${VS_Code[index].keys}`} /> */}
+                    <KWrap>
+                      {VS_Code[index].keys.split('+').map((item, index, arr) =>{
+                      console.log("TCL: KeySheet -> arr", arr);
+                      return (
+                        <KBD key={index}>{item}</KBD>
+                      )})}
+                    </KWrap>
+                  </ShortcutItem>
                 );
               }}
             </FixedSizeList>

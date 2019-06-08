@@ -25,7 +25,7 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
+  import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
 import KeyBuffer from './components/KeyBuffer';
@@ -94,9 +94,8 @@ function App() {
             </BufferProvider>
           </Grid>
           <Grid container direction="row" xs={12} spacing={3}>
-            <Grid item xs={4}><KeySheet/></Grid>
-            <Grid item xs={4}><KeySheet/></Grid>
-            <Grid item xs={4}><KeySheet/></Grid>
+            <Grid item xs={6}><KeySheet category="All Keys"/></Grid>
+            <Grid item xs={6}><KeySheet category="Basic Editing"/></Grid>
           </Grid>
         </Container>
       </main>
