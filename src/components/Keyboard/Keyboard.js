@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { firstRow, secondRow, thirdRow, fourthRow, fifthRow, keySize, mw } from './Layout';
+import { firstRow, secondRow, thirdRow, fourthRow, fifthRow, keySize, mw , excludedKeys} from './Layout';
 import {BufferContext} from '../KeyBuffer/BufferContext'
 import { Row, useKeyboardStyle, InnerFrame, Cover} from './Keyboard.styles';
 // import styled from '@xstyled/styled-components'
@@ -75,7 +75,8 @@ const KeyboardContainer = () => {
       <Key
 
         label={row[keyName][0]}
-        key={keyName}
+        key={i}
+        keyName={keyName in excludedKeys ? null : row[keyName][0] }
         wt={`${row[keyName][1]}`}
         ht={`${keySize}`}
         m={'1px'}
@@ -86,13 +87,6 @@ const KeyboardContainer = () => {
 
   return (
       <React.Fragment>
-         {/* <ThemeProvider theme={theme}> */}
-
-          {/* <Flex  className={keyboardStyles.app} >
-
-            <Flex className={keyboardStyles.root}> */}
-
-              {/* <Frame className={keyboardStyles.frame} width={`${mw}`} > */}
               <Cover>
                 <InnerFrame>
                   <Row zIndex={1}>{renderRow(firstRow)}</Row>

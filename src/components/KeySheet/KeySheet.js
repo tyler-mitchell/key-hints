@@ -1,11 +1,12 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
-import { List } from '@material-ui/core';
+import { List, TextField } from '@material-ui/core';
 import ListItemText from '@material-ui/core/ListItemText';
 import PropTypes from 'prop-types';
-import { FixedSizeList } from 'react-window';
+import { VariableSizeList } from 'react-window';
 
+import { shade, linearGradient, lighten } from 'polished';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -20,9 +21,15 @@ import Select from '@material-ui/core/Select';
 import clsx from 'clsx';
 import range from 'lodash/range';
 
-import { VS_Code } from './SheetData';
+import { KeyTable } from './SheetData';
 import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
+import { BufferContext } from '../KeyBuffer/BufferContext';
+import SearchIcon from '@material-ui/icons/Search';
+import InputBase from '@material-ui/core/InputBase';
+import { fade } from '@material-ui/core/styles/colorManipulator';
+import { useTheme } from '@material-ui/styles';
+import { SearchInput } from './SearchInput';
 
 const useStyles = makeStyles({
   app: {
@@ -48,11 +55,9 @@ const useStyles = makeStyles({
   },
   itemSelected: {
     fontWeight: 'bold',
-    backgroundColor: '#eee'
+    backgroundColor: '#EEBDEE'
   }
 });
-
-
 
 // list highlight text color: #1fe3ac
 // list highlight background color: #d3f9ee
@@ -90,55 +95,68 @@ const KBD = styled.kbd`
   text-shadow: 0 1px 0 #fff;
   display: inline-block;
   white-space: nowrap;
-  box-shadow: 1px 0 1px 0 #eee, 0 2px 0 2px #ccc, 0 2px 0 3px #444;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px #fff inset;
+  font-family: Arial, Helvetica, sans-serif;
   border-radius: 3px;
-  box-sizing: border-box;
   position: relative;
-  margin: 0.5em 2em 1em 0;
-      padding: 0.9em 0;
-      width: 3em;
+
+  padding: 10px;
+  min-width: 45px;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
 
   text-align: center;
-  margin: 0.5em 2em 1em 0;
-  &::after {
-      content: "+";
-      display: block;
-      padding: 0 0 0 0.8em;
-      position: absolute;
-      left: 100%;
-      top: 0.9em;
-    }
-
+  margin: 0 20px 0 0;
 `;
-const KWrap = styled.div`
-  & > ${KBD}:last-child::after {
-      content: "";
-      display: none;
-      padding: 0;
-      position: static;
-    }
-`;
-
+const KWrap = styled.div``;
 
 const ShortcutItem = styled(ListItem)`
-  &:nth-child(odd)  {
-       background: #f7f7f7;
-    }
+  ${({ odd }) =>
+    odd &&
+    `
+    background: ${lighten(0.05, '#d3f9ee')};
+  `}
 `;
 
+const KeyListItem = props => {
+  const { keybind, style, index } = props;
 
 
-export const KeySheet = (props) => {
-
-  const {category} = props;
 
 
+
+  return (
+    <>
+      <ListItemText primary={`${KeyTable[index].description}`} secondary />
+
+      {KeyTable[index].keys.map((keybind, index) => {
+        return <KBD key={index}>{keybind}</KBD>;
+      })}
+    </>
+  );
+};
+
+export const KeySheet = props => {
+  const { category } = props;
 
   const classes = useStyles();
   const listRef = React.useRef(null);
   const [selection, setSelection] = React.useState(null);
+
   const items = range(1000).map(i => <div>item #{i}</div>);
-  const [activeKeys, setActiveKeys] = React.useState(null);
+  const theme = useTheme();
+  const itemSz = (index, size) => {
+    return KeyTable[index].keys.length * 10 + 40;
+  };
+  const [,,activeKeys, setActiveKeys] = React.useContext(BufferContext);
+  const itemClicked = (index) => {
+    setSelection(index);
+    setActiveKeys(KeyTable[index].keys);
+    console.log("TCL: activeKeys", activeKeys)
+
+  }
+
   return (
     <React.Fragment>
       <Card>
@@ -150,39 +168,39 @@ export const KeySheet = (props) => {
             </IconButton>
           }
         />
+
+        <div>
+          <SearchInput
+            theme={theme}
+            placeholder="Search…"
+            inputProps={{ 'aria-label': 'Search' }}
+          />
+        </div>
         <CardContent>
           <div className={classes.root}>
-            <FixedSizeList
-              height={400}
-              itemSize={46}
-              itemCount={VS_Code.length}
+            <VariableSizeList
+              height={420}
+              itemSize={index => itemSz(index, 50)}
+              itemCount={KeyTable.length}
               outerElementType={List}
               ref={listRef}
             >
               {({ index, style }) => {
-                const item = items[index];
+
+
                 return (
                   <ShortcutItem
-                    selected={index === selection}
+                    selected={selection === index}
                     style={style}
-                    onClick={() => setSelection(index)}
-                    divider
+                    onClick={() => itemClicked(index)}
+                    odd={!(index % 2 === 0)}
                     dense
                   >
-                    <ListItemText primary={`${VS_Code[index].description}`} secondary/>
-
-                    {/* <ListItemText primary={`${VS_Code[index].keys}`} /> */}
-                    <KWrap>
-                      {VS_Code[index].keys.split('+').map((item, index, arr) =>{
-                      console.log("TCL: KeySheet -> arr", arr);
-                      return (
-                        <KBD key={index}>{item}</KBD>
-                      )})}
-                    </KWrap>
+                    <KeyListItem index={index} style={style} />
                   </ShortcutItem>
                 );
               }}
-            </FixedSizeList>
+            </VariableSizeList>
           </div>
         </CardContent>
       </Card>

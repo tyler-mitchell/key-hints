@@ -30,7 +30,7 @@ const spaceSize = 6.35 * keySize;
 const specialSize = 1.257 * keySize;
 
 export const firstRow = {
-  Backquote: ['` ∼', regularSize],
+  Backquote: ['`', regularSize],
   Digit1: ['1', regularSize],
   Digit2: ['2', regularSize],
   Digit3: ['3', regularSize],
@@ -43,10 +43,10 @@ export const firstRow = {
   Digit0: ['0', regularSize],
   Minus: ['-', regularSize],
   Equal: ['=', regularSize],
-  Backspace: ['⌫ Backspace', backspaceSize]
+  Backspace: ['Backspace', backspaceSize]
 };
 export const secondRow = {
-  Tab: ['Tab ⇄ ', tabSize],
+  Tab: ['Tab', tabSize],
   KeyQ: ['Q', regularSize],
   KeyW: ['W', regularSize],
   KeyE: ['E', regularSize],
@@ -62,7 +62,7 @@ export const secondRow = {
   Backslash: ['\\', backslashSize]
 };
 export const thirdRow = {
-  CapsLock: ['⇪ Caps Lock', capslockSize],
+  CapsLock: ['Caps Lock', capslockSize],
   KeyA: ['A', regularSize],
   KeyS: ['S', regularSize],
   KeyD: ['D', regularSize],
@@ -74,11 +74,11 @@ export const thirdRow = {
   KeyL: ['L', regularSize],
   Semicolon: [';', regularSize],
   Quote: ["'", regularSize],
-  Enter: ['Enter ⏎', enterSize]
+  Enter: ['Enter', enterSize]
 };
 
 export const fourthRow = {
-  Shiftleft: ['⇧ Shift', shiftSize],
+  Shiftleft: ['Shift', shiftSize],
   KeyZ: ['Z', regularSize],
   KeyX: ['X', regularSize],
   KeyC: ['C', regularSize],
@@ -89,11 +89,18 @@ export const fourthRow = {
   Comma: [',', regularSize],
   Period: ['.', regularSize],
   Slash: ['/', regularSize],
-  ShiftRight: ['⇧ Shift', rshiftSize]
+  ShiftRight: ['Shift', rshiftSize]
 };
+export const excludedKeys = {
+  ControlRight: ['Ctrl', specialSize],
+  ShiftRight: ['Shift', rshiftSize],
+  AltRight: ['Alt', specialSize],
+}
+
+
 export const fifthRow = {
   ControlLeft: ['Ctrl', specialSize],
-  MetaLeft: ['\u229E', specialSize],
+  MetaLeft: ['⊞', specialSize],
   AltLeft: ['Alt', specialSize],
   Space: ['', spaceSize],
   AltRight: ['Alt', specialSize],

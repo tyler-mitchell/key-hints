@@ -5,7 +5,6 @@ import { shade, linearGradient, lighten } from 'polished';
 import Layer from '@material-ui/core/Box';
 import { BufferContext } from '../KeyBuffer/BufferContext';
 
-
 const Column = props => <Box {...props} />;
 
 export const KeyContainer = styled(Column)`
@@ -85,57 +84,70 @@ export const Span = styled('div')`
   height: ${props => props.ht * 0.7}px;
   width: ${props => props.wt - 18}px;
 
-
-
-
   background-color: red;
   background: ${props =>
+    linearGradient({
+      colorStops: [`${shade(0.05, props.color)} 0%`, `${lighten(0.2, props.color)} 50%`],
+      toDirection: '-30deg',
+      fallback: '#FFF'
+    })};
+  /* background: ${props =>
     linearGradient({
       colorStops: [`${shade(0.05, props.color)} 0%`, `${lighten(0.09, props.color)} 50%`],
       toDirection: '-30deg',
       fallback: '#FFF'
-    })};
+    })}; */
 
-
-transition: 1s   ease;
-
+  transition: 1s ease;
 `;
 
-export const Key = ({ label, key, wt, ht, m }) => {
 
-  const defaultColor = '#f9f9f9';
-  const activeColor = '#3f51b5';
+export const Key = ({ label, keyName, wt, ht, m }) => {
+
+  const defaultColor = '#FFFFFF';
+  const activeColor = '#1fe3ac';
   const [keyColor, changeColor] = React.useState(defaultColor);
   const [active, toggleButton] = React.useState(true);
   const [keys, setKeys] = React.useContext(BufferContext);
+  const [,,activeKeys, setActiveKeys] = React.useContext(BufferContext);
 
-  const keyClicked = (newKey) => {
 
-    toggleButton(!active);
-    if(active){
-    changeColor(activeColor)
-    setKeys([...keys, newKey]);
-  } else {
-    changeColor(defaultColor);
-    setKeys(keys.filter((k)=> k !== newKey));
+  React.useEffect(() => {
+    console.log("TCL: Key -> key", keyName)
+    if (activeKeys.includes(keyName)  ) {
+      console.log("TCL: Key -> key", keyName)
+      console.log("TCL: Key -> activeKeys", activeKeys)
+      console.log("TCL: Key -> label", label)
+      changeColor(activeColor);
 
     }
+    return () => {
+      changeColor(defaultColor);
+      toggleButton(false);
+    }
+  }, [activeKeys, label])
 
+  const keyClicked = newKey => {
+    toggleButton(!active);
+    if (active) {
+      changeColor(activeColor);
+      setKeys([...keys, newKey]);
+    } else {
+      changeColor(defaultColor);
+      setKeys(keys.filter(k => k !== newKey));
+    }
 
-
-
-    console.log("TCL: keyClicked -> keys", keys)
-  }
+    console.log('TCL: keyClicked -> keys', keys);
+  };
   return (
-
     <React.Fragment>
       <KeyContainer
-      label={label}
-      wt={wt}
-      ht={ht}
-      m={m}
-      color={keyColor}
-      onClick={(()=> keyClicked(label))}
+        label={label}
+        wt={wt}
+        ht={ht}
+        m={m}
+        color={keyColor}
+        onClick={() => keyClicked(label)}
       >
         <KeyCap>
           <KeyChar>

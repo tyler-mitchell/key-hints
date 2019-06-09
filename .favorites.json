@@ -1,0 +1,47 @@
+[
+    {
+        "type": "File",
+        "name": "c:\\Users\\tdmam\\Documents\\Projects\\comp-env\\src\\App.js",
+        "parent_id": null,
+        "fsPath": "c:\\Users\\tdmam\\Documents\\Projects\\comp-env\\src\\App.js",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "fCiemZ4lgTbW5aHQ"
+    },
+    {
+        "type": "File",
+        "name": "c:\\Users\\tdmam\\Documents\\Projects\\comp-env\\src\\components\\KeySheet\\KeySheet.js",
+        "parent_id": null,
+        "fsPath": "c:\\Users\\tdmam\\Documents\\Projects\\comp-env\\src\\components\\KeySheet\\KeySheet.js",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "VDOl1N78SBgQvpmM"
+    },
+    {
+        "type": "File",
+        "name": "c:\\Users\\tdmam\\Documents\\Projects\\comp-env\\src\\components\\Key\\Key.styles.js",
+        "parent_id": null,
+        "fsPath": "c:\\Users\\tdmam\\Documents\\Projects\\comp-env\\src\\components\\Key\\Key.styles.js",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "ZUFM5tx3vr9Vsq78"
+    },
+    {
+        "type": "File",
+        "name": "c:\\Users\\tdmam\\Documents\\Projects\\comp-env\\src\\components\\KeySheet\\SheetData.js",
+        "parent_id": null,
+        "fsPath": "c:\\Users\\tdmam\\Documents\\Projects\\comp-env\\src\\components\\KeySheet\\SheetData.js",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "tPHA0qCVmpr4eoks"
+    },
+    {
+        "type": "File",
+        "name": "c:\\Users\\tdmam\\Documents\\Projects\\comp-env\\src\\components\\Keyboard\\Keyboard.js",
+        "parent_id": null,
+        "fsPath": "c:\\Users\\tdmam\\Documents\\Projects\\comp-env\\src\\components\\Keyboard\\Keyboard.js",
+        "workspaceRoot": null,
+        "workspacePath": null,
+        "id": "sXdFt68TOS5EPbhr"
+    }
+]
