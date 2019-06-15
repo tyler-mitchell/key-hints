@@ -15,13 +15,13 @@ export default {
   },
   secondary: {
     contrastText: white,
-    main: '#7d58ff',
+    main: '#ED4740',
     light: '',
-    dark: '#37248F'
+    dark: '#BF0E08'
   },
   action: {
     selected: '#4be8bc',
-    hover: '#FFD371',
+    hover: '#DFE3E8',
     disabled: '#9B9B9B'
   },
   success: {

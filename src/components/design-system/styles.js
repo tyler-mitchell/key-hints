@@ -19,6 +19,7 @@ export const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     color: '#1fe3ac',
+    // overflow: 'hidden',
 
   },
   toolbar: {
@@ -41,7 +42,7 @@ export const useStyles = makeStyles(theme => ({
     }),
   },
   appBarShift: {
-   
+
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(['width', 'margin'], {

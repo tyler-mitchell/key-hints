@@ -5,6 +5,7 @@ import './App.css';
 import { ThemeProvider } from '@material-ui/styles';
 import { useStyles } from './components/design-system/styles';
 import { KeySheet } from './components/KeySheet/KeySheet';
+import useLockBodyScroll from './components/KeySheet/useLockScroll'
 // Local
 import Keyboard from './components/Keyboard';
 // import theme from './components/design-system/theme/index';
@@ -65,7 +66,9 @@ const muiTheme = createMuiTheme({
 
   }
 });
-function App(props) {
+function App() {
+
+  useLockBodyScroll();
   const style = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -74,7 +77,12 @@ function App(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+
+
+
   return (
+
     <ThemeProvider theme={theme}>
       <div className={style.root}>
         <CssBaseline />
@@ -118,7 +126,7 @@ function App(props) {
         <main className={style.content}>
           <div className={style.appBarSpacer} />
           <Container maxWidth="lg" className={style.container}>
-            <Grid container direction="column" justify="center" spacing={2} alignItems="center">
+            <Grid container direction="column" justify="space-around" spacing={2} alignItems="center">
               <BufferProvider>
                 <Grid item xs={12}>
                   {/* Keyboard */}
@@ -126,16 +134,15 @@ function App(props) {
                   <Keyboard className={style.keyboardContainer} />
                 </Grid>
                 <Grid item xs={12}>
+
                   {/* Buffer */}
-                  {/* <KeyBuffer items={'Ctrl Shift S'.split(' ')} /> */}
+                  {/* <KeyBuffer  /> */}
                 </Grid>
                 <Grid container direction="row" xs={12} spacing={3} justify-content="center">
-                  <Grid item xs={6}>
+                  <Grid item xs={12}>
                     <KeySheet category="All Keys" />
                   </Grid>
-                  <Grid item xs={6}>
-                    <KeySheet category="Basic Editing" />
-                  </Grid>
+
                 </Grid>
               </BufferProvider>
             </Grid>
@@ -143,6 +150,7 @@ function App(props) {
         </main>
       </div>
     </ThemeProvider>
+
   );
 }
 

@@ -1,45 +1,65 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { zIndex, position, top, right, bottom, left } from 'styled-system';
 import { Flex } from '@rebass/grid';
 import { makeStyles } from '@material-ui/styles';
 import { tint, shade, linearGradient, lighten } from 'polished';
 import Container from '@material-ui/core/Container';
+import { Grid } from '@material-ui/core/';
 import Box from '@material-ui/core/Box';
+import React from 'react';
+import { useSpring, animated, Keyframes } from 'react-spring';
 
-export const Row = styled(Flex)`
-  margin: -4px;
-  width: 100%;
-  box-sizing: border-box;
+// const fader = css`
+//   @keyframes fader {
+//   0% { background: #76FFA3; }
+//   20% { background: #82D8FF; }
+//   40% { background: #AA7AFF; }
+//   60% { background: #FF817F; }
+//   80% { background: #F5C38C; }
+//   100% { background: #F5EE90; }
+// }
+
+// `;
+
+export const Row = styled(Grid)`
+  /* margin: -4px; */
+
+  /* box-sizing: border-box; */
   ${zIndex};
   ${position};
 `;
 
-Row.defaultProps = {
-  position: 'relative'
-};
-export const InnerFrame = styled(Box)`
-  position: sticky;
-  display: inline-block;
-  width: 100%;
-  width: 100%;
-  box-sizing: border-box;
+Row.defaultProps = {};
+export const InnerFrame = styled(Grid)`
+  /* position: sticky; */
+  /* display: inline-block; */
 
+  /* flex-grow: 1, */
+
+  /* box-sizing: border-box; */
+  flex-grow: 1;
+  /* animation: fader 6s infinite; */
   color: black;
   background: ${shade(0.7, '#f9f9f9')};
-  padding: 4px;
+  padding-bottom: 3px;
+  padding-top: 2px;
+  padding-right: 2px;
+  padding-left: 2px;
   border-radius: 10px;
   box-shadow: 0 0 0 4px hsl(0, 0%, 60%), 0 0 0 5px hsl(0, 0%, 90%), 0 0 0 3px hsl(0, 0%, 80%);
 `;
+
 export const Cover = styled.div`
+  flex-grow: 1;
   background: '#f9f9f9';
-  display: inline-block;
+  /* display: inline-block; */
   box-shadow:
     2px 2px 2px 2px rgba(0, 0, 0, 0.1),
-    0 1px 6px rgba(0, 0, 0, 0.1),
-    0 8px 8px rgba(0, 0, 0, 0.1),
+    0 8px 6px rgba(0, 0, 0, 0.1),
+    0 8px 6px rgba(0, 0, 0, 0.1),
     0 16px 16px rgba(0, 0, 0, 0.1),
-    8px 10px 10px rgba(0, 0, 0, 0.10),
-    8px 10px 10px rgba(0, 0, 0, 0.10);
+    8px 10px 10px rgba(0, 0, 0, 0.1),
+    8px 10px 10px rgba(0, 0, 0, 0.1);
   /* box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.1), 0 1px 6px rgba(0, 0, 0, 0.05),
     0 8px 8px rgba(0, 0, 0, 0.1), 0 16px 16px rgba(0, 0, 0, 0.1), 8px 10px 10px rgba(0, 0, 0, 0.15),
     8px 10px 10px rgba(0, 0, 0, 0.15); */
@@ -76,7 +96,7 @@ export const useKeyboardStyle = makeStyles({
     display: 'inline-block',
     borderSizing: 'border-box',
     color: 'black',
-    background: `${shade(0.7, '#f9f9f9')}`,
+    // background: `${shade(0.7, '#f9f9f9')}`,
 
     padding: '4px',
     borderRadius: '10px',
@@ -95,4 +115,24 @@ export const useKeyboardStyle = makeStyles({
     boxSizing: 'border-box'
   }
 });
+
+const AnimatedFrame = animated(InnerFrame);
+
+const AContainer = styled(animated.div)`
+   width: 100%;
+
+/* box-sizing: border-box; */
+
+color: black;
+/* background: ${shade(0.7, '#f9f9f9')}; */
+padding: 4px;
+border-radius: 10px;
+box-shadow: 0 0 0 4px hsl(0, 0%, 60%), 0 0 0 5px hsl(0, 0%, 90%), 0 0 0 3px hsl(0, 0%, 80%);
+
+
+
+
+
+`;
+
 export default { Row, useKeyboardStyle };

@@ -13,7 +13,26 @@
 export const keySize = 75;
 export const mw = keySize * 15;
 
-const regularSize = 1 * keySize;
+// const regularSize = 1 * keySize;
+
+// const backspaceSize = 2 * keySize;
+
+// const tabSize = 1.5 * keySize;
+// const backslashSize = 1.5 * keySize;
+
+// const capslockSize = 1.75 * keySize;
+// const enterSize = 2.27 * keySize;
+
+// const shiftSize = 2.25 * keySize;
+// const rshiftSize = 2.795 * keySize;
+
+// const spaceSize = 6.35 * keySize;
+// const specialSize = 1.257 * keySize;
+
+
+
+
+const regularSize =  keySize;
 
 const backspaceSize = 2 * keySize;
 
@@ -21,13 +40,13 @@ const tabSize = 1.5 * keySize;
 const backslashSize = 1.5 * keySize;
 
 const capslockSize = 1.75 * keySize;
-const enterSize = 2.27 * keySize;
+const enterSize = 2.25 * keySize;
 
 const shiftSize = 2.25 * keySize;
-const rshiftSize = 2.795 * keySize;
+const rshiftSize = 2.75 * keySize;
 
-const spaceSize = 6.35 * keySize;
-const specialSize = 1.257 * keySize;
+const spaceSize = 6.25 * keySize;
+const specialSize = 1.27 * keySize;
 
 export const firstRow = {
   Backquote: ['`', regularSize],

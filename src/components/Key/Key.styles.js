@@ -1,14 +1,29 @@
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
+import { findAll } from 'styled-components/test-utils';
 import React from 'react';
 import { Box } from '@rebass/grid';
 import { shade, linearGradient, lighten } from 'polished';
 import Layer from '@material-ui/core/Box';
 import { BufferContext } from '../KeyBuffer/BufferContext';
+import { Card, Grid, Paper } from '@material-ui/core';
+import { useSpring, animated, useTransition } from 'react-spring';
+
+import './key.css';
 
 const Column = props => <Box {...props} />;
 
-export const KeyContainer = styled(Column)`
-  box-sizing: border-box;
+const Container = styled.ul`
+  opacity: 1;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s ease-in-out;
+`;
+
+export const KeyContainer = styled.div`
+  * > *{
+
+    box-sizing: border-box;
+  }
   width: ${props => props.wt}px;
   height: ${props => props.ht}px;
   cursor: pointer;
@@ -25,31 +40,81 @@ export const KeyContainer = styled(Column)`
 
   }
   &:first-child {
-    margin-bottom: 3px;
+    /* margin-bottom: 3px; */
     border-width: 10px 10px 20px 10px;
   }
   border-style: solid;
 
+  &::after {
+    content: '';
+    position: absolute;
 
-  height: ${props => props.height};
+    display: block;
+    top: -10px;
+    left:-10px;
+    width: ${props => props.wt}px;
+    height: ${props => props.ht}px;
+    text-align: center;
+
+    border-radius: 100%;
+
+
+    ${({ active }) =>
+
+    active &&
+    `
+    background-color:${props => shade(0.05, props.color)};
+
+
+  `}
+
+
+
+
+
+
+    border-radius: 8px;
+    border-width: 10px 10px 20px 10px;
+
+
+  }
+
+  &:hover::after{
+      background-color:${props => shade(0.05, props.color)};
+
+      transition: all 0.4s ease-in-out;
+      }
+
+  /* height: ${props => props.height}; */
   border-top-color: ${props => shade(0.02, props.color)};
   border-bottom-color: ${props => shade(0.3, props.color)};
   border-left-color: ${props => shade(0.09, props.color)};
   border-right-color: ${props => shade(0.09, props.color)};
   border-radius: 8px;
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
-
   position: relative;
-  z-index: -1;
+
+  /* position: relative; */
+  /* z-index: -1; */
   /* background-color: ${props => shade(0.02, props.color)}; */
-
-
+  transition: filter .3s;
   &:hover {
+    background-position: 0 0, 0 0;
+    transition-duration: 0.5s;
     /* background: inherit; */
-    filter: invert(8%) contrast(145%);
+   filter: contrast(140%);
   }
+
+  ${({ active }) =>
+
+    active &&
+    `
+    animation: fader 1s infinite;
+
+
+  `}
 
 `;
 
@@ -101,63 +166,111 @@ export const Span = styled('div')`
   transition: 1s ease;
 `;
 
+const ActiveWrapper = styled.div`
 
-export const Key = ({ label, keyName, wt, ht, m }) => {
+position: relative;
+background-color: rgba(0,0,0,0.5);
+/* pointer-events: none; */
+`;
 
+const ConditionalWrap = ({ condition, wrap, children }) =>
+  condition ? wrap(children) : <>{children}</>;
+
+export const Key = ({ label, keyName, wt, ht, m, amin, key }) => {
   const defaultColor = '#FFFFFF';
   const activeColor = '#1fe3ac';
+  const editColor = '#FFB822';
   const [keyColor, changeColor] = React.useState(defaultColor);
-  const [active, toggleButton] = React.useState(true);
+  const [active, setActive] = React.useState(false);
+  const [editableKey, setEditableKey] = React.useState(false);
   const [keys, setKeys] = React.useContext(BufferContext);
-  const [,,activeKeys, setActiveKeys] = React.useContext(BufferContext);
+  const [, , , , editMode, setEditMode] = React.useContext(BufferContext);
+  const [, , activeKeys, setActiveKeys] = React.useContext(BufferContext);
+  const [, , , , , , flashLoop] = React.useContext(BufferContext);
+
+
+
 
 
   React.useEffect(() => {
-    console.log("TCL: Key -> key", keyName)
-    if (activeKeys.includes(keyName)  ) {
-      console.log("TCL: Key -> key", keyName)
-      console.log("TCL: Key -> activeKeys", activeKeys)
-      console.log("TCL: Key -> label", label)
-      changeColor(activeColor);
 
+    console.log("TCL: Key -> editMode", editMode)
+    if (activeKeys.includes(keyName)) {
+      if (editMode) {
+        changeColor(editColor);
+        setActive(true);
+      } else {
+        changeColor(activeColor);
+      }
     }
     return () => {
       changeColor(defaultColor);
-      toggleButton(false);
-    }
-  }, [activeKeys, label])
+      setEditableKey(false);
+      setActive(false);
+    };
+  }, [activeKeys, editMode, keyName]);
+
+
 
   const keyClicked = newKey => {
-    toggleButton(!active);
-    if (active) {
-      changeColor(activeColor);
-      setKeys([...keys, newKey]);
-    } else {
-      changeColor(defaultColor);
-      setKeys(keys.filter(k => k !== newKey));
+    if (editMode) {
+      if (active) {
+        changeColor(defaultColor);
+        setActive(false);
+      } else {
+        changeColor(editColor);
+        setActive(true);
+      }
+
+      // setKeys([...keys, newKey]);
     }
 
-    console.log('TCL: keyClicked -> keys', keys);
+    // console.log('TCL: keyClicked -> keys', keys);
   };
+
   return (
     <React.Fragment>
-      <KeyContainer
-        label={label}
-        wt={wt}
-        ht={ht}
-        m={m}
-        color={keyColor}
-        onClick={() => keyClicked(label)}
+
+    <ConditionalWrap
+      condition={active}
+      wrap={children => (
+
+
+            <animated.div key={key} style={flashLoop}>{children}</animated.div>
+
+
+      )}
+    >
+
+      {console.log("❗❗TCL: Key -> label", label)}
+
+          <KeyContainer
+
+            editableKey={editableKey}
+          active={active}
+          
+            label={label}
+            wt={wt}
+
+            ht={ht}
+
+            color={keyColor}
+            onClick={() => keyClicked(label)}
       >
-        <KeyCap>
-          <KeyChar>
-            <Layer zIndex="2" position="absolute" margin="10px">
-              {label}
-            </Layer>
-            <Span color={keyColor} wt={wt} ht={ht} marginTop="1px" />
-          </KeyChar>
-        </KeyCap>
-      </KeyContainer>
+
+            <KeyCap>
+              <KeyChar>
+                <Layer zIndex="2" position="absolute" margin="10px">
+                  {label}
+                </Layer>
+                <Span color={keyColor} wt={wt} ht={ht} marginTop="1px" />
+              </KeyChar>
+            </KeyCap>
+          </KeyContainer>
+
+
+    </ConditionalWrap>
+
     </React.Fragment>
   );
 };

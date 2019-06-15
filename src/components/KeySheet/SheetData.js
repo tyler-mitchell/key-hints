@@ -16,32 +16,38 @@ export const KeyTable = [
   {
     "keys": [Key.Ctrl, Key.Alt, 'C'],
     "description": "Cut line (empty selection)",
-    "category": '',
+    "category": "Basic Editing",
     "when": '',
   },
   {
     "keys": [Key.Ctrl, Key.Shift, 'D'],
-    "description": "Copy line (empty selection)"
+    "description": "Copy line (empty selection)",
+    "category": "Basic Editing",
   },
   {
     "keys": [Key.Alt, Key.Shift, Key.ArrowUp],
-    "description": "Move line up/down"
+    "description": "Move line up/down",
+    "category": "Basic Editing",
   },
   {
     "keys": [Key.Alt, Key.Shift, 'S'],
-    "description": "Copy line up/down"
+    "description": "Copy line up/down",
+    "category": "Basic Editing",
   },
   {
     "keys": [Key.Alt , Key.Shift, 'A'],
-    "description": "Delete line"
+    "description": "Delete line",
+    "category": "",
   },
   {
     "keys": [Key.Ctrl, Key.Alt, 'Z'],
-    "description": "Insert line below"
+    "description": "Insert line below",
+    "category": "",
   },
   {
     "keys": [Key.Ctrl, Key.Alt , 'X'],
-    "description": "Enter Insert line above"
+    "description": "Enter Insert line above",
+    "category": "",
   },
 
 ]

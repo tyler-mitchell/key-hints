@@ -32,7 +32,7 @@ export default {
   h5: {
     color: palette.text.primary,
     fontWeight: '500',
-    fontSize: '16px',
+    fontSize: '18px',
     letterSpacing: '-0.05px',
     lineHeight: '20px'
   },
@@ -63,7 +63,7 @@ export default {
   },
   body2: {
     color: palette.text.primary,
-    fontSize: '12px',
+    fontSize: '16px',
     letterSpacing: '-0.04px',
     lineHeight: '14px'
   },
