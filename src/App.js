@@ -100,7 +100,7 @@ function App() {
               onClick={handleDrawerOpen}
               className={clsx(style.menuButton, open && style.menuButtonHidden)}
             />
-            <Typography component="h1" variant="h6" color="inherit" noWrap className={style.title}>
+            <Typography component="h1" variant="h5" color="inherit" noWrap className={style.title}>
               Key Hints
             </Typography>
             <IconButton color="inherit">

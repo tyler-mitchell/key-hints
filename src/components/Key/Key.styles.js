@@ -56,20 +56,26 @@ export const KeyContainer = styled.div`
     height: ${props => props.ht}px;
     text-align: center;
 
-    border-radius: 100%;
+    /* border-radius: 100%; */
+
+    /* background-color:${props => shade(0.01, '#2cdbaa')}; */
+
+      transition: all 0.4s ease-in-out;
 
 
-    ${({ active }) =>
+    /* ${props => props.active ? 'background-color: ' + props.color : null } */
+    background: ${props =>
+    linearGradient({
+      colorStops: [`${shade(0.05, props.activeColor)} 0%`, `${lighten(0.2, props.activeColor)} 50%`],
+      toDirection: '-30deg',
+      fallback: '#FFF'
+    })};
 
-    active &&
-    `
-    background-color:${props => shade(0.05, props.color)};
-
-
-  `}
-
-
-
+    border-style: solid;
+    border-top-color: ${props => shade(0.02, props.activeColor)};
+    border-bottom-color: ${props => shade(0.3, props.activeColor)};
+    border-left-color: ${props => shade(0.09, props.activeColor)};
+    border-right-color: ${props => shade(0.09, props.activeColor)};
 
 
 
@@ -80,16 +86,20 @@ export const KeyContainer = styled.div`
   }
 
   &:hover::after{
-      background-color:${props => shade(0.05, props.color)};
-
+      background-color:${props => shade(0.05, '#1fe3ac')};
+      opacity: 0.5;
       transition: all 0.4s ease-in-out;
       }
 
   /* height: ${props => props.height}; */
-  border-top-color: ${props => shade(0.02, props.color)};
+  border-top-color: ${props => shade(0.02, props.defaultColor)};
+  border-bottom-color: ${props => shade(0.3, props.defaultColor)};
+  border-left-color: ${props => shade(0.09, props.defaultColor)};
+  border-right-color: ${props => shade(0.09, props.defaultColor)};
+  /* border-top-color: ${props => shade(0.02, props.color)};
   border-bottom-color: ${props => shade(0.3, props.color)};
   border-left-color: ${props => shade(0.09, props.color)};
-  border-right-color: ${props => shade(0.09, props.color)};
+  border-right-color: ${props => shade(0.09, props.color)}; */
   border-radius: 8px;
   display: flex;
   /* justify-content: center; */
@@ -107,14 +117,14 @@ export const KeyContainer = styled.div`
    filter: contrast(140%);
   }
 
-  ${({ active }) =>
+  /* ${({ active }) =>
 
     active &&
     `
     animation: fader 1s infinite;
 
 
-  `}
+  `} */
 
 `;
 
@@ -247,8 +257,10 @@ export const Key = ({ label, keyName, wt, ht, m, amin, key }) => {
           <KeyContainer
 
             editableKey={editableKey}
-          active={active}
-          
+          active={true}
+          // active={active}
+          defaultColor={defaultColor}
+          activeColor={activeColor}
             label={label}
             wt={wt}
 
