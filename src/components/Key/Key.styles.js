@@ -30,6 +30,39 @@ export const KeyContainer = styled.div`
   border-width: 10px 10px 20px 10px;
 
   transition: background-color 2s, color 300ms;
+
+
+  /* height: ${props => props.height}; */
+  border-top-color: ${props => shade(0.02, props.color)};
+  border-bottom-color: ${props => shade(0.3, props.color)};
+  border-left-color: ${props => shade(0.09, props.color)};
+  border-right-color: ${props => shade(0.09, props.color)};
+
+  border-radius: 8px;
+
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+
+  transition: filter .3s;
+  &:hover {
+    background-position: 0 0, 0 0;
+    transition-duration: 0.5s;
+    /* background: inherit; */
+   filter: contrast(140%);
+  }
+
+  /* ${({ active }) =>
+    active &&
+    `
+    animation: fader 1s infinite;
+
+
+  `} */
+
   &:active {
     transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
     transform: translateY(2px) scaleX(0.98);
@@ -48,97 +81,22 @@ export const KeyContainer = styled.div`
 
 
   &:hover::after{
-      background-color:${props => shade(0.05, '#1fe3ac')};
-      opacity: 0.5;
-      transition: all 0.4s ease-in-out;
-      }
-
-  /* height: ${props => props.height}; */
-  border-top-color: ${props => shade(0.02, props.color)};
-  border-bottom-color: ${props => shade(0.3, props.color)};
-  border-left-color: ${props => shade(0.09, props.color)};
-  border-right-color: ${props => shade(0.09, props.color)};
-  /* border-top-color: ${props => shade(0.02, props.color)};
-  border-bottom-color: ${props => shade(0.3, props.color)};
-  border-left-color: ${props => shade(0.09, props.color)};
-  border-right-color: ${props => shade(0.09, props.color)}; */
-  border-radius: 8px;
-
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-
-  /* position: relative; */
-  /* z-index: -1; */
-  /* background-color: ${props => shade(0.02, props.color)}; */
-  transition: filter .3s;
-  &:hover {
-    background-position: 0 0, 0 0;
-    transition-duration: 0.5s;
-    /* background: inherit; */
-   filter: contrast(140%);
+    background-color:${props => shade(0.05, '#1fe3ac')};
+    opacity: 0.5;
+    transition: all 0.4s ease-in-out;
   }
-
-  /* ${({ active }) =>
-    active &&
-    `
-    animation: fader 1s infinite;
-
-
-  `} */
 
 `;
 
 KeyContainer.defaultProps = {};
 
 export const ActiveKeyContainer = styled(KeyContainer)`
-
-
-
-  /* background: ${props =>
-    linearGradient({
-      colorStops: [`${shade(0.05, props.color)} 0%`, `${lighten(0.2, props.color)} 50%`],
-      toDirection: '-30deg',
-      fallback: '#FFF'
-    })}; */
-  /* background: ${props =>
-    linearGradient({
-      colorStops: [`${shade(0.05, props.color)} 0%`, `${lighten(0.09, props.color)} 50%`],
-      toDirection: '-30deg',
-      fallback: '#FFF'
-    })}; */
-
-
-
-
-    /* border-radius: 100%; */
-
-    /* background-color:${props => shade(0.01, '#2cdbaa')}; */
-
-      transition: all 0.4s ease-in-out;
-
-
-    /* ${props => (props.active ? 'background-color: ' + props.color : null)} */
-    /* background: ${props =>
-      linearGradient({
-        colorStops: [
-          `${shade(0.05, props.activeColor)} 0%`,
-          `${lighten(0.2, props.activeColor)} 50%`
-        ],
-        toDirection: '-30deg',
-        fallback: '#FFF'
-      })}; */
-
-    border-top-color: ${props => shade(0.02, props.color)};
-    border-bottom-color: ${props => shade(0.3, props.color)};
-    border-left-color: ${props => shade(0.09, props.color)};
-    border-right-color: ${props => shade(0.09, props.color)};
-
+  border-top-color: ${props => shade(0.02, props.color)};
+  border-bottom-color: ${props => shade(0.3, props.color)};
+  border-left-color: ${props => shade(0.09, props.color)};
+  border-right-color: ${props => shade(0.09, props.color)};
+  /* transition: all 0.4s ease-in-out; */
 `;
-
-
 
 const KeyTop = styled.div`
   height: ${props => props.ht * 0.7}px;
@@ -148,19 +106,16 @@ const KeyTop = styled.div`
   position: relative;
   border-radius: 8px;
 
-
-  background: ${props =>
+  background-image: ${props =>
     linearGradient({
       colorStops: [`${shade(0.05, props.color)} 0%`, `${lighten(0.2, props.color)} 50%`],
       toDirection: '-30deg',
       fallback: '#FFF'
     })};
 
-
-  transition: all 0.3s;
+  /* transition: all 0.3s; */
+  /* z-index: 1; */
 `;
-
-
 
 export const KeyChar = styled('Layer')`
   font-size: 15px;
@@ -260,41 +215,41 @@ export const Key = ({ label, keyName, wt, ht, m, amin, key }) => {
       >
         {console.log('❗❗TCL: Key -> label', label)}
 
-   { active ?    ( <KeyContainer
-          editableKey={editableKey}
-          active={true}
-          // active={active}
-          defaultColor={defaultColor}
-          activeColor={activeColor}
-          label={label}
-          wt={wt}
-          ht={ht}
-          color={keyColor}
-          onClick={() => keyClicked(label)}
-        >
-          <KeyTop wt={wt} ht={ht} color={keyColor}>
-            <KeyChar>{label}</KeyChar>
-          </KeyTop>
-        </KeyContainer>)
-
-        :
-
-        (<ActiveKeyContainer
-          editableKey={editableKey}
-          active={true}
-          // active={active}
-          defaultColor={defaultColor}
-          activeColor={activeColor}
-          label={label}
-          wt={wt}
-          ht={ht}
-          color={keyColor}
-          onClick={() => keyClicked(label)}
-        >
-          <KeyTop wt={wt} ht={ht} color={keyColor}>
-            <KeyChar>{label}</KeyChar>
-          </KeyTop>
-        </ActiveKeyContainer>)}
+        {active ? (
+          <KeyContainer
+            editableKey={editableKey}
+            active={true}
+            // active={active}
+            defaultColor={defaultColor}
+            activeColor={activeColor}
+            label={label}
+            wt={wt}
+            ht={ht}
+            color={keyColor}
+            onClick={() => keyClicked(label)}
+          >
+            <KeyTop wt={wt} ht={ht} color={keyColor}>
+              <KeyChar>{label}</KeyChar>
+            </KeyTop>
+          </KeyContainer>
+        ) : (
+          <ActiveKeyContainer
+            editableKey={editableKey}
+            active={true}
+            // active={active}
+            defaultColor={defaultColor}
+            activeColor={activeColor}
+            label={label}
+            wt={wt}
+            ht={ht}
+            color={keyColor}
+            onClick={() => keyClicked(label)}
+          >
+            <KeyTop wt={wt} ht={ht} color={keyColor}>
+              <KeyChar>{label}</KeyChar>
+            </KeyTop>
+          </ActiveKeyContainer>
+        )}
       </ConditionalWrap>
     </React.Fragment>
   );
