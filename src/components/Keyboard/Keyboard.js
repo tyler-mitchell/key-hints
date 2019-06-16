@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Box, Flex } from '@rebass/grid';
 import Space from '@rebass/space';
 import Layer from '@material-ui/core/Box';
-import { KeyContainer, KeyCap, KeyChar, Span, KeyWrapper, Key } from '../Key/Key.styles';
+import { KeyContainer, ActiveKeyContainer, KeyChar, Span, KeyWrapper, Key } from '../Key/Key.styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
@@ -89,26 +89,30 @@ const EditPanel = styled(Paper)`
 
 
 const KeyItem = styled(Grid)`
-  padding-left:1px;
-  padding-right:1px;
+
+
+
 `;
+
 const renderRow = (row) => {
 
 
   return Object.keys(row).map((keyName, i) => (
 
-    <KeyItem item >
-      <Key
-        item
-        label={row[keyName][0]}
-        key={i}
-        keyName={keyName in excludedKeys ? null : row[keyName][0]}
-        wt={`${row[keyName][1]}`}
-        ht={`${keySize}`}
 
-        keySize={keySize}
-      />
-    </KeyItem >
+      <KeyItem  item  >
+        <Key
+          item
+          label={row[keyName][0]}
+          key={i}
+          keyName={keyName in excludedKeys ? null : row[keyName][0]}
+          wt={`${row[keyName][1]}`}
+          ht={`${keySize}`}
+
+          keySize={keySize}
+        />
+      </KeyItem>
+
   ));
 };
 
@@ -129,12 +133,12 @@ const KeyboardContainer = () => {
     <React.Fragment>
       <Cover>
 
-        <InnerFrame container spacing={0} direction="column" justify="space-evenly" align-items="stretch" >
-          <Row direction="row" alignItems="center" spacing={24}  justify="space-evenly"   xs={12} container zIndex={1}>{renderRow(firstRow)}  </Row>
-          <Row direction="row" alignItems="center" spacing={24} justify="space-evenly"   xs={12} container zIndex={2}>{renderRow(secondRow)} </Row>
-          <Row direction="row" alignItems="center" spacing={24} justify="space-evenly"   xs={12} container zIndex={3}>{renderRow(thirdRow )} </Row>
-          <Row direction="row" alignItems="center" spacing={24} justify="space-evenly"   xs={12} container zIndex={4}>{renderRow(fourthRow)} </Row>
-          <Row direction="row" alignItems="center" spacing={24} justify="space-evenly"   xs={12} container zIndex={5}>{renderRow(fifthRow )} </Row>
+        <InnerFrame container  alignItems="space-around" direction="column" justify="space-between"  >
+          <Row container direction="row" wrap='nowrap' item={true}  justify="space-evenly"  alignItems="stretch"  xs={12}   zIndex={1}>{renderRow(firstRow)}  </Row>
+          <Row container direction="row" wrap='nowrap' item={true}  justify="space-evenly" alignItems="stretch"  xs={12}   zIndex={2}>{renderRow(secondRow)} </Row>
+          <Row container direction="row" wrap='nowrap' item={true}  justify="space-evenly" alignItems="stretch"  xs={12}   zIndex={3}>{renderRow(thirdRow )} </Row>
+          <Row container direction="row" wrap='nowrap' item={true}  justify="space-evenly" alignItems="stretch"  xs={12}   zIndex={4}>{renderRow(fourthRow)} </Row>
+          <Row container direction="row" wrap='nowrap' item={true}  justify="space-evenly" alignItems="stretch"  xs={12}   zIndex={5}>{renderRow(fifthRow )} </Row>
         </InnerFrame>
 
       </Cover>

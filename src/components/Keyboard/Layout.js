@@ -10,7 +10,7 @@
 // const capslockSize = 1.77 * keySize;
 // const backspaceSize = 2 * keySize;
 
-export const keySize = 75;
+export const keySize = 70;
 export const mw = keySize * 15;
 
 // const regularSize = 1 * keySize;
@@ -31,6 +31,12 @@ export const mw = keySize * 15;
 
 
 
+// 1*14 + 2*1 = 16
+// 1.5 + 1*13 + 1.5 = 16
+// 1.75 + 1*12 + 2.25 = 16
+// 2.25 + 1*12 + 1.25 = 16
+// 1.25*3 + 6.25 + 1*6
+
 
 const regularSize =  keySize;
 
@@ -43,10 +49,10 @@ const capslockSize = 1.75 * keySize;
 const enterSize = 2.25 * keySize;
 
 const shiftSize = 2.25 * keySize;
-const rshiftSize = 2.75 * keySize;
+const rshiftSize = 1.8 * keySize;
 
-const spaceSize = 6.25 * keySize;
-const specialSize = 1.27 * keySize;
+const spaceSize = 6.52 * keySize;
+const specialSize = 1.25 * keySize;
 
 export const firstRow = {
   Backquote: ['`', regularSize],
@@ -62,7 +68,8 @@ export const firstRow = {
   Digit0: ['0', regularSize],
   Minus: ['-', regularSize],
   Equal: ['=', regularSize],
-  Backspace: ['Backspace', backspaceSize]
+  Backspace: ['Backspace', backspaceSize],
+  PageUp: ['PgUp', regularSize]
 };
 export const secondRow = {
   Tab: ['Tab', tabSize],
@@ -78,7 +85,8 @@ export const secondRow = {
   KeyP: ['P', regularSize],
   BracketLeft: ['[', regularSize],
   BracketRight: [']', regularSize],
-  Backslash: ['\\', backslashSize]
+  Backslash: ['\\', backslashSize],
+  PageDown: ['PgDn', regularSize]
 };
 export const thirdRow = {
   CapsLock: ['Caps Lock', capslockSize],
@@ -93,7 +101,8 @@ export const thirdRow = {
   KeyL: ['L', regularSize],
   Semicolon: [';', regularSize],
   Quote: ["'", regularSize],
-  Enter: ['Enter', enterSize]
+  Enter: ['Enter', enterSize],
+  Insert: ['Insert', regularSize]
 };
 
 export const fourthRow = {
@@ -108,7 +117,9 @@ export const fourthRow = {
   Comma: [',', regularSize],
   Period: ['.', regularSize],
   Slash: ['/', regularSize],
-  ShiftRight: ['Shift', rshiftSize]
+  ShiftRight: ['Shift', rshiftSize],
+  UpArrow: ['↑', regularSize],
+  Delete: ['Delete', regularSize]
 };
 export const excludedKeys = {
   ControlRight: ['Ctrl', specialSize],
@@ -122,11 +133,29 @@ export const fifthRow = {
   MetaLeft: ['⊞', specialSize],
   AltLeft: ['Alt', specialSize],
   Space: ['', spaceSize],
-  AltRight: ['Alt', specialSize],
-  Fn: ['Fn', specialSize],
-  ContextMenu: ['≣', specialSize],
-  ControlRight: ['Ctrl', specialSize]
+  AltRight: ['Alt', regularSize],
+  ContextMenu: ['≣', regularSize],
+  ControlRight: ['Ctrl', regularSize],
+  LeftArrow: ['←', regularSize],
+  DownArrow: ['↓', regularSize],
+  RightArrow: ['→', regularSize],
 };
+
+
+// export const fifthRow = {
+//   ControlLeft: ['Ctrl', specialSize],
+//   MetaLeft: ['⊞', specialSize],
+//   AltLeft: ['Alt', specialSize],
+//   Space: ['', spaceSize],
+//   AltRight: ['Alt', specialSize],
+//   Fn: ['Fn', specialSize],
+//   ContextMenu: ['≣', specialSize],
+//   ControlRight: ['Ctrl', specialSize],
+//   LeftArrow: ['←', specialSize],
+//   DownArrow: ['↓', specialSize],
+//   RightArrow: ['→', specialSize],
+// };
+
 export default {
   firstRow,
   secondRow,

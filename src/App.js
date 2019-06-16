@@ -123,6 +123,7 @@ function App() {
           <List>{}</List>
         </Drawer>
         {/* ⭐ MAIN APP */}
+
         <main className={style.content}>
           <div className={style.appBarSpacer} />
           <Container maxWidth="lg" className={style.container}>
@@ -131,7 +132,7 @@ function App() {
                 <Grid item xs={12}>
                   {/* Keyboard */}
 
-                  <Keyboard className={style.keyboardContainer} />
+                  <Keyboard  />
                 </Grid>
                 <Grid item xs={12}>
 

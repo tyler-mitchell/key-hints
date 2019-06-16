@@ -36,8 +36,8 @@ export const InnerFrame = styled(Grid)`
 
   /* flex-grow: 1, */
 
-  /* box-sizing: border-box; */
-  flex-grow: 1;
+  box-sizing: border-box;
+
   /* animation: fader 6s infinite; */
   color: black;
   background: ${shade(0.7, '#f9f9f9')};
@@ -50,7 +50,7 @@ export const InnerFrame = styled(Grid)`
 `;
 
 export const Cover = styled.div`
-  flex-grow: 1;
+
   background: '#f9f9f9';
   /* display: inline-block; */
   box-shadow:
@@ -93,6 +93,7 @@ export const useKeyboardStyle = makeStyles({
   },
 
   frame: {
+
     display: 'inline-block',
     borderSizing: 'border-box',
     color: 'black',
