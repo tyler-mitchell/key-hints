@@ -7,7 +7,7 @@ import Layer from '@material-ui/core/Box';
 import { BufferContext } from '../KeyBuffer/BufferContext';
 import { Card, Grid, Paper } from '@material-ui/core';
 import { useSpring, animated, useTransition } from 'react-spring';
-
+import Typography from "@material-ui/core/Typography";
 import './key.css';
 
 const Column = props => <Box {...props} />;
@@ -98,7 +98,7 @@ export const ActiveKeyContainer = styled(KeyContainer)`
   /* transition: all 0.4s ease-in-out; */
 `;
 
-const KeyTop = styled.div`
+const KeyTop = styled(Grid)`
   height: ${props => props.ht * 0.7}px;
   width: ${props => props.wt - 17}px;
   display: block;
@@ -117,12 +117,17 @@ const KeyTop = styled.div`
   /* z-index: 1; */
 `;
 
-export const KeyChar = styled('Layer')`
+export const KeyChar = styled.div`
   font-size: 15px;
+
   font-family: Roboto;
   font-weight: bold;
+
+
+
   color: rgba(0, 0, 0, 0.45);
   user-select: none;
+  /* text-align: center; */
 `;
 
 export const Span = styled.div`
@@ -245,8 +250,10 @@ export const Key = ({ label, keyName, wt, ht, m, amin, key }) => {
             color={keyColor}
             onClick={() => keyClicked(label)}
           >
-            <KeyTop wt={wt} ht={ht} color={keyColor}>
-              <KeyChar>{label}</KeyChar>
+            <KeyTop container alignItems="center" justify="center" wt={wt} ht={ht} color={keyColor}>
+              <KeyChar >
+                <Typography variant="button" align="center"   >{label}</Typography>
+              </KeyChar>
             </KeyTop>
           </ActiveKeyContainer>
         )}
