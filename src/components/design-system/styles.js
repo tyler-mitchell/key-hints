@@ -43,12 +43,12 @@ export const useStyles = makeStyles(theme => ({
   },
   appBarShift: {
 
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
+    // marginLeft: drawerWidth,
+    // width: `calc(100% - ${drawerWidth}px)`,
+    // transition: theme.transitions.create(['width', 'margin'], {
+    //   easing: theme.transitions.easing.sharp,
+    //   duration: theme.transitions.duration.enteringScreen
+    // })
   },
   menuButton: {
     marginRight: 36
@@ -79,11 +79,12 @@ export const useStyles = makeStyles(theme => ({
       width: theme.spacing(9)
     }
   },
-  appBarSpacer: theme.mixins.toolbar,
+  appBarSpacer: {minHeight: '30px'},
   content: {
     flexGrow: 1,
     height: '100vh',
-    overflow: 'auto'
+    overflowX: 'hidden',
+    overflowY: 'hidden',
   },
   container: {
     paddingTop: theme.spacing(5),
@@ -134,7 +135,6 @@ export const useStyles = makeStyles(theme => ({
     'moon-gray': '#ccc',
     'light-gray': '#eee',
     'near-white': '#f4f4f4',
-    white: '#fff',
     transparent: 'transparent',
     blacks: [
       'rgba(0,0,0,.0125)',

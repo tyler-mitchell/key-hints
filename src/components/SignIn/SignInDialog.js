@@ -13,14 +13,12 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import Login from './Login'
-import Register from './Register'
-
-
+import Login from './Login';
+import Register from './Register';
 
 function TabContainer({ children, dir }) {
   return (
-    <Typography component="div" dir={dir} style={{ padding: 8 * 3 }}>
+    <Typography component="div" dir={dir} style={{ padding: 2 }}>
       {children}
     </Typography>
   );
@@ -28,20 +26,17 @@ function TabContainer({ children, dir }) {
 
 TabContainer.propTypes = {
   children: PropTypes.node.isRequired,
-  dir: PropTypes.string.isRequired,
+  dir: PropTypes.string.isRequired
 };
 
 const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.background.paper,
-    width: 500,
-  },
+    width: 500
+  }
 }));
 
-
-
 export default function SignInDialog() {
-
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -66,38 +61,37 @@ export default function SignInDialog() {
 
   return (
     <>
-
-
       <Button variant="contained" color="primary" onClick={handleClickOpen}>
         Sign In
       </Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-      <div className={classes.root}>
-      <AppBar position="static" color="default">
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
-        >
-          <Tab label="Sign In" />
-          <Tab label="Register" />
-
-        </Tabs>
-      </AppBar>
-      <SwipeableViews
-        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-        index={value}
-        onChangeIndex={handleChangeIndex}
-      >
-        <TabContainer dir={theme.direction}><Login /></TabContainer>
-        <TabContainer dir={theme.direction}><Register/></TabContainer>
-
-      </SwipeableViews>
-    </div>
-
-
+        <div className={classes.root}>
+          <AppBar position="static" color="default">
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              indicatorColor="primary"
+              textColor="primary"
+              variant="fullWidth"
+            >
+              <Tab value={0} label="Register" />
+        
+              <Tab value={1} label="Sign In" />
+            </Tabs>
+          </AppBar>
+          <SwipeableViews
+            axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+            index={value}
+            onChangeIndex={handleChangeIndex}
+          >
+            <TabContainer dir={theme.direction} >
+              <Register />
+            </TabContainer>
+            <TabContainer dir={theme.direction} value={1}>
+              <Login />
+            </TabContainer>
+          </SwipeableViews>
+        </div>
       </Dialog>
     </>
   );
