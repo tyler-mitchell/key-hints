@@ -23,7 +23,7 @@ export const useStyles = makeStyles(theme => ({
 
   },
   toolbar: {
-    paddingRight: 24 // keep right padding when drawer closed
+    paddingRight: 24, // keep right padding when drawer closed
   },
   toolbarIcon: {
     display: 'flex',
@@ -34,8 +34,11 @@ export const useStyles = makeStyles(theme => ({
   },
   appBar: {
     fontSize: '90px',
+    height: '50px',
     zIndex: theme.zIndex.drawer + 1,
-
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen

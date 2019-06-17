@@ -5,7 +5,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import Dashboard from './Dashboard';
 import Login from './components/SignIn/Login';
 import Register from './components/SignIn/Register';
-import { Typography, AppBar, IconButton, Toolbar, CssBaseline } from '@material-ui/core';
+import { Typography, AppBar, IconButton, Toolbar, CssBaseline, Grid } from '@material-ui/core';
 import SignInDialog from './components/SignIn/SignInDialog';
 import clsx from 'clsx';
 import { useStyles } from './components/design-system/styles';

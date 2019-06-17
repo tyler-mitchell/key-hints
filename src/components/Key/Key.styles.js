@@ -98,13 +98,17 @@ export const ActiveKeyContainer = styled(KeyContainer)`
   /* transition: all 0.4s ease-in-out; */
 `;
 
-const KeyTop = styled(Grid)`
+const KeyTop = styled.div`
   height: ${props => props.ht * 0.7}px;
   width: ${props => props.wt - 17}px;
-  display: block;
-  margin: -15px;
+  margin: -30px;
   position: relative;
   border-radius: 8px;
+
+  /* vertical & horizontal centering children */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   background-image: ${props =>
     linearGradient({
