@@ -1,5 +1,5 @@
 import React from 'react';
-import { FixedSizeList } from 'react-window';
+import { VariableSizeList } from 'react-window';
 import { List } from '@material-ui/core';
 import KeyListItem from './KeyListItem';
 import { KeyTable } from '../SheetData';
@@ -29,17 +29,19 @@ const KeyList = props => {
   const { height, ...others } = props;
   console.log('TCL: others', others);
 
+
   return (
     <SelectionProvider>
-      <FixedSizeList
+      <VariableSizeList
         height={height}
         itemCount={others.keyTable.length}
-        itemSize={46}
+        itemSize={index => Object.keys(others.keyTable[index].keys).length * 50 }
         outerElementType={List}
-        itemData={{ ...others }}
+
+        itemData={others}
       >
         {Row}
-      </FixedSizeList>
+      </VariableSizeList>
     </SelectionProvider>
   );
 };

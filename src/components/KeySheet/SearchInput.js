@@ -19,17 +19,16 @@ import styled from 'styled-components';
 
 
 const SearchContainer = styled.div`
-    
+
     align-items: center;
     background-color: ${({theme})=> theme.palette.common.white};
     border: 1px solid ${ ({ theme })=>theme.palette.common.neutral};
     border-radius: 4px;
     display: flex;
-    flex-basis: 420px;
-    padding-bottom:${({theme})=>  theme.spacing.unit} * 0.5;
-    padding-left: ${({theme})=> theme.spacing.unit};
-    padding-right: ${({theme})=> theme.spacing.unit};
-    padding-top: ${({theme})=> theme.spacing.unit * 0.5};
+    flex-basis: 200px;
+   
+    margin-left: 38px;
+
 
 `;
 
@@ -39,6 +38,7 @@ const SearchIcon = styled(Search)`
 `;
 
 const InputSearch = styled(Input)`
+
     flex-grow: 1;
     font-size: 14px;
     line-height: 16px;

@@ -5,30 +5,79 @@ import IconButton from '@material-ui/core/IconButton';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { SelectionContext } from './SelectionContext';
 import { BufferContext } from '../../KeyBuffer/BufferContext';
-import { Button, ListItem, ListItemSecondaryAction, ListItemText } from '@material-ui/core';
-import useScrollTop from './useScrollTop'
+import {
+  Button,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
+  List,
+  Badge
+} from '@material-ui/core';
+import useScrollTop from './useScrollTop';
 
+const KbdKeyList = styled(ListItem)``;
+
+const KbdKey = styled.div`
+  margin-left: auto;
+  margin-right: 0;
+`;
+const KbdBadge = styled.div`
+  margin-left: auto;
+  margin-right: 0;
+`;
+
+const renderKeys = keybind => {
+  const keysLength = Object.keys(keybind).length > 1;
+
+  return (
+    <>
+      {Object.values(keybind).map((keyItem, keyIndex) => {
+        return (
+          <KbdKeyList
+            key={keyIndex}
+            dense={true}
+            button={true}
+            disableGutters={true}
+            alignItems="flex-end"
+          >
+
+            <Badge badgeContent={keyIndex+1} color="primary" >
+              {keyItem.map((kb, index, array) => (
+                <KbdKey key={index}>
+                  <KBD>{kb}</KBD>
+                  {index !== keyItem.length - 1 && '+'}
+                </KbdKey>
+              ))}
+              </Badge>
+
+            {/* {keyIndex !== Object.keys(keybind).length - 1 && 'or'} */}
+            {console.log('TCL: keybind.length ', keybind.length)}
+          </KbdKeyList>
+        );
+      })}
+    </>
+  );
+};
 const KBD = styled.kbd`
-  background-color: #fff;
-  border: 1px solid #ccc;
-  color: #333;
-  line-height: 1.4;
-  text-shadow: 0 1px 0 #fff;
   display: inline-block;
-  white-space: nowrap;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px #fff inset;
-  font-family: Arial, Helvetica, sans-serif;
-  border-radius: 3px;
-  position: relative;
+  min-width: auto;
+  min-height: auto;
+  padding: 12px 12px;
+  border: 1px solid #8a8a8a;
+  border-radius: 4px;
+  /* background: linear-gradient(to bottom, #fafafa 0%,#f0f0f0 100%); */
+  box-shadow: inset 0px 0px 0px 4px rgba(255, 255, 255, 1), 0px 2px 0px 0px rgba(159, 159, 159, 1);
+  display: inline-block;
 
-  padding: 10px;
-  min-width: 45px;
-  box-sizing: border-box;
-  justify-content: center;
-  align-items: center;
-  user-select: none;
-  text-align: center;
-  margin: 0 20px 0 0;
+  margin: 0px 4px;
+  background: #fff;
+  border-radius: 4px;
+  /* box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.5); */
+  /*Text Properties*/
+  /* font: 10px Helvetica, serif ; */
+  text-transform: uppercase;
+  /* text-align: center; */
+  color: #666;
 `;
 
 const KeyListItem = props => {
@@ -36,43 +85,30 @@ const KeyListItem = props => {
   const [, , activeKeys, setActiveKeys] = React.useContext(BufferContext);
   const [, , , , editMode, setEditMode] = React.useContext(BufferContext);
   const editClicked = (e, index) => {
-    openMenu(e, index)
+    openMenu(e, index);
     setEditMode(true);
   };
   const [selection, setSelection] = React.useContext(SelectionContext);
   const itemClicked = index => {
     setSelection(index);
-    setActiveKeys(keybind);
-    if(!(selection===index)){
+    setActiveKeys(keybind['key1']);
+    if (selection !== index) {
       setEditMode(false);
     }
     console.log('TCL: activeKeys', activeKeys);
   };
 
-
-
-  React.useEffect(() => {
-
-    return () => {
-      // setSelection(null);
-    };
-  }, [selection, setSelection]);
-
-
   return (
     <ListItem
       button
-      ContainerProps={{ style: styles }}
+      style={styles}
       divider
       onClick={() => itemClicked(index)}
       selected={selection === index}
     >
-
-
       <ListItemText primary={text} />
-      {keybind.map((keybind, index) => {
-        return <KBD key={index}>{keybind}</KBD>;
-      })}
+
+      <List>{renderKeys(keybind)}</List>
     </ListItem>
   );
 };

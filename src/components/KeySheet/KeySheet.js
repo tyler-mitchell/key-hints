@@ -55,11 +55,15 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { SelectionProvider } from './Menu/SelectionContext';
 import { BufferContext } from '../KeyBuffer/BufferContext';
+import { AppBar } from '@material-ui/core';
 
 import { Save as SaveIcon, Refresh as RefreshIcon } from '@material-ui/icons';
 import Fade from '@material-ui/core/Fade';
 
 const useStyles = makeStyles({
+  appBar: {
+    color: 'white'
+  },
   app: {
     display: 'flex',
     flexDirection: 'column'
@@ -155,27 +159,19 @@ const ShortcutItem = styled(ListItem)`
 
 `;
 
-const KeyKBDItem = props => {
-  const { keybind, style, index } = props;
-
-
-  return (
-    <>
-      <ListItemText primary={`${KeyTable[index].description}`} secondary />
-
-      {KeyTable[index].keys.map((keybind, index) => {
-        return <KBD key={index}>{keybind}</KBD>;
-      })}
-    </>
-  );
-};
-
-
 const EditButtonGroup = styled.div`
   padding-right: 10px;
 `;
 
-const Header = styled(Paper)``;
+const CardHeadStyle = theme => ({
+  root: {}
+});
+const CardHead = styled(AppBar)`
+  &&& {
+    position: relative;
+    background: white;
+  }
+`;
 
 export const KeySheet = props => {
   const { category } = props;
@@ -188,37 +184,23 @@ export const KeySheet = props => {
     return KeyTable[index].keys.length * 10 + 40;
   };
 
-  // const itemClicked = index => {
-  //   setSelection(index);
-  //   setActiveKeys(KeyTable[index].keys);
-  //   console.log('TCL: activeKeys', activeKeys);
-  // };
-
-  const [menuAnchor, menuItem, handleMenuClose, openMenu] = useMenu();
-  // const [,,selection, setSelection] = React.useContext(SelectionContext);
-
   const [value, setValue] = React.useState('All');
 
-  const [keyTable, setKeyTable] = React.useState(KeyTable);
-  React.useEffect(() => {
-    // Update the document title using the browser API
-    console.log("TCL: value", value)
-  },[]);
+  const [keyTable, setKeyTable] = React.useState(KeyTable.table);
+
   const [, , , , editMode, setEditMode] = React.useContext(BufferContext);
 
   function handleChange(event, newValue) {
-    console.log('TCL: handleChange -> keyTable', keyTable);
-
     setValue(newValue);
 
     newValue !== 'All'
       ? setKeyTable(
-          keyTable.filter(key => {
-            console.log('TCL: handleChange -> key.category', key.category);
-            return key.category === newValue;
+          KeyTable.table.filter(key => {
+            console.log(`TCL: handleChange -> key.category **${key.category}**`);
+            return key.category.toUpperCase() === newValue;
           })
         )
-      : setKeyTable(KeyTable);
+      : setKeyTable(KeyTable.table);
 
     console.log('TCL: NewTable -> keyTable', keyTable);
   }
@@ -229,7 +211,6 @@ export const KeySheet = props => {
     setInvisible(!invisible);
   }
   const editClicked = () => {
-
     setEditMode(true);
   };
   const [editButtonsVisible, setEditButtonsVisibility] = React.useState(false);
@@ -238,9 +219,15 @@ export const KeySheet = props => {
     <React.Fragment>
       <SelectionProvider>
         <Card>
-          <Paper value={value} indicatorColor="primary" textColor="primary" onChange={handleChange}>
-            <Grid container spacing={2} direction="row" alignItems="center">
-              <Grid item xs={10}>
+          <CardHead
+            className={classes.appBar}
+            value={value}
+            indicatorColor="primary"
+            textColor="primary"
+            onChange={handleChange}
+          >
+            <Grid container spacing={0} justify="flex-start" direction="column">
+              <Grid item xs={12}>
                 <Tabs
                   value={value}
                   onChange={handleChange}
@@ -262,33 +249,47 @@ export const KeySheet = props => {
                       </Badge>
                     }
                   />
-                  <Tab
-                    value="Basic Editing"
-                    label={
-                      <Badge
-                        className={classes.padding}
-                        color="secondary"
-                        badgeContent={4}
-                        invisible={invisible}
-                      >
-                        Basic Editing
-                      </Badge>
-                    }
-                  />
+                  {KeyTable.categories.map((e, index) => {
+                    return (
+                      <Tab
+                        key={index}
+                        value={e}
+                        label={
+                          <Badge
+                            className={classes.padding}
+                            color="secondary"
+                            badgeContent={4}
+                            invisible={invisible}
+                          >
+                            {e}
+                          </Badge>
+                        }
+                      />
+                    );
+                  })}
                 </Tabs>
               </Grid>
-              <Grid item xs={2} alignItems="center">
+              <Grid container direction="row">
+                <Grid item xs={11}>
+                  <SearchInput
+                    theme={theme}
+                    placeholder="Search…"
+                    inputProps={{ 'aria-label': 'Search' }}
+                  />
+                </Grid>
 
                 <Grid
                   container
                   spacing={1}
-                  justify="flex-end"
+                  item
+                  xs={1}
+                  justify="space-between"
                   direction="row"
                   alignItems="center"
                 >
                   {editMode ? (
                     <>
-                      <Grid item>
+                      <Grid item xs={6}>
                         <Button
                           className={theme.button}
                           variant="contained"
@@ -300,7 +301,7 @@ export const KeySheet = props => {
                           Save
                         </Button>
                       </Grid>
-                      <Grid item>
+                      <Grid item xs={6}>
                         <EditButtonGroup>
                           <Button
                             className={theme.button}
@@ -316,16 +317,14 @@ export const KeySheet = props => {
                     </>
                   ) : (
                     <>
-
                       <Grid item>
                         <EditButtonGroup>
-                            <Button
+                          <Button
                             onClick={event => editClicked()}
                             className={theme.button}
                             variant="contained"
                             color="primary"
                             size="small"
-
                           >
                             <EditIcon />
                             Edit
@@ -338,7 +337,7 @@ export const KeySheet = props => {
 
               </Grid>
             </Grid>
-          </Paper>
+          </CardHead>
           {/* <CardHeader
           title={category}
           action={
@@ -347,23 +346,11 @@ export const KeySheet = props => {
             </IconButton>
           }
         /> */}
-          <div>
-            <SearchInput
-              theme={theme}
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'Search' }}
-            />
-          </div>
-          <CardContent>
 
+          <CardContent>
             <div>
               {console.log('⭐TCL: Row -> others')}
-              <KeyList
-                height={360}
-                itemCount={keyTable.length}
-                keyTable={keyTable}
-
-              />
+              <KeyList height={360} keyTable={keyTable} />
             </div>
           </CardContent>
         </Card>

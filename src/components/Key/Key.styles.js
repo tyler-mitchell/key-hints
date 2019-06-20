@@ -256,7 +256,7 @@ export const Key = ({ label, keyName, wt, ht, m, amin, key }) => {
           >
             <KeyTop container alignItems="center" justify="center" wt={wt} ht={ht} color={keyColor}>
               <KeyChar >
-                <Typography variant="button" align="center"   >{label}</Typography>
+                {label}
               </KeyChar>
             </KeyTop>
           </ActiveKeyContainer>
