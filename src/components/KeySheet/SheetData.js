@@ -16,7 +16,7 @@ export const KeyTable = {
   table: [
     {
 
-      keys: {'key1': ['Ctrl', 'Shift', 'P'], 'key2': ['F1']},
+      keys: {'key1': {0: 'Ctrl', 1: 'Shift', 2: 'P'}, 'key2': {0: 'F1'}},
       description: "Show Command Palette",
       category: "General"
 
@@ -24,7 +24,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'P']},
+      keys: {'key1': {0: 'Ctrl', 1: 'P'}},
       description: "Quick Open, Go to File…",
       category: "General"
 
@@ -32,7 +32,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'Shift', 'N']},
+      keys: {'key1': {0: 'Ctrl', 1: 'Shift', 2: 'N'}},
       description: "New window/instance",
       category: "General"
 
@@ -40,7 +40,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'Shift', 'W']},
+      keys: {'key1': {0: 'Ctrl', 1: 'Shift', 2: 'W'}},
       description: "Close window/instance",
       category: "General"
 
@@ -48,7 +48,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', ',']},
+      keys: {'key1': {0: 'Ctrl', 1: ','}},
       description: "User Settings",
       category: "General"
 
@@ -56,7 +56,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'K'], 'key2': ['Ctrl', 'S']},
+      keys: {'key1': {0: 'Ctrl', 1: 'K'}, 'key2': {0: 'Ctrl', 1: 'S'}},
       description: "Keyboard Shortcuts",
       category: "General"
 
@@ -64,7 +64,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'X']},
+      keys: {'key1': {0: 'Ctrl', 1: 'X'}},
       description: "Cut line (empty selection)",
       category: "Basic editing"
 
@@ -72,7 +72,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'C']},
+      keys: {'key1': {0: 'Ctrl', 1: 'C'}},
       description: "Copy line (empty selection)",
       category: "Basic editing"
 
@@ -80,7 +80,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Alt', ['↑', '↓']]},
+      keys: {'key1': {0: 'Alt', 1: ['↑', '↓']}},
       description: "Move line up/down",
       category: "Basic editing"
 
@@ -88,7 +88,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Shift', 'Alt', ['↓', '↑']]},
+      keys: {'key1': {0: 'Shift', 1: 'Alt', 2: ['↓', '↑']}},
       description: "Copy line up/down",
       category: "Basic editing"
 
@@ -96,7 +96,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'Shift', 'K']},
+      keys: {'key1': {0: 'Ctrl', 1: 'Shift', 2: 'K'}},
       description: "Delete line",
       category: "Basic editing"
 
@@ -104,7 +104,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'Enter']},
+      keys: {'key1': {0: 'Ctrl', 1: 'Enter'}},
       description: "Insert line below",
       category: "Basic editing"
 
@@ -112,7 +112,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'T']},
+      keys: {'key1': {0: 'Ctrl', 1: 'T'}},
       description: "Show all Symbols",
       category: "Navigation"
 
@@ -120,7 +120,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'G']},
+      keys: {'key1': {0: 'Ctrl', 1: 'G'}},
       description: "Go to Line...",
       category: "Navigation"
 
@@ -128,7 +128,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'P']},
+      keys: {'key1': {0: 'Ctrl', 1: 'P'}},
       description: "Go to File...",
       category: "Navigation"
 
@@ -136,7 +136,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'Shift', 'O']},
+      keys: {'key1': {0: 'Ctrl', 1: 'Shift', 2: 'O'}},
       description: "Go to Symbol...",
       category: "Navigation"
 
@@ -144,7 +144,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'Shift', 'M']},
+      keys: {'key1': {0: 'Ctrl', 1: 'Shift', 2: 'M'}},
       description: "Show Problems panel",
       category: "Navigation"
 
@@ -152,7 +152,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['F8']},
+      keys: {'key1': {0: 'F8'}},
       description: "Go to next error or warning",
       category: "Navigation"
 
@@ -160,7 +160,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Shift', 'F8']},
+      keys: {'key1': {0: 'Shift', 1: 'F8'}},
       description: "Go to previous error or warning",
       category: "Navigation"
 
@@ -168,7 +168,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'Shift', 'Tab']},
+      keys: {'key1': {0: 'Ctrl', 1: 'Shift', 2: 'Tab'}},
       description: "Navigate editor group history",
       category: "Navigation"
 
@@ -176,7 +176,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Alt', ['←', '→']]},
+      keys: {'key1': {0: 'Alt', 1: ['←', '→']}},
       description: "Go back / forward",
       category: "Navigation"
 
@@ -184,7 +184,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'F']},
+      keys: {'key1': {0: 'Ctrl', 1: 'F'}},
       description: "Find",
       category: "Search and replace"
 
@@ -192,7 +192,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'H']},
+      keys: {'key1': {0: 'Ctrl', 1: 'H'}},
       description: "Replace",
       category: "Search and replace"
 
@@ -200,7 +200,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['F3'], 'key2': ['Shift', 'F3']},
+      keys: {'key1': {0: 'F3'}, 'key2': {0: 'Shift', 1: 'F3'}},
       description: "Find next/previous",
       category: "Search and replace"
 
@@ -208,7 +208,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Alt', 'Enter']},
+      keys: {'key1': {0: 'Alt', 1: 'Enter'}},
       description: "Select all occurences of Find match",
       category: "Search and replace"
 
@@ -216,7 +216,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'D']},
+      keys: {'key1': {0: 'Ctrl', 1: 'D'}},
       description: "Add selection to next Find match",
       category: "Search and replace"
 
@@ -224,7 +224,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'K'], 'key2': ['Ctrl', 'D']},
+      keys: {'key1': {0: 'Ctrl', 1: 'K'}, 'key2': {0: 'Ctrl', 1: 'D'}},
       description: "Move last selection to next Find match",
       category: "Search and replace"
 
@@ -232,7 +232,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Alt', ['C', 'R', 'W']]},
+      keys: {'key1': {0: 'Alt', 1: ['C', 'R', 'W']}},
       description: "Toggle case-sensitive / regex / whole word",
       category: "Search and replace"
 
@@ -240,7 +240,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Alt', 'Click']},
+      keys: {'key1': {0: 'Alt', 1: 'Click'}},
       description: "Insert cursor",
       category: "Multi-cursor and selection"
 
@@ -248,7 +248,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'Alt', ['↑', '↓']]},
+      keys: {'key1': {0: 'Ctrl', 1: 'Alt', 2: ['↑', '↓']}},
       description: "Insert cursor above / below",
       category: "Multi-cursor and selection"
 
@@ -256,7 +256,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'U']},
+      keys: {'key1': {0: 'Ctrl', 1: 'U'}},
       description: "Undo last cursor operation",
       category: "Multi-cursor and selection"
 
@@ -264,7 +264,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Shift', 'Alt', 'I']},
+      keys: {'key1': {0: 'Shift', 1: 'Alt', 2: 'I'}},
       description: "Insert cursor at end of each line selected",
       category: "Multi-cursor and selection"
 
@@ -272,7 +272,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'L']},
+      keys: {'key1': {0: 'Ctrl', 1: 'L'}},
       description: "Select current line",
       category: "Multi-cursor and selection"
 
@@ -280,7 +280,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'Shift', 'L']},
+      keys: {'key1': {0: 'Ctrl', 1: 'Shift', 2: 'L'}},
       description: "Select all occurrences of current selection",
       category: "Multi-cursor and selection"
 
@@ -288,7 +288,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'F2']},
+      keys: {'key1': {0: 'Ctrl', 1: 'F2'}},
       description: "Select all occurrences of current word",
       category: "Multi-cursor and selection"
 
@@ -296,7 +296,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Shift', 'Alt', '→']},
+      keys: {'key1': {0: 'Shift', 1: 'Alt', 2: '→'}},
       description: "Expand selection",
       category: "Multi-cursor and selection"
 
@@ -304,7 +304,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Shift', 'Alt', '←']},
+      keys: {'key1': {0: 'Shift', 1: 'Alt', 2: '←'}},
       description: "Shrink selection",
       category: "Multi-cursor and selection"
 
@@ -312,7 +312,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Shift', 'Alt', '(drag mouse)']},
+      keys: {'key1': {0: 'Shift', 1: 'Alt', 2: '(drag mouse)'}},
       description: "Column (box) selection",
       category: "Multi-cursor and selection"
 
@@ -320,7 +320,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'Shift', 'Alt', '(arrow key)']},
+      keys: {'key1': {0: 'Ctrl', 1: 'Shift', 2: 'Alt', 3: '(arrow key)'}},
       description: "Column (box) selection",
       category: "Multi-cursor and selection"
 
@@ -328,7 +328,7 @@ export const KeyTable = {
 
     {
 
-      keys: {'key1': ['Ctrl', 'Shift', 'Alt', ['PgUp', 'PgDn']]},
+      keys: {'key1': {0: 'Ctrl', 1: 'Shift', 2: 'Alt', 3: ['PgUp', 'PgDn']}},
       description: "Column (box) selection page up/down",
       category: "Multi-cursor and selection"
 

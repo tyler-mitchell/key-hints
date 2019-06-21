@@ -27,6 +27,10 @@ const KbdBadge = styled.div`
   margin-right: 0;
 `;
 
+const ORLabel = styled.span`
+  font-size: 8px;
+`;
+
 const renderKeys = keybind => {
   const keysLength = Object.keys(keybind).length > 1;
 
@@ -42,15 +46,18 @@ const renderKeys = keybind => {
             alignItems="flex-end"
           >
             {/* <Badge badgeContent={keyIndex+1} color="primary" variant="dot" > */}
-            {keyItem.map((kb, index, array) => (
+            {Object.keys(keyItem).map((kb, index, array) => (
               <KbdKey key={index}>
                 <KBD>
-                  {Array.isArray(kb)
+                  {Array.isArray(keyItem[kb])
+                    ? keyItem[kb].map((x, i, arr) => (arr.length - 1 !== i ? <span key={i}>{ x}<ORLabel> or </ORLabel></span> : x))
+                    : keyItem[kb]}
+                  {/* {Array.isArray(kb)
                     // ? kb.map((x, i) =>   i !== Object.keys(keybind).length - 1 && 'or')
                     ? kb.map((x, i) => x + (kb.length - 1 !== i ? 'or': ''))
-                    : kb}
+                    : kb} */}
                 </KBD>
-                {index !== keyItem.length - 1 && '+'}
+                {index !== Object.keys(keyItem).length - 1 && '+'}
               </KbdKey>
             ))}
             {/* </Badge> */}

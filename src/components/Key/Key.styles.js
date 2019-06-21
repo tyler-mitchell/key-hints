@@ -10,6 +10,8 @@ import { useSpring, animated, useTransition } from 'react-spring';
 import Typography from "@material-ui/core/Typography";
 import './key.css';
 
+import flatMap from 'lodash/flatMap';
+
 const Column = props => <Box {...props} />;
 
 const keypress = keyframes`
@@ -162,7 +164,6 @@ const KeyTop = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
   background-image: ${props =>
     linearGradient({
       colorStops: [`${shade(0.05, props.color)} 0%`, `${lighten(0.2, props.color)} 50%`],
@@ -176,12 +177,8 @@ const KeyTop = styled.div`
 
 export const KeyChar = styled.div`
   font-size: 15px;
-
   font-family: Roboto;
   font-weight: bold;
-
-
-
   color: rgba(0, 0, 0, 0.45);
   user-select: none;
   /* text-align: center; */
@@ -191,7 +188,6 @@ export const Span = styled.div`
 
   top: 0;
   position: relative;
-
   padding-top: 5px;
   border-radius: 8px;
   height: ${props => props.ht * 0.7}px;
@@ -233,8 +229,10 @@ export const Key = ({ label, keyName, wt, ht, m, amin, key }) => {
   const [, , , , , , flashLoop] = React.useContext(BufferContext);
 
   React.useEffect(() => {
-    console.log('TCL: Key -> editMode', editMode);
-    if (activeKeys.includes(keyName)) {
+
+
+    if (flatMap(activeKeys).includes(keyName)) {
+      console.log("⚡⚡-> Object.assign.apply({}, activeKeys)", Object.keys(activeKeys).reduce(function (r, k) { return r.concat(activeKeys[k]); }, []))
       if (editMode) {
         changeColor(editColor);
         setActive(true);
