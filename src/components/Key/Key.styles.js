@@ -12,6 +12,42 @@ import './key.css';
 
 const Column = props => <Box {...props} />;
 
+const keypress = keyframes`
+
+	0% {
+		transform: translateY(0%);
+	}
+
+	16% {
+		transform: translateY(-40.27%);
+	}
+
+	28% {
+		transform: translateY(-30.88%);
+	}
+
+	44% {
+		transform: translateY(-35.63%);
+	}
+
+	59% {
+		transform: translateY(-32.36%);
+	}
+
+	73% {
+		transform: translateY(-38.58%);
+	}
+
+	88% {
+		transform: translateY(-25.8%);
+	}
+
+	100% {
+		transform: translateY(-6%);
+	}
+
+
+`;
 const Container = styled.ul`
   opacity: 1;
   visibility: hidden;
@@ -48,30 +84,31 @@ export const KeyContainer = styled.div`
 
 
   transition: filter .3s;
+
+
   &:hover {
     background-position: 0 0, 0 0;
     transition-duration: 0.5s;
     /* background: inherit; */
+
    filter: contrast(140%);
+
   }
 
-  /* ${({ active }) =>
-    active &&
-    `
-    animation: fader 1s infinite;
 
-
-  `} */
+  transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
 
   &:active {
-    transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
-    transform: translateY(2px) scaleX(0.98);
-    transform-origin: -100, 200;
+    /* transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1); */
+    /* transform: translateY(2px) scaleX(0.98); */
+    /* transform-origin: -100, 200; */
+    /* animation: ${keypress} 2s ; */
   }
   &:last-child {
     border-width: 10px 12px 20px 10px;
 
   }
+
   &:first-child {
     /* margin-bottom: 3px; */
     border-width: 10px 10px 20px 10px;
@@ -95,6 +132,21 @@ export const ActiveKeyContainer = styled(KeyContainer)`
   border-bottom-color: ${props => shade(0.3, props.color)};
   border-left-color: ${props => shade(0.09, props.color)};
   border-right-color: ${props => shade(0.09, props.color)};
+
+
+  &:hover{
+    animation:  ${keypress} 3s ease-out infinite;
+    animation-delay: 2s
+  }
+  ${keypress}
+  ${({ active }) =>
+    active &&
+    `
+
+    animation: 2s keypress 0.3 0s both;
+
+
+  `}
   /* transition: all 0.4s ease-in-out; */
 `;
 
@@ -104,6 +156,7 @@ const KeyTop = styled.div`
   margin: -30px;
   position: relative;
   border-radius: 8px;
+
 
   /* vertical & horizontal centering children */
   display: flex;
@@ -227,7 +280,7 @@ export const Key = ({ label, keyName, wt, ht, m, amin, key }) => {
         {active ? (
           <KeyContainer
             editableKey={editableKey}
-            active={true}
+            active={active}
             // active={active}
             defaultColor={defaultColor}
             activeColor={activeColor}
@@ -244,7 +297,7 @@ export const Key = ({ label, keyName, wt, ht, m, amin, key }) => {
         ) : (
           <ActiveKeyContainer
             editableKey={editableKey}
-            active={true}
+            active={active}
             // active={active}
             defaultColor={defaultColor}
             activeColor={activeColor}

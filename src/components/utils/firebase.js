@@ -1,5 +1,5 @@
 import app from 'firebase/app'
-
+import { KeyTable } from '../components/KeySheet/SheetData';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCcVhJ72zFfHBG9dIUeo4O_RYg8wH7zHwI",
@@ -14,9 +14,9 @@ const firebaseConfig = {
 app.initializeApp(firebaseConfig);
 
 
-app.firestore();
+let db = app.firestore();
 
 
-// let docRef = db.collection('KeyTables').doc('VS_Code');
+let docRef = db.collection('KeyTables').doc('VS_Code');
 
-// let setTables = docRef.set({...KeyTable});
+let setTables = docRef.set({...KeyTable});

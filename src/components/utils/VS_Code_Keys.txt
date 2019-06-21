@@ -1,0 +1,141 @@
+General
+Ctrl+Shift+P, F1     ____       Show Command Palette
+Ctrl+P Quick         ____       Open, Go to File…
+Ctrl+Shift+N         ____       New window/instance
+Ctrl+Shift+W         ____       Close window/instance
+Ctrl+,               ____       User Settings
+Ctrl+K Ctrl+S        ____       Keyboard Shortcuts
+-------------------------------------
+Basic editing
+Ctrl+X               ____       Cut line (empty selection)
+Ctrl+C               ____       Copy line (empty selection)
+Alt+ ↑ / ↓           ____       Move line up/down
+Shift+Alt + ↓ / ↑    ____       Copy line up/down
+Ctrl+Shift+K         ____       Delete line
+Ctrl+Enter           ____       Insert line below
+Ctrl+Shift+Enter     ____                  Insert line above
+Ctrl+Shift+\\        ____              Jump to matching bracket
+Ctrl+] / [           ____            Indent/outdent line
+Home / End           ____            Go to beginning/end of line
+Ctrl+Home            ____           Go to beginning of file
+Ctrl+End             ____          Go to end of file
+Ctrl+↑ / ↓           ____            Scroll line up/down
+Alt+PgUp / PgDn      ____                 Scroll page up/down
+Ctrl+Shift+[         ____              Fold (collapse) region
+Ctrl+Shift+]         ____              Unfold (uncollapse) region
+Ctrl+K Ctrl+[        ____               Fold (collapse) all subregions
+Ctrl+K Ctrl+]        ____               Unfold (uncollapse) all subregions
+Ctrl+K Ctrl+0        ____               Fold (collapse) all regions
+Ctrl+K Ctrl+J        ____               Unfold (uncollapse) all regions
+Ctrl+K Ctrl+C        ____               Add line comment
+Ctrl+K Ctrl+U        ____               Remove line comment
+Ctrl+/               ____        Toggle line comment
+Shift+Alt+A          ____             Toggle block comment
+Alt+Z                ____       Toggle word wrap
+-------------------------------------
+Navigation
+Ctrl+T             ____          Show all Symbols
+Ctrl+G             ____          Go to Line...
+Ctrl+P             ____          Go to File...
+Ctrl+Shift+O       ____                Go to Symbol...
+Ctrl+Shift+M       ____                Show Problems panel
+F8                 ____      Go to next error or warning
+Shift+F8           ____            Go to previous error or warning
+Ctrl+Shift+Tab     ____                  Navigate editor group history
+Alt+ ← / →         ____              Go back / forward
+-------------------------------------
+Search and replace
+Ctrl+F             ____              Find
+Ctrl+H             ____              Replace
+F3 / Shift+F3      ____                     Find next/previous
+Alt+Enter          ____                 Select all occurences of Find match
+Ctrl+D             ____              Add selection to next Find match
+Ctrl+K Ctrl+D      ____                     Move last selection to next Find match
+Alt+C / R / W      ____                     Toggle case-sensitive / regex / whole word
+-------------------------------------
+Multi-cursor and selection
+Alt+Click                     ____       Insert cursor
+Ctrl+Alt+ ↑ / ↓               ____             Insert cursor above / below
+Ctrl+U                        ____    Undo last cursor operation
+Shift+Alt+I                   ____         Insert cursor at end of each line selected
+Ctrl+L                        ____    Select current line
+Ctrl+Shift+L                  ____          Select all occurrences of current selection
+Ctrl+F2                       ____     Select all occurrences of current word
+Shift+Alt+→                   ____         Expand selection
+Shift+Alt+←                   ____         Shrink selection
+Shift+Alt +(drag mouse)       ____                    Column (box) selection
+Ctrl+Shift+Alt+ (arrow key)   ____                         Column (box) selection
+Ctrl+Shift+Alt+PgUp/PgDn      ____                       Column (box) selection page up/down
+-------------------------------------
+Rich languages editing
+Ctrl+Space         ____                  Trigger suggestion
+Ctrl+Shift+Space   ____                        Trigger parameter hints
+Shift+Alt+F        ____                   Format document
+Ctrl+K Ctrl+F      ____                 Format selection
+F12                ____       Go to Definition
+Alt+F12            ____           Peek Definition
+Ctrl+K F12         ____              Open Definition to the side
+Ctrl+.             ____          Quick Fix
+Shift+F12          ____             Show References
+F2                 ____      Rename Symbol
+Ctrl+K Ctrl+X      ____                 Trim trailing whitespace
+Ctrl+K M           ____            Change file language
+-------------------------------------
+Editor management
+Ctrl+F4, Ctrl+W    ____                Close editor
+Ctrl+K F           ____         Close folder
+Ctrl+\\            ____       Split editor
+Ctrl+ 1 / 2 / 3    ____                Focus into 1st, 2nd or 3rd editor group
+Ctrl+K Ctrl+ ←/→   ____                 Focus into previous/next editor group
+Ctrl+Shift+PgUp /  ____                  PgDn Move editor left/right
+Ctrl+K ← / →       ____             Move active editor group
+-------------------------------------
+File management
+Ctrl+N             ____          New File
+Ctrl+O             ____          Open File...
+Ctrl+S             ____          Save
+Ctrl+Shift+S       ____                Save As...
+Ctrl+K S           ____            Save All
+Ctrl+F4            ____           Close
+Ctrl+K Ctrl+W      ____           Close All
+Ctrl+K Enter       ____            Keep preview mode editor open
+Ctrl+Shift+T       ____                Reopen closed editor
+Ctrl+Tab           ____            Open next
+Ctrl+Shift+Tab     ____                  Open previous
+Ctrl+K P           ____            Copy path of active file
+Ctrl+K R           ____            Reveal active file in Explorer
+Ctrl+K O           ____            Show active file in new window/instance
+-------------------------------------
+Display
+F11                ____       Toggle full screen
+Shift+Alt+0        ____               Toggle editor layout (horizontal/vertical)
+Ctrl+ = / -        ____               Zoom in/out
+Ctrl+B             ____          Toggle Sidebar visibility
+Ctrl+Shift+E       ____                Show Explorer / Toggle focus
+Ctrl+Shift+F       ____                Show Search
+Ctrl+Shift+G       ____                Show Source Control
+Ctrl+Shift+D       ____                Show Debug
+Ctrl+Shift+X       ____                Show Extensions
+Ctrl+Shift+H       ____                Replace in files
+Ctrl+Shift+J       ____                Toggle Search details
+Ctrl+Shift+U       ____                Show Output panel
+Ctrl+Shift+V       ____                Open Markdown preview
+Ctrl+K V           ____            Open Markdown preview to the side
+Ctrl+K Z           ____            Zen Mode (Esc Esc to exit)
+-------------------------------------
+Debug
+F9                 ____       Toggle breakpoint
+F5                 ____       Start/Continue
+Shift+F5           ____             Stop
+F11 / Shift+F11    ____      Step into/out
+F10                ____        Step over
+Ctrl+K Ctrl+I      ____                  Show hover
+-------------------------------------
+Integrated terminal
+Ctrl+\`             ____          Show integrated terminal
+Ctrl+Shift+\`       ____                Create new terminal
+Ctrl+C             ____          Copy selection
+Ctrl+V             ____          Paste into active terminal
+Ctrl+↑ / ↓         ____              Scroll up/down
+Shift+PgUp / PgDn  ____                     Scroll page up/down
+Ctrl+Home / End    ____                Scroll to top/bottom

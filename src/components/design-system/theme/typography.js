@@ -76,5 +76,12 @@ export default {
     fontSize: '12px',
     letterSpacing: '0.3px',
     lineHeight: '16px'
+  },
+  keylabel: {
+    color: palette.text.primary,
+    fontSize: '22px',
+    fontFamily: 'Nunito',
+    letterSpacing: '0.3px',
+    lineHeight: '16px'
   }
 };

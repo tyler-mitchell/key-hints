@@ -11,7 +11,8 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   List,
-  Badge
+  Badge,
+  Typography
 } from '@material-ui/core';
 import useScrollTop from './useScrollTop';
 
@@ -40,15 +41,19 @@ const renderKeys = keybind => {
             disableGutters={true}
             alignItems="flex-end"
           >
-
-            <Badge badgeContent={keyIndex+1} color="primary" >
-              {keyItem.map((kb, index, array) => (
-                <KbdKey key={index}>
-                  <KBD>{kb}</KBD>
-                  {index !== keyItem.length - 1 && '+'}
-                </KbdKey>
-              ))}
-              </Badge>
+            {/* <Badge badgeContent={keyIndex+1} color="primary" variant="dot" > */}
+            {keyItem.map((kb, index, array) => (
+              <KbdKey key={index}>
+                <KBD>
+                  {Array.isArray(kb)
+                    // ? kb.map((x, i) =>   i !== Object.keys(keybind).length - 1 && 'or')
+                    ? kb.map((x, i) => x + (kb.length - 1 !== i ? 'or': ''))
+                    : kb}
+                </KBD>
+                {index !== keyItem.length - 1 && '+'}
+              </KbdKey>
+            ))}
+            {/* </Badge> */}
 
             {/* {keyIndex !== Object.keys(keybind).length - 1 && 'or'} */}
             {console.log('TCL: keybind.length ', keybind.length)}
@@ -68,7 +73,7 @@ const KBD = styled.kbd`
   /* background: linear-gradient(to bottom, #fafafa 0%,#f0f0f0 100%); */
   box-shadow: inset 0px 0px 0px 4px rgba(255, 255, 255, 1), 0px 2px 0px 0px rgba(159, 159, 159, 1);
   display: inline-block;
-
+  font-family: 'Nunito', sans-serif;
   margin: 0px 4px;
   background: #fff;
   border-radius: 4px;
@@ -78,6 +83,10 @@ const KBD = styled.kbd`
   text-transform: uppercase;
   /* text-align: center; */
   color: #666;
+`;
+
+const ListItemContainer = () => styled(ListItem)`
+  font-family: 'Nunito', sans-serif;
 `;
 
 const KeyListItem = props => {
@@ -106,7 +115,10 @@ const KeyListItem = props => {
       onClick={() => itemClicked(index)}
       selected={selection === index}
     >
-      <ListItemText primary={text} />
+      <ListItemText
+        primary={<Typography variant="keylabel">{text}</Typography>}
+        secondary={keybind.category}
+      />
 
       <List>{renderKeys(keybind)}</List>
     </ListItem>

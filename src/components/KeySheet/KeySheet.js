@@ -55,14 +55,15 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { SelectionProvider } from './Menu/SelectionContext';
 import { BufferContext } from '../KeyBuffer/BufferContext';
-import { AppBar } from '@material-ui/core';
+import { AppBar, Toolbar } from '@material-ui/core';
 
 import { Save as SaveIcon, Refresh as RefreshIcon } from '@material-ui/icons';
 import Fade from '@material-ui/core/Fade';
 
 const useStyles = makeStyles({
   appBar: {
-    color: 'white'
+    color: 'white',
+    padding: 0,
   },
   app: {
     display: 'flex',
@@ -233,7 +234,8 @@ export const KeySheet = props => {
                   onChange={handleChange}
                   indicatorColor="primary"
                   textColor="primary"
-                  variant="scrollable"
+                  variant="fullWidth"
+
                   scrollButtons="auto"
                 >
                   <Tab
@@ -269,7 +271,13 @@ export const KeySheet = props => {
                   })}
                 </Tabs>
               </Grid>
-              <Grid container direction="row">
+            </Grid>
+
+          </CardHead>
+          <Paper>
+
+            <Toolbar>
+            <Grid container direction="row" spacing={1} wrap="nowrap">
                 <Grid item xs={11}>
                   <SearchInput
                     theme={theme}
@@ -278,18 +286,10 @@ export const KeySheet = props => {
                   />
                 </Grid>
 
-                <Grid
-                  container
-                  spacing={1}
-                  item
-                  xs={1}
-                  justify="space-between"
-                  direction="row"
-                  alignItems="center"
-                >
+
                   {editMode ? (
                     <>
-                      <Grid item xs={6}>
+                      <Grid item >
                         <Button
                           className={theme.button}
                           variant="contained"
@@ -301,7 +301,7 @@ export const KeySheet = props => {
                           Save
                         </Button>
                       </Grid>
-                      <Grid item xs={6}>
+                      <Grid item >
                         <EditButtonGroup>
                           <Button
                             className={theme.button}
@@ -333,11 +333,12 @@ export const KeySheet = props => {
                       </Grid>
                     </>
                   )}
-                </Grid>
+
 
               </Grid>
-            </Grid>
-          </CardHead>
+           
+            </Toolbar>
+          </Paper>
           {/* <CardHeader
           title={category}
           action={
