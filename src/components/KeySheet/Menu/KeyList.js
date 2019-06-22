@@ -21,6 +21,7 @@ const Row = props => {
       text={keyTable[index].description}
       keybind={keyTable[index].keys}
       {...data}
+      
     />
   );
 };

@@ -36,11 +36,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+export const FocusContext = React.createContext({})
+
 export default function SignInDialog() {
   const classes = useStyles();
   const theme = useTheme();
+  const [focused, setFocused] = React.useState("SignIn");
   const [value, setValue] = React.useState(0);
-
+  let ref = React.createRef();
   function handleChange(event, newValue) {
     setValue(newValue);
   }
@@ -61,38 +64,39 @@ export default function SignInDialog() {
 
   return (
     <>
-      <Button variant="contained" color="primary" onClick={handleClickOpen}>
-        Sign In
-      </Button>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <div className={classes.root}>
-          <AppBar position="static" color="default">
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              indicatorColor="primary"
-              textColor="primary"
-              variant="fullWidth"
+
+        <Button variant="contained" color="primary" onClick={handleClickOpen}>
+          Sign In
+        </Button>
+        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+          <div className={classes.root}>
+            <AppBar position="static" color="default">
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                indicatorColor="primary"
+                textColor="primary"
+                variant="fullWidth"
+              >
+                <Tab value={0} label="Sign In" onClick={() => { console.log("🌟FOCUSED?", focused); setFocused("SignIn")}} />
+                <Tab value={1} label="Register" onClick={() => setFocused("Register")}/>
+              </Tabs>
+            </AppBar>
+            <SwipeableViews
+              // axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+              index={value}
+              onChangeIndex={handleChangeIndex}
             >
-              <Tab value={0} label="Register" />
-        
-              <Tab value={1} label="Sign In" />
-            </Tabs>
-          </AppBar>
-          <SwipeableViews
-            axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-            index={value}
-            onChangeIndex={handleChangeIndex}
-          >
-            <TabContainer dir={theme.direction} >
-              <Register />
-            </TabContainer>
-            <TabContainer dir={theme.direction} value={1}>
-              <Login />
-            </TabContainer>
-          </SwipeableViews>
-        </div>
-      </Dialog>
+              <TabContainer dir={theme.direction} >
+                <Login ref={ref}/>
+              </TabContainer>
+              <TabContainer dir={theme.direction} >
+                <Register  />
+              </TabContainer>
+            </SwipeableViews>
+          </div>
+        </Dialog>
+
     </>
   );
 }

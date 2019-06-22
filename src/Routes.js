@@ -46,8 +46,8 @@ export default function Routes() {
       <Switch>
         <Redirect exact from="/" to="/dashboard" />
         <Route component={Dashboard} exact path="/dashboard" />
-        <Route component={Login} exact path="/login" />
-        <Route component={Register} exact path="/register" />
+        {/* <Route component={Login} exact path="/login" /> */}
+        {/* <Route component={Register} exact path="/register" /> */}
       </Switch>
     </>
   );
