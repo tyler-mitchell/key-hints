@@ -88,7 +88,7 @@ export default function SignInDialog() {
               onChangeIndex={handleChangeIndex}
             >
               <TabContainer dir={theme.direction} >
-                <Login ref={ref}/>
+                <Login />
               </TabContainer>
               <TabContainer dir={theme.direction} >
                 <Register  />

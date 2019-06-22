@@ -11,7 +11,9 @@ import {
   Snackbar,
   SnackbarContent,
   InputAdornment,
-  FormHelperText
+  FormHelperText,
+  IconButton,
+  TextField
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -20,8 +22,13 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { FirebaseContext } from '../utils/firebase';
 import { FirebaseLogin } from '../utils/firebase';
 import CloseIcon from '@material-ui/icons/Close';
+import PersonIcon from '@material-ui/icons/Person';
+import LockIcon from '@material-ui/icons/Lock';
+import GoogleIcon from './GoogleIcon';
 // import firebase from '../firebase'
-import FocusContext from './SignInDialog'
+import FocusContext from './SignInDialog';
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth"
+
 
 const styles = theme => ({
   main: {
@@ -55,12 +62,7 @@ const styles = theme => ({
   }
 });
 
-
-
-function SignIn( props ) {
-
-
-
+function SignIn(props) {
   const { classes } = props;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -81,9 +83,21 @@ function SignIn( props ) {
     setTimeout(() => {
       setErrors('');
     }, 0);
-	}
+  }
+
+  const uiConfig = {
+    signInFlow: "popup",
+    signInOptions: [
+      firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      firebase.auth.EmailAuthProvider.PROVIDER_ID
+      // firebase.auth.GithubAuthProvider.PROVIDER_ID,
+    ],
+    callbacks: {
+      signInSuccess: () => false
+    }
 
 
+  }
 
   return (
     <Paper className={classes.paper}>
@@ -95,34 +109,49 @@ function SignIn( props ) {
       </Typography>
       <form className={classes.form} onSubmit={e => e.preventDefault() && false}>
         <FormControl margin="normal" required fullWidth>
-          <InputLabel htmlFor="email">Email Address</InputLabel>
-          <Input
-            id="email"
-            name="email"
-						autoComplete="off"
+        <StyledFirebaseAuth  uiConfig={uiConfig} firebaseAuth={firebase.auth()}/>
 
+          <Typography className={classes.sugestion} variant="body1">
+            or login with email address
+          </Typography>
+          <TextField
+            id="email"
+            placeholder="Email"
+            variant="outlined"
+            autoComplete="off"
             autoFocus
             value={email}
-
             onChange={e => setEmail(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  {/* <IconButton edge="start" aria-label="Enter login"> */}
+                  <PersonIcon />
+                  {/* </IconButton> */}
+                </InputAdornment>
+              )
+            }}
           />
-
         </FormControl>
         <FormControl margin="normal" required fullWidth>
-          <InputLabel htmlFor="password">Password</InputLabel>
-          <Input
-            name="password"
+          <TextField
             type="password"
             id="password"
+            placeholder="Password"
+            variant="outlined"
             autoComplete="off"
             value={password}
             onChange={e => setPassword(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start" disablePointerEvents>
+                  {/* <IconButton edge="start" aria-label="Enter login"> */}
+                  <LockIcon tabIndex="-1" />
+                  {/* </IconButton> */}
+                </InputAdornment>
+              )
+            }}
           />
-          {error && (
-            <FormHelperText disabled={true} error id="component-error-text">
-              {error}
-            </FormHelperText>
-          )}
         </FormControl>
         <Button
           type="submit"
@@ -134,24 +163,22 @@ function SignIn( props ) {
         >
           Sign in
         </Button>
-        {error ? (
+        {/* {error ? (
           <>
             ERROR: {error} <CircularProgress size={24} className={classes.buttonProgress} />{' '}
           </>
         ) : (
           <div></div>
-        )}
+        )} */}
         <Button
           type="submit"
           fullWidth
-
           variant="contained"
           color="secondary"
           // component={Link}
           // to="/register"
           onClick={logout}
           className={classes.submit}
-
         >
           Logout
         </Button>
@@ -160,15 +187,11 @@ function SignIn( props ) {
             vertical: 'bottom',
             horizontal: 'left'
           }}
-          open={true}
-          autoHideDuration={6000}
+          open={error}
+          autoHideDuration={4000}
           onClose={handleClose}
         >
-          <SnackbarContent
-            onClose={handleClose}
-            variant="error"
-            message="This is a success message!"
-          />
+          <SnackbarContent onClose={handleClose} variant="error" message={error} />
         </Snackbar>
       </form>
     </Paper>

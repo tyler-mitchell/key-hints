@@ -55,7 +55,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { SelectionProvider } from './Menu/SelectionContext';
 import { BufferContext } from '../KeyBuffer/BufferContext';
-import { AppBar, Toolbar } from '@material-ui/core';
+import { AppBar, Toolbar, Divider } from '@material-ui/core';
 
 import { Save as SaveIcon, Refresh as RefreshIcon } from '@material-ui/icons';
 import Fade from '@material-ui/core/Fade';
@@ -89,6 +89,11 @@ const useStyles = makeStyles({
   itemSelected: {
     fontWeight: 'bold',
     backgroundColor: '#EEBDEE'
+  },
+  divider: {
+    width: 1,
+    height: 28,
+    margin: 4,
   }
 });
 
@@ -286,7 +291,7 @@ export const KeySheet = props => {
                   />
                 </Grid>
 
-
+                <Divider className={classes.divider} />
                   {editMode ? (
                     <>
                       <Grid item >
@@ -336,7 +341,7 @@ export const KeySheet = props => {
 
 
               </Grid>
-           
+
             </Toolbar>
           </Paper>
           {/* <CardHeader
