@@ -15,6 +15,7 @@
     "history": "^4.9.0",
     "lodash-es": "^4.17.11",
     "lodash-move": "^1.1.1",
+    "material-ui-popup-state": "^1.4.0",
     "polished": "^3.3.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

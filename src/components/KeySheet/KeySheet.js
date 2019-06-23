@@ -38,10 +38,8 @@ import EditIcon from '@material-ui/icons/Edit';
 
 import Portal from '@material-ui/core/Portal';
 import Button from '@material-ui/core/Button';
-import { TreeStuff, Tree } from './Tree';
-import { Global } from './treestyles';
-import useMenu from './Menu/useMenu';
-import EditModal from './Menu/EditModal';
+
+
 
 import KeyList from './Menu/KeyList';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Menu, MenuList, ClickAwayListener, MenuItem } from '@material-ui/core';
-import ListMenu from './ListMenu';
+import ListMenu from '../KeySheet/Menu/ListMenu';
 import styled from 'styled-components';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
@@ -36,14 +36,7 @@ const EditModal = props => {
         <Fade {...TransitionProps} timeout={350}>
           <Paper id="menu-list-grow">
 
-            <MenuList
-              anchorOrigin={{ vertical: 'center', horizontal: 'left' }}
-              transformOrigin={{ vertical: 'center', horizontal: 'right' }}
-              disablePortal={false}
-            >
-              <MenuItem color="primary" onClick={handleSave}>Save</MenuItem>
-              <MenuItem onClick={handleMenuClose}>Cancel</MenuItem>
-            </MenuList>
+          
 
           </Paper>
         </Fade>

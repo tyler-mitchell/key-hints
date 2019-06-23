@@ -86,6 +86,7 @@ function SignIn(props) {
   }
 
   const uiConfig = {
+    
     signInFlow: "popup",
     signInOptions: [
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -98,6 +99,11 @@ function SignIn(props) {
 
 
   }
+
+
+  React.useEffect(() => {
+
+  }, [])
 
   return (
     <Paper className={classes.paper}>
