@@ -232,7 +232,7 @@ export const Key = ({ label, keyName, wt, ht, m, amin, key }) => {
 
 
     if (flatMap(activeKeys).includes(keyName)) {
-      console.log("⚡⚡-> Object.assign.apply({}, activeKeys)", Object.keys(activeKeys).reduce(function (r, k) { return r.concat(activeKeys[k]); }, []))
+      
       if (editMode) {
         changeColor(editColor);
         setActive(true);
@@ -273,7 +273,7 @@ export const Key = ({ label, keyName, wt, ht, m, amin, key }) => {
           </animated.div>
         )}
       >
-        {console.log('❗❗TCL: Key -> label', label)}
+
 
         {active ? (
           <KeyContainer

@@ -17,6 +17,8 @@ export const FirebaseProvider = ({ children }) => {
       messagingSenderId: '879535977309',
       appId: '1:879535977309:web:5e5035b25f4ca605'
     });
+
+    
   }
   return <FirebaseContext.Provider value={app}>{children}</FirebaseContext.Provider>;
 };

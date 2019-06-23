@@ -11,8 +11,7 @@ const itemSize = index => {
 const Row = props => {
   const { data, index, style, ...others } = props;
   const { keyTable } = data;
-  console.log('TCL: Row -> data', data);
-  console.log('TCL: Row -> others', others);
+
 
   return (
     <KeyListItem
@@ -21,14 +20,14 @@ const Row = props => {
       text={keyTable[index].description}
       keybind={keyTable[index].keys}
       {...data}
-      
+
     />
   );
 };
 
 const KeyList = props => {
   const { height, ...others } = props;
-  console.log('TCL: others', others);
+
 
 
   return (

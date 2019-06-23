@@ -22,7 +22,7 @@ import Select from '@material-ui/core/Select';
 import clsx from 'clsx';
 import range from 'lodash/range';
 
-import { KeyTable } from './SheetData';
+
 import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
 
@@ -39,8 +39,6 @@ import EditIcon from '@material-ui/icons/Edit';
 import Portal from '@material-ui/core/Portal';
 import Button from '@material-ui/core/Button';
 
-
-
 import KeyList from './Menu/KeyList';
 
 import CategoryTab from './CategoryTab/CategoryTab';
@@ -53,15 +51,17 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { SelectionProvider } from './Menu/SelectionContext';
 import { BufferContext } from '../KeyBuffer/BufferContext';
-import { AppBar, Toolbar, Divider } from '@material-ui/core';
+import { AppBar, Toolbar, Divider, CircularProgress } from '@material-ui/core';
 
 import { Save as SaveIcon, Refresh as RefreshIcon } from '@material-ui/icons';
 import Fade from '@material-ui/core/Fade';
+import { useCollection, useCollectionData, useDocument, useDocumentData } from 'react-firebase-hooks/firestore';
+import { FirebaseContext } from '../utils/firebase';
 
 const useStyles = makeStyles({
   appBar: {
     color: 'white',
-    padding: 0,
+    padding: 0
   },
   app: {
     display: 'flex',
@@ -91,7 +91,7 @@ const useStyles = makeStyles({
   divider: {
     width: 1,
     height: 28,
-    margin: 4,
+    margin: 4
   }
 });
 
@@ -185,12 +185,12 @@ export const KeySheet = props => {
   const theme = useTheme();
 
   const itemSz = (index, size) => {
-    return KeyTable[index].keys.length * 10 + 40;
+    return fbKeyTable[index].keys.length * 10 + 40;
   };
 
-  const [value, setValue] = React.useState('All');
+  const [val, setValue] = React.useState('All');
 
-  const [keyTable, setKeyTable] = React.useState(KeyTable.table);
+
 
   const [, , , , editMode, setEditMode] = React.useContext(BufferContext);
 
@@ -199,17 +199,14 @@ export const KeySheet = props => {
 
     newValue !== 'All'
       ? setKeyTable(
-          KeyTable.table.filter(key => {
-            console.log(`TCL: handleChange -> key.category **${key.category}**`);
+          fbKeyTable.table.filter(key => {
             return key.category.toUpperCase() === newValue;
           })
         )
-      : setKeyTable(KeyTable.table);
-
-    console.log('TCL: NewTable -> keyTable', keyTable);
+      : setKeyTable(fbKeyTable.table);
   }
 
-  const [invisible, setInvisible] = React.useState(true);
+  const [invisible, setInvisible] =  React.useState(true);
 
   function handleBadgeVisibility() {
     setInvisible(!invisible);
@@ -219,80 +216,91 @@ export const KeySheet = props => {
   };
   const [editButtonsVisible, setEditButtonsVisibility] = React.useState(false);
 
+  // Firebase
+  const firebase = React.useContext(FirebaseContext);
+  const [fbKeyTable, loading, error] = useDocumentData(firebase.firestore().collection('KeyTables').doc('VS_Code'));
+  console.log("⭐: loading", loading)
+  const [keyTable, setKeyTable] = React.useState(null);
+
+
+  //  console.log('⭐: fbVal, Error', value.docs.map(doc =>(doc.id)), error);
+   let c = !loading ? console.log('⭐: fbVal, Error', fbKeyTable.table) : null
+
   return (
     <React.Fragment>
-      <SelectionProvider>
-        <Card>
-          <CardHead
-            className={classes.appBar}
-            value={value}
-            indicatorColor="primary"
-            textColor="primary"
-            onChange={handleChange}
-          >
-            <Grid container spacing={0} justify="flex-start" direction="column">
-              <Grid item xs={12}>
-                <Tabs
-                  value={value}
-                  onChange={handleChange}
-                  indicatorColor="primary"
-                  textColor="primary"
-                  variant="fullWidth"
 
-                  scrollButtons="auto"
-                >
-                  <Tab
-                    value="All"
-                    label={
-                      <Badge
-                        className={classes.padding}
-                        color="secondary"
-                        badgeContent={4}
-                        invisible={invisible}
-                      >
-                        All
-                      </Badge>
-                    }
-                  />
-                  {KeyTable.categories.map((e, index) => {
-                    return (
-                      <Tab
-                        key={index}
-                        value={e}
-                        label={
-                          <Badge
-                            className={classes.padding}
-                            color="secondary"
-                            badgeContent={4}
-                            invisible={invisible}
-                          >
-                            {e}
-                          </Badge>
-                        }
-                      />
-                    );
-                  })}
-                </Tabs>
-              </Grid>
-            </Grid>
+      { loading ? (<CircularProgress className={classes.progress} />) :
 
-          </CardHead>
-          <Paper>
+       ( <SelectionProvider>
+          <Card>
 
-            <Toolbar>
-            <Grid container direction="row" spacing={1} wrap="nowrap">
-                <Grid item xs={11}>
-                  <SearchInput
-                    theme={theme}
-                    placeholder="Search…"
-                    inputProps={{ 'aria-label': 'Search' }}
-                  />
+            <CardHead
+              className={classes.appBar}
+              value={val}
+              indicatorColor="primary"
+              textColor="primary"
+              onChange={handleChange}
+            >
+              <Grid container spacing={0} justify="flex-start" direction="column">
+                <Grid item xs={12}>
+                  <Tabs
+                    value={val}
+                    onChange={handleChange}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    variant="fullWidth"
+                    scrollButtons="auto"
+                  >
+                    <Tab
+                      value="All"
+                      label={
+                        <Badge
+                          className={classes.padding}
+                          color="secondary"
+                          badgeContent={4}
+                          invisible={invisible}
+                        >
+                          All
+                        </Badge>
+                      }
+                    />
+                    {fbKeyTable.categories.map((e, index) => {
+                      return (
+                        <Tab
+                          key={index}
+                          value={e}
+                          label={
+                            <Badge
+                              className={classes.padding}
+                              color="secondary"
+                              badgeContent={4}
+                              invisible={invisible}
+                            >
+                              {e}
+                            </Badge>
+                          }
+                        />
+                      );
+                    })}
+                  </Tabs>
                 </Grid>
+              </Grid>
+            </CardHead>
+            <Paper>
+              <Toolbar>
+                <Grid container direction="row" spacing={1} wrap="nowrap">
+                  <Grid item xs={11}>
+                    <SearchInput
+                      theme={theme}
+                      placeholder="Search…"
+                      inputProps={{ 'aria-label': 'Search' }}
+                    />
+                  </Grid>
 
-                <Divider className={classes.divider} />
+                  <Divider className={classes.divider} />
                   {editMode ? (
                     <>
-                      <Grid item >
+                      <Grid item>
                         <Button
                           className={theme.button}
                           variant="contained"
@@ -304,7 +312,7 @@ export const KeySheet = props => {
                           Save
                         </Button>
                       </Grid>
-                      <Grid item >
+                      <Grid item>
                         <EditButtonGroup>
                           <Button
                             className={theme.button}
@@ -336,29 +344,17 @@ export const KeySheet = props => {
                       </Grid>
                     </>
                   )}
+                </Grid>
+              </Toolbar>
+            </Paper>
 
-
-              </Grid>
-
-            </Toolbar>
-          </Paper>
-          {/* <CardHeader
-          title={category}
-          action={
-            <IconButton>
-              <MoreHorizIcon />
-            </IconButton>
-          }
-        /> */}
-
-          <CardContent>
-            <div>
-              {console.log('⭐TCL: Row -> others')}
-              <KeyList height={360} keyTable={keyTable} />
-            </div>
-          </CardContent>
-        </Card>
-      </SelectionProvider>
-    </React.Fragment>
+            <CardContent>
+              <div>
+                <KeyList height={360} keyTable={fbKeyTable.table} />
+              </div>
+            </CardContent>
+          </Card>
+        </SelectionProvider>)
+   } </React.Fragment>
   );
 };

@@ -62,8 +62,8 @@ const renderKeys = keybind => {
             ))}
             {/* </Badge> */}
 
-            {/* {keyIndex !== Object.keys(keybind).length - 1 && 'or'} */}
-            {console.log('TCL: keybind.length ', keybind.length)}
+            
+
           </KbdKeyList>
         );
       })}
@@ -111,7 +111,7 @@ const KeyListItem = props => {
     if (selection !== index) {
       setEditMode(false);
     }
-    console.log('TCL: activeKeys', activeKeys);
+
   };
 
   return (
