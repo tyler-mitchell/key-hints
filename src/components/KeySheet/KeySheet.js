@@ -8,44 +8,30 @@ import { VariableSizeList } from 'react-window';
 
 import { shade, linearGradient, lighten } from 'polished';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
+
 import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
-import Avatar from '@material-ui/core/Avatar';
+
 import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import Select from '@material-ui/core/Select';
-import clsx from 'clsx';
-import range from 'lodash/range';
 
 
 import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
 
-import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
-import { fade } from '@material-ui/core/styles/colorManipulator';
+
 import { useTheme } from '@material-ui/styles';
 import { SearchInput } from './SearchInput';
 
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import Tooltip from '@material-ui/core/Tooltip';
+
 import EditIcon from '@material-ui/icons/Edit';
 
-import Portal from '@material-ui/core/Portal';
+
 import Button from '@material-ui/core/Button';
 
 import KeyList from './Menu/KeyList';
 
-import CategoryTab from './CategoryTab/CategoryTab';
+
 import Badge from '@material-ui/core/Badge';
-import Switch from '@material-ui/core/Switch';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -53,10 +39,17 @@ import { SelectionProvider } from './Menu/SelectionContext';
 import { BufferContext } from '../KeyBuffer/BufferContext';
 import { AppBar, Toolbar, Divider, CircularProgress } from '@material-ui/core';
 
+
 import { Save as SaveIcon, Refresh as RefreshIcon } from '@material-ui/icons';
-import Fade from '@material-ui/core/Fade';
-import { useCollection, useCollectionData, useDocument, useDocumentData } from 'react-firebase-hooks/firestore';
+
+import {
+
+  useDocument,
+
+} from 'react-firebase-hooks/firestore';
 import { FirebaseContext } from '../utils/firebase';
+
+import 'firebase/firestore';
 
 const useStyles = makeStyles({
   appBar: {
@@ -95,81 +88,16 @@ const useStyles = makeStyles({
   }
 });
 
-// list highlight text color: #1fe3ac
-// list highlight background color: #d3f9ee
 
-function Row({ index, style, active, listRef }) {
-  // const { index, style } = props;
-  const itemClicked = () => {
-    // setSelected(!selected);
-  };
-  return (
-    <ListItem
-      button
-      index={index}
-      styles={style}
-      disableRipple
-      onClick={() => itemClicked()}
-      ref={listRef}
-    >
-      <IconButton />
-      <ListItemText primary={`Item ${index + 1}`} />
-      <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>X</kbd>
-    </ListItem>
-  );
-}
 
-Row.propTypes = {
-  index: PropTypes.number,
-  style: PropTypes.object
-};
-const KBD = styled.kbd`
-  background-color: #fff;
-  border: 1px solid #ccc;
-  color: #333;
-  line-height: 1.4;
-  text-shadow: 0 1px 0 #fff;
-  display: inline-block;
-  white-space: nowrap;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px #fff inset;
-  font-family: Arial, Helvetica, sans-serif;
-  border-radius: 3px;
-  position: relative;
 
-  padding: 10px;
-  min-width: 45px;
-  box-sizing: border-box;
-  justify-content: center;
-  align-items: center;
 
-  text-align: center;
-  margin: 0 20px 0 0;
-`;
-const KWrap = styled.div``;
-
-const ShortcutItem = styled(ListItem)`
-  /* ${({ odd }) =>
-    odd &&
-    `
-    background: ${lighten(0.05, '#d3f9ee')};
-  `} */
-  user-select: none;
-  ${({ editMode }) =>
-    editMode &&
-    `
-    // pointer-events: none;
-
-  `}
-
-`;
 
 const EditButtonGroup = styled.div`
   padding-right: 10px;
 `;
 
-const CardHeadStyle = theme => ({
-  root: {}
-});
+
 const CardHead = styled(AppBar)`
   &&& {
     position: relative;
@@ -177,63 +105,98 @@ const CardHead = styled(AppBar)`
   }
 `;
 
+
 export const KeySheet = props => {
-  const { category } = props;
+
   const classes = useStyles();
-  const listRef = React.useRef(null);
+
 
   const theme = useTheme();
 
-  const itemSz = (index, size) => {
-    return fbKeyTable[index].keys.length * 10 + 40;
-  };
+
 
   const [val, setValue] = React.useState('All');
-
-
 
   const [, , , , editMode, setEditMode] = React.useContext(BufferContext);
 
   function handleChange(event, newValue) {
     setValue(newValue);
-
+    // if (newValue !== 'All') {
+    //   fbKeyTable.table.filter(key => {
+    //     return key.category.toUpperCase() === newValue;
+    //   })
+    // } else {
+    //   return fbKeyTable.table
+    // }
     newValue !== 'All'
       ? setKeyTable(
-          fbKeyTable.table.filter(key => {
+          fbKeyTable.data().table.filter(key => {
             return key.category.toUpperCase() === newValue;
           })
         )
-      : setKeyTable(fbKeyTable.table);
+      : setKeyTable(fbKeyTable.data().table);
   }
 
-  const [invisible, setInvisible] =  React.useState(true);
+  const [invisible, setInvisible] = React.useState(true);
 
-  function handleBadgeVisibility() {
-    setInvisible(!invisible);
-  }
+
   const editClicked = () => {
     setEditMode(true);
   };
-  const [editButtonsVisible, setEditButtonsVisibility] = React.useState(false);
+
 
   // Firebase
   const firebase = React.useContext(FirebaseContext);
-  const [fbKeyTable, loading, error] = useDocumentData(firebase.firestore().collection('KeyTables').doc('VS_Code'));
-  console.log("⭐: loading", loading)
-  const [keyTable, setKeyTable] = React.useState(null);
+  const vsCodeDocument = firebase
+    .firestore()
+    .collection('KeyTables')
+    .doc('VS_Code');
+
+  const [fbKeyTable, loading, error] = useDocument(vsCodeDocument);
+  console.log("⭐: fbKeyTable", !loading && fbKeyTable.data())
 
 
-  //  console.log('⭐: fbVal, Error', value.docs.map(doc =>(doc.id)), error);
-   let c = !loading ? console.log('⭐: fbVal, Error', fbKeyTable.table) : null
+  console.log('⭐: loading', loading);
+  const keyTableCopy = loading ? null : fbKeyTable.data()
+  const [keyTableCategory, setKeyTable] = React.useState( null);
+
+
+
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const rollouts = await
+        firebase.firestore().collection('KeyTables').doc('VS_Code').get();
+        console.log("⭐: fetchData -> rollouts", rollouts)
+
+        if (rollouts) {
+          setKeyTable(
+           rollouts.data().table
+          );
+
+          console.log("⭐: fetchData -> keyTableCategory", keyTableCategory)
+        }
+      } catch (err) {
+        console.log("ERROR  ", err.message);
+      }
+
+    };
+    fetchData();
+    console.log("⭐: fetchData -> keyTableCategory", keyTableCategory)
+  }, []);
+
 
   return (
     <React.Fragment>
+      {loading && (
+        <CircularProgress className={classes.progress} />
+      )}
 
-      { loading ? (<CircularProgress className={classes.progress} />) :
+      {!loading && !error && (
+        <SelectionProvider>
 
-       ( <SelectionProvider>
           <Card>
-
             <CardHead
               className={classes.appBar}
               value={val}
@@ -264,7 +227,7 @@ export const KeySheet = props => {
                         </Badge>
                       }
                     />
-                    {fbKeyTable.categories.map((e, index) => {
+                    {fbKeyTable.data().categories.map((e, index) => {
                       return (
                         <Tab
                           key={index}
@@ -350,11 +313,15 @@ export const KeySheet = props => {
 
             <CardContent>
               <div>
-                <KeyList height={360} keyTable={fbKeyTable.table} />
+                {console.log("⭐: keyTableCopy", keyTableCategory)}
+                {keyTableCategory  && <KeyList height={360} keyTable={keyTableCategory}>{console.log("⭐: INNER", keyTableCategory)}</KeyList>  }
+
               </div>
             </CardContent>
           </Card>
-        </SelectionProvider>)
-   } </React.Fragment>
+        </SelectionProvider>
+      )}
+      {error && <div>ERROR</div>}
+    </React.Fragment>
   );
 };

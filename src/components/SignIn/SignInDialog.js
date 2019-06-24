@@ -66,12 +66,11 @@ const useStyles = makeStyles(theme => ({
 export const FocusContext = React.createContext({});
 
 export default function SignInDialog() {
-  const [menuAnchor, menuItem, handleMenuClose, openMenu] = useMenu();
+
 
   const classes = useStyles();
 
-  const [focused, setFocused] = React.useState('SignIn');
-  const [value, setValue] = React.useState(0);
+
 
   const firebase = React.useContext(FirebaseContext);
   const [user] = useAuthState(firebase.auth());
@@ -85,7 +84,7 @@ export default function SignInDialog() {
       // firebase.auth.GithubAuthProvider.PROVIDER_ID,
     ],
     callbacks: {
-      signInSuccess: () => console.log('TCL: SignInDialog -> user', user)
+      signInSuccess: () => setTimeout(popupState.close, 900)
     }
   };
 
