@@ -34,12 +34,21 @@ import Tab from '@material-ui/core/Tab';
 import { SelectionProvider } from './Menu/SelectionContext';
 import { BufferContext } from '../KeyBuffer/BufferContext';
 import {
+  usePopupState,
+  bindToggle,
+  bindPopper,
+  anchorRef,
+  bindTrigger
+} from 'material-ui-popup-state/hooks';
+import {
   AppBar,
   Toolbar,
   Divider,
   CircularProgress,
   Drawer,
-  ListItemIcon
+  ListItemIcon,
+  Popper,
+  Fade
 } from '@material-ui/core';
 
 import {
@@ -91,14 +100,23 @@ const useStyles = makeStyles(theme => ({
     margin: 4
   },
   drawerPaper: {
-    width: drawerWidth,
+    width: drawerWidth
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
+    padding: theme.spacing(3)
   },
   root: {
-    display: 'flex',
+    display: 'flex'
+  },
+  popper: {
+    zIndex: 0,
+    height: '40px'
+   
+  },
+  paper: {
+    height: '400px',
+    overflow: 'scroll'
   }
 }));
 
@@ -119,7 +137,7 @@ export const KeySheet = props => {
   const [val, setValue] = React.useState('All');
 
   const [editMode, setEditMode] = useGlobalState('editMode');
-  const contentRef = React.createRef();
+
   // const [, , , , editMode, setEditMode] = React.useContext(BufferContext);
 
   function handleChange(event, newValue) {
@@ -153,7 +171,10 @@ export const KeySheet = props => {
   console.log('⭐: loading', loading);
 
   const [keyTableCategory, setKeyTable] = React.useState(null);
-  const [drawerState] = useGlobalState('drawerState')
+
+  const [drawerState] = useGlobalState('drawerState');
+  const popupState = usePopupState({ variant: 'popper', popupId: 'demoPopper' });
+  const { open, ...bindPopState } = bindPopper(popupState);
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -176,6 +197,7 @@ export const KeySheet = props => {
     };
     fetchData();
     console.log('⭐: fetchData -> keyTableCategory', keyTableCategory);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -191,49 +213,43 @@ export const KeySheet = props => {
               indicatorColor="primary"
               textColor="primary"
               onChange={handleChange}
-            >
-             
-            </CardHead>
+            />
 
             <SearchInput
               theme={theme}
               placeholder="Search…"
               inputProps={{ 'aria-label': 'Search' }}
             />
-            <Drawer
-              open={drawerState}
-            
-              elevation={3}
-              PaperProps={{ paperAnchorDockedLeft: true, style: { position: 'absolute' } }}
-              BackdropProps={{ style: { position: 'absolute' } }}
-              ModalProps={{
-                hideBackdrop: true,
-                container: document.getElementById('drawer-container'),
-                style: { position: 'absolute' }
-              }}
-              variant="temporary"
-            >
-              
-              <div className={classes.toolbar} />
-              <List>
-                {fbKeyTable.data().categories.map((text, index) => (
-                  <ListItem button key={text}>
-                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                    <ListItemText primary={startCase(toLower(text))} />
-                  </ListItem>
-                ))}
-              </List>
-              <Divider />
-              <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                  <ListItem button key={text}>
-                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItem>
-                ))}
-              </List>
-            </Drawer>
-            <div id="drawer-container" style={{position: 'relative'}}>
+            <Popper  placement="left-start" className={classes.popper} open={drawerState} {...bindPopState}>
+              <Fade in={popupState} timeout={250}>
+                <Paper className={classes.paper}>
+                  
+                  <List>
+                    {fbKeyTable.data().categories.map((text, index) => (
+                      <ListItem button key={text}>
+                        <ListItemIcon>
+                          {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                        </ListItemIcon>
+                        <ListItemText primary={startCase(toLower(text))} />
+                      </ListItem>
+                    ))}
+                  </List>
+                  <Divider />
+                  <List>
+                    {['All mail', 'Trash', 'Spam'].map((text, index) => (
+                      <ListItem button key={text}>
+                        <ListItemIcon>
+                          {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                        </ListItemIcon>
+                        <ListItemText primary={text} />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Paper>
+              </Fade>
+            </Popper>
+
+            <div ref={anchorRef(popupState)}>
               <CardContent>
                 {keyTableCategory && (
                   <KeyList height={360} keyTable={keyTableCategory}>
