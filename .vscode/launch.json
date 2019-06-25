@@ -11,15 +11,17 @@
       "program": "${file}",
       "console": "integratedTerminal"
     },
+    
     {
-      "type": "chrome",
+      "type": "browser-preview",
+      "request": "attach",
+      "name": "Browser Preview: Attach"
+  },
+  {
+      "type": "browser-preview",
       "request": "launch",
-      "name": "Launch Chrome against localhost",
-      "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}",
-      "runtimeArgs": [
-        "--load-extension=${env:userprofile}/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/3.2.3_0"
-      ]
-    }
+      "name": "Browser Preview: Launch",
+      "url": "http://localhost:3000"
+  }
   ]
 }

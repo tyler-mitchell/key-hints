@@ -9,6 +9,10 @@ import { Card, Grid, Paper } from '@material-ui/core';
 import { useSpring, animated, useTransition } from 'react-spring';
 import Typography from "@material-ui/core/Typography";
 import './key.css';
+ import {FlashingKey} from './useColorLoop';
+
+
+import { useGlobalState } from '../../state';
 
 import flatMap from 'lodash/flatMap';
 
@@ -213,20 +217,27 @@ export const Span = styled.div`
 
 `;
 
-const ConditionalWrap = ({ condition, wrap, children }) =>
-  condition ? wrap(children) : <>{children}</>;
-
+const ConditionalWrap = ({ condition, wrap, children }) =>{
+  const [flashing] = React.useContext(BufferContext)
+  return (condition ? wrap(children, flashing) : <>{children}</>)
+}
 export const Key = ({ label, keyName, wt, ht, m, amin, key }) => {
   const defaultColor = '#FFFFFF';
   const activeColor = '#1fe3ac';
   const editColor = '#FFB822';
   const [keyColor, changeColor] = React.useState(defaultColor);
+  console.log("⭐: Key -> keyColor", keyColor)
   const [active, setActive] = React.useState(false);
   const [editableKey, setEditableKey] = React.useState(false);
-  const [keys, setKeys] = React.useContext(BufferContext);
-  const [, , , , editMode, setEditMode] = React.useContext(BufferContext);
-  const [, , activeKeys, setActiveKeys] = React.useContext(BufferContext);
-  const [, , , , , , flashLoop] = React.useContext(BufferContext);
+  
+
+
+  const [editMode, setEditMode] = useGlobalState('editMode');
+  const [activeKeys, setActiveKeys] = useGlobalState('activeKeys');
+
+
+  
+  // const [, , , , , , flashLoop] = React.useContext(BufferContext);
 
   React.useEffect(() => {
 
@@ -267,8 +278,8 @@ export const Key = ({ label, keyName, wt, ht, m, amin, key }) => {
     <React.Fragment>
       <ConditionalWrap
         condition={editMode && active}
-        wrap={children => (
-          <animated.div key={key} style={flashLoop}>
+        wrap={(children, flashing )=> (
+          <animated.div key={key} style={flashing}>
             {children}
           </animated.div>
         )}

@@ -8,6 +8,9 @@ import { createBrowserHistory } from 'history';
 import { ThemeProvider } from '@material-ui/styles';
 import {FirebaseProvider} from './components/utils/firebase'
 
+
+
+
 // Theme
 import theme from './components/design-system/theme'
 
@@ -19,6 +22,12 @@ import theme from './components/design-system/theme'
 // Routes
 import Routes from './Routes';
 
+
+// Global State
+import { GlobalStateProvider } from './state';
+
+
+
 // Browser history
 const browserHistory = createBrowserHistory();
 
@@ -26,14 +35,16 @@ const browserHistory = createBrowserHistory();
 export default class App extends Component {
   render() {
     return (
-      <FirebaseProvider>
-        <ThemeProvider theme={theme}>
-          <Router history={browserHistory}>
-
-            <Routes />
-          </Router>
-        </ThemeProvider>
-      </FirebaseProvider>
+      <GlobalStateProvider>
+        <FirebaseProvider>
+          <ThemeProvider theme={theme}>
+            <Router history={browserHistory}>
+  
+              <Routes />
+            </Router>
+          </ThemeProvider>
+        </FirebaseProvider>
+      </GlobalStateProvider>
     );
   }
 }

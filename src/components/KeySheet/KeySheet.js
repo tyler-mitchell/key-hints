@@ -50,6 +50,8 @@ import {
 import { FirebaseContext } from '../utils/firebase';
 
 import 'firebase/firestore';
+import { useGlobalState } from '../../state';
+
 
 const useStyles = makeStyles({
   appBar: {
@@ -109,25 +111,16 @@ const CardHead = styled(AppBar)`
 export const KeySheet = props => {
 
   const classes = useStyles();
-
-
   const theme = useTheme();
-
-
-
   const [val, setValue] = React.useState('All');
+  
+  const [editMode, setEditMode] = useGlobalState('editMode');
 
-  const [, , , , editMode, setEditMode] = React.useContext(BufferContext);
+  // const [, , , , editMode, setEditMode] = React.useContext(BufferContext);
 
   function handleChange(event, newValue) {
     setValue(newValue);
-    // if (newValue !== 'All') {
-    //   fbKeyTable.table.filter(key => {
-    //     return key.category.toUpperCase() === newValue;
-    //   })
-    // } else {
-    //   return fbKeyTable.table
-    // }
+    
     newValue !== 'All'
       ? setKeyTable(
           fbKeyTable.data().table.filter(key => {

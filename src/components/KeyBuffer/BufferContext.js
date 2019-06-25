@@ -1,13 +1,43 @@
 import React from 'react';
 import { KeyTable } from '../KeySheet/SheetData';
 import { useSpring, animated, config } from 'react-spring';
+import { useGlobalState } from '../../state';
+
 export const BufferContext = React.createContext({});
 
 export const BufferProvider = ({ children }) => {
-  const [activeKeys, setActiveKeys] = React.useState([]);
-  const [keys, setKeys] = React.useState(activeKeys);
-  const [editMode, setEditMode] = React.useState(false);
-  const [keyTable, setKeyTable] = React.useState(KeyTable);
+  
+  
+
+  // const uav = () => {
+  //   const [editMode] = useGlobalState('editMode');
+   
+  //   const not = x => !x;
+  //   const useSpringLoop = ({ from, to }) => {
+  //     const [reverse, setReverse] = React.useState(false);
+  
+  //     return useSpring({
+  //       reset: true,
+  //       reverse,
+  //       from,
+  //       to,
+  
+  //       onRest: () => setReverse(not)
+  //     });
+  //   };
+  
+  //   return useSpringLoop(
+
+  //     editMode
+  //       ? {
+  //           from: { opacity: 0.75 },
+  //           to: { opacity: 1 },
+  //           config: config.gentle
+  //         }
+  //       : {}
+  //   );
+  // };
+
 
   const not = x => !x;
   const useSpringLoop = ({ from, to }) => {
@@ -25,6 +55,7 @@ export const BufferProvider = ({ children }) => {
 
 
   const useColorLoop = () => {
+    const [editMode] = useGlobalState('editMode');
     return  useSpringLoop(editMode ? {
       from: { opacity: 0.75 },
       to: { opacity: 1 },
@@ -33,7 +64,8 @@ export const BufferProvider = ({ children }) => {
 
   };
   const flashLoop = useColorLoop();
+ 
 
-  const keyContexts = [keys, setKeys, activeKeys, setActiveKeys, editMode, setEditMode, flashLoop];
-  return <BufferContext.Provider value={keyContexts}>{children}</BufferContext.Provider>;
+ 
+  return <BufferContext.Provider value={[flashLoop]}>{children}</BufferContext.Provider>;
 };

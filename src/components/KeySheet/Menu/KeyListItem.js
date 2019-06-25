@@ -15,6 +15,7 @@ import {
   Typography
 } from '@material-ui/core';
 import useScrollTop from './useScrollTop';
+import { useGlobalState } from '../../../state';
 
 const KbdKeyList = styled(ListItem)``;
 
@@ -98,8 +99,11 @@ const ListItemContainer = () => styled(ListItem)`
 
 const KeyListItem = props => {
   const { index, openMenu, styles, text, keybind } = props;
-  const [, , activeKeys, setActiveKeys] = React.useContext(BufferContext);
-  const [, , , , editMode, setEditMode] = React.useContext(BufferContext);
+  // const [, , activeKeys, setActiveKeys] = React.useContext(BufferContext);
+
+  const [, setActiveKeys] = useGlobalState('activeKeys');
+  
+  const [editMode, setEditMode] = useGlobalState('editMode');
   const editClicked = (e, index) => {
     openMenu(e, index);
     setEditMode(true);
