@@ -8,8 +8,9 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
 
   activeKeys: [],
   editMode: false,
-  flashing: {}
-
+  flashing: {},
+  keyTable: {},
+  drawerState: false
 });
 
 

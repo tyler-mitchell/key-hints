@@ -5,6 +5,7 @@ import { List, TextField } from '@material-ui/core';
 import ListItemText from '@material-ui/core/ListItemText';
 import PropTypes from 'prop-types';
 import { VariableSizeList } from 'react-window';
+import { startCase, toLower } from 'lodash';
 
 import { shade, linearGradient, lighten } from 'polished';
 import Card from '@material-ui/core/Card';
@@ -13,22 +14,17 @@ import CardContent from '@material-ui/core/CardContent';
 
 import IconButton from '@material-ui/core/IconButton';
 
-
 import styled from 'styled-components';
 import Grid from '@material-ui/core/Grid';
-
 
 import { useTheme } from '@material-ui/styles';
 import { SearchInput } from './SearchInput';
 
-
 import EditIcon from '@material-ui/icons/Edit';
-
 
 import Button from '@material-ui/core/Button';
 
 import KeyList from './Menu/KeyList';
-
 
 import Badge from '@material-ui/core/Badge';
 
@@ -37,23 +33,29 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { SelectionProvider } from './Menu/SelectionContext';
 import { BufferContext } from '../KeyBuffer/BufferContext';
-import { AppBar, Toolbar, Divider, CircularProgress } from '@material-ui/core';
-
-
-import { Save as SaveIcon, Refresh as RefreshIcon } from '@material-ui/icons';
+import {
+  AppBar,
+  Toolbar,
+  Divider,
+  CircularProgress,
+  Drawer,
+  ListItemIcon
+} from '@material-ui/core';
 
 import {
+  Save as SaveIcon,
+  Refresh as RefreshIcon,
+  Inbox as InboxIcon,
+  Mail as MailIcon
+} from '@material-ui/icons';
 
-  useDocument,
-
-} from 'react-firebase-hooks/firestore';
+import { useDocument } from 'react-firebase-hooks/firestore';
 import { FirebaseContext } from '../utils/firebase';
 
 import 'firebase/firestore';
 import { useGlobalState } from '../../state';
-
-
-const useStyles = makeStyles({
+const drawerWidth = 240;
+const useStyles = makeStyles(theme => ({
   appBar: {
     color: 'white',
     padding: 0
@@ -87,18 +89,22 @@ const useStyles = makeStyles({
     width: 1,
     height: 28,
     margin: 4
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+  },
+  root: {
+    display: 'flex',
   }
-});
-
-
-
-
-
+}));
 
 const EditButtonGroup = styled.div`
   padding-right: 10px;
 `;
-
 
 const CardHead = styled(AppBar)`
   &&& {
@@ -107,20 +113,18 @@ const CardHead = styled(AppBar)`
   }
 `;
 
-
 export const KeySheet = props => {
-
   const classes = useStyles();
   const theme = useTheme();
   const [val, setValue] = React.useState('All');
-  
-  const [editMode, setEditMode] = useGlobalState('editMode');
 
+  const [editMode, setEditMode] = useGlobalState('editMode');
+  const contentRef = React.createRef();
   // const [, , , , editMode, setEditMode] = React.useContext(BufferContext);
 
   function handleChange(event, newValue) {
     setValue(newValue);
-    
+
     newValue !== 'All'
       ? setKeyTable(
           fbKeyTable.data().table.filter(key => {
@@ -132,11 +136,9 @@ export const KeySheet = props => {
 
   const [invisible, setInvisible] = React.useState(true);
 
-
   const editClicked = () => {
     setEditMode(true);
   };
-
 
   // Firebase
   const firebase = React.useContext(FirebaseContext);
@@ -146,49 +148,42 @@ export const KeySheet = props => {
     .doc('VS_Code');
 
   const [fbKeyTable, loading, error] = useDocument(vsCodeDocument);
-  console.log("⭐: fbKeyTable", !loading && fbKeyTable.data())
-
+  console.log('⭐: fbKeyTable', !loading && fbKeyTable.data());
 
   console.log('⭐: loading', loading);
-  const keyTableCopy = loading ? null : fbKeyTable.data()
-  const [keyTableCategory, setKeyTable] = React.useState( null);
 
-
-
+  const [keyTableCategory, setKeyTable] = React.useState(null);
+  const [drawerState] = useGlobalState('drawerState')
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const rollouts = await
-        firebase.firestore().collection('KeyTables').doc('VS_Code').get();
-        console.log("⭐: fetchData -> rollouts", rollouts)
+        const rollouts = await firebase
+          .firestore()
+          .collection('KeyTables')
+          .doc('VS_Code')
+          .get();
+        console.log('⭐: fetchData -> rollouts', rollouts);
 
         if (rollouts) {
-          setKeyTable(
-           rollouts.data().table
-          );
+          setKeyTable(rollouts.data().table);
 
-          console.log("⭐: fetchData -> keyTableCategory", keyTableCategory)
+          console.log('⭐: fetchData -> keyTableCategory', keyTableCategory);
         }
       } catch (err) {
-        console.log("ERROR  ", err.message);
+        console.log('ERROR  ', err.message);
       }
-
     };
     fetchData();
-    console.log("⭐: fetchData -> keyTableCategory", keyTableCategory)
+    console.log('⭐: fetchData -> keyTableCategory', keyTableCategory);
   }, []);
-
 
   return (
     <React.Fragment>
-      {loading && (
-        <CircularProgress className={classes.progress} />
-      )}
+      {loading && <CircularProgress className={classes.progress} />}
 
       {!loading && !error && (
         <SelectionProvider>
-
           <Card>
             <CardHead
               className={classes.appBar}
@@ -197,120 +192,56 @@ export const KeySheet = props => {
               textColor="primary"
               onChange={handleChange}
             >
-              <Grid container spacing={0} justify="flex-start" direction="column">
-                <Grid item xs={12}>
-                  <Tabs
-                    value={val}
-                    onChange={handleChange}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    variant="fullWidth"
-                    scrollButtons="auto"
-                  >
-                    <Tab
-                      value="All"
-                      label={
-                        <Badge
-                          className={classes.padding}
-                          color="secondary"
-                          badgeContent={4}
-                          invisible={invisible}
-                        >
-                          All
-                        </Badge>
-                      }
-                    />
-                    {fbKeyTable.data().categories.map((e, index) => {
-                      return (
-                        <Tab
-                          key={index}
-                          value={e}
-                          label={
-                            <Badge
-                              className={classes.padding}
-                              color="secondary"
-                              badgeContent={4}
-                              invisible={invisible}
-                            >
-                              {e}
-                            </Badge>
-                          }
-                        />
-                      );
-                    })}
-                  </Tabs>
-                </Grid>
-              </Grid>
+             
             </CardHead>
-            <Paper>
-              <Toolbar>
-                <Grid container direction="row" spacing={1} wrap="nowrap">
-                  <Grid item xs={11}>
-                    <SearchInput
-                      theme={theme}
-                      placeholder="Search…"
-                      inputProps={{ 'aria-label': 'Search' }}
-                    />
-                  </Grid>
 
-                  <Divider className={classes.divider} />
-                  {editMode ? (
-                    <>
-                      <Grid item>
-                        <Button
-                          className={theme.button}
-                          variant="contained"
-                          color="primary"
-                          size="small"
-                          disabled={true}
-                        >
-                          <SaveIcon />
-                          Save
-                        </Button>
-                      </Grid>
-                      <Grid item>
-                        <EditButtonGroup>
-                          <Button
-                            className={theme.button}
-                            variant="contained"
-                            size="small"
-                            disabled={true}
-                          >
-                            <RefreshIcon />
-                            Reset
-                          </Button>
-                        </EditButtonGroup>
-                      </Grid>
-                    </>
-                  ) : (
-                    <>
-                      <Grid item>
-                        <EditButtonGroup>
-                          <Button
-                            onClick={event => editClicked()}
-                            className={theme.button}
-                            variant="contained"
-                            color="primary"
-                            size="small"
-                          >
-                            <EditIcon />
-                            Edit
-                          </Button>
-                        </EditButtonGroup>
-                      </Grid>
-                    </>
-                  )}
-                </Grid>
-              </Toolbar>
-            </Paper>
-
-            <CardContent>
-              <div>
-                {console.log("⭐: keyTableCopy", keyTableCategory)}
-                {keyTableCategory  && <KeyList height={360} keyTable={keyTableCategory}>{console.log("⭐: INNER", keyTableCategory)}</KeyList>  }
-
-              </div>
-            </CardContent>
+            <SearchInput
+              theme={theme}
+              placeholder="Search…"
+              inputProps={{ 'aria-label': 'Search' }}
+            />
+            <Drawer
+              open={drawerState}
+            
+              elevation={3}
+              PaperProps={{ paperAnchorDockedLeft: true, style: { position: 'absolute' } }}
+              BackdropProps={{ style: { position: 'absolute' } }}
+              ModalProps={{
+                hideBackdrop: true,
+                container: document.getElementById('drawer-container'),
+                style: { position: 'absolute' }
+              }}
+              variant="temporary"
+            >
+              
+              <div className={classes.toolbar} />
+              <List>
+                {fbKeyTable.data().categories.map((text, index) => (
+                  <ListItem button key={text}>
+                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                    <ListItemText primary={startCase(toLower(text))} />
+                  </ListItem>
+                ))}
+              </List>
+              <Divider />
+              <List>
+                {['All mail', 'Trash', 'Spam'].map((text, index) => (
+                  <ListItem button key={text}>
+                    <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItem>
+                ))}
+              </List>
+            </Drawer>
+            <div id="drawer-container" style={{position: 'relative'}}>
+              <CardContent>
+                {keyTableCategory && (
+                  <KeyList height={360} keyTable={keyTableCategory}>
+                    {console.log('⭐: INNER', keyTableCategory)}
+                  </KeyList>
+                )}
+              </CardContent>
+            </div>
           </Card>
         </SelectionProvider>
       )}

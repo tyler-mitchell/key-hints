@@ -226,7 +226,7 @@ export const Key = ({ label, keyName, wt, ht, m, amin, key }) => {
   const activeColor = '#1fe3ac';
   const editColor = '#FFB822';
   const [keyColor, changeColor] = React.useState(defaultColor);
-  console.log("⭐: Key -> keyColor", keyColor)
+ 
   const [active, setActive] = React.useState(false);
   const [editableKey, setEditableKey] = React.useState(false);
   
