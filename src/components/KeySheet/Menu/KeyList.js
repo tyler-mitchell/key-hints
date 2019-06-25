@@ -19,6 +19,8 @@ const Row = props => {
       styles={style}
       text={keyTable[index].description}
       keybind={keyTable[index].keys}
+      category={keyTable[index].category}
+      
       {...data}
 
     />

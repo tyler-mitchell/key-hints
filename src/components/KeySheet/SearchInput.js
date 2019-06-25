@@ -75,7 +75,7 @@ export const SearchInput = props => {
   const [editMode, setEditMode] = useGlobalState('editMode');
 
   return (
-    <Paper elevation={1} className={classes.root}>
+    <Paper elevation={0} className={classes.root}>
       <IconButton className={classes.iconButton} aria-label="Menu" onClick={() => setDrawerState(!drawerState)}>
         <MenuIcon />
       </IconButton>

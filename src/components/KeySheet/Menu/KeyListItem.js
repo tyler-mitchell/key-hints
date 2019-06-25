@@ -12,10 +12,13 @@ import {
   ListItemText,
   List,
   Badge,
-  Typography
+  Typography,
+  Chip,
+  Grid
 } from '@material-ui/core';
 import useScrollTop from './useScrollTop';
 import { useGlobalState } from '../../../state';
+import { KeyTable } from '../SheetData';
 
 const KbdKeyList = styled(ListItem)``;
 
@@ -51,7 +54,16 @@ const renderKeys = keybind => {
               <KbdKey key={index}>
                 <KBD>
                   {Array.isArray(keyItem[kb])
-                    ? keyItem[kb].map((x, i, arr) => (arr.length - 1 !== i ? <span key={i}>{ x}<ORLabel> or </ORLabel></span> : x))
+                    ? keyItem[kb].map((x, i, arr) =>
+                        arr.length - 1 !== i ? (
+                          <span key={i}>
+                            {x}
+                            <ORLabel> or </ORLabel>
+                          </span>
+                        ) : (
+                          x
+                        )
+                      )
                     : keyItem[kb]}
                   {/* {Array.isArray(kb)
                     // ? kb.map((x, i) =>   i !== Object.keys(keybind).length - 1 && 'or')
@@ -62,9 +74,6 @@ const renderKeys = keybind => {
               </KbdKey>
             ))}
             {/* </Badge> */}
-
-            
-
           </KbdKeyList>
         );
       })}
@@ -97,12 +106,18 @@ const ListItemContainer = () => styled(ListItem)`
   font-family: 'Nunito', sans-serif;
 `;
 
+const CategoryChip = styled(Chip)`
+
+  transform: scale(0.85);
+  
+`;
+
 const KeyListItem = props => {
-  const { index, openMenu, styles, text, keybind } = props;
+  const { index, openMenu, styles, text, keybind, category } = props;
   // const [, , activeKeys, setActiveKeys] = React.useContext(BufferContext);
 
   const [, setActiveKeys] = useGlobalState('activeKeys');
-  
+
   const [editMode, setEditMode] = useGlobalState('editMode');
   const editClicked = (e, index) => {
     openMenu(e, index);
@@ -115,23 +130,29 @@ const KeyListItem = props => {
     if (selection !== index) {
       setEditMode(false);
     }
-
   };
 
   return (
     <ListItem
       button
-      style={styles}
+      style={{ ...styles, display: 'flex', justifyContent: 'flex-start' }}
       divider
       onClick={() => itemClicked(index)}
       selected={selection === index}
     >
-      <ListItemText
-        primary={<Typography variant="keylabel">{text}</Typography>}
-        secondary={keybind.category}
-      />
+      <Grid container xs={5} justify="flext-start">
+        <ListItemText
+          primary={<Typography variant="keylabel">{text}</Typography>}
+          disableTypography={true}
+        />
+      </Grid>
 
-      <List>{renderKeys(keybind)}</List>
+      <Grid container  xs={6} justify="flex-end" direction="row">
+        <List>{renderKeys(keybind)}</List>
+      </Grid>
+      <Grid container xs={1} justify="flex-start" direction="row">
+        <CategoryChip size="small" element={Typography} label={category} clickable color="primary" />
+      </Grid>
     </ListItem>
   );
 };

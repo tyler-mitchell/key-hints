@@ -60,6 +60,7 @@ import {
 
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { FirebaseContext } from '../utils/firebase';
+import useMeasure from './useMeasure'
 
 import 'firebase/firestore';
 import { useGlobalState } from '../../state';
@@ -111,11 +112,15 @@ const useStyles = makeStyles(theme => ({
   },
   popper: {
     zIndex: 0,
-    height: '40px'
+    
+    position:'absolute',
+    display:'block'
    
   },
   paper: {
-    height: '400px',
+    height: '471px',
+    marginRight: '10px',
+    display:'block',
     overflow: 'scroll'
   }
 }));
@@ -137,6 +142,9 @@ export const KeySheet = props => {
   const [val, setValue] = React.useState('All');
 
   const [editMode, setEditMode] = useGlobalState('editMode');
+  const cardRef = React.useRef(null);
+  const { margin } = useMeasure(cardRef, "margin");
+  console.log("⭐: bounds", margin)
 
   // const [, , , , editMode, setEditMode] = React.useContext(BufferContext);
 
@@ -206,60 +214,64 @@ export const KeySheet = props => {
 
       {!loading && !error && (
         <SelectionProvider>
-          <Card>
-            <CardHead
-              className={classes.appBar}
-              value={val}
-              indicatorColor="primary"
-              textColor="primary"
-              onChange={handleChange}
-            />
-
-            <SearchInput
-              theme={theme}
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'Search' }}
-            />
-            <Popper  placement="left-start" className={classes.popper} open={drawerState} {...bindPopState}>
-              <Fade in={popupState} timeout={250}>
-                <Paper className={classes.paper}>
-                  
-                  <List>
-                    {fbKeyTable.data().categories.map((text, index) => (
-                      <ListItem button key={text}>
-                        <ListItemIcon>
-                          {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                        </ListItemIcon>
-                        <ListItemText primary={startCase(toLower(text))} />
-                      </ListItem>
-                    ))}
-                  </List>
-                  <Divider />
-                  <List>
-                    {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                      <ListItem button key={text}>
-                        <ListItemIcon>
-                          {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                        </ListItemIcon>
-                        <ListItemText primary={text} />
-                      </ListItem>
-                    ))}
-                  </List>
-                </Paper>
-              </Fade>
-            </Popper>
-
-            <div ref={anchorRef(popupState)}>
-              <CardContent>
-                {keyTableCategory && (
-                  <KeyList height={360} keyTable={keyTableCategory}>
-                    {console.log('⭐: INNER', keyTableCategory)}
-                  </KeyList>
-                )}
-              </CardContent>
-            </div>
-          </Card>
-        </SelectionProvider>
+       <div >
+            <Card ref={anchorRef(popupState)}>
+              <CardHead
+                ref={cardRef}
+                className={classes.appBar}
+                value={val}
+                indicatorColor="primary"
+                textColor="primary"
+                onChange={handleChange}
+              />
+  
+              <SearchInput
+                theme={theme}
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'Search' }}
+              />
+              <Divider/>
+              <Popper  placement="left-start" className={classes.popper} open={drawerState} {...bindPopState}>
+                <Fade in={popupState} timeout={250}>
+                  <Paper className={classes.paper}>
+                    
+                    <List>
+                      {fbKeyTable.data().categories.map((text, index) => (
+                        <ListItem button key={text}>
+                          <ListItemIcon>
+                            {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                          </ListItemIcon>
+                          <ListItemText primary={startCase(toLower(text))} />
+                        </ListItem>
+                      ))}
+                    </List>
+                    <Divider />
+                    <List>
+                      {['All mail', 'Trash', 'Spam'].map((text, index) => (
+                        <ListItem button key={text}>
+                          <ListItemIcon>
+                            {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                          </ListItemIcon>
+                          <ListItemText primary={text} />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Paper>
+                </Fade>
+              </Popper>
+  
+              <div >
+                <CardContent>
+                  {keyTableCategory && (
+                    <KeyList height={360} keyTable={keyTableCategory}>
+                      {console.log('⭐: INNER', keyTableCategory)}
+                    </KeyList>
+                  )}
+                </CardContent>
+              </div>
+            </Card>
+          
+       </div></SelectionProvider>
       )}
       {error && <div>ERROR</div>}
     </React.Fragment>
