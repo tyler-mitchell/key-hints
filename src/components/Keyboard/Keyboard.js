@@ -106,10 +106,12 @@ const renderRow = (row) => {
           item
           label={row[keyName][0]}
           key={i}
-          keyName={keyName in excludedKeys ? null : row[keyName][0]}
+          uniqueKeyName={keyName in excludedKeys ? null : row[keyName][0]}
+          keyName={keyName}
           wt={`${row[keyName][1]}`}
           ht={`${keySize}`}
-
+          
+          
           keySize={keySize}
         />
       </KeyItem>

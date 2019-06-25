@@ -118,6 +118,8 @@ const useStyles = makeStyles(theme => ({
    
   },
   paper: {
+
+    
     height: '471px',
     marginRight: '10px',
     display:'block',
@@ -135,7 +137,42 @@ const CardHead = styled(AppBar)`
     background: white;
   }
 `;
+const CategoryPaper = styled(Paper)`
 
+  height: 471px;
+  margin-right: 10px;
+  display: block;
+  overflow-x:hidden;
+  
+  &::-webkit-scrollbar { width: 5px;}
+  &::hover{
+    /* overflow-y: auto; */
+    
+/* &::-webkit-scrollbar-track { background: #f7f7f7; }
+&::-webkit-scrollbar-thumb { background: #eee; }
+&:-webkit-scrollbar { width: 0 !important } */
+  }
+
+
+/* &::-webkit-scrollbar-thumb:hover {background: #555;} */
+
+  /* &::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3);
+	border-radius: 2px;
+	background-color: #F5F5F5;
+}
+
+
+
+&::-webkit-scrollbar-thumb
+{
+	border-radius: 5px;
+	-webkit-box-shadow: inset 0 0 2px rgba(0,0,0,.3);
+	background: #cccccc; 
+} */
+
+`;
 export const KeySheet = props => {
   const classes = useStyles();
   const theme = useTheme();
@@ -233,7 +270,7 @@ export const KeySheet = props => {
               <Divider/>
               <Popper  placement="left-start" className={classes.popper} open={drawerState} {...bindPopState}>
                 <Fade in={popupState} timeout={250}>
-                  <Paper className={classes.paper}>
+                  <CategoryPaper >
                     
                     <List>
                       {fbKeyTable.data().categories.map((text, index) => (
@@ -256,7 +293,7 @@ export const KeySheet = props => {
                         </ListItem>
                       ))}
                     </List>
-                  </Paper>
+                  </CategoryPaper>
                 </Fade>
               </Popper>
   

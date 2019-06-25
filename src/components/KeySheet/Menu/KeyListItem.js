@@ -19,6 +19,7 @@ import {
 import useScrollTop from './useScrollTop';
 import { useGlobalState } from '../../../state';
 import { KeyTable } from '../SheetData';
+import {ArrowBack as LeftArrowIcon, ArrowForward as RightArrowIcon, ArrowUpward as UpArrowIcon, ArrowDownward as DownArrowIcon} from '@material-ui/icons'
 
 const KbdKeyList = styled(ListItem)``;
 
@@ -35,8 +36,24 @@ const ORLabel = styled.span`
   font-size: 8px;
 `;
 
+
+const renderIcon = keyLabel => {
+  const iconLabels = {
+     '←': <LeftArrowIcon fontSize="small" style={{ display: "inline-block", verticalAlign: "middle"  }}>{keyLabel}</LeftArrowIcon>,
+     '→': <RightArrowIcon fontSize="small" style={{ display: "inline-block",verticalAlign: "middle"  }}>{keyLabel}</RightArrowIcon>,
+     '↑': <UpArrowIcon fontSize="small" style={{ display: "inline-block", verticalAlign: "middle" }}>{keyLabel}</UpArrowIcon>,
+     '↓': <DownArrowIcon fontSize="small" style={{ display: "inline-block",verticalAlign: "middle"  }}>{keyLabel}</DownArrowIcon>
+  }
+
+  if(keyLabel in iconLabels){
+    return iconLabels[keyLabel]
+  } else {
+    return keyLabel
+  }
+}
 const renderKeys = keybind => {
   const keysLength = Object.keys(keybind).length > 1;
+  
 
   return (
     <>
@@ -56,15 +73,15 @@ const renderKeys = keybind => {
                   {Array.isArray(keyItem[kb])
                     ? keyItem[kb].map((x, i, arr) =>
                         arr.length - 1 !== i ? (
-                          <span key={i}>
-                            {x}
+                          <span key={i} >
+                            {renderIcon(x)}
                             <ORLabel> or </ORLabel>
                           </span>
                         ) : (
-                          x
+                          renderIcon(x)
                         )
                       )
-                    : keyItem[kb]}
+                    : renderIcon(keyItem[kb])}
                   {/* {Array.isArray(kb)
                     // ? kb.map((x, i) =>   i !== Object.keys(keybind).length - 1 && 'or')
                     ? kb.map((x, i) => x + (kb.length - 1 !== i ? 'or': ''))
@@ -147,10 +164,10 @@ const KeyListItem = props => {
         />
       </Grid>
 
-      <Grid container  xs={6} justify="flex-end" direction="row">
+      <Grid container  justify="flex-end" direction="row">
         <List>{renderKeys(keybind)}</List>
       </Grid>
-      <Grid container xs={1} justify="flex-start" direction="row">
+      <Grid container xs={2} justify="flex-end"  direction="row">
         <CategoryChip size="small" element={Typography} label={category} clickable color="primary" />
       </Grid>
     </ListItem>

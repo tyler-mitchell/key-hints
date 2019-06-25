@@ -8,6 +8,7 @@ import { BufferContext } from '../KeyBuffer/BufferContext';
 import { Card, Grid, Paper } from '@material-ui/core';
 import { useSpring, animated, useTransition } from 'react-spring';
 import Typography from "@material-ui/core/Typography";
+import {ArrowBack as LeftArrowIcon, ArrowForward as RightArrowIcon, ArrowUpward as UpArrowIcon, ArrowDownward as DownArrowIcon} from '@material-ui/icons'
 import './key.css';
  import {FlashingKey} from './useColorLoop';
 
@@ -72,6 +73,8 @@ export const KeyContainer = styled.div`
   border-width: 10px 10px 20px 10px;
 
   transition: background-color 2s, color 300ms;
+
+ 
 
 
   /* height: ${props => props.height}; */
@@ -181,7 +184,7 @@ const KeyTop = styled.div`
 
 export const KeyChar = styled.div`
   font-size: 15px;
-  font-family: Roboto;
+  font-family: 'Nunito';
   font-weight: bold;
   color: rgba(0, 0, 0, 0.45);
   user-select: none;
@@ -221,7 +224,7 @@ const ConditionalWrap = ({ condition, wrap, children }) =>{
   const [flashing] = React.useContext(BufferContext)
   return (condition ? wrap(children, flashing) : <>{children}</>)
 }
-export const Key = ({ label, keyName, wt, ht, m, amin, key }) => {
+export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => {
   const defaultColor = '#FFFFFF';
   const activeColor = '#1fe3ac';
   const editColor = '#FFB822';
@@ -236,13 +239,17 @@ export const Key = ({ label, keyName, wt, ht, m, amin, key }) => {
   const [activeKeys, setActiveKeys] = useGlobalState('activeKeys');
 
 
+  const iconLabels = {
+    LeftArrow: <LeftArrowIcon>{label}</LeftArrowIcon>,
+    RightArrow: <RightArrowIcon>{label}</RightArrowIcon>,
+    UpArrow: <UpArrowIcon>{label}</UpArrowIcon>,
+    DownArrow: <DownArrowIcon>{label}</DownArrowIcon>
+  }
   
-  // const [, , , , , , flashLoop] = React.useContext(BufferContext);
-
   React.useEffect(() => {
 
 
-    if (flatMap(activeKeys).includes(keyName)) {
+    if (flatMap(activeKeys).includes(uniqueKeyName)) {
       
       if (editMode) {
         changeColor(editColor);
@@ -256,7 +263,7 @@ export const Key = ({ label, keyName, wt, ht, m, amin, key }) => {
       setEditableKey(false);
       setActive(false);
     };
-  }, [activeKeys, editMode, keyName]);
+  }, [activeKeys, editMode, uniqueKeyName]);
 
   const keyClicked = newKey => {
     if (editMode) {
@@ -267,11 +274,9 @@ export const Key = ({ label, keyName, wt, ht, m, amin, key }) => {
         changeColor(editColor);
         setActive(true);
       }
-
-      // setKeys([...keys, newKey]);
     }
 
-    // console.log('TCL: keyClicked -> keys', keys);
+   
   };
 
   return (
@@ -318,11 +323,14 @@ export const Key = ({ label, keyName, wt, ht, m, amin, key }) => {
           >
             <KeyTop container alignItems="center" justify="center" wt={wt} ht={ht} color={keyColor}>
               <KeyChar >
-                {label}
+                 {keyName in iconLabels ? iconLabels[keyName] : label}
+                 
               </KeyChar>
+              
             </KeyTop>
           </ActiveKeyContainer>
-        )}
+          )}
+        
       </ConditionalWrap>
     </React.Fragment>
   );
