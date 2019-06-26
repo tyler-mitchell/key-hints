@@ -61,7 +61,7 @@ function Dashboard() {
     <div className={style.root}>
 
       {/* Side Drawer */}
-      <Drawer
+      <Drawer open={open}
         classes={{
           paper: clsx(style.drawerPaper, !open && style.drawerPaperClose)
         }}

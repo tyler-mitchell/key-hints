@@ -59,7 +59,7 @@ import {
   Folder as FolderIcon
 } from '@material-ui/icons';
 
-import { useDocument } from 'react-firebase-hooks/firestore';
+import { useDocument, useCollection } from 'react-firebase-hooks/firestore';
 import { FirebaseContext } from '../utils/firebase';
 import useMeasure from './useMeasure';
 
@@ -195,50 +195,92 @@ export const KeySheet = props => {
   }
 
   // Firebase
+  
   const firebase = React.useContext(FirebaseContext);
-  const vsCodeDocument = firebase
+  const [user] = useAuthState(firebase.auth());
+  
+  const vsCodeDocument =
+    firebase
     .firestore()
     .collection('KeyTables')
     .doc('VS_Code');
+  
+  const userKeyTableCollection =
+    firebase
+    .firestore()
+    .collection('UserKeyTables')
 
-  const [fbKeyTable, loading, error] = useDocument(vsCodeDocument);
-  console.log('⭐: fbKeyTable', !loading && fbKeyTable.data());
+  const [fbKeyTable, loadingD, errorD] = useDocument(vsCodeDocument);
+  const [userKeyTable, loadingC, errorC] = useCollection(userKeyTableCollection);
+  console.log('⭐: fbKeyTable', !loadingD && fbKeyTable.data());
 
-  console.log('⭐: loading', loading);
+  console.log('⭐: loading', loadingD);
 
+  
+  
+  
+  
+  // Menu 
   const [drawerState] = useGlobalState('drawerState');
   const popupState = usePopupState({ variant: 'popper', popupId: 'demoPopper' });
   const { open, ...bindPopState } = bindPopper(popupState);
-
   const [selectedIndex, setSelectedIndex] = React.useState();
-  const [listRef, setListRef] = useGlobalState('listRef')
+  const [listRef, setListRef] = useGlobalState('listRef');
+  
 
-  console.log("⭐: handleListItemClick -> listRef.current", listRef)
+
+
+
+  
   function handleListItemClick(event, index, category) {
     setSelectedIndex(index);
     setCurCategory(category);
-    listRef.current.resetAfterIndex(0, false)
+    listRef.current.resetAfterIndex(0, false);
     console.log('⭐: handleListItemClick -> category', category);
   }
 
-  const [user] = useAuthState(firebase.auth());
 
-  const addSheet = (userId, sheetName) =>
+
+  
+
+  const addCategory = (userId, sheetName) =>
     firebase
       .firestore()
-      .collection('KeyTables')
-      .add({
+      .collection('UserKeyTables')
+      .doc(user.uid)
+      .set({
         keyDoc: sheetName,
         user: userId
       });
 
+  const newKeyTable = (userId, name) => {
+    const keyTableRef =
+      firebase
+      .firestore()
+      .collection('UserKeyTables')
+      .doc(user.uid);
+
+    const getRef = keyTableRef.get().then(doc => {
+      if (doc.exists) {
+        console.log("Document Already Exists", doc)
+      }
+    })
+  
+  };
+  // .collection('')
+  // .set({
+  //   keyDoc: name,
+  //   user: userId
+  // });
+
   return (
     <React.Fragment>
-      {loading && <CircularProgress className={classes.progress} />}
+      {loadingD && <CircularProgress className={classes.progress} />}
 
-      {!loading && !error && (
+      {!loadingD && !errorD && (
         <SelectionProvider>
           <div>
+            <Button onClick={() => newKeyTable(user.uid, 'NEW SHEET')}> ADD SHEET </Button>
             {/* <Button onClick={()=>addSheet(user.uid, "TEST NAME")}>TEST </Button> */}
             <Card ref={anchorRef(popupState)}>
               <CardHead
@@ -274,7 +316,7 @@ export const KeySheet = props => {
                         </ListItemIcon>
                         <ListItemText primary={'All'} />
                       </ListItem>
-                      <Divider/>
+                      <Divider />
                       {fbKeyTable.data().categories.map((category, index) => (
                         <ListItem
                           button
@@ -286,7 +328,9 @@ export const KeySheet = props => {
                               <FolderIcon /> 
                           </ListItemIcon>} */}
 
-                          <ListItemText primary={startCase(toLower(category))} />
+                          <Badge>
+                            <ListItemText primary={startCase(toLower(category))} />
+                          </Badge>
                         </ListItem>
                       ))}
                     </List>
@@ -304,7 +348,7 @@ export const KeySheet = props => {
           </div>
         </SelectionProvider>
       )}
-      {error && <div>ERROR</div>}
+      {errorD && <div>ERROR</div>}
     </React.Fragment>
   );
 };
