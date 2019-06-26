@@ -11,7 +11,9 @@ const itemSize = index => {
 const Row = props => {
   const { data, index, style, ...others } = props;
   const { keyTable } = data;
-
+  
+  
+  
 
   return (
     <KeyListItem
@@ -29,8 +31,16 @@ const Row = props => {
 
 const KeyList = props => {
   const { height, ...others } = props;
+  const listRef = React.useRef();
 
+  function getListHeight(index) {
+    
+  }
 
+  React.useEffect(()=> {
+    
+    listRef.current.resetAfterIndex(0, false)
+  },[others.keyTable])
 
   return (
     <SelectionProvider>
@@ -39,7 +49,7 @@ const KeyList = props => {
         itemCount={others.keyTable.length}
         itemSize={index => Object.keys(others.keyTable[index].keys).length * 50 }
         outerElementType={List}
-
+        ref={listRef}
         itemData={others}
       >
         {Row}
