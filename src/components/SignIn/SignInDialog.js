@@ -19,6 +19,7 @@ import { FirebaseContext } from '../utils/firebase';
 import useMenu from './useMenu';
 import { usePopupState, bindToggle, bindPopper } from 'material-ui-popup-state/hooks';
 
+
 import {
   Paper,
   Popper,
@@ -91,8 +92,12 @@ export default function SignInDialog() {
   const logout = () => {
     firebase.auth().signOut();
   };
+
+  
+
   return (
     <>
+      
       <div {...bindToggle(popupState)}>
         {user ? (
           <Fab color="primary" size="small">
@@ -101,6 +106,7 @@ export default function SignInDialog() {
               className={classes.avatar}
               src={firebase.auth().currentUser.photoURL}
             />
+            
           </Fab>
         ) : (
           <Button variant="contained" color="primary">

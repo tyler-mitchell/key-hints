@@ -3,7 +3,9 @@ import app from 'firebase/app';
 import { KeyTable } from '../KeySheet/SheetData';
 import firebase from 'firebase';
 import 'firebase/auth';
-
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useDocument } from 'react-firebase-hooks/firestore';
+import {useGlobalState, setGlobalState} from '../../state'
 export const FirebaseContext = React.createContext(null);
 
 export const FirebaseProvider = ({ children }) => {
@@ -17,58 +19,60 @@ export const FirebaseProvider = ({ children }) => {
       messagingSenderId: '879535977309',
       appId: '1:879535977309:web:5e5035b25f4ca605'
     });
-
-    
   }
+  const db = app.firestore();
+  const [user] = useAuthState(firebase.auth());
+
+  const vsCodeDocument = firebase
+  .firestore()
+  .collection('KeyTables')
+  .doc('VS_Code');
+
+  // const addSheet = (userId, sheetName) =>
+  //   db.collection('KeyTables').add({
+  //     keyDoc: sheetName,
+  //     user: userId
+  //   });
+
+  const mySheet = async userId =>
+    db.collection('favs')
+      .where('user', '==', userId)
+      .get();
+
+  const logout = () => {
+    firebase.auth().signOut();
+  };
+  
+  // const [globalKeyTable] = useGlobalState('keyTable')
+  
+  // const [fbKeyTable, loading, error] = useDocument(vsCodeDocument);
+  
+ 
+  
+  
+  // // console.log("⭐: FirebaseProvider -> fbKeyTable", fb)
+
+
+  // React.useEffect(() => {
+  //   vsCodeDocument
+  //     .get()
+  //     .then(snapshot => {
+  //       console.log("⭐: FirebaseProvider -> data", snapshot.data())
+  //       setGlobalState('keyTable', snapshot.data())
+  //       // console.log("⭐: FirebaseProvider -> globalKeyTable", globalKeyTable)
+        
+        
+
+        
+  //     })
+
+  //   console.log("❗ TEST");
+  // }, [])
+
+
   return <FirebaseContext.Provider value={app}>{children}</FirebaseContext.Provider>;
 };
 
-export class FirebaseLogin {
-  constructor() {
-    this.auth = app.auth();
-    this.db = app.firestore();
-  }
-
-  login(email, password) {
-    return this.auth.signInWithEmailAndPassword(email, password);
-  }
-
-  logout() {
-    return this.auth.signOut();
-  }
-
-  async register(name, email, password) {
-    await this.auth.createUserWithEmailAndPassword(email, password);
-    return this.auth.currentUser.updateProfile({
-      displayName: name
-    });
-  }
-
-  addQuote(quote) {
-    if (!this.auth.currentUser) {
-      return alert('Not authorized');
-    }
-
-    return this.db.doc(`users_codedamn_video/${this.auth.currentUser.uid}`).set({
-      quote
-    });
-  }
-
-  isInitialized() {
-    return new Promise(resolve => {
-      this.auth.onAuthStateChanged(resolve);
-    });
-  }
-
-  getCurrentUsername() {
-    return this.auth.currentUser && this.auth.currentUser.displayName;
-  }
-
-  async getCurrentUserQuote() {
-    const quote = await this.db.doc(`users_codedamn_video/${this.auth.currentUser.uid}`).get();
-    return quote.get('quote');
-  }
-}
 //   apiKey: "AIzaSyCcVhJ72zFfHBG9dIUeo4O_RYg8wH7zHwI",
 //   authDomain: "key-hints.firebaseapp.com",
 //   databaseURL: "https://key-hints.firebaseio.com",

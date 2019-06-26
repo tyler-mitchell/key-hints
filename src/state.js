@@ -10,10 +10,11 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
   editMode: false,
   flashing: {},
   keyTable: {},
-  drawerState: false
+  drawerState: false,
+  loading: true
 });
 
 
 
 
-export { GlobalStateProvider, useGlobalState };
+export { GlobalStateProvider, useGlobalState, setGlobalState };

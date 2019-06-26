@@ -64,6 +64,12 @@ import useMeasure from './useMeasure'
 
 import 'firebase/firestore';
 import { useGlobalState } from '../../state';
+
+
+
+import { useAuthState } from 'react-firebase-hooks/auth';
+
+
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -173,77 +179,70 @@ const CategoryPaper = styled(Paper)`
 } */
 
 `;
+
+
+
 export const KeySheet = props => {
   const classes = useStyles();
   const theme = useTheme();
-  const [val, setValue] = React.useState('All');
+  
 
-  const [editMode, setEditMode] = useGlobalState('editMode');
+
   const cardRef = React.useRef(null);
   const { margin } = useMeasure(cardRef, "margin");
+  const [curCategory, setCurCategory] = React.useState('All');
+  
   console.log("⭐: bounds", margin)
 
-  // const [, , , , editMode, setEditMode] = React.useContext(BufferContext);
 
-  function handleChange(event, newValue) {
-    setValue(newValue);
+  function filterKeyTable(ktable, category) {
 
-    newValue !== 'All'
-      ? setKeyTable(
-          fbKeyTable.data().table.filter(key => {
-            return key.category.toUpperCase() === newValue;
-          })
-        )
-      : setKeyTable(fbKeyTable.data().table);
+    if (category !== 'All') {
+      return ktable.data().table.filter(key => {
+        return key.category.toUpperCase() === category;
+      }
+    )
+    } else {
+      return ktable.data().table
+    }
+
   }
-
-  const [invisible, setInvisible] = React.useState(true);
-
-  const editClicked = () => {
-    setEditMode(true);
-  };
 
   // Firebase
   const firebase = React.useContext(FirebaseContext);
-  const vsCodeDocument = firebase
-    .firestore()
-    .collection('KeyTables')
-    .doc('VS_Code');
+  const vsCodeDocument = firebase.firestore().collection('KeyTables').doc('VS_Code');
 
   const [fbKeyTable, loading, error] = useDocument(vsCodeDocument);
   console.log('⭐: fbKeyTable', !loading && fbKeyTable.data());
 
   console.log('⭐: loading', loading);
 
-  const [keyTableCategory, setKeyTable] = React.useState(null);
+  
 
   const [drawerState] = useGlobalState('drawerState');
   const popupState = usePopupState({ variant: 'popper', popupId: 'demoPopper' });
   const { open, ...bindPopState } = bindPopper(popupState);
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const rollouts = await firebase
-          .firestore()
-          .collection('KeyTables')
-          .doc('VS_Code')
-          .get();
-        console.log('⭐: fetchData -> rollouts', rollouts);
+  const [selectedIndex, setSelectedIndex] = React.useState();
 
-        if (rollouts) {
-          setKeyTable(rollouts.data().table);
+  function handleListItemClick(event, index, category) {
+    setSelectedIndex(index);
+    setCurCategory(category)
+    console.log("⭐: handleListItemClick -> category", category)
+    
+  }
 
-          console.log('⭐: fetchData -> keyTableCategory', keyTableCategory);
-        }
-      } catch (err) {
-        console.log('ERROR  ', err.message);
-      }
-    };
-    fetchData();
-    console.log('⭐: fetchData -> keyTableCategory', keyTableCategory);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  
+
+  const [user] = useAuthState(firebase.auth());
+
+  const addSheet = (userId, sheetName) =>
+  firebase.firestore().collection('KeyTables').add({
+    keyDoc: sheetName,
+    user: userId
+    
+  });
+
 
   return (
     <React.Fragment>
@@ -251,15 +250,16 @@ export const KeySheet = props => {
 
       {!loading && !error && (
         <SelectionProvider>
-       <div >
+          <div >
+          <Button onClick={()=>addSheet(user.uid, "TEST NAME")}>TEST </Button>
             <Card ref={anchorRef(popupState)}>
               <CardHead
                 ref={cardRef}
                 className={classes.appBar}
-                value={val}
+               
                 indicatorColor="primary"
                 textColor="primary"
-                onChange={handleChange}
+                
               />
   
               <SearchInput
@@ -273,37 +273,28 @@ export const KeySheet = props => {
                   <CategoryPaper >
                     
                     <List>
-                      {fbKeyTable.data().categories.map((text, index) => (
-                        <ListItem button key={text}>
+                      {fbKeyTable.data().categories.map((category, index) => (
+                        <ListItem button onClick={e => handleListItemClick(e, index, category)} selected={selectedIndex === index} key={category}>
                           <ListItemIcon>
                             {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                           </ListItemIcon>
-                          <ListItemText primary={startCase(toLower(text))} />
+                          <ListItemText primary={startCase(toLower(category))} />
                         </ListItem>
                       ))}
                     </List>
                     <Divider />
-                    <List>
-                      {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                        <ListItem button key={text}>
-                          <ListItemIcon>
-                            {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                          </ListItemIcon>
-                          <ListItemText primary={text} />
-                        </ListItem>
-                      ))}
-                    </List>
+                  
                   </CategoryPaper>
                 </Fade>
               </Popper>
   
               <div >
                 <CardContent>
-                  {keyTableCategory && (
-                    <KeyList height={360} keyTable={keyTableCategory}>
-                      {console.log('⭐: INNER', keyTableCategory)}
+                  
+                    <KeyList height={360} keyTable={filterKeyTable(fbKeyTable, curCategory)}>
+                      
                     </KeyList>
-                  )}
+                
                 </CardContent>
               </div>
             </Card>
