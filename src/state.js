@@ -11,7 +11,8 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
   flashing: {},
   keyTable: {},
   drawerState: false,
-  loading: true
+  loading: true,
+  listRef: {}
 });
 
 

@@ -55,20 +55,18 @@ import {
   Save as SaveIcon,
   Refresh as RefreshIcon,
   Inbox as InboxIcon,
-  Mail as MailIcon
+  Mail as MailIcon,
+  Folder as FolderIcon
 } from '@material-ui/icons';
 
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { FirebaseContext } from '../utils/firebase';
-import useMeasure from './useMeasure'
+import useMeasure from './useMeasure';
 
 import 'firebase/firestore';
 import { useGlobalState } from '../../state';
 
-
-
 import { useAuthState } from 'react-firebase-hooks/auth';
-
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
@@ -118,17 +116,14 @@ const useStyles = makeStyles(theme => ({
   },
   popper: {
     zIndex: 0,
-    
-    position:'absolute',
-    display:'block'
-   
+
+    position: 'absolute',
+    display: 'block'
   },
   paper: {
-
-    
     height: '471px',
     marginRight: '10px',
-    display:'block',
+    display: 'block',
     overflow: 'scroll'
   }
 }));
@@ -144,23 +139,23 @@ const CardHead = styled(AppBar)`
   }
 `;
 const CategoryPaper = styled(Paper)`
-
   height: 471px;
   margin-right: 10px;
   display: block;
-  overflow-x:hidden;
-  
-  &::-webkit-scrollbar { width: 5px;}
-  &::hover{
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::hover {
     /* overflow-y: auto; */
-    
-/* &::-webkit-scrollbar-track { background: #f7f7f7; }
+
+    /* &::-webkit-scrollbar-track { background: #f7f7f7; }
 &::-webkit-scrollbar-thumb { background: #eee; }
 &:-webkit-scrollbar { width: 0 !important } */
   }
 
-
-/* &::-webkit-scrollbar-thumb:hover {background: #555;} */
+  /* &::-webkit-scrollbar-thumb:hover {background: #555;} */
 
   /* &::-webkit-scrollbar-track
 {
@@ -177,72 +172,65 @@ const CategoryPaper = styled(Paper)`
 	-webkit-box-shadow: inset 0 0 2px rgba(0,0,0,.3);
 	background: #cccccc; 
 } */
-
 `;
-
-
 
 export const KeySheet = props => {
   const classes = useStyles();
   const theme = useTheme();
-  
-
 
   const cardRef = React.useRef(null);
-  const { margin } = useMeasure(cardRef, "margin");
+  const { margin } = useMeasure(cardRef, 'margin');
   const [curCategory, setCurCategory] = React.useState('All');
-  
-  console.log("⭐: bounds", margin)
 
+  console.log('⭐: bounds', margin);
 
   function filterKeyTable(ktable, category) {
-
     if (category !== 'All') {
       return ktable.data().table.filter(key => {
         return key.category.toUpperCase() === category;
-      }
-    )
+      });
     } else {
-      return ktable.data().table
+      return ktable.data().table;
     }
-
   }
 
   // Firebase
   const firebase = React.useContext(FirebaseContext);
-  const vsCodeDocument = firebase.firestore().collection('KeyTables').doc('VS_Code');
+  const vsCodeDocument = firebase
+    .firestore()
+    .collection('KeyTables')
+    .doc('VS_Code');
 
   const [fbKeyTable, loading, error] = useDocument(vsCodeDocument);
   console.log('⭐: fbKeyTable', !loading && fbKeyTable.data());
 
   console.log('⭐: loading', loading);
 
-  
-
   const [drawerState] = useGlobalState('drawerState');
   const popupState = usePopupState({ variant: 'popper', popupId: 'demoPopper' });
   const { open, ...bindPopState } = bindPopper(popupState);
 
   const [selectedIndex, setSelectedIndex] = React.useState();
+  const [listRef, setListRef] = useGlobalState('listRef')
 
+  console.log("⭐: handleListItemClick -> listRef.current", listRef)
   function handleListItemClick(event, index, category) {
     setSelectedIndex(index);
-    setCurCategory(category)
-    console.log("⭐: handleListItemClick -> category", category)
-    
+    setCurCategory(category);
+    listRef.current.resetAfterIndex(0, false)
+    console.log('⭐: handleListItemClick -> category', category);
   }
-
-  
 
   const [user] = useAuthState(firebase.auth());
 
   const addSheet = (userId, sheetName) =>
-  firebase.firestore().collection('KeyTables').add({
-    keyDoc: sheetName,
-    user: userId
-    
-  });
-
+    firebase
+      .firestore()
+      .collection('KeyTables')
+      .add({
+        keyDoc: sheetName,
+        user: userId
+      });
 
   return (
     <React.Fragment>
@@ -250,56 +238,71 @@ export const KeySheet = props => {
 
       {!loading && !error && (
         <SelectionProvider>
-          <div >
-          <Button onClick={()=>addSheet(user.uid, "TEST NAME")}>TEST </Button>
+          <div>
+            {/* <Button onClick={()=>addSheet(user.uid, "TEST NAME")}>TEST </Button> */}
             <Card ref={anchorRef(popupState)}>
               <CardHead
                 ref={cardRef}
                 className={classes.appBar}
-               
                 indicatorColor="primary"
                 textColor="primary"
-                
               />
-  
+
               <SearchInput
                 theme={theme}
                 placeholder="Search…"
                 inputProps={{ 'aria-label': 'Search' }}
               />
-              <Divider/>
-              <Popper  placement="left-start" className={classes.popper} open={drawerState} {...bindPopState}>
+              <Divider />
+              <Popper
+                placement="left-start"
+                className={classes.popper}
+                open={drawerState}
+                {...bindPopState}
+              >
                 <Fade in={popupState} timeout={250}>
-                  <CategoryPaper >
-                    
+                  <CategoryPaper>
                     <List>
+                      <ListItem
+                        button
+                        onClick={e => handleListItemClick(e, -1, 'All')}
+                        selected={selectedIndex === -1}
+                        key={'All'}
+                      >
+                        <ListItemIcon>
+                          <FolderIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={'All'} />
+                      </ListItem>
+                      <Divider/>
                       {fbKeyTable.data().categories.map((category, index) => (
-                        <ListItem button onClick={e => handleListItemClick(e, index, category)} selected={selectedIndex === index} key={category}>
-                          <ListItemIcon>
-                            {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                          </ListItemIcon>
+                        <ListItem
+                          button
+                          onClick={e => handleListItemClick(e, index, category)}
+                          selected={selectedIndex === index}
+                          key={category}
+                        >
+                          {/* {selectedIndex === index && <ListItemIcon>
+                              <FolderIcon /> 
+                          </ListItemIcon>} */}
+
                           <ListItemText primary={startCase(toLower(category))} />
                         </ListItem>
                       ))}
                     </List>
                     <Divider />
-                  
                   </CategoryPaper>
                 </Fade>
               </Popper>
-  
-              <div >
+
+              <div>
                 <CardContent>
-                  
-                    <KeyList height={360} keyTable={filterKeyTable(fbKeyTable, curCategory)}>
-                      
-                    </KeyList>
-                
+                  <KeyList height={360} keyTable={filterKeyTable(fbKeyTable, curCategory)} />
                 </CardContent>
               </div>
             </Card>
-          
-       </div></SelectionProvider>
+          </div>
+        </SelectionProvider>
       )}
       {error && <div>ERROR</div>}
     </React.Fragment>

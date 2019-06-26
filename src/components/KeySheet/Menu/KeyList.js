@@ -4,6 +4,7 @@ import { List } from '@material-ui/core';
 import KeyListItem from './KeyListItem';
 import { KeyTable } from '../SheetData';
 import { SelectionProvider } from './SelectionContext';
+import { setGlobalState } from '../../../state';
 
 const itemSize = index => {
   return KeyTable[index].keys.length * 10 + 40;
@@ -31,17 +32,9 @@ const Row = props => {
 
 const KeyList = props => {
   const { height, ...others } = props;
-  const listRef = React.useRef();
-
-  function getListHeight(index) {
-    
-  }
-
-  React.useEffect(()=> {
-    
-    listRef.current.resetAfterIndex(0, false)
-  },[others.keyTable])
-
+  let listRef = React.useRef();
+  setGlobalState('listRef', listRef)
+  
   return (
     <SelectionProvider>
       <VariableSizeList
