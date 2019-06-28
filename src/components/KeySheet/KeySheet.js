@@ -7,8 +7,7 @@ import PropTypes from 'prop-types';
 import { FixedSizeList } from 'react-window';
 import { startCase, toLower } from 'lodash';
 
-import {KeyTable} from './SheetData'
-
+import { KeyTable } from './SheetData';
 
 import { shade, linearGradient, lighten } from 'polished';
 import Card from '@material-ui/core/Card';
@@ -199,41 +198,26 @@ export const KeySheet = props => {
   }
 
   // Firebase
-  
-  const {firebase,  userAuthState, GetCollections} = React.useContext(FirebaseContext);
+
+  const { firebase, userAuthState } = React.useContext(FirebaseContext);
   const [user, loading, error] = userAuthState;
 
-  (() => {
-    if (!loading) {
-      
-      const a = GetCollections
-      const v = a();
-    }
-    else {
-      
-    }
-  })()
   
-  
-  console.log("🚀🚀🚀: user", user)
+
+  console.log('🚀🚀🚀: user', user);
 
   // console.log("⭐: GetCollections(userAuthState.user.uid)", GetCollections(userAuthState.user.uid))
- 
 
-  
-  console.log("⭐: userAuthState", userAuthState)
-  console.log("⭐: firebase", firebase)
- 
-  setGlobalState('user', user)
+  console.log('⭐: userAuthState', userAuthState);
+  console.log('⭐: firebase', firebase);
 
-  
-  
-  const vsCodeDocument =
-    firebase
+  setGlobalState('user', user);
+
+  const vsCodeDocument = firebase
     .firestore()
     .collection('KeyTables')
     .doc('VS_Code');
-  
+
   // const userKeyTable =
   //   firebase
   //   .firestore()
@@ -241,34 +225,34 @@ export const KeySheet = props => {
   //   .doc(user.uid).collection("A New Key Table")
   //   .doc("VS_Code")
 
-  
-  
-  
-
   const [fbKeyTable, loadingD, errorD] = useDocument(vsCodeDocument);
   // const [userKeyTable, loadingC, errorC] = useCollection(userKeyTableCollection);
-  console.log('⭐: fbKeyTable', !loadingD && fbKeyTable.data());
+  
 
-  console.log('⭐: loading', loadingD);
+ // Collection Ref
+  const collectionRef =
+    user &&
+    firebase
+      .firestore()
+      .collection('UserKeyTables')
+      .doc(user.uid);
 
+  const [keyCollection] = useDocument(collectionRef);
+  console.log("⭐: keyCollection", keyCollection)
+
+  setGlobalState('keyTable', keyCollection)
+  const [GlobalCOLLECTION] = useGlobalState('keyTable')
+  console.log("😍😍: GlobalCOLLECTION", GlobalCOLLECTION)
   
   
-  
-  
-  // Menu 
+
+  // Menu
   const [drawerState] = useGlobalState('drawerState');
   const popupState = usePopupState({ variant: 'popper', popupId: 'demoPopper' });
   const { open, ...bindPopState } = bindPopper(popupState);
   const [selectedIndex, setSelectedIndex] = React.useState();
   const [listRef, setListRef] = useGlobalState('listRef');
- 
 
-  
-
-
-
-
-  
   function handleListItemClick(event, index, category) {
     setSelectedIndex(index);
     setCurCategory(category);
@@ -276,9 +260,10 @@ export const KeySheet = props => {
     console.log('⭐: handleListItemClick -> category', category);
   }
 
+ 
 
 
-  
+
 
   const addCategory = (userId, sheetName) =>
     firebase
@@ -291,21 +276,18 @@ export const KeySheet = props => {
       });
 
   const newKeyTable = (userId, name) => {
-      // firebase
-      //   .firestore()
-      //   .collection('UserKeyTables')
-      //   .doc(user.uid)
-      //   .collection('A New Key Table')
-      //   .doc("VS_CODE").set(KeyTable);
-     
-        // .doc("VS_CODE").set({ category: {}, table: {} });
-
+    // firebase
+    //   .firestore()
+    //   .collection('UserKeyTables')
+    //   .doc(user.uid)
+    //   .collection('A New Key Table')
+    //   .doc("VS_CODE").set(KeyTable);
+    // .doc("VS_CODE").set({ category: {}, table: {} });
     // const getRef = keyTableRef.get().then(doc => {
     //   if (doc.exists) {
     //     console.log("Document Already Exists", doc)
     //   }
     // })
-  
   };
   // .collection('')
   // .set({
