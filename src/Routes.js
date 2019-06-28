@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
+
 // Views
 import Dashboard from './Dashboard';
 import Login from './components/SignIn/Login';
@@ -17,11 +18,14 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  Fab, 
+  ButtonIcon
 } from '@material-ui/core';
 import SignInDialog from './components/SignIn/SignInDialog';
 import clsx from 'clsx';
 import styled from 'styled-components';
+import useOutSideClick from './components/utils/useOutsideClick';
 
 import { useStyles } from './components/design-system/styles';
 // import { useRouteStyles } from './Routes.styles';
@@ -31,7 +35,8 @@ import {
   ChevronLeft as ChevronLeftIcon,
   Inbox as InboxIcon,
   Mail as MailIcon,
-  Close as CloseIcon
+  Close as CloseIcon,
+  Add as AddIcon
 } from '@material-ui/icons';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
@@ -73,7 +78,7 @@ const useRouteStyles = makeStyles(theme => ({
 
     elevation: 9,
     borderRadius: '0px 12px 12px 0px',
-    top: 75,
+    top: 73,
 
     whiteSpace: 'nowrap'
   },
@@ -150,9 +155,7 @@ export default function Routes() {
             onClick={handleDrawerOpen}
             edge="start"
             className={routeClasses.menuButton}
-          >
-            
-          </IconButton>
+          />
           <Typography component="h1" variant="h5" color="inherit" noWrap className={style.title}>
             Key Hints
           </Typography>
@@ -192,7 +195,7 @@ export default function Routes() {
           ))}
         </List>
         <Divider />
-        <List>
+        <List >
           {['All mail', 'Trash', 'Spam'].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
@@ -200,12 +203,30 @@ export default function Routes() {
             </ListItem>
           ))}
         </List>
+        <Divider style={{bottom: '50px', position: 'absolute'}} />
+        
+          
+          <Grid container justify="center">
+            <Fab color="primary" variant="extended" size="small" style={{bottom: '10px', position: 'absolute'}} button>
+              
+                <AddIcon />
+                Add New Collection
+             
+            </Fab>
+          </Grid>
+          {/* <ListItem style={{bottom: 0, position: 'absolute'}} button>
+            <ListItemIcon>
+              <AddIcon />
+            </ListItemIcon>
+            <ListItemText primary="Add New Collection" />
+          </ListItem> */}
+        
       </Drawer>
 
       <Drawer
         variant="persistent"
         classes={{ paper: routeClasses.drawerTab }}
-        PaperProps={{elevation: 3}}
+        PaperProps={{ elevation: 3 }}
         open={!open}
       >
         <div style={{ marginLeft: '20px' }}>

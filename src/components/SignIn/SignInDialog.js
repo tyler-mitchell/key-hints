@@ -73,8 +73,10 @@ export default function SignInDialog() {
 
 
 
-  const firebase = React.useContext(FirebaseContext);
-  const [user] = useAuthState(firebase.auth());
+  const { firebase, userAuthState, logout } = React.useContext(FirebaseContext);
+  const [user, loading, error] = userAuthState;
+  
+  // const [user] = useAuthState(firebase.auth());
   const popupState = usePopupState({ variant: 'popper', popupId: 'demoPopper' });
   const uiConfig = {
     // state: { user },
@@ -89,9 +91,7 @@ export default function SignInDialog() {
     }
   };
 
-  const logout = () => {
-    firebase.auth().signOut();
-  };
+
 
   
 

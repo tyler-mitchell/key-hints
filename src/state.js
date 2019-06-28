@@ -12,7 +12,10 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
   keyTable: {},
   drawerState: false,
   loading: true,
-  listRef: {}
+  listRef: {},
+  user: { user: null },
+ 
+
 });
 
 

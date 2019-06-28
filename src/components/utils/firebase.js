@@ -4,7 +4,7 @@ import { KeyTable } from '../KeySheet/SheetData';
 import firebase from 'firebase';
 import 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useDocument } from 'react-firebase-hooks/firestore';
+import { useDocument, useCollection } from 'react-firebase-hooks/firestore';
 import {useGlobalState, setGlobalState} from '../../state'
 export const FirebaseContext = React.createContext(null);
 
@@ -21,7 +21,8 @@ export const FirebaseProvider = ({ children }) => {
     });
   }
   const db = app.firestore();
-  const [user] = useAuthState(firebase.auth());
+  const userAuthState = useAuthState(firebase.auth());
+
 
   const vsCodeDocument = firebase
   .firestore()
@@ -34,7 +35,7 @@ export const FirebaseProvider = ({ children }) => {
   //     user: userId
   //   });
 
-  const mySheet = async userId =>
+  const mySheet = async (userId) =>
     db.collection('favs')
       .where('user', '==', userId)
       .get();
@@ -43,6 +44,44 @@ export const FirebaseProvider = ({ children }) => {
     firebase.auth().signOut();
   };
   
+ 
+
+  function CurrentCollection() {
+    
+    React.useEffect(() => {
+      
+    }, [])
+  }
+  
+  const [a, b] = useCollection(vsCodeDocument)
+  
+  function GetCollections(uid) {
+    
+
+    const collectionRef =
+    firebase
+    .firestore()
+    .collection('UserKeyTables')
+    // .doc(uid)
+    // .collection("A New Key Table")
+    
+    
+    
+    return a
+     
+      
+   
+  
+    // const userKeyTableCollection = useCollection(collectionRef)
+     
+      
+
+    
+    
+  }
+
+ 
+
   // const [globalKeyTable] = useGlobalState('keyTable')
   
   // const [fbKeyTable, loading, error] = useDocument(vsCodeDocument);
@@ -68,9 +107,18 @@ export const FirebaseProvider = ({ children }) => {
 
   //   console.log("❗ TEST");
   // }, [])
+  const fbContext = {
+    firebase,
+    db,
+    userAuthState,
+    logout,
+    GetCollections
 
 
-  return <FirebaseContext.Provider value={app}>{children}</FirebaseContext.Provider>;
+
+  }
+
+  return <FirebaseContext.Provider value={fbContext}>{children}</FirebaseContext.Provider>;
 };
 
 //   apiKey: "AIzaSyCcVhJ72zFfHBG9dIUeo4O_RYg8wH7zHwI",
@@ -87,5 +135,6 @@ export const FirebaseProvider = ({ children }) => {
 // let db = app.firestore();
 
 // let docRef = db.collection('KeyTables').doc('VS_Code');
+
 
 // let setTables = docRef.set({...KeyTable});

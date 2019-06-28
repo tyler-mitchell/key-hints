@@ -60,20 +60,7 @@ function Dashboard() {
 
     <div className={style.root}>
 
-      {/* Side Drawer */}
-      <Drawer open={open}
-        classes={{
-          paper: clsx(style.drawerPaper, !open && style.drawerPaperClose)
-        }}
-      >
-        <div className={style.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>{}</IconButton>
-        </div>
-        <Divider />
-        <List>{}</List>
-        <Divider />
-        <List>{}</List>
-      </Drawer>
+    
       {/* ⭐ MAIN APP */}
 
       <main className={style.content}>
