@@ -190,11 +190,11 @@ export const KeySheet = props => {
 
   function filterKeyTable(ktable, category) {
     if (category !== 'All') {
-      return curKeyTable.table.filter(key => {
+      return curKeyTable.data().table.filter(key => {
         return key.category.toUpperCase() === category;
       });
     } else {
-      return curKeyTable.table;
+      return curKeyTable.data().table;
     }
   }
 
@@ -203,7 +203,7 @@ export const KeySheet = props => {
   const { firebase, userAuthState } = React.useContext(FirebaseContext);
   const [user, loading, error] = userAuthState;
 
-  const { curKeyTable } = React.useContext(KeyTableContext);
+  const { curKeyTable, loadingUKTC } = React.useContext(KeyTableContext);
   
 
   console.log("⭐: curKeyTable", curKeyTable)
@@ -218,6 +218,7 @@ export const KeySheet = props => {
     .collection('KeyTables')
     .doc('VS_Code');
 
+  console.log("⭐: vsCodeDocument", vsCodeDocument);
 
   const [fbKeyTable, loadingD, errorD] = useDocument(vsCodeDocument);
 
@@ -249,6 +250,8 @@ export const KeySheet = props => {
     listRef.current.resetAfterIndex(0, false);
     console.log('⭐: handleListItemClick -> category', category);
   }
+
+  
 
  
 
@@ -284,9 +287,9 @@ export const KeySheet = props => {
 
   return (
     <React.Fragment>
-      {loadingD && <CircularProgress className={classes.progress} />}
+      {loadingUKTC && <CircularProgress className={classes.progress} />}
 
-      {!loadingD && !errorD && (
+      {curKeyTable && !errorD && (
         <SelectionProvider>
           <div>
             
@@ -325,7 +328,10 @@ export const KeySheet = props => {
                         <ListItemText primary={'All'} />
                       </ListItem>
                       <Divider />
-                      {fbKeyTable.data().categories.map((category, index) => (
+                      {console.log("⭐: curKeyTable.data()", curKeyTable)}
+                      { 
+                        
+                        (curKeyTable.data().categories || []).map((category, index) => (
                         <ListItem
                           button
                           onClick={e => handleListItemClick(e, index, category)}
@@ -341,6 +347,7 @@ export const KeySheet = props => {
                           </Badge>
                         </ListItem>
                       ))}
+                        
                     </List>
                     <Divider />
                   </CategoryPaper>
@@ -349,7 +356,7 @@ export const KeySheet = props => {
 
               <div>
                 <CardContent>
-                  <KeyList height={360} keyTable={filterKeyTable(fbKeyTable, curCategory)} />
+                  <KeyList height={360} keyTable={filterKeyTable(curKeyTable, curCategory) } />
                 </CardContent>
               </div>
             </Card>

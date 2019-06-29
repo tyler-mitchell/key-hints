@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 // Material components
 import { withStyles, makeStyles, Paper, Input, InputBase, Grid, Button, Divider, IconButton } from '@material-ui/core';
 import { useGlobalState } from '../../state';
-
+import {KeyTableContext} from '../../context/KeyTableContext'
 
 
 // Material icons
@@ -16,7 +16,8 @@ import {
   Edit as EditIcon,
   Refresh as RefreshIcon,
   Save as SaveIcon,
-  Menu as MenuIcon
+  Menu as MenuIcon,
+  Add as AddIcon
 } from '@material-ui/icons';
 import styled from 'styled-components';
 
@@ -74,6 +75,10 @@ export const SearchInput = props => {
   const [drawerState, setDrawerState] = useGlobalState('drawerState')
   const [editMode, setEditMode] = useGlobalState('editMode');
 
+
+  const { userKTC } = React.useContext(KeyTableContext)
+  
+  
   return (
     <Paper elevation={0} className={classes.root}>
       <IconButton className={classes.iconButton} aria-label="Menu" onClick={() => setDrawerState(!drawerState)}>
@@ -118,6 +123,16 @@ export const SearchInput = props => {
             >
               <EditIcon />
               Edit
+            </Button>
+            <Button
+              onClick={() => setEditMode(true)}
+              className={theme.button}
+              variant="contained"
+              color="primary"
+              size="small"
+            >
+            <AddIcon />
+              Add
             </Button>
           </Grid>
         </>

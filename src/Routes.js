@@ -37,11 +37,13 @@ import {
   Inbox as InboxIcon,
   Mail as MailIcon,
   Close as CloseIcon,
-  Add as AddIcon
+  Add as AddIcon,
+  Folder as FolderIcon
 } from '@material-ui/icons';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useGlobalState } from './state';
 import { useCollection } from 'react-firebase-hooks/firestore';
+import { ChromeLogo, FigmaLogo, Windows10Logo, SketchLogo, VSCodeLogo } from './assets';
 
 const drawerWidth = 240;
 const DrawerTab = styled(Drawer)``;
@@ -158,20 +160,14 @@ export default function Routes() {
   const [curCategory, setCurCategory] = React.useState('All');
 
   function handleListItemClick(event, index, doc) {
-    console.log("⭐: handleListItemClick -> dd", doc.data())
-   
     setSelectedIndex(index);
-   
-    
-   
-    setCurKeyTable(doc.data());
 
-
-    // console.log('⭐: handleListItemClick -> docID', docID);
+    setCurKeyTable(doc);
+    console.log('⭐: handleListItemClick -> doc', doc.data());
   }
 
   const newKeyTable = name => {
-    collectionRef.doc(name).set({ categories: {}, table: {} });
+    collectionRef.doc(name).set({ categories: [], table: [] });
 
     // .doc("VS_CODE").set({ category: {}, table: {} });
     // const getRef = keyTableRef.get().then(doc => {
@@ -229,30 +225,59 @@ export default function Routes() {
         </div>
         <Divider />
         <List>
-          {['Windows 10', 'Figma', 'Sketch', 'Chrome'].map((text, index) => (
-            <ListItem
-              button
-              key={text}
-              >
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
+          <ListItem button>
+            <ListItemIcon>
+              <VSCodeLogo />
+            </ListItemIcon>
+            <ListItemText>
+              VS Code
+            </ListItemText>
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <ChromeLogo />
+            </ListItemIcon>
+            <ListItemText>
+              Chrome
+            </ListItemText>
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <Windows10Logo />
+            </ListItemIcon>
+            <ListItemText>
+              Windows 10
+            </ListItemText>
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <FigmaLogo />
+            </ListItemIcon>
+            <ListItemText>
+              Figma
+            </ListItemText>
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <SketchLogo />
+            </ListItemIcon>
+            <ListItemText>
+              Sketch
+            </ListItemText>
+          </ListItem>
         </List>
         <Divider />
         <List>
           {userKTC &&
             userKTC.docs.map((doc, index) => (
-            
-              
               <ListItem
                 button
                 key={doc.id}
                 onClick={e => handleListItemClick(e, index, doc)}
-                selected={selectedIndex === index}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />} </ListItemIcon>
+                selected={selectedIndex === index}
+              >
+                <ListItemIcon><FolderIcon color="primary" /></ListItemIcon>
                 <ListItemText primary={doc.id} />
-                
               </ListItem>
             ))}
         </List>
@@ -265,7 +290,7 @@ export default function Routes() {
             size="small"
             style={{ bottom: '10px', position: 'absolute' }}
             button
-            onClick={() => newKeyTable('Another KT')}
+            onClick={() => newKeyTable('MY KT')}
           >
             <AddIcon />
             Add New Collection

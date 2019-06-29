@@ -17,10 +17,17 @@ export default function KeyTableProvider({ children }) {
       .firestore()
       .collection('Users')
       .doc(user.uid);
+  
+  
+  
+      const vsCodeDocument = firebase
+      .firestore()
+      .collection('KeyTables')
+      .doc('VS_Code');
 
   const userKTColRef = user && userDocumentRef.collection('KeyTables');
 
-  const [curKeyTable, setCurKeyTable] = React.useState(KeyTable)
+  const [curKeyTable, setCurKeyTable] = React.useState(false)
   
 
 
