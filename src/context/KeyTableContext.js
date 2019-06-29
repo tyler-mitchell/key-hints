@@ -1,8 +1,9 @@
 import React from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { FirebaseContext } from '../components/utils/firebase';
+import {KeyTable} from '../components/KeySheet/SheetData'
 
-const KeyTableContext = React.createContext(null);
+export const KeyTableContext = React.createContext(null);
 
 export const useKeyTable = () => React.useContext(KeyTableContext);
 
@@ -17,17 +18,23 @@ export default function KeyTableProvider({ children }) {
       .collection('Users')
       .doc(user.uid);
 
-  const userKeyTablesRef = user && userDocumentRef.collection('KeyTables');
+  const userKTColRef = user && userDocumentRef.collection('KeyTables');
 
-  const [userKTC, loadingUKTC, errUKTC] = useCollection(userKeyTablesRef);
+  const [curKeyTable, setCurKeyTable] = React.useState(KeyTable)
+  
+
+
+  const [userKTC, loadingUKTC, errUKTC] = useCollection(userKTColRef);
 
   
 
   const ctx = {
     // currentUser,
     userKTC,
+    curKeyTable,
     loadingUKTC,
-    errUKTC
+    errUKTC,
+    setCurKeyTable
   };
 
   return <KeyTableContext.Provider value={ctx}>{children}</KeyTableContext.Provider>;

@@ -6,7 +6,7 @@ import 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useDocument, useCollection } from 'react-firebase-hooks/firestore';
 import { useGlobalState, setGlobalState } from '../../state';
-import { useCollection as customUseCollection } from '../firebaseHooks/useCollection';
+
 export const FirebaseContext = React.createContext(null);
 
 export const FirebaseProvider = ({ children }) => {

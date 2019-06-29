@@ -35,6 +35,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { SelectionProvider } from './Menu/SelectionContext';
 import { BufferContext } from '../KeyBuffer/BufferContext';
+import {KeyTableContext} from '../../context/KeyTableContext'
 import {
   usePopupState,
   bindToggle,
@@ -183,17 +184,17 @@ export const KeySheet = props => {
 
   const cardRef = React.useRef(null);
 
-  const [curCategory, setCurCategory] = React.useState('All');
+  
 
 
 
   function filterKeyTable(ktable, category) {
     if (category !== 'All') {
-      return ktable.data().table.filter(key => {
+      return curKeyTable.table.filter(key => {
         return key.category.toUpperCase() === category;
       });
     } else {
-      return ktable.data().table;
+      return curKeyTable.table;
     }
   }
 
@@ -202,7 +203,10 @@ export const KeySheet = props => {
   const { firebase, userAuthState } = React.useContext(FirebaseContext);
   const [user, loading, error] = userAuthState;
 
+  const { curKeyTable } = React.useContext(KeyTableContext);
   
+
+  console.log("⭐: curKeyTable", curKeyTable)
 
   
 
@@ -219,24 +223,12 @@ export const KeySheet = props => {
 
   
 
- // Collection Ref
-  const collectionRef =
-    user &&
-    firebase
-      .firestore()
-      .collection('Users')
-      .doc(user.uid)
-      .collection('KeyTables');
-
-  const [usrKTC, loadingKTC, errorKTC] = useCollection(collectionRef);
-
-  setGlobalState('keyTable', usrKTC)
-  setGlobalState('loadingKTC', loadingKTC)
-  setGlobalState('errorKTC', errorKTC)
 
 
-  const [GlobalCOLLECTION] = useGlobalState('keyTable')
-  console.log("⭐: GlobalCOLLECTION", GlobalCOLLECTION)
+  
+
+
+ 
 
 
   
@@ -246,7 +238,9 @@ export const KeySheet = props => {
   const [drawerState] = useGlobalState('drawerState');
   const popupState = usePopupState({ variant: 'popper', popupId: 'demoPopper' });
   const { open, ...bindPopState } = bindPopper(popupState);
+
   const [selectedIndex, setSelectedIndex] = React.useState();
+  const [curCategory, setCurCategory] = React.useState('All');
   const [listRef, setListRef] = useGlobalState('listRef');
 
   function handleListItemClick(event, index, category) {
@@ -295,8 +289,7 @@ export const KeySheet = props => {
       {!loadingD && !errorD && (
         <SelectionProvider>
           <div>
-            <Button onClick={() => newKeyTable(user.uid, 'Sublime Text')}> ADD SHEET </Button>
-            {/* <Button onClick={()=>addSheet(user.uid, "TEST NAME")}>TEST </Button> */}
+            
             <Card ref={anchorRef(popupState)}>
               <CardHead
                 ref={cardRef}

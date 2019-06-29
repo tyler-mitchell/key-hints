@@ -26,7 +26,7 @@ import clsx from 'clsx';
 import styled from 'styled-components';
 import useOutSideClick from './components/utils/useOutsideClick';
 import { FirebaseContext } from './components/utils/firebase';
-import { useKeyTable } from './context/KeyTableContext';
+import { KeyTableContext } from './context/KeyTableContext';
 
 import { useStyles } from './components/design-system/styles';
 // import { useRouteStyles } from './Routes.styles';
@@ -134,7 +134,7 @@ export default function Routes() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   // const [userKTC] = useGlobalState('keyTable');
-  const [loadingKTC] = useGlobalState('loadingKTC');
+
   const { firebase, userAuthState } = React.useContext(FirebaseContext);
   const [user, loading, error] = userAuthState;
 
@@ -152,10 +152,23 @@ export default function Routes() {
       .collection('Users')
       .doc(user.uid)
       .collection('KeyTables');
-  const {userKTC} = useKeyTable()
-  const [userKC, loadingKC, errorKTC] = useCollection(collectionRef);
+  const { userKTC, setCurKeyTable } = React.useContext(KeyTableContext);
 
   const [selectedIndex, setSelectedIndex] = React.useState();
+  const [curCategory, setCurCategory] = React.useState('All');
+
+  function handleListItemClick(event, index, doc) {
+    console.log("⭐: handleListItemClick -> dd", doc.data())
+   
+    setSelectedIndex(index);
+   
+    
+   
+    setCurKeyTable(doc.data());
+
+
+    // console.log('⭐: handleListItemClick -> docID', docID);
+  }
 
   const newKeyTable = name => {
     collectionRef.doc(name).set({ categories: {}, table: {} });
@@ -167,10 +180,6 @@ export default function Routes() {
     //   }
     // })
   };
-
-
-
-
 
   return (
     <>
@@ -220,8 +229,11 @@ export default function Routes() {
         </div>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
+          {['Windows 10', 'Figma', 'Sketch', 'Chrome'].map((text, index) => (
+            <ListItem
+              button
+              key={text}
+              >
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItem>
@@ -229,13 +241,18 @@ export default function Routes() {
         </List>
         <Divider />
         <List>
-          {console.log('⭐: Routes -> userKTC', userKTC)}
-          {console.log('⭐: Routes -> loadingKTC', loadingKTC)}
           {userKTC &&
             userKTC.docs.map((doc, index) => (
-              <ListItem button key={doc.id}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+            
+              
+              <ListItem
+                button
+                key={doc.id}
+                onClick={e => handleListItemClick(e, index, doc)}
+                selected={selectedIndex === index}>
+                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />} </ListItemIcon>
                 <ListItemText primary={doc.id} />
+                
               </ListItem>
             ))}
         </List>
