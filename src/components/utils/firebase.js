@@ -24,6 +24,7 @@ export const FirebaseProvider = ({ children }) => {
   const db = app.firestore();
   const userAuthState = useAuthState(firebase.auth());
 
+
   const vsCodeDocument = firebase
     .firestore()
     .collection('KeyTables')
@@ -45,8 +46,8 @@ export const FirebaseProvider = ({ children }) => {
     firebase.auth().signOut();
   };
 
-  const [coll] = customUseCollection(vsCodeDocument);
-  console.log('😎😎: FirebaseProvider -> coll', coll);
+  
+ 
 
   // const [keyCollection, loading, error] = useCollection(db.doc(`admins/${ user && user.email }`));
 
@@ -70,18 +71,7 @@ export const FirebaseProvider = ({ children }) => {
 
   // // console.log("⭐: FirebaseProvider -> fbKeyTable", fb)
 
-  // React.useEffect(() => {
-  //   vsCodeDocument
-  //     .get()
-  //     .then(snapshot => {
-  //       console.log("⭐: FirebaseProvider -> data", snapshot.data())
-  //       setGlobalState('keyTable', snapshot.data())
-  //       // console.log("⭐: FirebaseProvider -> globalKeyTable", globalKeyTable)
 
-  //     })
-
-  //   console.log("❗ TEST");
-  // }, [])
   const fbContext = {
     firebase,
     db,

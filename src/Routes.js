@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
-
 // Views
 import Dashboard from './Dashboard';
 import Login from './components/SignIn/Login';
@@ -19,13 +18,15 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Fab, 
+  Fab,
   ButtonIcon
 } from '@material-ui/core';
 import SignInDialog from './components/SignIn/SignInDialog';
 import clsx from 'clsx';
 import styled from 'styled-components';
 import useOutSideClick from './components/utils/useOutsideClick';
+import { FirebaseContext } from './components/utils/firebase';
+import { useKeyTable } from './context/KeyTableContext';
 
 import { useStyles } from './components/design-system/styles';
 // import { useRouteStyles } from './Routes.styles';
@@ -39,6 +40,8 @@ import {
   Add as AddIcon
 } from '@material-ui/icons';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useGlobalState } from './state';
+import { useCollection } from 'react-firebase-hooks/firestore';
 
 const drawerWidth = 240;
 const DrawerTab = styled(Drawer)``;
@@ -130,6 +133,10 @@ export default function Routes() {
   const routeClasses = useRouteStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  // const [userKTC] = useGlobalState('keyTable');
+  const [loadingKTC] = useGlobalState('loadingKTC');
+  const { firebase, userAuthState } = React.useContext(FirebaseContext);
+  const [user, loading, error] = userAuthState;
 
   function handleDrawerOpen() {
     setOpen(!open);
@@ -138,6 +145,32 @@ export default function Routes() {
   function handleDrawerClose() {
     setOpen(false);
   }
+  const collectionRef =
+    user &&
+    firebase
+      .firestore()
+      .collection('Users')
+      .doc(user.uid)
+      .collection('KeyTables');
+  const {userKTC} = useKeyTable()
+  const [userKC, loadingKC, errorKTC] = useCollection(collectionRef);
+
+  const [selectedIndex, setSelectedIndex] = React.useState();
+
+  const newKeyTable = name => {
+    collectionRef.doc(name).set({ categories: {}, table: {} });
+
+    // .doc("VS_CODE").set({ category: {}, table: {} });
+    // const getRef = keyTableRef.get().then(doc => {
+    //   if (doc.exists) {
+    //     console.log("Document Already Exists", doc)
+    //   }
+    // })
+  };
+
+
+
+
 
   return (
     <>
@@ -195,32 +228,38 @@ export default function Routes() {
           ))}
         </List>
         <Divider />
-        <List >
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
+        <List>
+          {console.log('⭐: Routes -> userKTC', userKTC)}
+          {console.log('⭐: Routes -> loadingKTC', loadingKTC)}
+          {userKTC &&
+            userKTC.docs.map((doc, index) => (
+              <ListItem button key={doc.id}>
+                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                <ListItemText primary={doc.id} />
+              </ListItem>
+            ))}
         </List>
-        <Divider style={{bottom: '50px', position: 'absolute'}} />
-        
-          
-          <Grid container justify="center">
-            <Fab color="primary" variant="extended" size="small" style={{bottom: '10px', position: 'absolute'}} button>
-              
-                <AddIcon />
-                Add New Collection
-             
-            </Fab>
-          </Grid>
-          {/* <ListItem style={{bottom: 0, position: 'absolute'}} button>
+        <Divider style={{ bottom: '50px', position: 'absolute' }} />
+
+        <Grid container justify="center">
+          <Fab
+            color="primary"
+            variant="extended"
+            size="small"
+            style={{ bottom: '10px', position: 'absolute' }}
+            button
+            onClick={() => newKeyTable('Another KT')}
+          >
+            <AddIcon />
+            Add New Collection
+          </Fab>
+        </Grid>
+        {/* <ListItem style={{bottom: 0, position: 'absolute'}} button>
             <ListItemIcon>
               <AddIcon />
             </ListItemIcon>
             <ListItemText primary="Add New Collection" />
           </ListItem> */}
-        
       </Drawer>
 
       <Drawer
@@ -238,7 +277,8 @@ export default function Routes() {
 
       <Switch>
         <Redirect exact from="/" to="/dashboard" />
-        <Route component={Dashboard} exact path="/dashboard" />
+
+        <Route path="/dashboard" render={() => <Dashboard keyTable={{}} />} />
         {/* <Route component={Login} exact path="/login" /> */}
         {/* <Route component={Register} exact path="/register" /> */}
       </Switch>

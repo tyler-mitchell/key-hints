@@ -182,10 +182,10 @@ export const KeySheet = props => {
   const theme = useTheme();
 
   const cardRef = React.useRef(null);
-  const { margin } = useMeasure(cardRef, 'margin');
+
   const [curCategory, setCurCategory] = React.useState('All');
 
-  console.log('⭐: bounds', margin);
+
 
   function filterKeyTable(ktable, category) {
     if (category !== 'All') {
@@ -204,12 +204,8 @@ export const KeySheet = props => {
 
   
 
-  console.log('🚀🚀🚀: user', user);
+  
 
-  // console.log("⭐: GetCollections(userAuthState.user.uid)", GetCollections(userAuthState.user.uid))
-
-  console.log('⭐: userAuthState', userAuthState);
-  console.log('⭐: firebase', firebase);
 
   setGlobalState('user', user);
 
@@ -218,15 +214,9 @@ export const KeySheet = props => {
     .collection('KeyTables')
     .doc('VS_Code');
 
-  // const userKeyTable =
-  //   firebase
-  //   .firestore()
-  //   .collection('UserKeyTables')
-  //   .doc(user.uid).collection("A New Key Table")
-  //   .doc("VS_Code")
 
   const [fbKeyTable, loadingD, errorD] = useDocument(vsCodeDocument);
-  // const [userKeyTable, loadingC, errorC] = useCollection(userKeyTableCollection);
+
   
 
  // Collection Ref
@@ -234,15 +224,21 @@ export const KeySheet = props => {
     user &&
     firebase
       .firestore()
-      .collection('UserKeyTables')
-      .doc(user.uid);
+      .collection('Users')
+      .doc(user.uid)
+      .collection('KeyTables');
 
-  const [keyCollection] = useDocument(collectionRef);
-  console.log("⭐: keyCollection", keyCollection)
+  const [usrKTC, loadingKTC, errorKTC] = useCollection(collectionRef);
 
-  setGlobalState('keyTable', keyCollection)
+  setGlobalState('keyTable', usrKTC)
+  setGlobalState('loadingKTC', loadingKTC)
+  setGlobalState('errorKTC', errorKTC)
+
+
   const [GlobalCOLLECTION] = useGlobalState('keyTable')
-  console.log("😍😍: GlobalCOLLECTION", GlobalCOLLECTION)
+  console.log("⭐: GlobalCOLLECTION", GlobalCOLLECTION)
+
+
   
   
 
@@ -268,7 +264,7 @@ export const KeySheet = props => {
   const addCategory = (userId, sheetName) =>
     firebase
       .firestore()
-      .collection('UserKeyTables')
+      .collection('Users')
       .doc(user.uid)
       .set({
         keyDoc: sheetName,
@@ -276,12 +272,9 @@ export const KeySheet = props => {
       });
 
   const newKeyTable = (userId, name) => {
-    // firebase
-    //   .firestore()
-    //   .collection('UserKeyTables')
-    //   .doc(user.uid)
-    //   .collection('A New Key Table')
-    //   .doc("VS_CODE").set(KeyTable);
+    // collectionRef
+    //   .collection('KeyTables')
+    //   .doc(name).set(KeyTable);
     // .doc("VS_CODE").set({ category: {}, table: {} });
     // const getRef = keyTableRef.get().then(doc => {
     //   if (doc.exists) {
@@ -302,7 +295,7 @@ export const KeySheet = props => {
       {!loadingD && !errorD && (
         <SelectionProvider>
           <div>
-            <Button onClick={() => newKeyTable(user.uid, 'NEW SHEET')}> ADD SHEET </Button>
+            <Button onClick={() => newKeyTable(user.uid, 'Sublime Text')}> ADD SHEET </Button>
             {/* <Button onClick={()=>addSheet(user.uid, "TEST NAME")}>TEST </Button> */}
             <Card ref={anchorRef(popupState)}>
               <CardHead
