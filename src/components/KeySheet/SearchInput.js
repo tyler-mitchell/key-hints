@@ -3,12 +3,20 @@ import React from 'react';
 // Externals
 import PropTypes from 'prop-types';
 
-
 // Material components
-import { withStyles, makeStyles, Paper, Input, InputBase, Grid, Button, Divider, IconButton } from '@material-ui/core';
-import { useGlobalState } from '../../state';
-import {KeyTableContext} from '../../context/KeyTableContext'
-
+import {
+  withStyles,
+  makeStyles,
+  Paper,
+  Input,
+  InputBase,
+  Grid,
+  Button,
+  Divider,
+  IconButton
+} from '@material-ui/core';
+import { useGlobalState, clearKeySelection, setGlobalState } from '../../state';
+import { KeyTableContext } from '../../context/KeyTableContext';
 
 // Material icons
 import {
@@ -26,10 +34,7 @@ const useStyles = makeStyles({
     padding: '10px 10px',
     display: 'flex',
     alignItems: 'center',
-    borderRadius: 0,
-    
-    
-  
+    borderRadius: 0
   },
   input: {
     marginLeft: 8,
@@ -72,21 +77,33 @@ const InputSearch = styled(Input)`
 export const SearchInput = props => {
   const { theme, className, onChange, style, ...rest } = props;
   const classes = useStyles();
-  const [drawerState, setDrawerState] = useGlobalState('drawerState')
+  const [drawerState, setDrawerState] = useGlobalState('drawerState');
   const [editMode, setEditMode] = useGlobalState('editMode');
+  const [activeKeys, setActiveKeys] = useGlobalState('activeKeys');
+  const [addMode, setAddMode] = useGlobalState('addMode');
+  const handleAddClick = () => {
+    clearKeySelection();
+    setGlobalState('addMode', v => !v);
+  };
+  const handleSaveKeyClick = () => {
+    clearKeySelection();
+    setGlobalState('addMode', v => !v);
+  };
 
+  const { userKTC } = React.useContext(KeyTableContext);
 
-  const { userKTC } = React.useContext(KeyTableContext)
-  
-  
   return (
     <Paper elevation={0} className={classes.root}>
-      <IconButton className={classes.iconButton} aria-label="Menu" onClick={() => setDrawerState(!drawerState)}>
+      <IconButton
+        className={classes.iconButton}
+        aria-label="Menu"
+        onClick={() => setDrawerState(!drawerState)}
+      >
         <MenuIcon />
       </IconButton>
-        <SearchIcon theme={theme} />
-        <InputSearch {...rest} disableUnderline onChange={onChange} />
-    
+      <SearchIcon theme={theme} />
+      <InputSearch {...rest} disableUnderline onChange={onChange} />
+
       <Divider className={classes.divider} />
       {editMode ? (
         <>
@@ -114,7 +131,7 @@ export const SearchInput = props => {
       ) : (
         <>
           <Grid item>
-            <Button
+            {!addMode && <Button
               onClick={() => setEditMode(true)}
               className={theme.button}
               variant="contained"
@@ -123,17 +140,42 @@ export const SearchInput = props => {
             >
               <EditIcon />
               Edit
-            </Button>
-            <Button
-              onClick={() => setEditMode(true)}
-              className={theme.button}
-              variant="contained"
-              color="primary"
-              size="small"
-            >
-            <AddIcon />
-              Add
-            </Button>
+            </Button>}
+            {!addMode ? (
+              <Button
+                onClick={handleAddClick}
+                className={theme.button}
+                variant="contained"
+                color="primary"
+                size="small"
+              >
+                <AddIcon />
+                Add
+              </Button>
+            ) : (
+              <>
+                <Button
+                  onClick={handleSaveKeyClick}
+                  className={theme.button}
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                >
+                  <SaveIcon />
+                  Save
+                </Button>
+                <Button
+                  onClick={() => setAddMode(false)}
+                  className={theme.button}
+                  variant="contained"
+                  color="secondary"
+                  size="small"
+                >
+                  <SaveIcon />
+                  Cancel
+                </Button>
+              </>
+            )}
           </Grid>
         </>
       )}

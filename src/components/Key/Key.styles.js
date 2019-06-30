@@ -7,14 +7,18 @@ import Layer from '@material-ui/core/Box';
 import { BufferContext } from '../KeyBuffer/BufferContext';
 import { Card, Grid, Paper } from '@material-ui/core';
 import { useSpring, animated, useTransition } from 'react-spring';
-import Typography from "@material-ui/core/Typography";
-import {ArrowBack as LeftArrowIcon, ArrowForward as RightArrowIcon, ArrowUpward as UpArrowIcon, ArrowDownward as DownArrowIcon} from '@material-ui/icons'
+import Typography from '@material-ui/core/Typography';
+import {
+  ArrowBack as LeftArrowIcon,
+  ArrowForward as RightArrowIcon,
+  ArrowUpward as UpArrowIcon,
+  ArrowDownward as DownArrowIcon
+} from '@material-ui/icons';
 import './key.css';
- import {FlashingKey} from './useColorLoop';
-
+import { FlashingKey } from './useColorLoop';
 
 import { useGlobalState } from '../../state';
-
+import _ from 'lodash';
 import flatMap from 'lodash/flatMap';
 
 const Column = props => <Box {...props} />;
@@ -108,8 +112,8 @@ export const KeyContainer = styled.div`
   transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
 
   &:active {
-    /* transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1); */
-    /* transform: translateY(2px) scaleX(0.98); */
+    transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
+    transform: translateY(2px) scaleX(0.98);
     /* transform-origin: -100, 200; */
     /* animation: ${keypress} 2s ; */
   }
@@ -142,10 +146,9 @@ export const ActiveKeyContainer = styled(KeyContainer)`
   border-left-color: ${props => shade(0.09, props.color)};
   border-right-color: ${props => shade(0.09, props.color)};
 
-
-  &:hover{
-    animation:  ${keypress} 3s ease-out infinite;
-    animation-delay: 2s
+  &:hover {
+    animation: ${keypress} 3s ease-out infinite;
+    animation-delay: 2s;
   }
   ${keypress}
   ${({ active }) =>
@@ -156,7 +159,6 @@ export const ActiveKeyContainer = styled(KeyContainer)`
 
 
   `}
-  /* transition: all 0.4s ease-in-out; */
 `;
 
 const KeyTop = styled.div`
@@ -165,7 +167,6 @@ const KeyTop = styled.div`
   margin: -30px;
   position: relative;
   border-radius: 8px;
-
 
   /* vertical & horizontal centering children */
   display: flex;
@@ -220,37 +221,34 @@ export const Span = styled.div`
 
 `;
 
-const ConditionalWrap = ({ condition, wrap, children }) =>{
-  const [flashing] = React.useContext(BufferContext)
-  return (condition ? wrap(children, flashing) : <>{children}</>)
-}
+const ConditionalWrap = ({ condition, wrap, children }) => {
+  const [flashing] = React.useContext(BufferContext);
+  return condition ? wrap(children, flashing) : <>{children}</>;
+};
 export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => {
   const defaultColor = '#FFFFFF';
   const activeColor = '#1fe3ac';
   const editColor = '#FFB822';
   const [keyColor, changeColor] = React.useState(defaultColor);
- 
+
   const [active, setActive] = React.useState(false);
   const [editableKey, setEditableKey] = React.useState(false);
-  
-
 
   const [editMode, setEditMode] = useGlobalState('editMode');
   const [activeKeys, setActiveKeys] = useGlobalState('activeKeys');
 
+  const [addMode] = useGlobalState('addMode');
+  const [newKeys, setNewKeys] = useGlobalState('newKeys');
 
   const iconLabels = {
     LeftArrow: <LeftArrowIcon>{label}</LeftArrowIcon>,
     RightArrow: <RightArrowIcon>{label}</RightArrowIcon>,
     UpArrow: <UpArrowIcon>{label}</UpArrowIcon>,
     DownArrow: <DownArrowIcon>{label}</DownArrowIcon>
-  }
-  
+  };
+
   React.useEffect(() => {
-
-
     if (flatMap(activeKeys).includes(uniqueKeyName)) {
-      
       if (editMode) {
         changeColor(editColor);
         setActive(true);
@@ -263,34 +261,67 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
       setEditableKey(false);
       setActive(false);
     };
-  }, [activeKeys, editMode, uniqueKeyName]);
+  }, [activeKeys, addMode, editMode, uniqueKeyName]);
 
-  const keyClicked = newKey => {
+  const addItem = key => {
+    const keyXLength = _.size(newKeys.keys.key1)
+    console.log("⭐: Key -> keysLength", keyXLength)
+
+
+    // setNewKeys(p => ({ ...p, [keysLength]: key }));
+    const individualKeys = { ...newKeys.keys["key1"], [keyXLength]: key }
+    const keys = {"key1": individualKeys }
+    console.log("⭐: Key -> individualKeys", keys)
+    
+    console.log("⭐: Key -> keys", keys)
+    setNewKeys(p => ({ ...p, keys }));
+    console.log('⭐: addItem -> newKeys', newKeys.keys);
+  };
+  const removeItem = key => {
+    const key1 = newKeys.keys.key1;
+    const newObj = _.filter(key1, function (v, k) {
+    
+      return(v !== key)
+    });
+
+    const keys = { "key1": newObj }
+    
+    setNewKeys(p => ({ ...p, keys }));
+  };
+
+      
+      
+  const toggleKey = isActive => {
+    if (isActive) {
+      addMode && removeItem(label);
+      changeColor(defaultColor);
+      setActive(false);
+    } else {
+      addMode && addItem(label);
+      changeColor(editColor);
+      setActive(true);
+    }
+  };
+  const keyClicked = () => {
     if (editMode) {
-      if (active) {
-        changeColor(defaultColor);
-        setActive(false);
-      } else {
-        changeColor(editColor);
-        setActive(true);
-      }
+      toggleKey(active);
     }
 
-   
+    if (addMode) {
+      toggleKey(active);
+    }
   };
 
   return (
     <React.Fragment>
       <ConditionalWrap
         condition={editMode && active}
-        wrap={(children, flashing )=> (
+        wrap={(children, flashing) => (
           <animated.div key={key} style={flashing}>
             {children}
           </animated.div>
         )}
       >
-
-
         {active ? (
           <KeyContainer
             editableKey={editableKey}
@@ -302,10 +333,10 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
             wt={wt}
             ht={ht}
             color={keyColor}
-            onClick={() => keyClicked(label)}
+            onClick={keyClicked}
           >
             <KeyTop wt={wt} ht={ht} color={keyColor}>
-              <KeyChar>{label}</KeyChar>
+              <KeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</KeyChar>
             </KeyTop>
           </KeyContainer>
         ) : (
@@ -319,18 +350,13 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
             wt={wt}
             ht={ht}
             color={keyColor}
-            onClick={() => keyClicked(label)}
+            onClick={keyClicked}
           >
             <KeyTop container alignItems="center" justify="center" wt={wt} ht={ht} color={keyColor}>
-              <KeyChar >
-                 {keyName in iconLabels ? iconLabels[keyName] : label}
-                 
-              </KeyChar>
-              
+              <KeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</KeyChar>
             </KeyTop>
           </ActiveKeyContainer>
-          )}
-        
+        )}
       </ConditionalWrap>
     </React.Fragment>
   );

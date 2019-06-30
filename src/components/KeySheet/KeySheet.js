@@ -6,6 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import PropTypes from 'prop-types';
 import { FixedSizeList } from 'react-window';
 import { startCase, toLower } from 'lodash';
+import { NewKeyForm } from './Menu/KeyListItem';
 
 import { KeyTable } from './SheetData';
 
@@ -35,7 +36,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { SelectionProvider } from './Menu/SelectionContext';
 import { BufferContext } from '../KeyBuffer/BufferContext';
-import {KeyTableContext} from '../../context/KeyTableContext'
+import { KeyTableContext } from '../../context/KeyTableContext';
 import {
   usePopupState,
   bindToggle,
@@ -68,9 +69,10 @@ import { FirebaseContext } from '../utils/firebase';
 import useMeasure from './useMeasure';
 
 import 'firebase/firestore';
-import { useGlobalState, setGlobalState } from '../../state';
+import { useGlobalState, setGlobalState, clearKeySelection } from '../../state';
 
 import { useAuthState } from 'react-firebase-hooks/auth';
+import SwipeableViews from 'react-swipeable-views';
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
@@ -129,6 +131,20 @@ const useStyles = makeStyles(theme => ({
     marginRight: '10px',
     display: 'block',
     overflow: 'scroll'
+  },
+  slideContainer: {
+    height: 100
+  },
+  slide: {
+    padding: 15,
+    minHeight: 100,
+    color: '#fff'
+  },
+  slide1: {
+    backgroundColor: '#FEA900'
+  },
+  slide2: {
+    backgroundColor: '#B3DC4A'
   }
 }));
 
@@ -147,6 +163,7 @@ const CategoryPaper = styled(Paper)`
   margin-right: 10px;
   display: block;
   overflow-x: hidden;
+  width: 200px;
 
   &::-webkit-scrollbar {
     width: 5px;
@@ -184,10 +201,6 @@ export const KeySheet = props => {
 
   const cardRef = React.useRef(null);
 
-  
-
-
-
   function filterKeyTable(ktable, category) {
     if (category !== 'All') {
       return curKeyTable.data().table.filter(key => {
@@ -204,11 +217,6 @@ export const KeySheet = props => {
   const [user, loading, error] = userAuthState;
 
   const { curKeyTable, loadingUKTC } = React.useContext(KeyTableContext);
-  
-
-  console.log("⭐: curKeyTable", curKeyTable)
-
-  
 
 
   setGlobalState('user', user);
@@ -218,22 +226,8 @@ export const KeySheet = props => {
     .collection('KeyTables')
     .doc('VS_Code');
 
-  console.log("⭐: vsCodeDocument", vsCodeDocument);
 
   const [fbKeyTable, loadingD, errorD] = useDocument(vsCodeDocument);
-
-  
-
-
-
-  
-
-
- 
-
-
-  
-  
 
   // Menu
   const [drawerState] = useGlobalState('drawerState');
@@ -243,20 +237,23 @@ export const KeySheet = props => {
   const [selectedIndex, setSelectedIndex] = React.useState();
   const [curCategory, setCurCategory] = React.useState('All');
   const [listRef, setListRef] = useGlobalState('listRef');
+  const [newKeys, setNewKeys] = useGlobalState('newKeys');
 
-  function handleListItemClick(event, index, category) {
+  const [addMode] = useGlobalState('addMode');
+
+  const [value, setView] = React.useState(0);
+
+  function handleChangeIndex(index) {
+    setView(index);
+  }
+
+  function handleListCategoryClick(event, index, category) {
+    clearKeySelection();
+
     setSelectedIndex(index);
     setCurCategory(category);
     listRef.current.resetAfterIndex(0, false);
-    console.log('⭐: handleListItemClick -> category', category);
   }
-
-  
-
- 
-
-
-
 
   const addCategory = (userId, sheetName) =>
     firebase
@@ -279,11 +276,10 @@ export const KeySheet = props => {
     //   }
     // })
   };
-  // .collection('')
-  // .set({
-  //   keyDoc: name,
-  //   user: userId
-  // });
+  const [viewIndex, setViewIndex] = React.useState(0);
+  React.useEffect(() => {
+    addMode ? setViewIndex(1) : setViewIndex(0);
+  }, [addMode]);
 
   return (
     <React.Fragment>
@@ -292,8 +288,7 @@ export const KeySheet = props => {
       {curKeyTable && !errorD && (
         <SelectionProvider>
           <div>
-            
-            <Card ref={anchorRef(popupState)}>
+            <Card ref={anchorRef(popupState)} style={{ height: '470px' }}>
               <CardHead
                 ref={cardRef}
                 className={classes.appBar}
@@ -318,7 +313,7 @@ export const KeySheet = props => {
                     <List>
                       <ListItem
                         button
-                        onClick={e => handleListItemClick(e, -1, 'All')}
+                        onClick={e => handleListCategoryClick(e, -1, 'All')}
                         selected={selectedIndex === -1}
                         key={'All'}
                       >
@@ -328,13 +323,11 @@ export const KeySheet = props => {
                         <ListItemText primary={'All'} />
                       </ListItem>
                       <Divider />
-                      {console.log("⭐: curKeyTable.data()", curKeyTable)}
-                      { 
-                        
-                        (curKeyTable.data().categories || []).map((category, index) => (
+
+                      {(curKeyTable.data().categories || []).map((category, index) => (
                         <ListItem
                           button
-                          onClick={e => handleListItemClick(e, index, category)}
+                          // onClick={e => handleListCategoryClick(e, index, category)}
                           selected={selectedIndex === index}
                           key={category}
                         >
@@ -347,18 +340,43 @@ export const KeySheet = props => {
                           </Badge>
                         </ListItem>
                       ))}
-                        
                     </List>
                     <Divider />
                   </CategoryPaper>
                 </Fade>
               </Popper>
 
-              <div>
+              <SwipeableViews
+                // axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+
+                resistance={true}
+                axis="y"
+                index={viewIndex}
+                // onChangeIndex={handleChangeIndex}
+
+                slideStyle={{ height: '100%' }}
+                containerStyle={{ height: '500px' }}
+                style={{ flex: 1 }}
+              >
                 <CardContent>
-                  <KeyList height={360} keyTable={filterKeyTable(curKeyTable, curCategory) } />
+                  <KeyList height={360} keyTable={filterKeyTable(curKeyTable, curCategory)} />
                 </CardContent>
-              </div>
+                <CardContent>
+                  <NewKeyForm
+                    // onChange={e => setDescription(e.target.value)}
+                    category="Hello"
+                    newKeys={newKeys.keys}
+                  >
+                    <TextField
+                      value={newKeyTable.description}
+                      onChange={event => {
+                        const description = event.target.value;
+                        setNewKeys(p => ({ ...p, description }));
+                      }}
+                    />
+                  </NewKeyForm>
+                </CardContent>
+              </SwipeableViews>
             </Card>
           </div>
         </SelectionProvider>

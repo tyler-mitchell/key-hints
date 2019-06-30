@@ -41,7 +41,7 @@ import {
   Folder as FolderIcon
 } from '@material-ui/icons';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { useGlobalState } from './state';
+import { useGlobalState, clearKeySelection } from './state';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { ChromeLogo, FigmaLogo, Windows10Logo, SketchLogo, VSCodeLogo } from './assets';
 
@@ -160,6 +160,7 @@ export default function Routes() {
   const [curCategory, setCurCategory] = React.useState('All');
 
   function handleListItemClick(event, index, doc) {
+    clearKeySelection();
     setSelectedIndex(index);
 
     setCurKeyTable(doc);
