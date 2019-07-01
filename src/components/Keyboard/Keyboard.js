@@ -30,7 +30,7 @@ import {
   mw,
   excludedKeys
 } from './Layout';
-import { BufferContext } from '../KeyBuffer/BufferContext';
+
 import { Row, useKeyboardStyle, InnerFrame, Cover } from './Keyboard.styles';
 // import styled from '@xstyled/styled-components'
 import { ThemeProvider } from 'styled-components';

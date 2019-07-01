@@ -2,7 +2,7 @@ import { createGlobalState } from 'react-hooks-global-state';
 import React from 'react';
 
 import { useSpring, animated, config } from 'react-spring';
-import useColorLoop from './components/Key/useColorLoop';
+import useColorLoop from './components/Key/FlashingKey';
 
 const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalState({
 

@@ -6,7 +6,7 @@ import * as firebase from 'firebase';
 import { ThemeProvider } from '@material-ui/styles';
 import { useStyles } from './components/design-system/styles';
 import { KeySheet } from './components/KeySheet/KeySheet';
-import useLockBodyScroll from './components/KeySheet/useLockScroll'
+import useLockBodyScroll from './components/hooks/useLockScroll'
 // Local
 import Keyboard from './components/Keyboard';
 // import theme from './components/design-system/theme/index';
@@ -38,7 +38,7 @@ import SignInDialog from './components/SignIn/SignInDialog'
 
 import KeyBuffer from './components/KeyBuffer';
 
-import { BufferProvider } from './components/KeyBuffer/BufferContext';
+import { FlashingProvider } from './components/Key/FlashingContext';
 
 function Dashboard() {
 
@@ -67,7 +67,7 @@ function Dashboard() {
         <div className={style.appBarSpacer} />
         <Container maxWidth="lg" className={style.container}>
           <Grid container direction="column" justify="space-around" spacing={2} alignItems="center">
-            <BufferProvider>
+            <FlashingProvider>
               <Grid item xs={12}>
                 {/* Keyboard */}
 
@@ -84,7 +84,7 @@ function Dashboard() {
                 </Grid>
 
               </Grid>
-            </BufferProvider>
+            </FlashingProvider>
           </Grid>
         </Container>
       </main>

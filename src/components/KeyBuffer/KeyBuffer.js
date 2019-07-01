@@ -8,7 +8,7 @@ import { useSprings, animated, interpolate } from 'react-spring';
 import styled from 'styled-components';
 import Box from '@material-ui/core/Box';
 import { lighten, darken, shade } from 'polished';
-import { BufferContext } from './BufferContext';
+import { FlashingContext } from '../Key/FlashingContext';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
@@ -122,7 +122,7 @@ const fn = (order, down, originalIndex, curIndex, x) => index =>
     : { x: order.indexOf(index) * 70, scale: 1, zIndex: '0', shadow: 1, immediate: false };
 
 const KeyBuffer = () => {
-  const [items, setKeys] = React.useContext(BufferContext);
+  const [items, setKeys] = React.useContext(FlashingContext);
 
   let order = items.map((_, index) => index); // Store indicies as a local ref, this represents the item order
 

@@ -1,10 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import EditIcon from '@material-ui/icons/Edit';
-import IconButton from '@material-ui/core/IconButton';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import { SelectionContext } from './SelectionContext';
-import { BufferContext } from '../../KeyBuffer/BufferContext';
+
+
+import { FlashingContext } from '../../Key/FlashingContext';
 import {
   Button,
   ListItem,
@@ -17,7 +15,7 @@ import {
   Grid,
   TextField
 } from '@material-ui/core';
-import useScrollTop from './useScrollTop';
+
 import { useGlobalState } from '../../../state';
 import { KeyTable } from '../SheetData';
 import {ArrowBack as LeftArrowIcon, ArrowForward as RightArrowIcon, ArrowUpward as UpArrowIcon, ArrowDownward as DownArrowIcon} from '@material-ui/icons'
@@ -153,7 +151,7 @@ const CategoryChip = styled(Chip)`
 
 export const KeyListItem = props => {
   const { index, openMenu, styles, text, keybind, category } = props;
-  // const [, , activeKeys, setActiveKeys] = React.useContext(BufferContext);
+  // const [, , activeKeys, setActiveKeys] = React.useContext(FlashingContext);
 
   const [, setActiveKeys] = useGlobalState('activeKeys');
 

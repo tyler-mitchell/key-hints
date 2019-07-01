@@ -1,78 +1,46 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import ListItem from '@material-ui/core/ListItem';
-import { List, TextField } from '@material-ui/core';
-import ListItemText from '@material-ui/core/ListItemText';
-import PropTypes from 'prop-types';
-import { FixedSizeList } from 'react-window';
-import { startCase, toLower } from 'lodash';
-import { NewKeyForm } from './Menu/KeyListItem';
 
-import { KeyTable } from './SheetData';
 
-import { shade, linearGradient, lighten } from 'polished';
+
 import Card from '@material-ui/core/Card';
 
 import CardContent from '@material-ui/core/CardContent';
 
-import IconButton from '@material-ui/core/IconButton';
+
 
 import styled from 'styled-components';
-import Grid from '@material-ui/core/Grid';
+
 
 import { useTheme } from '@material-ui/styles';
 import { SearchInput } from './SearchInput';
 
-import EditIcon from '@material-ui/icons/Edit';
 
-import Button from '@material-ui/core/Button';
 
 import KeyList from './Menu/KeyList';
 
-import Badge from '@material-ui/core/Badge';
 
 import Paper from '@material-ui/core/Paper';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import { SelectionProvider } from './Menu/SelectionContext';
-import { BufferContext } from '../KeyBuffer/BufferContext';
 import { KeyTableContext } from '../../context/KeyTableContext';
 import {
   usePopupState,
-  bindToggle,
-  bindPopper,
+  
   anchorRef,
-  bindTrigger
 } from 'material-ui-popup-state/hooks';
 import {
   AppBar,
-  Toolbar,
+
   Divider,
   CircularProgress,
-  Drawer,
-  ListItemIcon,
-  ListSubheader,
-  Popper,
-  Fade,
-  Chip,
-  Select,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Input
 } from '@material-ui/core';
 
-import {
-  Folder as FolderIcon
-} from '@material-ui/icons';
 
 import { FirebaseContext } from '../utils/firebase';
-import useMeasure from './useMeasure';
+
 
 import 'firebase/firestore';
-import { useGlobalState, setGlobalState, clearKeySelection } from '../../state';
-
-import { useAuthState } from 'react-firebase-hooks/auth';
+import { useGlobalState, setGlobalState } from '../../state';
 import SwipeableViews from 'react-swipeable-views';
 import { AddKeyView } from './AddKeyView'
 import {CategoryMenu} from './CategoryMenu/CategoryMenu'

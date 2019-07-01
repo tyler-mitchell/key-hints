@@ -50,16 +50,6 @@ const useStyles = makeStyles({
   }
 });
 
-const SearchContainer = styled.div`
-  align-items: center;
-  background-color: ${({ theme }) => theme.palette.common.white};
-  /* border: 1px solid ${({ theme }) => theme.palette.common.neutral}; */
-  border-radius: 4px;
-  display: flex;
-  /* flex-basis: 200px; */
-
-  /* margin-left: 38px; */
-`;
 
 const SearchIcon = styled(Search)`
   margin-right: ${({ theme }) => theme.spacing.unit};
@@ -81,7 +71,7 @@ export const SearchInput = props => {
   const [editMode, setEditMode] = useGlobalState('editMode');
   const [activeKeys, setActiveKeys] = useGlobalState('activeKeys') ;
   const [addMode, setAddMode] = useGlobalState('addMode');
-  const [newKeys, setNewKeys] = useGlobalState('newKeys');
+  const [newKeys] = useGlobalState('newKeys');
   const {curKeyTable, addNewKeyToFirebase} = React.useContext(KeyTableContext);
   
 
@@ -110,8 +100,7 @@ export const SearchInput = props => {
     
   };
 
-  const { userKTC } = React.useContext(KeyTableContext);
-  const cardRef = React.useRef(null)
+
   return (
     <Paper elevation={0} className={classes.root}>
       <IconButton

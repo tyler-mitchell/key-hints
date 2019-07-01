@@ -4,7 +4,7 @@ import React from 'react';
 import { Box } from '@rebass/grid';
 import { shade, linearGradient, lighten } from 'polished';
 import Layer from '@material-ui/core/Box';
-import { BufferContext } from '../KeyBuffer/BufferContext';
+import { FlashingContext } from './FlashingContext';
 import { Card, Grid, Paper } from '@material-ui/core';
 import { useSpring, animated, useTransition } from 'react-spring';
 import Typography from '@material-ui/core/Typography';
@@ -15,7 +15,7 @@ import {
   ArrowDownward as DownArrowIcon
 } from '@material-ui/icons';
 import './key.css';
-import { FlashingKey } from './useColorLoop';
+import { FlashingKey } from './FlashingKey';
 
 import { useGlobalState } from '../../state';
 import _ from 'lodash';
@@ -222,7 +222,7 @@ export const Span = styled.div`
 `;
 
 const ConditionalWrap = ({ condition, wrap, children }) => {
-  const [flashing] = React.useContext(BufferContext);
+  const [flashing] = React.useContext(FlashingContext);
   return condition ? wrap(children, flashing) : <>{children}</>;
 };
 export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => {

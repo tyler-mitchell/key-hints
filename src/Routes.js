@@ -43,8 +43,8 @@ import {
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useGlobalState, clearKeySelection, setGlobalState } from './state';
 
-import { ChromeLogo, FigmaLogo, Windows10Logo, SketchLogo, VSCodeLogo } from './assets';
-import {SheetList} from './components/Menu/SheetList'
+
+import {SheetDrawer} from './components/Menu/SheetDrawer'
 const drawerWidth = 240;
 const DrawerTab = styled(Drawer)``;
 const useRouteStyles = makeStyles(theme => ({
@@ -133,60 +133,15 @@ const useRouteStyles = makeStyles(theme => ({
 export default function Routes() {
   const style = useStyles();
   const routeClasses = useRouteStyles();
-  const theme = useTheme();
+
   const [open, setOpen] = React.useState(false);
 
 
   const { firebase, userAuthState } = React.useContext(FirebaseContext);
-  const [user, loading, error] = userAuthState;
 
-  function handleDrawerOpen() {
-    setOpen(!open);
-  }
 
-  function handleDrawerClose() {
-    setOpen(false);
-  }
-  const collectionRef =
-    user &&
-    firebase
-      .firestore()
-      .collection('Users')
-      .doc(user.uid)
-      .collection('KeyTables');
-  const { userKTC, setCurKeyTable, setDocIndex } = React.useContext(KeyTableContext);
 
-  const [selectedIndex, setSelectedIndex] = React.useState();
-  const [curCategory, setCurCategory] = React.useState('All');
 
-  function handleListItemClick(event, index) {
-    console.log("⭐: handleListItemClick -> index", index)
-    clearKeySelection();
-    setSelectedIndex(index);
-    setDocIndex(index);
-    setGlobalState('addMode', false);
-  }
-
-  const newKeyTable = name => {
-    collectionRef.doc(name).set({ categories: [], table: [] });
-
-    // .doc("VS_CODE").set({ category: {}, table: {} });
-    // const getRef = keyTableRef.get().then(doc => {
-    //   if (doc.exists) {
-    //     console.log("Document Already Exists", doc)
-    //   }
-    // })
-  };
-  const addNewKey = name => {
-    collectionRef.doc(name).set({ categories: [], table: [] });
-
-    // .doc("VS_CODE").set({ category: {}, table: {} });
-    // const getRef = keyTableRef.get().then(doc => {
-    //   if (doc.exists) {
-    //     console.log("Document Already Exists", doc)
-    //   }
-    // })
-  };
 
   return (
     <>
@@ -201,7 +156,6 @@ export default function Routes() {
           <IconButton
             color="inherit"
             aria-label="Open drawer"
-            onClick={handleDrawerOpen}
             edge="start"
             className={routeClasses.menuButton}
           />
@@ -211,51 +165,7 @@ export default function Routes() {
           <SignInDialog />
         </Toolbar>
       </AppBar>
-      <Drawer
-        classes={{ paper: routeClasses.paper }}
-        variant="persistent"
-        hideBackdrop={true}
-        BackdropProps={{ invisible: true }}
-        PaperProps={{ elevation: 1 }}
-        open={open}
-      >
-        <div className={routeClasses.toolbar}>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-          </IconButton>
-        </div>
-        <Divider />
-        <SheetList/>
-        <Divider style={{ bottom: '50px', position: 'absolute' }} />
-
-        <Grid container justify="center">
-          <Fab
-            color="primary"
-            variant="extended"
-            size="small"
-            style={{ bottom: '10px', position: 'absolute' }}
-            button
-            onClick={() => newKeyTable('MY KT')}
-          >
-            <AddIcon />
-            Add New Collection
-          </Fab>
-        </Grid>
-
-      </Drawer>
-
-      <Drawer
-        variant="persistent"
-        classes={{ paper: routeClasses.drawerTab }}
-        PaperProps={{ elevation: 3 }}
-        open={!open}
-      >
-        <div style={{ marginLeft: '20px' }}>
-          <IconButton onClick={handleDrawerOpen}>
-            <MenuIcon />
-          </IconButton>
-        </div>
-      </Drawer>
+      <SheetDrawer/>
 
       <Switch>
         <Redirect exact from="/" to="/dashboard" />
