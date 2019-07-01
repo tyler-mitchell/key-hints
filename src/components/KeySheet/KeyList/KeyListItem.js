@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-
 import { FlashingContext } from '../../Key/FlashingContext';
 import {
   Button,
@@ -18,12 +17,14 @@ import {
 
 import { useGlobalState } from '../../../state';
 import { KeyTable } from '../SheetData';
-import {ArrowBack as LeftArrowIcon, ArrowForward as RightArrowIcon, ArrowUpward as UpArrowIcon, ArrowDownward as DownArrowIcon} from '@material-ui/icons'
+import {
+  ArrowBack as LeftArrowIcon,
+  ArrowForward as RightArrowIcon,
+  ArrowUpward as UpArrowIcon,
+  ArrowDownward as DownArrowIcon
+} from '@material-ui/icons';
 
-const KbdKeyList = styled(ListItem)`
-
-
-`;
+const KbdKeyList = styled(ListItem)``;
 
 const KbdKey = styled.div`
   margin-left: auto;
@@ -38,12 +39,9 @@ const KbdKey = styled.div`
       transform: translateY(0);
     }
   }
-transition: all 0.4s;
-  
+  transition: all 0.4s;
 
-
- 
-  animation: fadeIn .4s ease-out;
+  animation: fadeIn 0.4s ease-out;
 `;
 const KbdBadge = styled.div`
   margin-left: auto;
@@ -54,23 +52,37 @@ const ORLabel = styled.span`
   font-size: 8px;
 `;
 
-
 const renderIcon = keyLabel => {
   const iconLabels = {
-     '←': <LeftArrowIcon fontSize="small" style={{ display: "inline-block", verticalAlign: "middle"  }}>{keyLabel}</LeftArrowIcon>,
-     '→': <RightArrowIcon fontSize="small" style={{ display: "inline-block",verticalAlign: "middle"  }}>{keyLabel}</RightArrowIcon>,
-     '↑': <UpArrowIcon fontSize="small" style={{ display: "inline-block", verticalAlign: "middle" }}>{keyLabel}</UpArrowIcon>,
-     '↓': <DownArrowIcon fontSize="small" style={{ display: "inline-block",verticalAlign: "middle"  }}>{keyLabel}</DownArrowIcon>
-  }
+    '←': (
+      <LeftArrowIcon fontSize="small" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+        {keyLabel}
+      </LeftArrowIcon>
+    ),
+    '→': (
+      <RightArrowIcon fontSize="small" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+        {keyLabel}
+      </RightArrowIcon>
+    ),
+    '↑': (
+      <UpArrowIcon fontSize="small" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+        {keyLabel}
+      </UpArrowIcon>
+    ),
+    '↓': (
+      <DownArrowIcon fontSize="small" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+        {keyLabel}
+      </DownArrowIcon>
+    )
+  };
 
-  if(keyLabel in iconLabels){
-    return iconLabels[keyLabel]
+  if (keyLabel in iconLabels) {
+    return iconLabels[keyLabel];
   } else {
-    return keyLabel
+    return keyLabel;
   }
-}
+};
 const renderKeys = keybind => {
-  const keysLength = Object.keys(keybind).length > 1;
   
 
   return (
@@ -91,7 +103,7 @@ const renderKeys = keybind => {
                   {Array.isArray(keyItem[kb])
                     ? keyItem[kb].map((x, i, arr) =>
                         arr.length - 1 !== i ? (
-                          <span key={i} >
+                          <span key={i}>
                             {renderIcon(x)}
                             <ORLabel> or </ORLabel>
                           </span>
@@ -100,10 +112,7 @@ const renderKeys = keybind => {
                         )
                       )
                     : renderIcon(keyItem[kb])}
-                  {/* {Array.isArray(kb)
-                    // ? kb.map((x, i) =>   i !== Object.keys(keybind).length - 1 && 'or')
-                    ? kb.map((x, i) => x + (kb.length - 1 !== i ? 'or': ''))
-                    : kb} */}
+                
                 </KBD>
                 {index !== Object.keys(keyItem).length - 1 && '+'}
               </KbdKey>
@@ -142,28 +151,17 @@ const ListItemContainer = () => styled(ListItem)`
 `;
 
 const CategoryChip = styled(Chip)`
-
   transform: scale(0.85);
-  
 `;
-
-
 
 export const KeyListItem = props => {
   const { index, openMenu, styles, text, keybind, category } = props;
   // const [, , activeKeys, setActiveKeys] = React.useContext(FlashingContext);
 
   const [, setActiveKeys] = useGlobalState('activeKeys');
+  const [, setEditMode] = useGlobalState('editMode');
+  const [selection, setSelection] = useGlobalState('selectedItem');
 
-  const [editMode, setEditMode] = useGlobalState('editMode');
-  const editClicked = (e, index) => {
-    openMenu(e, index);
-    setEditMode(true);
-  };
-
-
-  const [selection, setSelection] = useGlobalState('selectedItem')
-  
   const itemClicked = index => {
     setSelection(index);
     setActiveKeys(keybind['key1']);
@@ -172,85 +170,67 @@ export const KeyListItem = props => {
     }
   };
 
-
-
   const ListWrapper = styled(ListItem)`
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(2rem);
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(2rem);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  padding: 1rem;
+    padding: 1rem;
 
-  
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-  border-radius: 3px;
-  transition: all 0.4s;
-  
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+    transition: all 0.4s;
 
-
- 
-  animation: fadeIn .4s ease-out;
-  /* &:hover {
+    animation: fadeIn 0.4s ease-out;
+    /* &:hover {
     transform: translateX(5px);
   } */
-`;
-
+  `;
 
   return (
-    
-      <ListItem
-        button
-        style={{ ...styles, display: 'flex', justifyContent: 'flex-start' }}
-        divider
-        onClick={() => itemClicked(index)}
-        selected={selection === index}
-      >
-        <Grid container xs={5} justify="flext-start">
-          <ListItemText
-            primary={<Typography variant="keylabel">{text}</Typography>}
-            disableTypography={true}
-          />
-        </Grid>
-  
-        <Grid container  justify="flex-end" direction="row">
-          <List>{renderKeys(keybind)}</List>
-        </Grid>
-        <Grid container xs={2} justify="flex-end"  direction="row">
-          <CategoryChip size="small" element={Typography} label={category} clickable color="primary" />
-        </Grid>
-      </ListItem>
-   
+    <ListItem
+      button
+      style={{ ...styles, display: 'flex', justifyContent: 'flex-start' }}
+      divider
+      onClick={() => itemClicked(index)}
+      selected={selection === index}
+    >
+      <Grid container xs={5} justify="flext-start">
+        <ListItemText
+          primary={<Typography variant="keylabel">{text}</Typography>}
+          disableTypography={true}
+        />
+      </Grid>
+
+      <Grid container justify="flex-end" direction="row">
+        <List>{renderKeys(keybind)}</List>
+      </Grid>
+      <Grid container xs={2} justify="flex-end" direction="row">
+        <CategoryChip
+          size="small"
+          element={Typography}
+          label={category}
+          clickable
+          color="primary"
+        />
+      </Grid>
+    </ListItem>
   );
 };
 
-export const NewKeyForm = ({newKeys, category, children}) => {
+export const NewKeyForm = ({ newKeys, category, children }) => {
   return (
-    
-    <ListItem
- 
-      style={{  display: 'flex', justifyContent: 'flex-start' }}
-      divider
-     
- 
-    >
-   
-        {children}
+    <ListItem style={{ display: 'flex', justifyContent: 'flex-start' }} divider>
+      {children}
 
- 
-
-      
-        <List>{renderKeys(newKeys)}</List>
-   
-        
-      
+      <List>{renderKeys(newKeys)}</List>
     </ListItem>
- 
-);
-}
+  );
+};
 export default KeyListItem;

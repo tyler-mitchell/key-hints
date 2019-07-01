@@ -39,7 +39,7 @@ export const CategoryMenu = ({popupState}) => {
  
   const { open, ...bindPopState } = bindPopper(popupState);
 
-  const [selectedIndex, setSelectedIndex] = React.useState();
+  const [selectedIndex, setSelectedIndex] = useGlobalState('selectedCategoryIndex')
   const [curCategory, setCurCategory] = useGlobalState('sheetCategory')
   const [listRef] = useGlobalState('listRef');
   const { curKeyTable, loadingUKTC } = React.useContext(KeyTableContext);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGlobalState, setGlobalState, clearKeySelection } from '../../state';
 import { KeyTableContext } from '../../context/KeyTableContext';
-import { NewKeyForm } from './Menu/KeyListItem';
+import { NewKeyForm } from './KeyList/KeyListItem';
 import { Divider, TextField, CardContent } from '@material-ui/core';
 import { SearchInput } from './SearchInput'
 import { useTheme } from '@material-ui/styles';

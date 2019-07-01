@@ -59,7 +59,8 @@ export default function KeyTableProvider({ children }) {
     errUKTC,
     setCurKeyTable,
     addNewKeyToFirebase,
-    setDocIndex
+    setDocIndex,
+    docIndex
   };
 
   return <KeyTableContext.Provider value={ctx}>{children}</KeyTableContext.Provider>;

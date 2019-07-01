@@ -17,6 +17,7 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
   listRef: {},
   user: { user: null },
   selectedItem: null,
+  selectedCategoryIndex: -1,
   addMode: false,
   
   newKeys: {
@@ -34,7 +35,6 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
 export const clearKeySelection = () => {
   setGlobalState('selectedItem', null)
   setGlobalState('activeKeys', {})
-  const keys = { key1: {} }
   setGlobalState('newKeys', v => ({ ...v, keys: {key1: {}} }))
 
 

@@ -3,7 +3,7 @@ import { VariableSizeList } from 'react-window';
 import { List } from '@material-ui/core';
 import KeyListItem from './KeyListItem';
 import { KeyTable } from '../SheetData';
-import { SelectionProvider } from './SelectionContext';
+
 import { setGlobalState } from '../../../state';
 
 const itemSize = index => {
@@ -12,6 +12,9 @@ const itemSize = index => {
 const Row = props => {
   const { data, index, style, ...others } = props;
   const { keyTable } = data;
+  
+
+
   
   
   
@@ -35,8 +38,14 @@ const KeyList = props => {
   let listRef = React.useRef();
   setGlobalState('listRef', listRef)
   
+
+  // Re-cache list size when table changes
+  React.useEffect(() => {
+    listRef.current.resetAfterIndex(0, false);
+  },[others.keyTable])
+  
   return (
-    <SelectionProvider>
+
       <VariableSizeList
         height={height}
         itemCount={others.keyTable.length}
@@ -47,7 +56,7 @@ const KeyList = props => {
       >
         {Row}
       </VariableSizeList>
-    </SelectionProvider>
+
   );
 };
 

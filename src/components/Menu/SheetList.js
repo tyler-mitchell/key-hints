@@ -8,13 +8,14 @@ import { KeyTableContext } from '../../context/KeyTableContext';
 
 import { Folder as FolderIcon } from '@material-ui/icons';
 
-import { clearKeySelection, setGlobalState } from '../../state';
+import { clearKeySelection, setGlobalState, useGlobalState } from '../../state';
 
 export const SheetList = () => {
   const [selectedIndex, setSelectedIndex] = React.useState();
-  const { userKTC, setDocIndex } = React.useContext(KeyTableContext);
-
+  const { userKTC, setDocIndex, docIndex } = React.useContext(KeyTableContext);
+  
   function handleListItemClick(event, index) {
+    
     console.log('⭐: handleListItemClick -> index', index);
     clearKeySelection();
     setSelectedIndex(index);

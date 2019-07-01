@@ -1,89 +1,44 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
-
-
 import Card from '@material-ui/core/Card';
 
 import CardContent from '@material-ui/core/CardContent';
 
-
-
 import styled from 'styled-components';
-
 
 import { useTheme } from '@material-ui/styles';
 import { SearchInput } from './SearchInput';
 
-
-
-import KeyList from './Menu/KeyList';
-
+import KeyList from './KeyList/KeyList';
 
 import Paper from '@material-ui/core/Paper';
-import { SelectionProvider } from './Menu/SelectionContext';
+
 import { KeyTableContext } from '../../context/KeyTableContext';
-import {
-  usePopupState,
-  
-  anchorRef,
-} from 'material-ui-popup-state/hooks';
-import {
-  AppBar,
-
-  Divider,
-  CircularProgress,
-} from '@material-ui/core';
-
+import { usePopupState, anchorRef } from 'material-ui-popup-state/hooks';
+import { AppBar, Divider, CircularProgress } from '@material-ui/core';
 
 import { FirebaseContext } from '../utils/firebase';
-
 
 import 'firebase/firestore';
 import { useGlobalState, setGlobalState } from '../../state';
 import SwipeableViews from 'react-swipeable-views';
-import { AddKeyView } from './AddKeyView'
-import {CategoryMenu} from './CategoryMenu/CategoryMenu'
+import { AddKeyView } from './AddKeyView';
+import { CategoryMenu } from './CategoryMenu/CategoryMenu';
 
-const drawerWidth = 240;
+
 const useStyles = makeStyles(theme => ({
   appBar: {
     color: 'white',
     padding: 0
   },
-  app: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  title: {
-    marginBottom: 16
-  },
-  container: {
-    marginTop: 16,
-    alignSelf: 'flex-start'
-  },
-  list: {
-    border: '5px solid green'
-  },
-  item: {
-    height: 10,
-    padding: '0 8px',
-    fontFamily: 'Arial',
-    display: 'flex',
-    alignItems: 'center'
-  },
-  itemSelected: {
-    fontWeight: 'bold',
-    backgroundColor: '#EEBDEE'
-  },
+
   divider: {
     width: 1,
     height: 28,
     margin: 4
   },
-  drawerPaper: {
-    width: drawerWidth
-  },
+
   content: {
     flexGrow: 1,
     padding: theme.spacing(3)
@@ -119,9 +74,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const EditButtonGroup = styled.div`
-  padding-right: 10px;
-`;
 
 const CardHead = styled(AppBar)`
   &&& {
@@ -147,41 +99,43 @@ const CategoryPaper = styled(Paper)`
 &:-webkit-scrollbar { width: 0 !important } */
   }
 
-  /* &::-webkit-scrollbar-thumb:hover {background: #555;} */
-
-  /* &::-webkit-scrollbar-track
-{
-	-webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3);
-	border-radius: 2px;
-	background-color: #F5F5F5;
-}
-
-
-
-&::-webkit-scrollbar-thumb
-{
-	border-radius: 5px;
-	-webkit-box-shadow: inset 0 0 2px rgba(0,0,0,.3);
-	background: #cccccc; 
-} */
 `;
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250
-    }
-  }
-};
 
 export const KeySheet = props => {
   const classes = useStyles();
   const theme = useTheme();
 
-  const cardRef = React.useRef(null);
 
+  
+
+  const { curKeyTable, loadingUKTC, docIndex } = React.useContext(KeyTableContext);
+  const [curCategory, setCurCategory] = useGlobalState('sheetCategory');
+  const [addMode] = useGlobalState('addMode');
+
+
+  // Card View Index
+  const [viewIndex, setViewIndex] = React.useState(0);
+
+  // Category Menu popup state
+  const popupState = usePopupState({ variant: 'popper', popupId: 'demoPopper' });
+  
+  // useEffect
+  React.useEffect(() => {
+    addMode ? setViewIndex(1) : setViewIndex(0);
+  }, [addMode]);
+  
+  const [listRef] = useGlobalState('listRef');
+  React.useEffect(() => {
+    
+    return () => {
+      setGlobalState('selectedCategoryIndex', -1)
+      setCurCategory('All')
+    }
+
+  }, [curKeyTable]);
+
+
+  // Functions
   function filterKeyTable(ktable, category) {
     if (category !== 'All') {
       return curKeyTable.data().table.filter(key => {
@@ -192,98 +146,44 @@ export const KeySheet = props => {
     }
   }
 
-  // Firebase
-
-  const { firebase, userAuthState } = React.useContext(FirebaseContext);
-  const [user, loading, error] = userAuthState;
-
-  const { curKeyTable, loadingUKTC } = React.useContext(KeyTableContext);
-
-  setGlobalState('user', user);
-
-  const vsCodeDocument = firebase
-    .firestore()
-    .collection('KeyTables')
-    .doc('VS_Code');
-
-  // Menu
-  const [drawerState] = useGlobalState('drawerState');
-
-
-
-  const popupState = usePopupState({ variant: 'popper', popupId: 'demoPopper' });
-
-  const [selectedIndex, setSelectedIndex] = React.useState();
-  const [curCategory, setCurCategory] = useGlobalState('sheetCategory');
-  const [listRef, setListRef] = useGlobalState('listRef');
-  const [newKeys, setNewKeys] = useGlobalState('newKeys');
-
-  const [addMode, setAddMode] = useGlobalState('addMode');
-  
-  const [value, setView] = React.useState(0);
-
-
-  const addCategory = (userId, sheetName) =>
-    firebase
-      .firestore()
-      .collection('Users')
-      .doc(user.uid)
-      .set({
-        keyDoc: sheetName,
-        user: userId
-      });
-
-
-  const [viewIndex, setViewIndex] = React.useState(0);
-  React.useEffect(() => {
-    addMode ? setViewIndex(1) : setViewIndex(0);
-  }, [addMode]);
-
   return (
     <React.Fragment>
       {loadingUKTC && <CircularProgress className={classes.progress} />}
 
       {curKeyTable && (
-        <SelectionProvider>
-          <>
-            <Card ref={anchorRef(popupState)} style={{ height: '470px' }}>
-              <SwipeableViews
-                // axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+        <>
+          <Card ref={anchorRef(popupState)} style={{ height: '470px' }}>
+            <SwipeableViews
+              resistance={true}
+              axis="y"
+              index={viewIndex}
+              slideStyle={{ height: '100%' }}
+              containerStyle={{ height: '500px' }}
+            >
+              <>
+                <CardHead
+         
+                  className={classes.appBar}
+                  indicatorColor="primary"
+                  textColor="primary"
+                />
 
-                resistance={true}
-                axis="y"
-                index={viewIndex}
-                // onChangeIndex={handleChangeIndex}
+                <SearchInput
+                  theme={theme}
+                  placeholder="Search…"
+                  inputProps={{ 'aria-label': 'Search' }}
+                />
+                <Divider />
+                <CategoryMenu popupState={popupState} />
 
-                slideStyle={{ height: '100%' }}
-                containerStyle={{ height: '500px' }}
-                // style={{ flex: 1 }}
-              >
-                <>
-                  <CardHead
-                    ref={cardRef}
-                    className={classes.appBar}
-                    indicatorColor="primary"
-                    textColor="primary"
-                  />
-
-                  <SearchInput
-                    theme={theme}
-                    placeholder="Search…"
-                    inputProps={{ 'aria-label': 'Search' }}
-                  />
-                  <Divider />
-                  <CategoryMenu popupState={popupState}/>
-
-                  <CardContent>
-                    <KeyList height={360} keyTable={filterKeyTable(curKeyTable, curCategory)} />
-                  </CardContent>
-                </>
-                <AddKeyView/>
-              </SwipeableViews>
-            </Card>
-          </>
-        </SelectionProvider>
+                <CardContent>
+                  <KeyList height={360} keyTable={filterKeyTable(curKeyTable, curCategory)} />
+                </CardContent>
+              </>
+              <AddKeyView />
+            </SwipeableViews>
+          </Card>
+        </>
       )}
     </React.Fragment>
   );
