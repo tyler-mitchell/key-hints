@@ -162,12 +162,22 @@ export default function Routes() {
   function handleListItemClick(event, index, doc) {
     clearKeySelection();
     setSelectedIndex(index);
-
+    
     setCurKeyTable(doc);
     console.log('⭐: handleListItemClick -> doc', doc.data());
   }
 
   const newKeyTable = name => {
+    collectionRef.doc(name).set({ categories: [], table: [] });
+
+    // .doc("VS_CODE").set({ category: {}, table: {} });
+    // const getRef = keyTableRef.get().then(doc => {
+    //   if (doc.exists) {
+    //     console.log("Document Already Exists", doc)
+    //   }
+    // })
+  };
+  const addNewKey = name => {
     collectionRef.doc(name).set({ categories: [], table: [] });
 
     // .doc("VS_CODE").set({ category: {}, table: {} });

@@ -53,7 +53,13 @@ import {
   ListItemIcon,
   ListSubheader,
   Popper,
-  Fade
+  Fade,
+  Chip,
+  Select,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Input
 } from '@material-ui/core';
 
 import {
@@ -194,6 +200,16 @@ const CategoryPaper = styled(Paper)`
 	background: #cccccc; 
 } */
 `;
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250
+    }
+  }
+};
 
 export const KeySheet = props => {
   const classes = useStyles();
@@ -216,8 +232,8 @@ export const KeySheet = props => {
   const { firebase, userAuthState } = React.useContext(FirebaseContext);
   const [user, loading, error] = userAuthState;
 
-  const { curKeyTable, loadingUKTC } = React.useContext(KeyTableContext);
-
+  const { curKeyTable, loadingUKTC, userKTC} = React.useContext(KeyTableContext);
+  console.log("⭐: userKTC", userKTC)
 
   setGlobalState('user', user);
 
@@ -225,7 +241,6 @@ export const KeySheet = props => {
     .firestore()
     .collection('KeyTables')
     .doc('VS_Code');
-
 
   const [fbKeyTable, loadingD, errorD] = useDocument(vsCodeDocument);
 
@@ -327,7 +342,7 @@ export const KeySheet = props => {
                       {(curKeyTable.data().categories || []).map((category, index) => (
                         <ListItem
                           button
-                          // onClick={e => handleListCategoryClick(e, index, category)}
+                          onClick={e => handleListCategoryClick(e, index, category)}
                           selected={selectedIndex === index}
                           key={category}
                         >
@@ -369,11 +384,24 @@ export const KeySheet = props => {
                   >
                     <TextField
                       value={newKeyTable.description}
+                      variant="outlined"
+                      label="description"
                       onChange={event => {
                         const description = event.target.value;
                         setNewKeys(p => ({ ...p, description }));
                       }}
                     />
+                    <TextField
+                      value={newKeyTable.category}
+                      label="category"
+                      variant="outlined"
+                      onChange={event => {
+                        const category = event.target.value;
+                        setNewKeys(p => ({ ...p, category }));
+                      }}
+                    />
+
+                    
                   </NewKeyForm>
                 </CardContent>
               </SwipeableViews>

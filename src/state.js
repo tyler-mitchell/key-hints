@@ -32,6 +32,7 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
 export const clearKeySelection = () => {
   setGlobalState('selectedItem', null)
   setGlobalState('activeKeys', {})
+ 
 
 }
 

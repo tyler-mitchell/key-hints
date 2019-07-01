@@ -22,11 +22,30 @@ import { useGlobalState } from '../../../state';
 import { KeyTable } from '../SheetData';
 import {ArrowBack as LeftArrowIcon, ArrowForward as RightArrowIcon, ArrowUpward as UpArrowIcon, ArrowDownward as DownArrowIcon} from '@material-ui/icons'
 
-const KbdKeyList = styled(ListItem)``;
+const KbdKeyList = styled(ListItem)`
+
+
+`;
 
 const KbdKey = styled.div`
   margin-left: auto;
   margin-right: 0;
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(2rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+transition: all 0.4s;
+  
+
+
+ 
+  animation: fadeIn .4s ease-out;
 `;
 const KbdBadge = styled.div`
   margin-left: auto;
@@ -157,32 +176,32 @@ export const KeyListItem = props => {
 
 
 
-//   const ListWrapper = styled(ListItem)`
-//   @keyframes fadeIn {
-//     from {
-//       opacity: 0;
-//       transform: translateY(2rem);
-//     }
-//     to {
-//       opacity: 1;
-//       transform: translateY(0);
-//     }
-//   }
-//   padding: 1rem;
+  const ListWrapper = styled(ListItem)`
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(2rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  padding: 1rem;
 
   
-//   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-//   border-radius: 3px;
-//   transition: all 0.4s;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+  transition: all 0.4s;
   
 
 
  
-//   animation: fadeIn .4s ease-out;
-//   /* &:hover {
-//     transform: translateX(5px);
-//   } */
-// `;
+  animation: fadeIn .4s ease-out;
+  /* &:hover {
+    transform: translateX(5px);
+  } */
+`;
 
 
   return (
@@ -230,7 +249,7 @@ export const NewKeyForm = ({newKeys, category, children}) => {
       
         <List>{renderKeys(newKeys)}</List>
    
-        <CategoryChip size="small" element={Typography} label={category} clickable color="primary" />
+        
       
     </ListItem>
  

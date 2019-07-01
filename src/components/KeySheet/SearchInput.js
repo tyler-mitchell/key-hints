@@ -79,15 +79,29 @@ export const SearchInput = props => {
   const classes = useStyles();
   const [drawerState, setDrawerState] = useGlobalState('drawerState');
   const [editMode, setEditMode] = useGlobalState('editMode');
-  const [activeKeys, setActiveKeys] = useGlobalState('activeKeys');
+  const [activeKeys, setActiveKeys] = useGlobalState('activeKeys') ;
   const [addMode, setAddMode] = useGlobalState('addMode');
+  const [newKeys, setNewKeys] = useGlobalState('newKeys');
+  const {curKeyTable, addNewKeyToFirebase} = React.useContext(KeyTableContext);
+  
+
+
+  
+  
   const handleAddClick = () => {
     clearKeySelection();
     setGlobalState('addMode', v => !v);
   };
   const handleSaveKeyClick = () => {
+    
+    console.log("⭐: handleSaveKeyClick -> curKeyTable", curKeyTable.ref)
+    addNewKeyToFirebase(curKeyTable, newKeys)
     clearKeySelection();
     setGlobalState('addMode', v => !v);
+  
+    
+    console.log("⭐: handleSaveKeyClick -> newKeys", newKeys)
+    
   };
 
   const { userKTC } = React.useContext(KeyTableContext);
