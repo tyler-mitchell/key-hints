@@ -232,8 +232,8 @@ export const KeySheet = props => {
   const { firebase, userAuthState } = React.useContext(FirebaseContext);
   const [user, loading, error] = userAuthState;
 
-  const { curKeyTable, loadingUKTC, userKTC} = React.useContext(KeyTableContext);
-  console.log("⭐: userKTC", userKTC)
+  const { curKeyTable, loadingUKTC} = React.useContext(KeyTableContext);
+  
 
   setGlobalState('user', user);
 

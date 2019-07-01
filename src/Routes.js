@@ -154,17 +154,16 @@ export default function Routes() {
       .collection('Users')
       .doc(user.uid)
       .collection('KeyTables');
-  const { userKTC, setCurKeyTable } = React.useContext(KeyTableContext);
+  const { userKTC, setCurKeyTable, setDocIndex } = React.useContext(KeyTableContext);
 
   const [selectedIndex, setSelectedIndex] = React.useState();
   const [curCategory, setCurCategory] = React.useState('All');
 
-  function handleListItemClick(event, index, doc) {
+  function handleListItemClick(event, index) {
+    console.log("⭐: handleListItemClick -> index", index)
     clearKeySelection();
     setSelectedIndex(index);
-    
-    setCurKeyTable(doc);
-    console.log('⭐: handleListItemClick -> doc', doc.data());
+    setDocIndex(index);
   }
 
   const newKeyTable = name => {
@@ -284,7 +283,7 @@ export default function Routes() {
               <ListItem
                 button
                 key={doc.id}
-                onClick={e => handleListItemClick(e, index, doc)}
+                onClick={e => handleListItemClick(e, index)}
                 selected={selectedIndex === index}
               >
                 <ListItemIcon><FolderIcon color="primary" /></ListItemIcon>

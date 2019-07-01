@@ -98,9 +98,10 @@ export const SearchInput = props => {
     addNewKeyToFirebase(curKeyTable, newKeys)
     clearKeySelection();
     setGlobalState('addMode', v => !v);
-  
+    console.log("⭐: handleSaveKeyClick -> curKeyTable", curKeyTable.data())
     
-    console.log("⭐: handleSaveKeyClick -> newKeys", newKeys)
+    
+ 
     
   };
 

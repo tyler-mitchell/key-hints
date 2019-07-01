@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import { FirebaseContext } from '../components/utils/firebase';
 import { KeyTable } from '../components/KeySheet/SheetData';
 
@@ -25,11 +25,26 @@ export default function KeyTableProvider({ children }) {
 
   const userKTColRef = user && userDocumentRef.collection('KeyTables');
   
+
+
+
   const [curKeyTable, setCurKeyTable] = React.useState(false);
 
   const [userKTC, loadingUKTC, errUKTC] = useCollection(userKTColRef);
 
-  // const [curKeyTableRef, setcurKeyTableRef] = 
+
+  const [docIndex, setDocIndex] = React.useState(null);
+
+
+  React.useEffect(()=>{
+    console.log("⭐: KeyTableProvider -> userKTC", docIndex && userKTC.docs[docIndex].data())
+
+
+    docIndex !== null && setCurKeyTable(userKTC.docs[docIndex])
+    
+
+  }, [userKTC, docIndex])
+
 
   const addNewKeyToFirebase = (curKeyTable, newKey) => {
     curKeyTable.ref.update({table: firebase.firestore.FieldValue.arrayUnion(newKey)})
@@ -42,7 +57,8 @@ export default function KeyTableProvider({ children }) {
     loadingUKTC,
     errUKTC,
     setCurKeyTable,
-    addNewKeyToFirebase
+    addNewKeyToFirebase,
+    setDocIndex
   };
 
   return <KeyTableContext.Provider value={ctx}>{children}</KeyTableContext.Provider>;
