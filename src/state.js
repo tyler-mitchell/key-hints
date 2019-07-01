@@ -23,15 +23,24 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
     keys: { key1: {} },
     description: 'no description',
     category: 'none'
-  }
+  },
+  sheetCategory: 'All'
     
 
 });
 
 
+
 export const clearKeySelection = () => {
   setGlobalState('selectedItem', null)
   setGlobalState('activeKeys', {})
+  const keys = { key1: {} }
+  setGlobalState('newKeys', v => ({ ...v, keys: {key1: {}} }))
+
+
+  
+  
+ 
  
 
 }

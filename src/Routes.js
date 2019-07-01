@@ -41,10 +41,10 @@ import {
   Folder as FolderIcon
 } from '@material-ui/icons';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { useGlobalState, clearKeySelection } from './state';
-import { useCollection } from 'react-firebase-hooks/firestore';
-import { ChromeLogo, FigmaLogo, Windows10Logo, SketchLogo, VSCodeLogo } from './assets';
+import { useGlobalState, clearKeySelection, setGlobalState } from './state';
 
+import { ChromeLogo, FigmaLogo, Windows10Logo, SketchLogo, VSCodeLogo } from './assets';
+import {SheetList} from './components/Menu/SheetList'
 const drawerWidth = 240;
 const DrawerTab = styled(Drawer)``;
 const useRouteStyles = makeStyles(theme => ({
@@ -135,7 +135,7 @@ export default function Routes() {
   const routeClasses = useRouteStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  // const [userKTC] = useGlobalState('keyTable');
+
 
   const { firebase, userAuthState } = React.useContext(FirebaseContext);
   const [user, loading, error] = userAuthState;
@@ -164,6 +164,7 @@ export default function Routes() {
     clearKeySelection();
     setSelectedIndex(index);
     setDocIndex(index);
+    setGlobalState('addMode', false);
   }
 
   const newKeyTable = name => {
@@ -216,16 +217,6 @@ export default function Routes() {
         hideBackdrop={true}
         BackdropProps={{ invisible: true }}
         PaperProps={{ elevation: 1 }}
-        // className={clsx(routeClasses.drawer, {
-        //   [routeClasses.drawerOpen]: open,
-        //   [routeClasses.drawerClose]: !open
-        // })}
-        // classes={{
-        //   paper: clsx({
-        //     [routeClasses.drawerOpen]: open,
-        //     [routeClasses.drawerClose]: !open
-        //   })
-        // }}
         open={open}
       >
         <div className={routeClasses.toolbar}>
@@ -234,63 +225,7 @@ export default function Routes() {
           </IconButton>
         </div>
         <Divider />
-        <List>
-          <ListItem button>
-            <ListItemIcon>
-              <VSCodeLogo />
-            </ListItemIcon>
-            <ListItemText>
-              VS Code
-            </ListItemText>
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <ChromeLogo />
-            </ListItemIcon>
-            <ListItemText>
-              Chrome
-            </ListItemText>
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <Windows10Logo />
-            </ListItemIcon>
-            <ListItemText>
-              Windows 10
-            </ListItemText>
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <FigmaLogo />
-            </ListItemIcon>
-            <ListItemText>
-              Figma
-            </ListItemText>
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <SketchLogo />
-            </ListItemIcon>
-            <ListItemText>
-              Sketch
-            </ListItemText>
-          </ListItem>
-        </List>
-        <Divider />
-        <List>
-          {userKTC &&
-            userKTC.docs.map((doc, index) => (
-              <ListItem
-                button
-                key={doc.id}
-                onClick={e => handleListItemClick(e, index)}
-                selected={selectedIndex === index}
-              >
-                <ListItemIcon><FolderIcon color="primary" /></ListItemIcon>
-                <ListItemText primary={doc.id} />
-              </ListItem>
-            ))}
-        </List>
+        <SheetList/>
         <Divider style={{ bottom: '50px', position: 'absolute' }} />
 
         <Grid container justify="center">
@@ -306,12 +241,7 @@ export default function Routes() {
             Add New Collection
           </Fab>
         </Grid>
-        {/* <ListItem style={{bottom: 0, position: 'absolute'}} button>
-            <ListItemIcon>
-              <AddIcon />
-            </ListItemIcon>
-            <ListItemText primary="Add New Collection" />
-          </ListItem> */}
+
       </Drawer>
 
       <Drawer

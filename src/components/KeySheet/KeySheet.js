@@ -63,14 +63,9 @@ import {
 } from '@material-ui/core';
 
 import {
-  Save as SaveIcon,
-  Refresh as RefreshIcon,
-  Inbox as InboxIcon,
-  Mail as MailIcon,
   Folder as FolderIcon
 } from '@material-ui/icons';
 
-import { useDocument, useCollection } from 'react-firebase-hooks/firestore';
 import { FirebaseContext } from '../utils/firebase';
 import useMeasure from './useMeasure';
 
@@ -79,6 +74,8 @@ import { useGlobalState, setGlobalState, clearKeySelection } from '../../state';
 
 import { useAuthState } from 'react-firebase-hooks/auth';
 import SwipeableViews from 'react-swipeable-views';
+import { AddKeyView } from './AddKeyView'
+import {CategoryMenu} from './CategoryMenu/CategoryMenu'
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
@@ -232,8 +229,7 @@ export const KeySheet = props => {
   const { firebase, userAuthState } = React.useContext(FirebaseContext);
   const [user, loading, error] = userAuthState;
 
-  const { curKeyTable, loadingUKTC} = React.useContext(KeyTableContext);
-  
+  const { curKeyTable, loadingUKTC } = React.useContext(KeyTableContext);
 
   setGlobalState('user', user);
 
@@ -242,33 +238,22 @@ export const KeySheet = props => {
     .collection('KeyTables')
     .doc('VS_Code');
 
-  const [fbKeyTable, loadingD, errorD] = useDocument(vsCodeDocument);
-
   // Menu
   const [drawerState] = useGlobalState('drawerState');
+
+
+
   const popupState = usePopupState({ variant: 'popper', popupId: 'demoPopper' });
-  const { open, ...bindPopState } = bindPopper(popupState);
 
   const [selectedIndex, setSelectedIndex] = React.useState();
-  const [curCategory, setCurCategory] = React.useState('All');
+  const [curCategory, setCurCategory] = useGlobalState('sheetCategory');
   const [listRef, setListRef] = useGlobalState('listRef');
   const [newKeys, setNewKeys] = useGlobalState('newKeys');
 
-  const [addMode] = useGlobalState('addMode');
-
+  const [addMode, setAddMode] = useGlobalState('addMode');
+  
   const [value, setView] = React.useState(0);
 
-  function handleChangeIndex(index) {
-    setView(index);
-  }
-
-  function handleListCategoryClick(event, index, category) {
-    clearKeySelection();
-
-    setSelectedIndex(index);
-    setCurCategory(category);
-    listRef.current.resetAfterIndex(0, false);
-  }
 
   const addCategory = (userId, sheetName) =>
     firebase
@@ -280,17 +265,7 @@ export const KeySheet = props => {
         user: userId
       });
 
-  const newKeyTable = (userId, name) => {
-    // collectionRef
-    //   .collection('KeyTables')
-    //   .doc(name).set(KeyTable);
-    // .doc("VS_CODE").set({ category: {}, table: {} });
-    // const getRef = keyTableRef.get().then(doc => {
-    //   if (doc.exists) {
-    //     console.log("Document Already Exists", doc)
-    //   }
-    // })
-  };
+
   const [viewIndex, setViewIndex] = React.useState(0);
   React.useEffect(() => {
     addMode ? setViewIndex(1) : setViewIndex(0);
@@ -300,67 +275,10 @@ export const KeySheet = props => {
     <React.Fragment>
       {loadingUKTC && <CircularProgress className={classes.progress} />}
 
-      {curKeyTable && !errorD && (
+      {curKeyTable && (
         <SelectionProvider>
-          <div>
+          <>
             <Card ref={anchorRef(popupState)} style={{ height: '470px' }}>
-              <CardHead
-                ref={cardRef}
-                className={classes.appBar}
-                indicatorColor="primary"
-                textColor="primary"
-              />
-
-              <SearchInput
-                theme={theme}
-                placeholder="Search…"
-                inputProps={{ 'aria-label': 'Search' }}
-              />
-              <Divider />
-              <Popper
-                placement="left-start"
-                className={classes.popper}
-                open={drawerState}
-                {...bindPopState}
-              >
-                <Fade in={popupState} timeout={250}>
-                  <CategoryPaper>
-                    <List>
-                      <ListItem
-                        button
-                        onClick={e => handleListCategoryClick(e, -1, 'All')}
-                        selected={selectedIndex === -1}
-                        key={'All'}
-                      >
-                        <ListItemIcon>
-                          <FolderIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={'All'} />
-                      </ListItem>
-                      <Divider />
-
-                      {(curKeyTable.data().categories || []).map((category, index) => (
-                        <ListItem
-                          button
-                          onClick={e => handleListCategoryClick(e, index, category)}
-                          selected={selectedIndex === index}
-                          key={category}
-                        >
-                          {/* {selectedIndex === index && <ListItemIcon>
-                              <FolderIcon /> 
-                          </ListItemIcon>} */}
-
-                          <Badge>
-                            <ListItemText primary={startCase(toLower(category))} />
-                          </Badge>
-                        </ListItem>
-                      ))}
-                    </List>
-                    <Divider />
-                  </CategoryPaper>
-                </Fade>
-              </Popper>
-
               <SwipeableViews
                 // axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
 
@@ -371,45 +289,34 @@ export const KeySheet = props => {
 
                 slideStyle={{ height: '100%' }}
                 containerStyle={{ height: '500px' }}
-                style={{ flex: 1 }}
+                // style={{ flex: 1 }}
               >
-                <CardContent>
-                  <KeyList height={360} keyTable={filterKeyTable(curKeyTable, curCategory)} />
-                </CardContent>
-                <CardContent>
-                  <NewKeyForm
-                    // onChange={e => setDescription(e.target.value)}
-                    category="Hello"
-                    newKeys={newKeys.keys}
-                  >
-                    <TextField
-                      value={newKeyTable.description}
-                      variant="outlined"
-                      label="description"
-                      onChange={event => {
-                        const description = event.target.value;
-                        setNewKeys(p => ({ ...p, description }));
-                      }}
-                    />
-                    <TextField
-                      value={newKeyTable.category}
-                      label="category"
-                      variant="outlined"
-                      onChange={event => {
-                        const category = event.target.value;
-                        setNewKeys(p => ({ ...p, category }));
-                      }}
-                    />
+                <>
+                  <CardHead
+                    ref={cardRef}
+                    className={classes.appBar}
+                    indicatorColor="primary"
+                    textColor="primary"
+                  />
 
-                    
-                  </NewKeyForm>
-                </CardContent>
+                  <SearchInput
+                    theme={theme}
+                    placeholder="Search…"
+                    inputProps={{ 'aria-label': 'Search' }}
+                  />
+                  <Divider />
+                  <CategoryMenu popupState={popupState}/>
+
+                  <CardContent>
+                    <KeyList height={360} keyTable={filterKeyTable(curKeyTable, curCategory)} />
+                  </CardContent>
+                </>
+                <AddKeyView/>
               </SwipeableViews>
             </Card>
-          </div>
+          </>
         </SelectionProvider>
       )}
-      {errorD && <div>ERROR</div>}
     </React.Fragment>
   );
 };

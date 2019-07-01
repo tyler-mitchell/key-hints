@@ -85,8 +85,13 @@ export const SearchInput = props => {
   const {curKeyTable, addNewKeyToFirebase} = React.useContext(KeyTableContext);
   
 
-
   
+  React.useEffect(() => {
+    
+    return () => {
+      addMode && clearKeySelection()
+    }
+  },[addMode])
   
   const handleAddClick = () => {
     clearKeySelection();
@@ -106,7 +111,7 @@ export const SearchInput = props => {
   };
 
   const { userKTC } = React.useContext(KeyTableContext);
-
+  const cardRef = React.useRef(null)
   return (
     <Paper elevation={0} className={classes.root}>
       <IconButton

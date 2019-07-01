@@ -42,8 +42,9 @@ export default function KeyTableProvider({ children }) {
 
     docIndex !== null && setCurKeyTable(userKTC.docs[docIndex])
     
+    console.log("⌚⌚⌚: KeyTableProvider -> loadingUKTC", loadingUKTC)
 
-  }, [userKTC, docIndex])
+  }, [userKTC, docIndex, loadingUKTC])
 
 
   const addNewKeyToFirebase = (curKeyTable, newKey) => {
