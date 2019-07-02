@@ -90,7 +90,7 @@ const KeyItem = styled(Grid)``;
 const renderRow = row => {
   return Object.keys(row).map((keyName, i) => (
     <KeyItem item>
-      <FlashingProvider>
+     
         <Key
           item
           label={row[keyName][0]}
@@ -101,7 +101,7 @@ const renderRow = row => {
           ht={`${keySize}`}
           keySize={keySize}
         />
-      </FlashingProvider>
+     
     </KeyItem>
   ));
 };
@@ -115,7 +115,9 @@ const KeyboardContainer = () => {
   return (
     <React.Fragment>
       <Cover>
+
         <InnerFrame container alignItems="space-around" direction="column" justify="space-between">
+        <FlashingProvider>
           <Row
             container
             direction="row"
@@ -176,7 +178,8 @@ const KeyboardContainer = () => {
           >
             {renderRow(fifthRow)}{' '}
           </Row>
-        </InnerFrame>
+        </FlashingProvider>
+          </InnerFrame>
       </Cover>
     </React.Fragment>
   );

@@ -7,6 +7,7 @@ import useColorLoop from './components/Key/FlashingKey';
 const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalState({
 
   activeKeys: {},
+  activeKeysIndex: null,
   editMode: false,
   flashing: {},
   keyTable: null,
@@ -18,6 +19,7 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
   user: { user: null },
   selectedItem: null,
   selectedCategoryIndex: -1,
+  selectedKeySheet: 0,
   addMode: false,
   
   newKeys: {
@@ -26,7 +28,7 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
     category: 'none'
   },
   sheetCategory: 'All',
-  sheetNames: new Set()
+  sheetNames: {}
     
 
 });
@@ -39,6 +41,12 @@ export const clearKeySelection = () => {
   setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }))
 }
 
+export const selectNewSheet = (index) => {
+  setGlobalState('selectedItem', null)
+  setGlobalState('activeKeys', {})
+  setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }))
+  setGlobalState('selectedKeySheet', index)
 
+}
 
 export { GlobalStateProvider, useGlobalState, setGlobalState };

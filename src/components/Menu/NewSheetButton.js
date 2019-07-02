@@ -5,6 +5,7 @@ import { Fab } from '@material-ui/core';
 
 import { Add as AddIcon } from '@material-ui/icons';
 import { KeyTableContext } from '../../context/KeyTableContext';
+import { useGlobalState } from '../../state';
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
@@ -21,14 +22,12 @@ export const NewSheetButton = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('');
-  const {addNewKeySheet } = React.useContext(KeyTableContext);
+  const { addNewKeySheet, setDocIndex, docIndex } = React.useContext(KeyTableContext);
+  const [sheetNames] = useGlobalState('sheetNames');
 
-
-  
-
-  
-  
   function handleButtonClick() {
+    console.log('⭐: NewSheetButton -> sheetNames', sheetNames);
+    console.log('⭐: NewSheetButton -> value', value);
     setOpen(true);
   }
 
@@ -37,7 +36,6 @@ export const NewSheetButton = () => {
 
     if (newValue) {
       addNewKeySheet(newValue);
-      setValue('')
     }
   }
 
@@ -67,4 +65,4 @@ export const NewSheetButton = () => {
       />
     </>
   );
-}
+};

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
 
-
 import {
   Dialog,
   DialogTitle,
@@ -17,10 +16,9 @@ import { useGlobalState } from '../../state';
 export const NewSheetDialog = props => {
   const { handleClose, value: valueProp, open, ...other } = props;
   const [value, setValue] = React.useState(valueProp);
-  const [sheetNames] = useGlobalState('sheetNames')
-  const [duplicateError, setDuplicateError] = React.useState(false)
+  const [sheetNames] = useGlobalState('sheetNames');
+  const [duplicateError, setDuplicateError] = React.useState(false);
   let textInput = React.useRef(null);
-  
 
   React.useEffect(() => {
     if (!open) {
@@ -36,22 +34,24 @@ export const NewSheetDialog = props => {
 
   function handleCancel() {
     handleClose();
+    setValue('');
   }
 
   function handleOk() {
-
-    if (sheetNames.has(value)) {
-      setDuplicateError(true)
-      setTimeout(()=> {setDuplicateError(false)}, 3000)
+    if (value in sheetNames) {
+      setDuplicateError(true);
+      setTimeout(() => {
+        setDuplicateError(false);
+      }, 3000);
     } else {
       handleClose(value);
+      setValue('');
     }
-    
   }
 
-  function onChange(event) {
+  function handleOnChange(event) {
     const sheetName = event.target.value;
-    
+
     setValue(sheetName);
   }
   return (
@@ -74,18 +74,18 @@ export const NewSheetDialog = props => {
           inputRef={textInput}
           margin="dense"
           id="name"
-          helperText={duplicateError ? "Already Exists" : ''}
-          
+          value={value}
+          helperText={duplicateError ? 'Already Exists' : ''}
           label="Sheet Name"
-          onChange={event => onChange(event)}
+          onChange={event => handleOnChange(event)}
           fullWidth
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCancel} color="primary" >
+        <Button onClick={handleCancel} color="primary">
           Cancel
         </Button>
-        <Button onClick={handleOk} color="primary" >
+        <Button onClick={handleOk} color="primary">
           Ok
         </Button>
       </DialogActions>

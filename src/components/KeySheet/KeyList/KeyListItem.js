@@ -15,7 +15,7 @@ import {
   TextField
 } from '@material-ui/core';
 
-import { useGlobalState } from '../../../state';
+import { useGlobalState, setGlobalState } from '../../../state';
 import { KeyTable } from '../SheetData';
 import {
   ArrowBack as LeftArrowIcon,
@@ -213,6 +213,7 @@ export const KeyListItem = props => {
   const itemClicked = index => {
     setSelection(index);
     setActiveKeys(keybind['key1']);
+    setGlobalState('activeKeysIndex', index);
     if (selection !== index) {
       setEditMode(false);
     }

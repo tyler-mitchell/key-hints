@@ -249,7 +249,9 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
 
   React.useEffect(() => {
     if (flatMap(activeKeys).includes(uniqueKeyName)) {
+      console.log("⭐: Key -> activeKeys", activeKeys)
       if (editMode) {
+        
         changeColor(editColor);
         setActive(true);
       } else {
@@ -293,11 +295,13 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
       
   const toggleKey = isActive => {
     if (isActive) {
-      addMode && removeItem(label);
+      // addMode && removeItem(label);
+      removeItem(label);
       changeColor(defaultColor);
       setActive(false);
     } else {
-      addMode && addItem(label);
+      // addMode && addItem(label);
+      addItem(label);
       changeColor(editColor);
       setActive(true);
     }

@@ -72,7 +72,7 @@ export const SearchInput = props => {
   const [activeKeys, setActiveKeys] = useGlobalState('activeKeys') ;
   const [addMode, setAddMode] = useGlobalState('addMode');
   const [newKeys] = useGlobalState('newKeys');
-  const {curKeyTable, addNewKeyToFirebase} = React.useContext(KeyTableContext);
+  const {curKeyTable, addNewKeyToFirebase, updateKeyToFirebase } = React.useContext(KeyTableContext);
   
 
   
@@ -90,7 +90,7 @@ export const SearchInput = props => {
   const handleSaveKeyClick = () => {
     
     console.log("⭐: handleSaveKeyClick -> curKeyTable", curKeyTable.ref)
-    addNewKeyToFirebase(curKeyTable, newKeys)
+    addNewKeyToFirebase( newKeys)
     clearKeySelection();
     setGlobalState('addMode', v => !v);
     console.log("⭐: handleSaveKeyClick -> curKeyTable", curKeyTable.data())
@@ -100,6 +100,15 @@ export const SearchInput = props => {
     
   };
 
+  const handleEditClick = () => {
+    setEditMode(true);
+  }
+  const handleSaveEditClick = () => {
+    setEditMode(false);
+    updateKeyToFirebase(newKeys);
+    console.log("⭐: handleSaveEditClick -> newKeys", newKeys)
+    clearKeySelection();
+  }
 
   return (
     <Paper elevation={0} className={classes.root}>
@@ -123,7 +132,8 @@ export const SearchInput = props => {
                 variant="contained"
                 color="primary"
                 size="small"
-                disabled={true}
+                onClick={() => handleSaveEditClick()}
+                // disabled={true}
               >
                 <SaveIcon />
                 Save
@@ -141,7 +151,7 @@ export const SearchInput = props => {
         <>
           <Grid item>
             {!addMode && <Button
-              onClick={() => setEditMode(true)}
+              onClick={() => handleEditClick()}
               className={theme.button}
               variant="contained"
               color="primary"

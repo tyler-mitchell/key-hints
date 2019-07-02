@@ -44,6 +44,7 @@ export const FirebaseProvider = ({ children }) => {
 
   const logout = () => {
     firebase.auth().signOut();
+    
   };
 
   

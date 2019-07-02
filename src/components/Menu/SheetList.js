@@ -2,28 +2,40 @@ import React from 'react';
 
 import { ChromeLogo, FigmaLogo, Windows10Logo, SketchLogo, VSCodeLogo } from '../../assets';
 
-import { Divider, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import {
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  ListItemSecondaryAction,
+  IconButton
+} from '@material-ui/core';
 
 import { KeyTableContext } from '../../context/KeyTableContext';
+import { SheetData } from '../KeySheet/SheetData';
 
-import { Folder as FolderIcon } from '@material-ui/icons';
+import { Folder as FolderIcon, Delete as DeleteIcon } from '@material-ui/icons';
 
 import { clearKeySelection, setGlobalState, useGlobalState } from '../../state';
 
 export const SheetList = () => {
-  const [selectedIndex, setSelectedIndex] = React.useState();
-  const { userKTC, setDocIndex, docIndex } = React.useContext(KeyTableContext);
-  
+  const [selectedIndex, setSelectedIndex] = useGlobalState('selectedKeySheet');
+  const { userKTC, setDocIndex, docIndex, deleteKeySheet } = React.useContext(KeyTableContext);
+
   function handleListItemClick(event, index) {
-    
-    console.log('⭐: handleListItemClick -> index', index);
     clearKeySelection();
     setSelectedIndex(index);
     setDocIndex(index);
+
     setGlobalState('addMode', false);
   }
 
-  const [sheetNames] = useGlobalState('sheetNames')
+  function handleDeleteClick(index) {
+    deleteKeySheet(index);
+  }
+
+  // const [sheetNames, setSheetNames] = useGlobalState('sheetNames')
 
   return (
     <>
@@ -63,23 +75,33 @@ export const SheetList = () => {
       <List>
         {userKTC &&
           userKTC.docs.map((doc, index) => {
-            
-            sheetNames.add(doc.id);
-            
-            console.log("⭐: sheetNames", sheetNames)
+            setGlobalState('sheetNames', o => ({ ...o, [doc.id]: index }));
+
+            // console.log("⭐: sheetNames", sheetNames)
             return (
-            <ListItem
-              button
-              key={doc.id}
-              onClick={e => handleListItemClick(e, index)}
-              selected={selectedIndex === index}
-            >
-              <ListItemIcon>
-                <FolderIcon color="primary" />
-              </ListItemIcon>
-              <ListItemText primary={doc.id} />
-            </ListItem>
-          )})}
+              <ListItem
+                button
+                key={doc.id}
+                onClick={e => handleListItemClick(e, index)}
+                selected={selectedIndex === index}
+              >
+                <ListItemIcon>
+                  <FolderIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText primary={doc.id} />
+                <ListItemSecondaryAction>
+                  <IconButton
+                    edge="end"
+                    aria-label="Delete"
+                    size="small"
+                    onClick={() => handleDeleteClick(index)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            );
+          })}
       </List>
     </>
   );
