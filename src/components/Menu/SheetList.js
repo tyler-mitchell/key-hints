@@ -23,6 +23,8 @@ export const SheetList = () => {
     setGlobalState('addMode', false);
   }
 
+  const [sheetNames] = useGlobalState('sheetNames')
+
   return (
     <>
       <List>
@@ -60,7 +62,12 @@ export const SheetList = () => {
       <Divider />
       <List>
         {userKTC &&
-          userKTC.docs.map((doc, index) => (
+          userKTC.docs.map((doc, index) => {
+            
+            sheetNames.add(doc.id);
+            
+            console.log("⭐: sheetNames", sheetNames)
+            return (
             <ListItem
               button
               key={doc.id}
@@ -72,7 +79,7 @@ export const SheetList = () => {
               </ListItemIcon>
               <ListItemText primary={doc.id} />
             </ListItem>
-          ))}
+          )})}
       </List>
     </>
   );

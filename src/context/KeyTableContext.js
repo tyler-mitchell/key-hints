@@ -29,19 +29,13 @@ export default function KeyTableProvider({ children }) {
 
 
   const [curKeyTable, setCurKeyTable] = React.useState(false);
-
   const [userKTC, loadingUKTC, errUKTC] = useCollection(userKTColRef);
-
-
   const [docIndex, setDocIndex] = React.useState(null);
 
 
   React.useEffect(()=>{
     console.log("⭐: KeyTableProvider -> userKTC", docIndex && userKTC.docs[docIndex].data())
-
-
     docIndex !== null && setCurKeyTable(userKTC.docs[docIndex])
-    
     console.log("⌚⌚⌚: KeyTableProvider -> loadingUKTC", loadingUKTC)
 
   }, [userKTC, docIndex, loadingUKTC])
