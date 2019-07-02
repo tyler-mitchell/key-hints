@@ -8,7 +8,7 @@ import { useSprings, animated, interpolate } from 'react-spring';
 import styled from 'styled-components';
 import Box from '@material-ui/core/Box';
 import { lighten, darken, shade } from 'polished';
-import { FlashingContext } from '../Key/FlashingContext';
+import { FlashingContext } from '../../src/components/Key/FlashingContext';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';

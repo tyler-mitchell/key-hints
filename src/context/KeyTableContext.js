@@ -50,6 +50,11 @@ export default function KeyTableProvider({ children }) {
   const addNewKeyToFirebase = (curKeyTable, newKey) => {
     curKeyTable.ref.update({table: firebase.firestore.FieldValue.arrayUnion(newKey)})
   }
+  const addNewKeySheet = name => {
+    userDocumentRef.collection('KeyTables').doc(name).set({ categories: [], table: [] });
+  }
+
+  
 
   const ctx = {
     // currentUser,
@@ -59,6 +64,7 @@ export default function KeyTableProvider({ children }) {
     errUKTC,
     setCurKeyTable,
     addNewKeyToFirebase,
+    addNewKeySheet,
     setDocIndex,
     docIndex
   };

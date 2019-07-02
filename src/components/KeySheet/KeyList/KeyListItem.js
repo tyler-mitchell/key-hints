@@ -29,6 +29,11 @@ const KbdKeyList = styled(ListItem)``;
 const KbdKey = styled.div`
   margin-left: auto;
   margin-right: 0;
+  
+`;
+const KbdAddedKey = styled.div`
+  margin-left: auto;
+  margin-right: 0;
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -42,6 +47,7 @@ const KbdKey = styled.div`
   transition: all 0.4s;
 
   animation: fadeIn 0.4s ease-out;
+  
 `;
 const KbdBadge = styled.div`
   margin-left: auto;
@@ -116,6 +122,48 @@ const renderKeys = keybind => {
                 </KBD>
                 {index !== Object.keys(keyItem).length - 1 && '+'}
               </KbdKey>
+            ))}
+            {/* </Badge> */}
+          </KbdKeyList>
+        );
+      })}
+    </>
+  );
+};
+const renderAddedKeys = keybind => {
+  
+
+  return (
+    <>
+      {Object.values(keybind).map((keyItem, keyIndex) => {
+        return (
+          <KbdKeyList
+            key={keyIndex}
+            dense={true}
+            button={true}
+            disableGutters={true}
+            alignItems="flex-end"
+          >
+            {/* <Badge badgeContent={keyIndex+1} color="primary" variant="dot" > */}
+            {Object.keys(keyItem).map((kb, index, array) => (
+              <KbdAddedKey key={index}>
+                <KBD>
+                  {Array.isArray(keyItem[kb])
+                    ? keyItem[kb].map((x, i, arr) =>
+                        arr.length - 1 !== i ? (
+                          <span key={i}>
+                            {renderIcon(x)}
+                            <ORLabel> or </ORLabel>
+                          </span>
+                        ) : (
+                          renderIcon(x)
+                        )
+                      )
+                    : renderIcon(keyItem[kb])}
+                
+                </KBD>
+                {index !== Object.keys(keyItem).length - 1 && '+'}
+              </KbdAddedKey>
             ))}
             {/* </Badge> */}
           </KbdKeyList>
@@ -229,7 +277,7 @@ export const NewKeyForm = ({ newKeys, category, children }) => {
     <ListItem style={{ display: 'flex', justifyContent: 'flex-start' }} divider>
       {children}
 
-      <List>{renderKeys(newKeys)}</List>
+      <List>{renderAddedKeys(newKeys)}</List>
     </ListItem>
   );
 };

@@ -25,6 +25,7 @@ import { SheetList } from './SheetList';
 import { useDrawerStyles } from './SheetDrawer.styles';
 import { useTheme } from '@material-ui/core/styles';
 import { FirebaseContext } from '../utils/firebase';
+import { NewSheetButton } from './NewSheetButton'
 
 
 export const SheetDrawer = () => {
@@ -32,7 +33,7 @@ export const SheetDrawer = () => {
   const classes = useDrawerStyles();
   const [open, setOpen] = React.useState(false);
   const { firebase, userAuthState } = React.useContext(FirebaseContext);
-  const [user, loading, error] = userAuthState;
+  const [user] = userAuthState;
   function handleDrawerOpen() {
     setOpen(!open);
   }
@@ -40,18 +41,7 @@ export const SheetDrawer = () => {
   function handleDrawerClose() {
     setOpen(false);
   }
-  const collectionRef =
-  user &&
-  firebase
-    .firestore()
-    .collection('Users')
-    .doc(user.uid)
-      .collection('KeyTables');
   
-
-  const newKeyTable = name => {
-    collectionRef.doc(name).set({ categories: [], table: [] });
-  }
   return (
     <>
     
@@ -74,17 +64,7 @@ export const SheetDrawer = () => {
         <Divider style={{ bottom: '50px', position: 'absolute' }} />
 
         <Grid container justify="center">
-          <Fab
-            color="primary"
-            variant="extended"
-            size="small"
-            style={{ bottom: '10px', position: 'absolute' }}
-            button
-            onClick={() => newKeyTable('MY KT')}
-          >
-            <AddIcon />
-            Add New Collection
-          </Fab>
+          {user && <NewSheetButton />}
         </Grid>
 
       </Drawer>
