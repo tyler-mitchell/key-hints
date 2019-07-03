@@ -203,16 +203,22 @@ const CategoryChip = styled(Chip)`
 `;
 
 export const KeyListItem = props => {
-  const { index, openMenu, styles, text, keybind, category } = props;
+  const { index, openMenu, styles, text, keybind, category, shortcutObjectKey } = props;
+
   // const [, , activeKeys, setActiveKeys] = React.useContext(FlashingContext);
 
   const [, setActiveKeys] = useGlobalState('activeKeys');
   const [, setEditMode] = useGlobalState('editMode');
   const [selection, setSelection] = useGlobalState('selectedItem');
+  
+  
+  
+  
 
   const itemClicked = index => {
     setSelection(index);
     setActiveKeys(keybind['key1']);
+    setGlobalState('curShortcutObjectKey', shortcutObjectKey )
     setGlobalState('activeKeysIndex', index);
     if (selection !== index) {
       setEditMode(false);

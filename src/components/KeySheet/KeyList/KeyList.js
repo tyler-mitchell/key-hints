@@ -12,6 +12,7 @@ const itemSize = index => {
 const Row = props => {
   const { data, index, style, ...others } = props;
   const { keyTable } = data;
+  const shortcutObjectKey = `shortcut_${index + 1}`
   
 
 
@@ -22,10 +23,12 @@ const Row = props => {
   return (
     <KeyListItem
       index={index}
+      
       styles={style}
-      text={keyTable[index].description}
-      keybind={keyTable[index].keys}
-      category={keyTable[index].category}
+      text={keyTable[shortcutObjectKey].description}
+      keybind={keyTable[shortcutObjectKey].keys}
+      category={keyTable[shortcutObjectKey].category}
+      shortcutObjectKey={shortcutObjectKey}
       
       {...data}
 
@@ -38,19 +41,33 @@ const KeyList = props => {
   let listRef = React.useRef();
   setGlobalState('listRef', listRef)
   
-
+  
   // Re-cache list size when table changes
   React.useEffect(() => {
     listRef.current.resetAfterIndex(0, false);
-  },[others.keyTable])
+  }, [others.keyTable])
+  
+  
   
   return (
 
       <VariableSizeList
         height={height}
-        itemCount={others.keyTable.length}
-        itemSize={index => Object.keys(others.keyTable[index].keys).length * 50 }
-        outerElementType={List}
+        itemCount={Object.keys(others.keyTable).length}
+        itemSize={index => {
+         
+          
+          console.log("⭐: others.keyTable", others.keyTable)
+          const objKey = `shortcut_${index+1}`
+          console.log("⭐: objKey", objKey)
+
+          const keyObj = others.keyTable[objKey]
+          console.log("⭐: keyObj", keyObj)
+
+          
+        return (Object.keys(keyObj.keys).length * 50)
+      }}
+        outerElementType={List}                 
         ref={listRef}
         itemData={others}
       >

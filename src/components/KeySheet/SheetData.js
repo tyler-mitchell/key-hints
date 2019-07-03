@@ -361,4 +361,27 @@ const MacKey = {
   ArrowDown: '↓'
 };
 
+const newData = Object.assign({}, KeyTable); 
+
+
+
+// console.log(newData)
+function convertToObj(data) {
+  const newObj = {}
+  for (let o in data) {
+    const key = "key"+o
+    const obj = data[o]
+    newObj[key] = obj
+  }
+  // console.log(newObj)
+  
+  return newObj;
+}
+export const table = convertToObj(KeyTable.table)
+
+export const TableTest = { categories: KeyTable.categories, table: {...table }}
+
 export const SheetData = [{}, {}];
+
+
+

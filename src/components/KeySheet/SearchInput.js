@@ -72,6 +72,7 @@ export const SearchInput = props => {
   const [activeKeys, setActiveKeys] = useGlobalState('activeKeys') ;
   const [addMode, setAddMode] = useGlobalState('addMode');
   const [newKeys] = useGlobalState('newKeys');
+  const [isSelected] = useGlobalState('selectedItem')
   const {curKeyTable, addNewKeyToFirebase, updateKeyToFirebase } = React.useContext(KeyTableContext);
   
 
@@ -90,7 +91,7 @@ export const SearchInput = props => {
   const handleSaveKeyClick = () => {
     
     console.log("⭐: handleSaveKeyClick -> curKeyTable", curKeyTable.ref)
-    addNewKeyToFirebase( newKeys)
+    addNewKeyToFirebase(newKeys)
     clearKeySelection();
     setGlobalState('addMode', v => !v);
     console.log("⭐: handleSaveKeyClick -> curKeyTable", curKeyTable.data())
@@ -107,7 +108,9 @@ export const SearchInput = props => {
     setEditMode(false);
     updateKeyToFirebase(newKeys);
     console.log("⭐: handleSaveEditClick -> newKeys", newKeys)
-    clearKeySelection();
+    
+    
+    setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }))
   }
 
   return (
@@ -155,7 +158,8 @@ export const SearchInput = props => {
               className={theme.button}
               variant="contained"
               color="primary"
-              size="small"
+                size="small"
+                disabled={isSelected === null}
             >
               <EditIcon />
               Edit

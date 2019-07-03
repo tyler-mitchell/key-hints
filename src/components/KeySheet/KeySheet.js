@@ -26,6 +26,9 @@ import SwipeableViews from 'react-swipeable-views';
 import { AddKeyView } from './AddKeyView';
 import { CategoryMenu } from './CategoryMenu/CategoryMenu';
 
+import {filter, isEmpty} from 'lodash';
+
+
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -138,9 +141,10 @@ export const KeySheet = props => {
   // Functions
   function filterKeyTable(ktable, category) {
     if (category !== 'All') {
-      return curKeyTable.data().table.filter(key => {
+      return filter(curKeyTable.data().table, (key => {
+        
         return key.category.toUpperCase() === category;
-      });
+      }))
     } else {
       return curKeyTable.data().table;
     }
@@ -177,7 +181,9 @@ export const KeySheet = props => {
                 <CategoryMenu popupState={popupState} />
 
                 <CardContent>
-                  <KeyList height={360} keyTable={filterKeyTable(curKeyTable, curCategory)} />
+                  
+                  {console.log("⭐: curKeyTable.data().table", curKeyTable.data())}
+                  { !isEmpty(curKeyTable.data().table) && <KeyList height={360} keyTable={filterKeyTable(curKeyTable, curCategory)} />}
                 </CardContent>
               </>
               <AddKeyView />

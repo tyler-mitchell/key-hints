@@ -251,6 +251,11 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
     if (flatMap(activeKeys).includes(uniqueKeyName)) {
       console.log("⭐: Key -> activeKeys", activeKeys)
       if (editMode) {
+
+        
+        setNewKeys(p => ({...p, keys: {key1: activeKeys} }))
+
+        
         
         changeColor(editColor);
         setActive(true);
@@ -259,9 +264,11 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
       }
     }
     return () => {
+      
       changeColor(defaultColor);
       setEditableKey(false);
       setActive(false);
+
     };
   }, [activeKeys, addMode, editMode, uniqueKeyName]);
 

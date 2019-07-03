@@ -28,7 +28,8 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
     category: 'none'
   },
   sheetCategory: 'All',
-  sheetNames: {}
+  sheetNames: {},
+  curShortcutObjectKey: null
     
 
 });
