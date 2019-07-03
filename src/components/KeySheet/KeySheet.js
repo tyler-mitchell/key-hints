@@ -144,7 +144,7 @@ export const KeySheet = props => {
 
       {curKeyTable && (
         <>
-          <Card ref={anchorRef(popupState)} style={{ height: '470px', borderRadius: '10px' }}>
+          <Card ref={anchorRef(popupState)} style={{ height: '470px', borderRadius: '10px'}}>
             {/* <SwipeableViews
               resistance={true}
               axis="y"
@@ -170,16 +170,17 @@ export const KeySheet = props => {
                 )}
             <div
               style={{
-                bottom: 8,
+                bottom: 7,
                 pointerEvents: 'none',
                 alignItems: 'center',
                 position: 'absolute',
                 height: '120%',
                 width: '100%',
                 paddingBottom: '100px',
-                borderRadius: '30px',
+                // border: 'solid',
+                borderRadius: "10px 10px 60px 60px",
                 
-                clipPath: 'polygon(0 0, 100% 0, 100% 99%, 0 99%)',
+                clipPath: 'polygon(1% 0, 99% 0, 99% 99%, 1% 99% )',
                 left: 0,
                 right: 0,
               }}

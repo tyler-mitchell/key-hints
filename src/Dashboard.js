@@ -52,7 +52,7 @@ function Dashboard() {
                 {/* Buffer */}
                 {/* <KeyBuffer  /> */}
               </Grid>
-              <Grid container direction="row" xs={12} spacing={3} justify-content="center" style={{position: "relative"}}>
+              <Grid container direction="row" xs={12} spacing={3} justify-content="center" style={{position: "relative", zIndex: 5}}>
                 <Grid item xs={12}>
                 <KeySheet category="All Keys" />
                 {/* <AddKeyView /> */}
