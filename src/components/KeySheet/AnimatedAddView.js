@@ -15,12 +15,13 @@ import styled from 'styled-components';
 
 
 const OFFSET = 105
+const INITIAL = 780
 // const SLOW = config.gentle
 const SLOW = 	{ mass: 1, tension: 200, friction: 14 }
 const FAST = { tension: 1000, friction: 100 }
 
 export const AnimatedAddView = ({children})  => {
-  const [{ y }, set] = useSpring(() => ({ y: OFFSET }))
+  const [{ y }, set] = useSpring(() => ({ y: INITIAL }))
   const bind = useGesture(({ delta: [, y], down }) => set({ y: y > 400 ? 780 : !down ? OFFSET : y + OFFSET, config: !down || y > 400 ? SLOW : FAST }))
   const opacity = y.interpolate([180, 400], [0.2, 1], 'clamp')
   const [addMode] = useGlobalState('addMode')
@@ -52,13 +53,13 @@ export const View = props => {
           pointerEvents: 'auto',
           left: 0,
           right: 0,
-          bottom: -700,
+          bottom: 0,
           top: 0,
           margin: "0 30px",
-          
           flex: 1,
           fontSize: '0.8em',
           zIndex: 5000,
+          
           borderTopRightRadius: 30,
           background: 'white',
           borderTopLeftRadius: 30,
