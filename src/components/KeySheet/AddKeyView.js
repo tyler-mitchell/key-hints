@@ -14,10 +14,23 @@ export const AddKeyView = props => {
   return (
     <>
       <AnimatedAddView>
-    <Grid container alignItems="flex-start"> 
+    {/* <Grid container alignItems="flex-start">  */}
+    
         
-        
-        <CardContent >
+        <CardContent style={{ borderRadius: 15, background: "white", }}>
+        {/* <div
+        style={{
+         
+          width: 50,
+          height: 4,
+          backgroundColor: 'white',
+          top: 12,
+          borderRadius: 4,
+          margin: '0 auto',
+          left: 0,
+          right: 0
+        }}
+      /> */}
           <SearchInput theme={theme} placeholder="Search…" inputProps={{ 'aria-label': 'Search' }} />
         
             <Divider />
@@ -47,7 +60,7 @@ export const AddKeyView = props => {
             </NewKeyForm>
       
           </CardContent>
-          </Grid>
+          {/* </Grid> */}
        
       </AnimatedAddView>
     </>

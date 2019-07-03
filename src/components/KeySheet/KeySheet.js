@@ -144,9 +144,7 @@ export const KeySheet = props => {
 
       {curKeyTable && (
         <>
-              <AddKeyView  />
-          
-          <Card ref={anchorRef(popupState)} style={{ height: '470px', position: "relative", borderRadius: '10px' , position: "relative" }}>
+          <Card ref={anchorRef(popupState)} style={{ height: '470px', borderRadius: '10px' }}>
             {/* <SwipeableViews
               resistance={true}
               axis="y"
@@ -156,14 +154,7 @@ export const KeySheet = props => {
             > */}
             <>
               <CardHead className={classes.appBar} indicatorColor="primary" textColor="primary" />
-              <Grid
-              container
-              xs={12}
-              style={{}}
-              justify="center"
-              alignItems="center"
-            >
-            </Grid>
+              <Grid container xs={12} style={{}} justify="center" alignItems="center" />
               <SearchInput
                 theme={theme}
                 placeholder="Search…"
@@ -177,9 +168,27 @@ export const KeySheet = props => {
                 {!isEmpty(curKeyTable.data().table) && (
                   <KeyList height={360} keyTable={filterKeyTable(curKeyTable, curCategory)} />
                 )}
+            <div
+              style={{
+                bottom: 8,
+                pointerEvents: 'none',
+                alignItems: 'center',
+                position: 'absolute',
+                height: '120%',
+                width: '100%',
+                paddingBottom: '100px',
+                borderRadius: '30px',
+                
+                clipPath: 'polygon(0 0, 100% 0, 100% 99%, 0 99%)',
+                left: 0,
+                right: 0,
+              }}
+            >
+              <AddKeyView />
+            </div>
               </CardContent>
             </>
-            
+
             {/* </SwipeableViews> */}
           </Card>
         </>

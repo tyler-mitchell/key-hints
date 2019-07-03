@@ -14,7 +14,7 @@ import styled from 'styled-components';
 
 
 
-const OFFSET = 15
+const OFFSET = 150
 // const SLOW = config.gentle
 const SLOW = 	{ mass: 1, tension: 200, friction: 14 }
 const FAST = { tension: 1000, friction: 100 }
@@ -27,7 +27,7 @@ export const AnimatedAddView = ({children})  => {
   const transform = y.interpolate([OFFSET, 250], [40, 0], 'clamp').interpolate(val => `translate3d(0,${val}px,0)`)
 
   React.useEffect(() => {
-    addMode ?  set({ y: OFFSET, config: SLOW}) : set({ y: 450, config: FAST })
+    addMode ?  set({ y: OFFSET, config: SLOW}) : set({ y: 565, config: FAST })
   },[addMode])
   return (
     <>
@@ -43,42 +43,51 @@ export const AnimatedAddView = ({children})  => {
 
 export const View = props => {
   return (
-    <a.div
-      {...props}
-      style={{
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: -700,
-        top: 0,
-        margin: 13,
-        flex: 1,
-        fontSize: '0.8em',
-        zIndex: 5,
-        borderTopRightRadius: 15,
-        background: "white",
-        borderTopLeftRadius: 15,
-        padding: 24,
-        userSelect: 'none',
-        color: '#ffffffc0',
-        alignItems: 'center',
-        boxShadow: "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
-        ...props.style
-      }}>
-      <div
+    // <div style={{ position: 'relative', clipPath: 'polygon(-50% -50%, 150% -50%, 100% 10%, 0% 10%)'}}>
+    
+      <a.div
+        {...props}
         style={{
           position: 'absolute',
-          width: 50,
-          height: 4,
-          backgroundColor: 'rgba(220,220,220,0.4)',
-          top: 12,
-          borderRadius: 4,
-          margin: '0 auto',
+          pointerEvents: 'auto',
           left: 0,
-          right: 0
-        }}
-      />
-      {props.children}
-    </a.div>
+          right: 0,
+          bottom: -700,
+          top: 0,
+          margin: "0 30px",
+          flex: 1,
+          fontSize: '0.8em',
+          zIndex: 500,
+          borderTopRightRadius: 30,
+          background: 'white',
+          borderTopLeftRadius: 30,
+          // padding: 24,
+          userSelect: 'none',
+          color: '#ffffffc0',
+        
+          boxShadow: "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
+  
+          
+          // clipPath: "inset(10px 20px 30px 40px)",
+          alignItems: 'center',
+          
+          ...props.style
+        }}>
+        {/* <div
+          style={{
+            position: 'absolute',
+            width: 50,
+            height: 4,
+            backgroundColor: 'rgba(220,220,220,0.4)',
+            top: 12,
+            borderRadius: 4,
+            margin: '0 auto',
+            left: 0,
+            right: 0
+          }}
+        /> */}
+        {props.children}
+      </a.div>
+
   )
 }
