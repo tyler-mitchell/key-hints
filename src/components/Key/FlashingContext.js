@@ -27,7 +27,7 @@ export const FlashingProvider = ({ children }) => {
         ? {
             from: { opacity: 0.75 },
             to: { opacity: 1 },
-            config: config.gentle
+            config: config.molasses 
           }
         : {}
     );
