@@ -64,7 +64,7 @@ const InputSearch = styled(Input)`
   margin-left: 8px;
 `;
 
-export const SearchInput = props => {
+export const ToolBarAddView = props => {
   const { theme, className, onChange, style, ...rest } = props;
   const classes = useStyles();
   const [drawerState, setDrawerState] = useGlobalState('drawerState');
@@ -126,59 +126,37 @@ export const SearchInput = props => {
       <InputSearch {...rest} disableUnderline onChange={onChange} />
 
       <Divider className={classes.divider} />
-      {editMode ? (
-        <>
-          <Grid container spacing={1}>
-            <Grid item>
-              <Button
-                className={theme.button}
-                variant="contained"
-                color="primary"
-                size="small"
-                onClick={() => handleSaveEditClick()}
-                // disabled={true}
-              >
-                <SaveIcon />
-                Save
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button className={theme.button} variant="contained" size="small" disabled={true}>
-                <RefreshIcon />
-                Reset
-              </Button>
-            </Grid>
-          </Grid>
-        </>
-      ) : (
+      
         <>
           <Grid item>
-            {!addMode && <Button
-              onClick={() => handleEditClick()}
-              className={theme.button}
-              variant="contained"
-              color="primary"
-                size="small"
-                disabled={isSelected === null}
-            >
-              <EditIcon />
-              Edit
-            </Button>}
-            {!addMode && 
-              <Button
-                onClick={handleAddClick}
-                className={theme.button}
-                variant="contained"
-                color="primary"
-                size="small"
-              >
-                <AddIcon />
-                Add
-              </Button>
-             }
+            
+            
+              <>
+                <Button
+                  onClick={handleSaveKeyClick}
+                  className={theme.button}
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                >
+                  <SaveIcon />
+                  Save
+                </Button>
+                <Button
+                  onClick={() => setAddMode(false)}
+                  className={theme.button}
+                  variant="contained"
+                  color="secondary"
+                  size="small"
+                >
+                  <SaveIcon />
+                  Cancel
+                </Button>
+              </>
+
           </Grid>
         </>
-      )}
+      
     </Paper>
   );
 };

@@ -14,7 +14,7 @@ import styled from 'styled-components';
 
 
 
-const OFFSET = 120
+const OFFSET = 105
 // const SLOW = config.gentle
 const SLOW = 	{ mass: 1, tension: 200, friction: 14 }
 const FAST = { tension: 1000, friction: 100 }
@@ -55,6 +55,7 @@ export const View = props => {
           bottom: -700,
           top: 0,
           margin: "0 30px",
+          
           flex: 1,
           fontSize: '0.8em',
           zIndex: 5000,
