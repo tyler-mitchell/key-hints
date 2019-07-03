@@ -4,7 +4,6 @@ import './App.css';
 
 import { useStyles } from './components/design-system/styles';
 import { KeySheet } from './components/KeySheet/KeySheet';
-import { AddKeyView } from './components/KeySheet/AddKeyView';
 import useLockBodyScroll from './components/hooks/useLockScroll'
 // Local
 import Keyboard from './components/Keyboard';
@@ -49,13 +48,11 @@ function Dashboard() {
               </Grid>
               <Grid item xs={12}>
 
-                {/* Buffer */}
-                {/* <KeyBuffer  /> */}
+
               </Grid>
               <Grid container direction="row" xs={12} spacing={3} justify-content="center" style={{position: "relative", zIndex: 5}}>
                 <Grid item xs={12}>
                 <KeySheet category="All Keys" />
-                {/* <AddKeyView /> */}
                 
                 </Grid>
 

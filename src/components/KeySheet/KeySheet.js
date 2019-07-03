@@ -23,7 +23,7 @@ import { FirebaseContext } from '../utils/firebase';
 import 'firebase/firestore';
 import { useGlobalState, setGlobalState } from '../../state';
 import SwipeableViews from 'react-swipeable-views';
-import { AddKeyView } from './AddKeyView';
+import { NewKeyPanel } from './NewKeyPanel/NewKeyPanel';
 import { CategoryMenu } from './CategoryMenu/CategoryMenu';
 
 import { filter, isEmpty } from 'lodash';
@@ -185,7 +185,7 @@ export const KeySheet = props => {
                 right: 0,
               }}
             >
-              <AddKeyView />
+              <NewKeyPanel />
             </div>
               </CardContent>
             </>

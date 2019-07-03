@@ -6,7 +6,7 @@ import { useGesture } from 'react-use-gesture'
 import { a, animated } from 'react-spring'
 import {Modal} from '@material-ui/core';
 
-import {useGlobalState} from '../../state'
+import {useGlobalState} from '../../../state'
 import styled from 'styled-components';
 
 
@@ -20,7 +20,7 @@ const INITIAL = 780
 const SLOW = 	{ mass: 1, tension: 200, friction: 14 }
 const FAST = { tension: 1000, friction: 100 }
 
-export const AnimatedAddView = ({children})  => {
+export const AnimatedPanel = ({children})  => {
   const [{ y }, set] = useSpring(() => ({ y: INITIAL }))
   const bind = useGesture(({ delta: [, y], down }) => set({ y: y > 400 ? 780 : !down ? OFFSET : y + OFFSET, config: !down || y > 400 ? SLOW : FAST }))
   const opacity = y.interpolate([180, 400], [0.2, 1], 'clamp')

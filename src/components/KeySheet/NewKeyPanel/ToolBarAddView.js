@@ -15,8 +15,8 @@ import {
   Divider,
   IconButton
 } from '@material-ui/core';
-import { useGlobalState, clearKeySelection, setGlobalState } from '../../state';
-import { KeyTableContext } from '../../context/KeyTableContext';
+import { useGlobalState, clearKeySelection, setGlobalState } from '../../../state';
+import { KeyTableContext } from '../../../context/KeyTableContext';
 
 // Material icons
 import {

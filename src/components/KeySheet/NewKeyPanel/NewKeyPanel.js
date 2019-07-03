@@ -1,19 +1,20 @@
 import React from 'react';
-import { useGlobalState, setGlobalState, clearKeySelection } from '../../state';
-import { KeyTableContext } from '../../context/KeyTableContext';
-import { NewKeyForm } from './KeyList/KeyListItem';
+import { useGlobalState, setGlobalState, clearKeySelection } from '../../../state';
+import { KeyTableContext } from '../../../context/KeyTableContext';
+import { NewKeyForm } from '../KeyList/KeyListItem';
 import { Divider, TextField, CardContent, Grid } from '@material-ui/core';
 import { a } from 'react-spring';
 import { ToolBarAddView } from './ToolBarAddView';
 import { useTheme } from '@material-ui/styles';
-import { AnimatedAddView } from './AnimatedAddView';
-export const AddKeyView = props => {
+import { AnimatedPanel } from './AnimatedPanel'
+
+export const NewKeyPanel = props => {
   const [newKeys, setNewKeys] = useGlobalState('newKeys');
   const theme = useTheme();
 
   return (
     <>
-      <AnimatedAddView>
+      <AnimatedPanel>
         {/* <Grid container alignItems="flex-start">  */}
 
         <CardContent style={{ borderRadius: 15, background: 'white' }}>
@@ -65,7 +66,7 @@ export const AddKeyView = props => {
           </NewKeyForm>
         </CardContent>
         {/* </Grid> */}
-      </AnimatedAddView>
+      </AnimatedPanel>
     </>
   );
 };
