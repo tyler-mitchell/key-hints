@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { FlashingContext } from '../../Key/FlashingContext';
 import {
-  Button,
+  IconButton,
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
@@ -21,11 +21,12 @@ import {
   ArrowBack as LeftArrowIcon,
   ArrowForward as RightArrowIcon,
   ArrowUpward as UpArrowIcon,
-  ArrowDownward as DownArrowIcon
+  ArrowDownward as DownArrowIcon,
+  Add as AddIcon
 } from '@material-ui/icons';
 
-import _ from 'lodash'
-import { useTransition, animated , config} from 'react-spring';
+import _ from 'lodash';
+import { useTransition, animated, config, useSpring } from 'react-spring';
 
 export const KeySequence = ({ newKeys, category, children }) => {
   return (
@@ -45,52 +46,69 @@ const KeyItems = keyItem => {
   const [newKeys, setNewKeys] = useGlobalState('newKeys');
 
   const [sequence, setSequence] = React.useState([]);
-  const [count, setCount] = React.useState(0)
+  const [count, setCount] = React.useState(0);
 
   React.useEffect(() => {
     
-    setCount(count + 1)
-    setSequence(_.chain(newKeys.keys.key1).toArray().value().map((v,i) => ({ kb: v, index: i})))
-  },[newKeys])
-  
-  console.log("⭐: _.toArray(keyItem.key1)", _.toArray(newKeys.keys.key1))
+    setSequence(
+      _.chain(newKeys.keys.key1)
+        .toArray()
+        .value()
+        .map((v, i) => ({ kb: v, index: i }))
+    );
+  }, [ newKeys]);
+
+ 
   const transitions = useTransition(
     sequence,
     // _.toArray(keyItem.key1),
- 
+
     item => item.index,
     {
       from: {
         // position: 'absolute',
         opacity: 0,
-        transform: 'translate3d(0,-40px,0)'},
+        transform: 'translate3d(0,-40px,0)'
+      },
       enter: {
         opacity: 1,
-        transform: 'translate3d(0,0px,0)'},
+        transform: 'translate3d(0,0px,0)'
+      },
       leave: {
         opacity: 0,
         transform: 'translate3d(0,-40px,0)'
       },
       config: config.wobbly,
-      
+      delay: 100
     }
   );
 
   return (
-    <>
-      {count && transitions.map(({ item, key, props}) => (
-        <animated.div key={key} style={props}>
-          {console.log("🔥: key", key)}
-          {console.log('🔥: item', item)}
-          {console.log('🔥: sequence', sequence)}
-          <KBD style={props}>
+    <div style={{ display: 'flex', flexOverflow: 'wrap', position: 'relative', padding: '1rem' }}>
+      {
+        transitions.map(({ item, key, props }) => (
+          <animated.div
+            key={key}
+            style={{
+              ...props,
+              display: 'flex',
+              flexOverflow: 'wrap',
+              position: 'relative',
+              padding: '1rem'
+            }}
+          >
             
-               {renderIcon(item.kb)}
-          </KBD>
-          {item.kb !== Object.keys(keyItem).length - 1 && '+'}
-        </animated.div>
-      ))}
-    </>
+
+            <KBD >{renderIcon(item.kb)}</KBD>
+
+            {item.index !== sequence.length - 1 && (
+              <IconButton size="small" color="textSecondary">
+                <AddIcon fontSize="small" />
+              </IconButton>
+            )}
+          </animated.div>
+        ))}
+    </div>
   );
 };
 
@@ -180,6 +198,25 @@ const ORLabel = styled.span`
   font-size: 8px;
 `;
 
+
+const useKBDStyle = {
+  display: 'inline-block',
+  minWidth: 'auto',
+  minHeight: 'auto',
+  padding: '12px 12px',
+  border: '1px solid #8a8a8a',
+  borderRadius: '4px',
+  boxShadow: 'inset 0px 0px 0px 4px rgba(255, 255, 255, 1), 0px 2px 0px 0px rgba(159, 159, 159, 1)',
+  fontFamily: 'Nunito, sans-serif',
+  margin: '0px 4px',
+  background: '#fff',
+  textTransform: 'uppercase',
+  color: '#666'
+  // /* boxShadow: '0px 1px 3px 1px rgba(0, 0, 0, 0.5) */',
+  // /*Text Properties*/
+  // /* font: '10px Helvetica, serif  */',
+  // /* textAlign: 'center */',
+};
 const KBD = styled.kbd`
   display: inline-block;
   min-width: auto;
