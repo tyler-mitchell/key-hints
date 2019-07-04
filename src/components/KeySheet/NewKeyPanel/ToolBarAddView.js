@@ -77,23 +77,20 @@ export const ToolBarAddView = props => {
   
 
   
-  React.useEffect(() => {
+  // React.useEffect(() => {
     
-    return () => {
-      addMode && clearKeySelection()
-    }
-  },[addMode])
+  //   return () => {
+  //     addMode && setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }))
+      
+  //   }
+  // },[addMode])
   
-  const handleAddClick = () => {
-    clearKeySelection();
-    setGlobalState('addMode', v => !v);
-  };
+
   const handleSaveKeyClick = () => {
     
     console.log("⭐: handleSaveKeyClick -> curKeyTable", curKeyTable.ref)
     addNewKeyToFirebase(newKeys)
-    clearKeySelection();
-    setGlobalState('addMode', v => !v);
+    setGlobalState('addMode', false);
     console.log("⭐: handleSaveKeyClick -> curKeyTable", curKeyTable.data())
     
     
@@ -101,17 +98,7 @@ export const ToolBarAddView = props => {
     
   };
 
-  const handleEditClick = () => {
-    setEditMode(true);
-  }
-  const handleSaveEditClick = () => {
-    setEditMode(false);
-    updateKeyToFirebase(newKeys);
-    console.log("⭐: handleSaveEditClick -> newKeys", newKeys)
-    
-    
-    setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }))
-  }
+
 
   return (
     <Paper elevation={0} className={classes.root}>

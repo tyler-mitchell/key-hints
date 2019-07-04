@@ -77,29 +77,18 @@ export const SearchInput = props => {
   
 
   
-  React.useEffect(() => {
+  // React.useEffect(() => {
     
-    return () => {
-      addMode && clearKeySelection()
-    }
-  },[addMode])
+  //   return () => {
+  //     addMode && clearKeySelection()
+  //   }
+  // },[addMode])
   
   const handleAddClick = () => {
     clearKeySelection();
     setGlobalState('addMode', v => !v);
   };
-  const handleSaveKeyClick = () => {
-    
-    console.log("⭐: handleSaveKeyClick -> curKeyTable", curKeyTable.ref)
-    addNewKeyToFirebase(newKeys)
-    clearKeySelection();
-    setGlobalState('addMode', v => !v);
-    console.log("⭐: handleSaveKeyClick -> curKeyTable", curKeyTable.data())
-    
-    
  
-    
-  };
 
   const handleEditClick = () => {
     setEditMode(true);
@@ -107,6 +96,7 @@ export const SearchInput = props => {
   const handleSaveEditClick = () => {
     setEditMode(false);
     updateKeyToFirebase(newKeys);
+    
     console.log("⭐: handleSaveEditClick -> newKeys", newKeys)
     
     

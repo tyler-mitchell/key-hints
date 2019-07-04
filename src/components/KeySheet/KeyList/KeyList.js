@@ -57,12 +57,12 @@ const KeyList = props => {
         itemSize={index => {
          
           
-          console.log("⭐: others.keyTable", others.keyTable)
+    
           const objKey = `shortcut_${index+1}`
-          console.log("⭐: objKey", objKey)
+        
 
           const keyObj = others.keyTable[objKey]
-          console.log("⭐: keyObj", keyObj)
+    
 
           
         return (Object.keys(keyObj.keys).length * 50)
