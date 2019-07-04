@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGlobalState, setGlobalState, clearKeySelection } from '../../../state';
 import { KeyTableContext } from '../../../context/KeyTableContext';
-import { NewKeyForm } from '../KeyList/KeyListItem';
+import { KeySequence } from './KeySequence';
 import { Divider, TextField, CardContent, Grid } from '@material-ui/core';
 import { a } from 'react-spring';
 import { ToolBarAddView } from './ToolBarAddView';
@@ -40,7 +40,7 @@ export const NewKeyPanel = props => {
           />
 
           <Divider />
-          <NewKeyForm
+          <KeySequence
             // onChange={e => setDescription(e.target.value)}
             category="Hello"
             newKeys={newKeys.keys}
@@ -63,7 +63,7 @@ export const NewKeyPanel = props => {
                 setNewKeys(p => ({ ...p, category }));
               }}
             />
-          </NewKeyForm>
+          </KeySequence>
         </CardContent>
         {/* </Grid> */}
       </AnimatedPanel>
