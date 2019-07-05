@@ -97,8 +97,7 @@ export const SearchInput = props => {
     setEditMode(false);
     updateKeyToFirebase(newKeys);
     
-    console.log("⭐: handleSaveEditClick -> newKeys", newKeys)
-    
+   
     
     setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }))
   }

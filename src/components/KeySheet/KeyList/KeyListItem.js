@@ -230,6 +230,7 @@ export const KeyListItem = props => {
       setSelection(index);
       setActiveKeys(keybind['key1']);
       setGlobalState('curShortcutObjectKey', shortcutObjectKey);
+      console.log("⭐: shortcutObjectKey", shortcutObjectKey)
       setGlobalState('activeKeysIndex', index);
       setAlreadySelected(true);
     // }

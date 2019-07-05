@@ -35,7 +35,7 @@ export default function KeyTableProvider({ children }) {
   const [docIndex, setDocIndex] = React.useState(null);
   const [sheetAdded, setSheetAdded] = React.useState(false)
   
-  const [curShortcutObjectKey] = useGlobalState('curShortcutObjectKey')
+  const [curShortcutObjectKey, setCurShortcutObjectKey] = useGlobalState('curShortcutObjectKey')
 
   React.useEffect(()=>{
 
@@ -45,7 +45,7 @@ export default function KeyTableProvider({ children }) {
       const docChanges = userKTC.docChanges()
       const len = docChanges.length;
 
-      console.log("🚀🚀🚀🔥: KeyTableProvider -> userKTC.docChanges()", userKTC.docChanges())
+    
 
       
 
@@ -74,21 +74,26 @@ export default function KeyTableProvider({ children }) {
 
   }, [userKTC, docIndex, loadingUKTC])
 
-
+  
   const addNewKeyToFirebase = (newKey) => {
     
-
-    const keyNum = Object.keys(curKeyTable.data().table).length + 1
+    const keyID = firebase.firestore.Timestamp.now().toMillis()
+    const keyNum = Object.keys(curKeyTable.data().table).length
     const update = {};
-    update[`table.shortcut_${keyNum}`] = newKey
-    console.log("⭐: addNewKeyToFirebase -> update", update)
+    update[`table.${keyID}`] = newKey
   
+    
+    console.log("🚀🚀: addNewKeyToFirebase -> curShortcutObjectKey", curShortcutObjectKey)
 
+    
     curKeyTable.ref.update(update)
     setGlobalState('activeKeys', newKey.keys.key1)
-    setGlobalState('selectedItem', keyNum -1 )
+    setGlobalState('selectedItem', keyNum )
     setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }))
-    console.log("💀💀: addNewKeyToFirebase -> keyNum", keyNum)
+    setCurShortcutObjectKey(keyID)
+    console.log("🚀🔥: addNewKeyToFirebase -> curKeyTable.data().table", curKeyTable.data().table)
+
+   
     
     
     
@@ -120,13 +125,11 @@ export default function KeyTableProvider({ children }) {
     
     // const newDocRef = userDocumentRef.collection('KeyTables').doc(name)
     //   newDocRef.set({ categories: [], table: [] }).then(() => {
-    //   console.log('🔥🔥New Document', newDocRef );
+
     // });
     
    
-    // console.log("⭐: KeyTableProvider -> userKTC", userKTC)
     
-    // console.log("⭐: KeyTableProvider ->  userDocumentRef.collection('KeyTables').doc(name).set({ categories: [], table: [] })",  userDocumentRef.collection('KeyTables').doc(name).set({ categories: [], table: [] }))
     
   }
 
@@ -140,7 +143,7 @@ export default function KeyTableProvider({ children }) {
     const update = {};
     
     update[`table.${curShortcutObjectKey}`] = firebase.firestore.FieldValue.delete();
-
+    curKeyTable.ref.update(update)
 
   }
   
@@ -157,7 +160,8 @@ export default function KeyTableProvider({ children }) {
     addNewKeySheet,
     deleteKeySheet,
     setDocIndex,
-    docIndex
+    docIndex,
+    deleteShortcut
   };
 
   return <KeyTableContext.Provider value={ctx}>{children}</KeyTableContext.Provider>;

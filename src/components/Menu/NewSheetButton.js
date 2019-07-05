@@ -26,8 +26,7 @@ export const NewSheetButton = () => {
   const [sheetNames] = useGlobalState('sheetNames');
 
   function handleButtonClick() {
-    console.log('⭐: NewSheetButton -> sheetNames', sheetNames);
-    console.log('⭐: NewSheetButton -> value', value);
+    
     setOpen(true);
   }
 

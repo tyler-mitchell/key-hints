@@ -249,7 +249,7 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
 
   React.useEffect(() => {
     if (flatMap(activeKeys).includes(uniqueKeyName)) {
-      console.log("⭐: Key -> activeKeys", activeKeys)
+      
       if (editMode) {
 
         
@@ -274,17 +274,15 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
 
   const addItem = key => {
     const keyXLength = _.size(newKeys.keys.key1)
-    console.log("⭐: Key -> keysLength", keyXLength)
+   
 
 
     // setNewKeys(p => ({ ...p, [keysLength]: key }));
     const individualKeys = { ...newKeys.keys["key1"], [keyXLength]: key }
     const keys = {"key1": individualKeys }
-    console.log("⭐: Key -> individualKeys", keys)
     
-    console.log("⭐: Key -> keys", keys)
     setNewKeys(p => ({ ...p, keys }));
-    console.log('⭐: addItem -> newKeys', newKeys.keys);
+   
   };
   const removeItem = key => {
     const key1 = newKeys.keys.key1;

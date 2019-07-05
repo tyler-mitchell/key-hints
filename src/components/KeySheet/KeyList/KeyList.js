@@ -11,13 +11,14 @@ const itemSize = index => {
 };
 const Row = props => {
   const { data, index, style, ...others } = props;
-  const { keyTable } = data;
-  const shortcutObjectKey = `shortcut_${index + 1}`
+  const { keyTableKeys, keyTable } = data;
+  console.log("🔥🔥: keyTableKeys", keyTableKeys)
+  const shortcutObjectKey = keyTableKeys[index]
   
 
 
   
-  
+  // _.orderBy
   
 
   return (
@@ -53,19 +54,13 @@ const KeyList = props => {
 
       <VariableSizeList
         height={height}
-        itemCount={Object.keys(others.keyTable).length}
+        itemCount={others.keyTableKeys.length}
         itemSize={index => {
          
           
     
-          const objKey = `shortcut_${index+1}`
-        
-
-          const keyObj = others.keyTable[objKey]
-    
-
-          
-        return (Object.keys(keyObj.keys).length * 50)
+      
+        return (50)
       }}
         outerElementType={List}                 
         ref={listRef}

@@ -134,7 +134,7 @@ export const KeySheet = props => {
         return key.category.toUpperCase() === category;
       });
     } else {
-      return curKeyTable.data().table;
+      return Object.keys(curKeyTable.data().table).sort();
     }
   }
 
@@ -164,18 +164,20 @@ export const KeySheet = props => {
               <CategoryMenu popupState={popupState} />
 
               <CardContent>
-                {console.log('⭐: curKeyTable.data().table', curKeyTable.data())}
+              
                 {!isEmpty(curKeyTable.data().table) && (
-                  <KeyList height={360} keyTable={filterKeyTable(curKeyTable, curCategory)} />
+                  <KeyList height={360} keyTableKeys={filterKeyTable(curKeyTable, curCategory)} keyTable={curKeyTable.data().table}/>
                 )}
             <div
               style={{
-                bottom: 7,
+                    bottom: 7,
+                
                 pointerEvents: 'none',
                 alignItems: 'center',
                 position: 'absolute',
                 height: '120%',
-                width: '100%',
+                    width: '100%',
+                
                 paddingBottom: '100px',
                 // border: 'solid',
                 borderRadius: "10px 10px 60px 60px",

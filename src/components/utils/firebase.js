@@ -70,7 +70,7 @@ export const FirebaseProvider = ({ children }) => {
 
   // const [fbKeyTable, loading, error] = useDocument(vsCodeDocument);
 
-  // // console.log("⭐: FirebaseProvider -> fbKeyTable", fb)
+ 
 
 
   const fbContext = {

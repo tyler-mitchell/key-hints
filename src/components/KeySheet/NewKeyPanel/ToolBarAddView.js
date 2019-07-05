@@ -77,21 +77,21 @@ export const ToolBarAddView = props => {
   
 
   
-  // React.useEffect(() => {
+  React.useEffect(() => {
     
-  //   return () => {
-  //     addMode && setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }))
+    return () => {
+      addMode && setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }))
       
-  //   }
-  // },[addMode])
+    }
+  },[addMode])
   
 
   const handleSaveKeyClick = () => {
     
-    console.log("⭐: handleSaveKeyClick -> curKeyTable", curKeyTable.ref)
+   
     addNewKeyToFirebase(newKeys)
     setGlobalState('addMode', false);
-    console.log("⭐: handleSaveKeyClick -> curKeyTable", curKeyTable.data())
+  
     
     
  

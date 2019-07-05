@@ -365,7 +365,7 @@ const newData = Object.assign({}, KeyTable);
 
 
 
-// console.log(newData)
+
 function convertToObj(data) {
   const newObj = {}
   for (let o in data) {
@@ -373,7 +373,7 @@ function convertToObj(data) {
     const obj = data[o]
     newObj[key] = obj
   }
-  // console.log(newObj)
+
   
   return newObj;
 }

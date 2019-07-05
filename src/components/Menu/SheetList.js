@@ -77,7 +77,7 @@ export const SheetList = () => {
           userKTC.docs.map((doc, index) => {
             setGlobalState('sheetNames', o => ({ ...o, [doc.id]: index }));
 
-            // console.log("⭐: sheetNames", sheetNames)
+         
             return (
               <ListItem
                 button

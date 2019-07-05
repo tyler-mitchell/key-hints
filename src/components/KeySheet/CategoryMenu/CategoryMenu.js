@@ -55,17 +55,6 @@ export const CategoryMenu = ({popupState}) => {
   }
 
 
-  function newKeyTable(userId, name){
-    // collectionRef
-    //   .collection('KeyTables')
-    //   .doc(name).set(KeyTable);
-    // .doc("VS_CODE").set({ category: {}, table: {} });
-    // const getRef = keyTableRef.get().then(doc => {
-    //   if (doc.exists) {
-    //     console.log("Document Already Exists", doc)
-    //   }
-    // })
-  };
 
   return (
     <>

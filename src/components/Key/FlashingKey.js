@@ -7,7 +7,7 @@ import {FlashingContext} from './FlashingContext'
 
 export const FlashingKey = () => {
   const [flashLoop] = React.useContext(FlashingContext)
-  console.log("⭐: FlashingKey -> flashLoop", flashLoop)
+ 
  
   return <animated.div styles={flashLoop}/>;
 };
