@@ -15,6 +15,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { makeStyles, Popover, Menu, MenuItem, IconButton } from '@material-ui/core';
 import { usePopupState, bindTrigger, bindMenu } from 'material-ui-popup-state/hooks';
 import { KeyTableContext } from '../../../context/KeyTableContext'
+import {setGlobalState} from '../../../state'
 
 
 
@@ -47,14 +48,21 @@ const ListItemAction = () => {
 
   const {deleteShortcut}  = React.useContext(KeyTableContext)
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = (e) => {
+    e.stopPropagation();
     popupState.close()
     deleteShortcut();
 
   }
+  const handleEditClick = (e) => {
+    e.stopPropagation();
+    popupState.close()
+    setGlobalState('editMode', true)
+
+  }
   return (
     <>
-      <IconButton edge="end" aria-label="Edit-shortcut" {...bindTrigger(popupState)}>
+      <IconButton edge="end" aria-label="Edit-shortcut" onClick={(e) => e.stopPropagation()} {...bindTrigger(popupState)}>
         <MoreVertIcon />
       </IconButton>
       {/* <DeleteIcon/> */}
@@ -62,13 +70,14 @@ const ListItemAction = () => {
       <Menu
         {...bindMenu(popupState)}
         getContentAnchorEl={null}
-        useLayerForClickAway={false}
+        // useLayerForClickAway={false}
         disableGutters
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        
       >
-        <MenuItem onClick={popupState.close}>Edit</MenuItem>
-        <MenuItem onClick={()=>handleDeleteClick()}>Delete</MenuItem>
+        <MenuItem onClick={(e)=>handleEditClick(e)}>Edit</MenuItem>
+        <MenuItem onClick={(e)=>handleDeleteClick(e)}>Delete</MenuItem>
       </Menu>
     </>
   );

@@ -2,7 +2,7 @@ import React from 'react';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import { FirebaseContext } from '../components/utils/firebase';
 import { KeyTable, TableTest } from '../components/KeySheet/SheetData';
-import { useGlobalState, setGlobalState, selectNewSheet } from '../state'
+import { useGlobalState, setGlobalState, selectNewSheet, clearKeySelection } from '../state'
 
 export const KeyTableContext = React.createContext(null);
 
@@ -83,15 +83,16 @@ export default function KeyTableProvider({ children }) {
     update[`table.${keyID}`] = newKey
   
     
-    console.log("🚀🚀: addNewKeyToFirebase -> curShortcutObjectKey", curShortcutObjectKey)
+    
 
     
     curKeyTable.ref.update(update)
     setGlobalState('activeKeys', newKey.keys.key1)
     setGlobalState('selectedItem', keyNum )
     setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }))
+
     setCurShortcutObjectKey(keyID)
-    console.log("🚀🔥: addNewKeyToFirebase -> curKeyTable.data().table", curKeyTable.data().table)
+    
 
    
     
@@ -132,18 +133,24 @@ export default function KeyTableProvider({ children }) {
     
     
   }
-
+  const [activeKeys] = useGlobalState('activeKeys');
   const deleteKeySheet = (index) => {
     setGlobalState('sheetNames', {})
     userKTC.docs[index].ref.delete()
 
   }
-  const deleteShortcut = (index) => {
+  const deleteShortcut = () => {
     setGlobalState('sheetNames', {})
     const update = {};
     
     update[`table.${curShortcutObjectKey}`] = firebase.firestore.FieldValue.delete();
     curKeyTable.ref.update(update)
+    clearKeySelection()
+    
+    console.log("⭐: activeKeys", activeKeys)
+    
+
+    setGlobalState('selectedItem', null )
 
   }
   

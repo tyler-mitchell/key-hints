@@ -254,7 +254,7 @@ export const KeyListItem = props => {
       key={index}
       onClick={() => itemClicked(index)}
       selected={selection === index}
-      onMouseLeave={popupState.close}
+   
     >
       {/* <Grid  item direction="row" xs={12} alignItems="center" justify="flex-end" wrap="nowrap"> */}
         <Grid item xs={4} justify="flext-start">
