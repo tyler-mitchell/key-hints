@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 // Material components
 import {
-  withStyles,
+
   makeStyles,
   Paper,
   Input,

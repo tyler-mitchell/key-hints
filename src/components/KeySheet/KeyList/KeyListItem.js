@@ -12,7 +12,14 @@ import {
   Typography,
   Chip,
   Grid,
-  TextField
+  TextField,
+  makeStyles,
+  Popover,
+  Menu,
+  MenuItem,
+  IconButton,
+  ToolTip,
+  ClickAwayListener
 } from '@material-ui/core';
 
 import { useGlobalState, setGlobalState } from '../../../state';
@@ -21,15 +28,20 @@ import {
   ArrowBack as LeftArrowIcon,
   ArrowForward as RightArrowIcon,
   ArrowUpward as UpArrowIcon,
-  ArrowDownward as DownArrowIcon
+  ArrowDownward as DownArrowIcon,
+  Delete as DeleteIcon,
+  Edit as EditIcon
 } from '@material-ui/icons';
+
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { usePopupState, bindHover, bindMenu, bindTrigger } from 'material-ui-popup-state/hooks';
+import ListItemAction from './ListItemAction';
 
 const KbdKeyList = styled(ListItem)``;
 
 const KbdKey = styled.div`
   margin-left: auto;
   margin-right: 0;
-  
 `;
 const KbdAddedKey = styled.div`
   margin-left: auto;
@@ -47,7 +59,6 @@ const KbdAddedKey = styled.div`
   transition: all 0.4s;
 
   animation: fadeIn 0.4s ease-out;
-  
 `;
 const KbdBadge = styled.div`
   margin-left: auto;
@@ -89,8 +100,6 @@ const renderIcon = keyLabel => {
   }
 };
 const renderKeys = keybind => {
-  
-
   return (
     <>
       {Object.values(keybind).map((keyItem, keyIndex) => {
@@ -118,7 +127,6 @@ const renderKeys = keybind => {
                         )
                       )
                     : renderIcon(keyItem[kb])}
-                
                 </KBD>
                 {index !== Object.keys(keyItem).length - 1 && '+'}
               </KbdKey>
@@ -131,8 +139,6 @@ const renderKeys = keybind => {
   );
 };
 const renderAddedKeys = keybind => {
-  
-
   return (
     <>
       {Object.values(keybind).map((keyItem, keyIndex) => {
@@ -160,7 +166,6 @@ const renderAddedKeys = keybind => {
                         )
                       )
                     : renderIcon(keyItem[kb])}
-                
                 </KBD>
                 {index !== Object.keys(keyItem).length - 1 && '+'}
               </KbdAddedKey>
@@ -210,71 +215,63 @@ export const KeyListItem = props => {
   const [, setActiveKeys] = useGlobalState('activeKeys');
   const [, setEditMode] = useGlobalState('editMode');
   const [selection, setSelection] = useGlobalState('selectedItem');
-  
-  
-  
+  const [alreadySelected, setAlreadySelected] = React.useState(false);
   
 
+  const popupState = usePopupState({ variant: 'popover', popupId: 'demoMenu' });
+  React.useEffect(() => {
+
+    if (selection !== index) {
+      setAlreadySelected(false);
+    } 
+  }, [selection]);
   const itemClicked = index => {
-    setSelection(index);
-    setActiveKeys(keybind['key1']);
-    setGlobalState('curShortcutObjectKey', shortcutObjectKey )
-    setGlobalState('activeKeysIndex', index);
+    // if (!alreadySelected) {
+      setSelection(index);
+      setActiveKeys(keybind['key1']);
+      setGlobalState('curShortcutObjectKey', shortcutObjectKey);
+      setGlobalState('activeKeysIndex', index);
+      setAlreadySelected(true);
+    // }
     if (selection !== index) {
       setEditMode(false);
     }
   };
 
-  const ListWrapper = styled(ListItem)`
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(2rem);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    padding: 1rem;
-
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-    border-radius: 3px;
-    transition: all 0.4s;
-
-    animation: fadeIn 0.4s ease-out;
-    /* &:hover {
-    transform: translateX(5px);
-  } */
-  `;
-
   return (
     <ListItem
       button
-      style={{ ...styles, display: 'flex', justifyContent: 'flex-start' }}
+      style={{ ...styles }}
       divider
+      dense 
+      // component={Grid}
+      container
+      direction="row"
+      // justify="center"
+      
+      focusRipple
+      key={index}
       onClick={() => itemClicked(index)}
       selected={selection === index}
+      onMouseLeave={popupState.close}
     >
-      <Grid container xs={5} justify="flext-start">
-        <ListItemText
-          primary={<Typography variant="keylabel">{text}</Typography>}
-          disableTypography={true}
-        />
-      </Grid>
+      {/* <Grid  item direction="row" xs={12} alignItems="center" justify="flex-end" wrap="nowrap"> */}
+        <Grid item xs={4} justify="flext-start">
+          <ListItemText
+            primary={<Typography variant="keylabel">{text}</Typography>}
+            disableTypography={true}
+          />
+        </Grid>
 
-      <Grid container justify="flex-end" direction="row">
-        <List>{renderKeys(keybind)}</List>
-      </Grid>
-      <Grid container xs={2} justify="flex-end" direction="row">
-        <CategoryChip
-          size="small"
-          element={Typography}
-          label={category}
-          clickable
-          color="primary"
-        />
-      </Grid>
+        <Grid xs={8}  container item justify="flex-end" direction="row">
+          <List>{renderKeys(keybind)}</List>
+        </Grid>
+        
+          <ListItemAction/>
+       
+
+      {/* </Grid> */}
+      
     </ListItem>
   );
 };
