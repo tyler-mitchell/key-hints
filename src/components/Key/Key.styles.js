@@ -6,7 +6,7 @@ import { shade, linearGradient, lighten } from 'polished';
 import Layer from '@material-ui/core/Box';
 import { FlashingContext } from './FlashingContext';
 import { Card, Grid, Paper } from '@material-ui/core';
-import { useSpring, animated, useTransition, config } from 'react-spring';
+import { useSpring, animated, useTransition, config, interpolate, extrapolate } from 'react-spring';
 import Typography from '@material-ui/core/Typography';
 import {
   ArrowBack as LeftArrowIcon,
@@ -318,27 +318,45 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
     }
   };
 
-
-  const { freq, scale, transform, opacity, borderTopColor, borderBottomColor, borderLeftColor, borderRightColor, background } = useSpring({
+  const {
+    freq,
+    scale,
+    x,
+    y,
+    transform,
+    opacity,
+    borderTopColor,
+    borderBottomColor,
+    borderLeftColor,
+    borderRightColor,
+    background
+  } = useSpring({
     reverse: active,
     from: {
+      x: 0,
+      y: 0,
       scale: 10,
       opacity: 0,
       // transform: 'translateY(-38.58%) scale(1.02)',
-      transform: 'scale(1.02)',
+      // transform: 'scale(1)',
+
+      transform: 'translateY(1.5px) scaleX(0.98)',
       freq: '0.0175, 0.0',
-      borderTopColor:  `${shade(0.02, activeColor)}`,
-        borderBottomColor: `${shade(0.3, activeColor)}`,
-        borderLeftColor: `${shade(0.09, activeColor)}`,
-        borderRightColor:  `${shade(0.09, activeColor)}`,
-        background: `linear-gradient(-30deg, ${shade(0.05, activeColor)} 0%, ${lighten(0.2, activeColor)} 50%)`,
-          // background:  `${
-          //   linearGradient(
-          //     colorStops: [shade(0.05, activeColor) '0%', lighten(0.2, activeColor) 50%],
-          //     toDirection: '-30deg',
-          //     fallback: '#FFF'
-          //   )}`,
-      
+      borderTopColor: `${shade(0.02, activeColor)}`,
+      borderBottomColor: `${shade(0.3, activeColor)}`,
+      borderLeftColor: `${shade(0.09, activeColor)}`,
+      borderRightColor: `${shade(0.09, activeColor)}`,
+      background: `linear-gradient(-30deg, ${shade(0.05, activeColor)} 0%, ${lighten(
+        0.2,
+        activeColor
+      )} 50%)`
+      // background:  `${
+      //   linearGradient(
+      //     colorStops: [shade(0.05, activeColor) '0%', lighten(0.2, activeColor) 50%],
+      //     toDirection: '-30deg',
+      //     fallback: '#FFF'
+      //   )}`,
+
       // border: {
       //   borderTopColor: `${shade(0.02, defaultColor)}`,
       //   borderBottomColor: `${shade(0.3, defaultColor)}`,
@@ -346,39 +364,48 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
       //   borderRightColor: `${shade(0.09, defaultColor)}`
       // }
     },
-    to: {
-      scale: 150,
-      opacity: 1,
-      // transform: 'translateY(-0.58%) scale(1)',
-      transform: 'scale(1)',
-      freq: '0.0, 0.0',
-      // border: {
-      //   borderTopColor: `${shade(0.02, activeColor)}`,
-      //   borderBottomColor: `${shade(0.3, activeColor)}`,
-      //   borderLeftColor: `${shade(0.09, activeColor)}`,
-      //   borderRightColor: `${shade(0.09, activeColor)}`
-      // }
-     
+    to: [
+      {
+        x: 1,
+        y: 1,
+        scale: 150,
+        opacity: 1,
 
-      borderTopColor:  `${shade(0.02, defaultColor)}`,
+        transform: 'translateY(0px) scaleX(1)',
+        // transform: 'translateY(-0.58%) scale(1)',
+        // transform: 'scale(0.98)',
+        freq: '0.0, 0.0',
+        // border: {
+        //   borderTopColor: `${shade(0.02, activeColor)}`,
+        //   borderBottomColor: `${shade(0.3, activeColor)}`,
+        //   borderLeftColor: `${shade(0.09, activeColor)}`,
+        //   borderRightColor: `${shade(0.09, activeColor)}`
+        // }
+
+        borderTopColor: `${shade(0.02, defaultColor)}`,
         borderBottomColor: `${shade(0.3, defaultColor)}`,
         borderLeftColor: `${shade(0.09, defaultColor)}`,
-      borderRightColor: `${shade(0.09, defaultColor)}`,
-      background: `linear-gradient(-30deg, ${shade(0.05, defaultColor)} 0%, ${lighten(0.2, defaultColor)} 50%)`,
-      // background: `${
-      //   linearGradient({
-      //     colorStops: [`${shade(0.05, defaultColor)} 0%`, `${lighten(0.2, defaultColor)} 50%`],
-      //     toDirection: '-30deg',
-      //     fallback: '#FFF'
-      //   })}`,
-      
-        
-      
-    },
+        borderRightColor: `${shade(0.09, defaultColor)}`,
+        background: `linear-gradient(-30deg, ${shade(0.05, defaultColor)} 0%, ${lighten(
+          0.2,
+          defaultColor
+        )} 50%)`
+        // background: `${
+        //   linearGradient({
+        //     colorStops: [`${shade(0.05, defaultColor)} 0%`, `${lighten(0.2, defaultColor)} 50%`],
+        //     toDirection: '-30deg',
+        //     fallback: '#FFF'
+        //   })}`,
+      },
+      {}
+    ],
+
+    x: active ? 1 : 0,
     config: config.wobbly
   });
-  console.log('⭐: Key -> borderBottomColor', borderBottomColor);
 
+  console.log('⭐: Key -> borderBottomColor', borderBottomColor);
+  
   return (
     <React.Fragment>
       <ConditionalWrap
@@ -390,21 +417,66 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
         )}
       >
         {/* <animated.div style={{ transform, scale }}> */}
-        <animated.div style={{transform}} >
+        <animated.div
+          style={
+            {
+              // opacity: x.interpolate({ range: [0, 1], output: [0.3, 1] }),
+              // @-webkit-keyframes pulsate-bck {
+              //   0% {
+              //     -webkit-transform: scale(1);
+              //             transform: scale(1);
+              //   }
+              //   50% {
+              //     -webkit-transform: scale(0.9);
+              //             transform: scale(0.9);
+              //   }
+              //   100% {
+              //     -webkit-transform: scale(1);
+              //             transform: scale(1);
+              //   }
+              // }
+              // @keyframes pulsate-bck {
+              //   0% {
+              //     -webkit-transform: scale(1);
+              //             transform: scale(1);
+              //   }
+              //   50% {
+              //     -webkit-transform: scale(0.9);
+              //             transform: scale(0.9);
+              //   }
+              //   100% {
+              //     -webkit-transform: scale(1);
+              //             transform: scale(1);
+              //   }
+            }
+          }
+        >
           <KeyContainer
             editableKey={editableKey}
             active={active}
             // active={active}
             defaultColor={defaultColor}
             activeColor={activeColor}
-            style={{  borderTopColor, borderBottomColor, borderLeftColor, borderRightColor}}
+            style={{
+              borderTopColor,
+              borderBottomColor,
+              borderLeftColor,
+              borderRightColor,
+              transform
+              // transform: x
+              //   .interpolate({
+              //     range: [0, 0.5, 1],
+              //     output: [1, 0.98, 1]
+              //   })
+              //   .interpolate(x => `scaleX(${x})`)
+            }}
             label={label}
             wt={wt}
             ht={ht}
             color={keyColor}
             onClick={keyClicked}
           >
-            <KeyTop  wt={wt} ht={ht} color={keyColor} style={{background}}>
+            <KeyTop wt={wt} ht={ht} color={keyColor} style={{ background }}>
               <KeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</KeyChar>
             </KeyTop>
           </KeyContainer>
