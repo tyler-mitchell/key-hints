@@ -9,24 +9,17 @@ import Box from '@material-ui/core/Box';
 import React from 'react';
 import { useSpring, animated, Keyframes } from 'react-spring';
 
-// const fader = css`
-//   @keyframes fader {
-//   0% { background: #76FFA3; }
-//   20% { background: #82D8FF; }
-//   40% { background: #AA7AFF; }
-//   60% { background: #FF817F; }
-//   80% { background: #F5C38C; }
-//   100% { background: #F5EE90; }
-// }
-
-// `;
 
 export const Row = styled(Grid)`
-  /* margin: -4px; */
+ 
 
-  /* box-sizing: border-box; */
+  
   ${zIndex};
   ${position};
+
+  
+
+
 `;
 
 Row.defaultProps = {};

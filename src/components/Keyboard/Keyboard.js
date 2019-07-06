@@ -85,16 +85,37 @@ const EditPanel = styled(Paper)`
   z-index: -20; */
 `;
 
-const KeyItem = styled(Grid)``;
+const KeyItem = styled(Grid)`
+/* &:last-child {
+    border-width: 10px 12px 50px 10px;
+  } */
 
+`;
+
+
+const calculateMargin = (i, len) => {
+
+  
+  if (i === 0) { // first
+    
+    return `0 1.5px 0 0`
+    
+  } else if (i === len - 1) { // last
+    return  `0 0 0 1.5px`
+  } else {
+    return `0 1.5px 0 1.5px`
+  }
+}
 const renderRow = row => {
+  const len = Object.keys(row).length
   return Object.keys(row).map((keyName, i) => (
-    <KeyItem item>
+    
      
         <Key
           item
           label={row[keyName][0]}
           key={i}
+          margin={calculateMargin(i, len)}
           uniqueKeyName={keyName in excludedKeys ? null : row[keyName][0]}
           keyName={keyName}
           wt={`${row[keyName][1]}`}
@@ -102,7 +123,7 @@ const renderRow = row => {
           keySize={keySize}
         />
      
-    </KeyItem>
+   
   ));
 };
 
@@ -116,70 +137,70 @@ const KeyboardContainer = () => {
     <React.Fragment>
       <Cover>
 
-        <InnerFrame container alignItems="space-around" direction="column" justify="space-between">
         <FlashingProvider>
+        <InnerFrame container alignItems="center" justify="center" direction="column"  >
           <Row
             container
             direction="row"
             wrap="nowrap"
             item={true}
-            justify="space-evenly"
-            alignItems="stretch"
+            // justify="space-evenly"
+            // alignItems="stretch"
             xs={12}
             zIndex={1}
           >
-            {renderRow(firstRow)}{' '}
+            {renderRow(firstRow)}
           </Row>
           <Row
             container
             direction="row"
             wrap="nowrap"
             item={true}
-            justify="space-evenly"
-            alignItems="stretch"
+            // justify="space-evenly"
+            // alignItems="stretch"
             xs={12}
             zIndex={2}
           >
-            {renderRow(secondRow)}{' '}
+            {renderRow(secondRow)}
           </Row>
           <Row
             container
             direction="row"
             wrap="nowrap"
             item={true}
-            justify="space-evenly"
+            // justify="space-evenly"
             alignItems="stretch"
             xs={12}
             zIndex={3}
           >
-            {renderRow(thirdRow)}{' '}
+            {renderRow(thirdRow)}
           </Row>
           <Row
             container
             direction="row"
             wrap="nowrap"
             item={true}
-            justify="space-evenly"
-            alignItems="stretch"
+            // justify="space-evenly"
+            // alignItems="stretch"
             xs={12}
             zIndex={4}
           >
-            {renderRow(fourthRow)}{' '}
+            {renderRow(fourthRow)}
           </Row>
           <Row
             container
             direction="row"
             wrap="nowrap"
             item={true}
-            justify="space-evenly"
-            alignItems="stretch"
+            // justify="space-evenly"
+            // alignItems="stretch"
             xs={12}
             zIndex={5}
           >
-            {renderRow(fifthRow)}{' '}
+            {renderRow(fifthRow)}
           </Row>
-        </FlashingProvider>
           </InnerFrame>
+        </FlashingProvider>
       </Cover>
     </React.Fragment>
   );

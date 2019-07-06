@@ -68,21 +68,25 @@ const Container = styled.ul`
 `;
 
 export const KeyContainer = styled(animated.div)`
-
-  margin: 0 1.5px;
+  /* transform: scaleX(0.95); */
+  /* padding: 0 1.5px; */
+  margin: ${props => props.margin};
+  /* margin-right: 3px; */
   box-sizing: border-box;
-
+  
+  display: block;
+    position: absolute;
   width: ${props => props.wt}px;
   height: ${props => props.ht}px;
   cursor: pointer;
   border-width: 10px 10px 20px 10px;
-
+  /* display: grid; */
   /* transition: background-color 2s, color 300ms; */
 
  
 
 
-  height: ${props => props.height};
+  /* height: ${props => props.height}; */
   /* border-top-color: ${props => shade(0.02, props.color)};
   border-bottom-color: ${props => shade(0.3, props.color)};
   border-left-color: ${props => shade(0.09, props.color)};
@@ -236,7 +240,7 @@ const ConditionalWrap = ({ condition, wrap, children }) => {
   const [flashing] = React.useContext(FlashingContext);
   return condition ? wrap(children, flashing) : <>{children}</>;
 };
-export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => {
+export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, key }) => {
   const defaultColor = '#FFFFFF';
   const activeColor = '#1fe3ac';
   const editColor = '#FFB822';
@@ -431,6 +435,7 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
             editableKey={editableKey}
             active={active}
             // active={active}
+            margin={margin}
             defaultColor={defaultColor}
             activeColor={activeColor}
             style={{
