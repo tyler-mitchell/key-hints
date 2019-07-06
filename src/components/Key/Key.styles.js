@@ -112,14 +112,14 @@ export const KeyContainer = styled(animated.div)`
   }
 
   border-style: solid;
-  transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  /* transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1); */
 
   /* &:active {
     transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
     transform: translateY(2px) scaleX(0.98);
     /* transform-origin: -100, 200; */
     /* animation: ${keypress} 2s ; */
-  } */
+  /* } */ 
   &:last-child {
     border-width: 10px 12px 20px 10px;
 
@@ -161,13 +161,20 @@ export const ActiveKeyContainer = styled(KeyContainer)`
   `} */
 `;
 
-const KeyTop = styled.div`
+const KeyTop = styled(animated.div)`
   height: ${props => props.ht * 0.7}px;
   width: ${props => props.wt - 17}px;
+ 
   margin: -30px;
   position: relative;
   border-radius: 8px;
-  background-color: 'red';
+  /* background:  ${props =>
+    linearGradient({
+      colorStops: [`${shade(0.05, props.color)} 0%`, `${lighten(0.2, props.color)} 50%`],
+      toDirection: '-30deg',
+      fallback: '#FFF'
+    })}; */
+  overflow: hidden;
 
   /* vertical & horizontal centering children */
   display: flex;
@@ -317,20 +324,21 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
     from: {
       scale: 10,
       opacity: 0,
-      transform: 'translateY(-38.58%) scale(1.02)',
+      // transform: 'translateY(-38.58%) scale(1.02)',
+      transform: 'scale(1.02)',
       freq: '0.0175, 0.0',
       borderTopColor:  `${shade(0.02, activeColor)}`,
         borderBottomColor: `${shade(0.3, activeColor)}`,
         borderLeftColor: `${shade(0.09, activeColor)}`,
         borderRightColor:  `${shade(0.09, activeColor)}`,
-        
-        // background: `${
-        //   linearGradient({
-        //     colorStops: [`${shade(0.05, activeColor)} 0%`, `${lighten(0.2, activeColor)} 50%`],
-        //     toDirection: '-30deg',
-        //     fallback: '#FFF'
-        //   })}`,
-      background:'red'
+        background: `linear-gradient(-30deg, ${shade(0.05, activeColor)} 0%, ${lighten(0.2, activeColor)} 50%)`,
+          // background:  `${
+          //   linearGradient(
+          //     colorStops: [shade(0.05, activeColor) '0%', lighten(0.2, activeColor) 50%],
+          //     toDirection: '-30deg',
+          //     fallback: '#FFF'
+          //   )}`,
+      
       // border: {
       //   borderTopColor: `${shade(0.02, defaultColor)}`,
       //   borderBottomColor: `${shade(0.3, defaultColor)}`,
@@ -341,7 +349,8 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
     to: {
       scale: 150,
       opacity: 1,
-      transform: 'translateY(-0.58%) scale(1)',
+      // transform: 'translateY(-0.58%) scale(1)',
+      transform: 'scale(1)',
       freq: '0.0, 0.0',
       // border: {
       //   borderTopColor: `${shade(0.02, activeColor)}`,
@@ -355,14 +364,14 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
         borderBottomColor: `${shade(0.3, defaultColor)}`,
         borderLeftColor: `${shade(0.09, defaultColor)}`,
       borderRightColor: `${shade(0.09, defaultColor)}`,
-
+      background: `linear-gradient(-30deg, ${shade(0.05, defaultColor)} 0%, ${lighten(0.2, defaultColor)} 50%)`,
       // background: `${
       //   linearGradient({
       //     colorStops: [`${shade(0.05, defaultColor)} 0%`, `${lighten(0.2, defaultColor)} 50%`],
       //     toDirection: '-30deg',
       //     fallback: '#FFF'
       //   })}`,
-      background:'red',  
+      
         
       
     },
@@ -380,21 +389,22 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
           </animated.div>
         )}
       >
-        <animated.div style={{ transform, scale }}>
+        {/* <animated.div style={{ transform, scale }}> */}
+        <animated.div style={{transform}} >
           <KeyContainer
             editableKey={editableKey}
             active={active}
             // active={active}
             defaultColor={defaultColor}
             activeColor={activeColor}
-            style={{borderTopColor, borderBottomColor, borderLeftColor, borderRightColor}}
+            style={{  borderTopColor, borderBottomColor, borderLeftColor, borderRightColor}}
             label={label}
             wt={wt}
             ht={ht}
             color={keyColor}
             onClick={keyClicked}
           >
-            <KeyTop  wt={wt} ht={ht} color={keyColor}>
+            <KeyTop  wt={wt} ht={ht} color={keyColor} style={{background}}>
               <KeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</KeyChar>
             </KeyTop>
           </KeyContainer>
