@@ -6,7 +6,7 @@ import { shade, linearGradient, lighten } from 'polished';
 import Layer from '@material-ui/core/Box';
 import { FlashingContext } from './FlashingContext';
 import { Card, Grid, Paper } from '@material-ui/core';
-import { useSpring, animated, useTransition, config, interpolate, extrapolate } from 'react-spring';
+import { useSpring, animated, useTransition, config, interpolate, extrapolate, Easing } from 'react-spring';
 import Typography from '@material-ui/core/Typography';
 import {
   ArrowBack as LeftArrowIcon,
@@ -99,12 +99,12 @@ export const KeyContainer = styled(animated.div)`
   position: relative;
 
 
-  transition: filter .3s;
+  /* transition: filter .3s; */
 
 
   &:hover {
     background-position: 0 0, 0 0;
-    transition-duration: 0.5s;
+    /* transition-duration: 0.5s; */
     /* background: inherit; */
 
    filter: contrast(140%);
@@ -112,22 +112,22 @@ export const KeyContainer = styled(animated.div)`
   }
 
   border-style: solid;
-  /* transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1); */
+  transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1), filter .5s;
 
-  /* &:active {
-    transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
+   &:active {
+    /* transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1); */
     transform: translateY(2px) scaleX(0.98);
     /* transform-origin: -100, 200; */
     /* animation: ${keypress} 2s ; */
-  /* } */ 
+   } 
   &:last-child {
-    border-width: 10px 12px 20px 10px;
+    /* border-width: 10px 12px 20px 10px; */
 
   }
 
   &:first-child {
     /* margin-bottom: 3px; */
-    border-width: 10px 10px 20px 10px;
+    /* border-width: 10px 10px 20px 10px; */
   }
 
   &:hover::after {
@@ -139,6 +139,8 @@ export const KeyContainer = styled(animated.div)`
 `;
 
 KeyContainer.defaultProps = {};
+const AnimatedKeyContainer = animated(KeyContainer);
+
 
 export const ActiveKeyContainer = styled(KeyContainer)`
   border-top-color: ${props => shade(0.02, props.color)};
@@ -174,7 +176,7 @@ const KeyTop = styled(animated.div)`
       toDirection: '-30deg',
       fallback: '#FFF'
     })}; */
-  overflow: hidden;
+  /* overflow: hidden; */
 
   /* vertical & horizontal centering children */
   display: flex;
@@ -340,7 +342,7 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
       // transform: 'translateY(-38.58%) scale(1.02)',
       // transform: 'scale(1)',
 
-      transform: 'translateY(1.5px) scaleX(0.98)',
+      transform: 'translateY(1.5px) scale(0.98)',
       freq: '0.0175, 0.0',
       borderTopColor: `${shade(0.02, activeColor)}`,
       borderBottomColor: `${shade(0.3, activeColor)}`,
@@ -371,7 +373,7 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
         scale: 150,
         opacity: 1,
 
-        transform: 'translateY(0px) scaleX(1)',
+        transform: 'translateY(0px) scale(1)',
         // transform: 'translateY(-0.58%) scale(1)',
         // transform: 'scale(0.98)',
         freq: '0.0, 0.0',
@@ -397,11 +399,11 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
         //     fallback: '#FFF'
         //   })}`,
       },
-      {}
+      
     ],
 
     x: active ? 1 : 0,
-    config: config.wobbly
+    config: { mass: 1, tension: 180, friction: 12, duration: 200 }
   });
 
   console.log('⭐: Key -> borderBottomColor', borderBottomColor);
@@ -420,38 +422,12 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
         <animated.div
           style={
             {
-              // opacity: x.interpolate({ range: [0, 1], output: [0.3, 1] }),
-              // @-webkit-keyframes pulsate-bck {
-              //   0% {
-              //     -webkit-transform: scale(1);
-              //             transform: scale(1);
-              //   }
-              //   50% {
-              //     -webkit-transform: scale(0.9);
-              //             transform: scale(0.9);
-              //   }
-              //   100% {
-              //     -webkit-transform: scale(1);
-              //             transform: scale(1);
-              //   }
-              // }
-              // @keyframes pulsate-bck {
-              //   0% {
-              //     -webkit-transform: scale(1);
-              //             transform: scale(1);
-              //   }
-              //   50% {
-              //     -webkit-transform: scale(0.9);
-              //             transform: scale(0.9);
-              //   }
-              //   100% {
-              //     -webkit-transform: scale(1);
-              //             transform: scale(1);
-              //   }
+              // transform,
+              
             }
           }
         >
-          <KeyContainer
+          <AnimatedKeyContainer
             editableKey={editableKey}
             active={active}
             // active={active}
@@ -462,7 +438,7 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
               borderBottomColor,
               borderLeftColor,
               borderRightColor,
-              transform
+              // transform
               // transform: x
               //   .interpolate({
               //     range: [0, 0.5, 1],
@@ -479,7 +455,7 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
             <KeyTop wt={wt} ht={ht} color={keyColor} style={{ background }}>
               <KeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</KeyChar>
             </KeyTop>
-          </KeyContainer>
+          </AnimatedKeyContainer>
         </animated.div>
       </ConditionalWrap>
     </React.Fragment>
