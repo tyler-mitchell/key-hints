@@ -6,7 +6,7 @@ import { shade, linearGradient, lighten } from 'polished';
 import Layer from '@material-ui/core/Box';
 import { FlashingContext } from './FlashingContext';
 import { Card, Grid, Paper } from '@material-ui/core';
-import { useSpring, animated, useTransition } from 'react-spring';
+import { useSpring, animated, useTransition, config } from 'react-spring';
 import Typography from '@material-ui/core/Typography';
 import {
   ArrowBack as LeftArrowIcon,
@@ -19,6 +19,7 @@ import { FlashingKey } from './FlashingKey';
 
 import { useGlobalState } from '../../state';
 import _ from 'lodash';
+
 import flatMap from 'lodash/flatMap';
 
 const Column = props => <Box {...props} />;
@@ -66,7 +67,7 @@ const Container = styled.ul`
   transition: all 0.3s ease-in-out;
 `;
 
-export const KeyContainer = styled.div`
+export const KeyContainer = styled(animated.div)`
 
   margin: 0 1.5px;
   box-sizing: border-box;
@@ -76,16 +77,18 @@ export const KeyContainer = styled.div`
   cursor: pointer;
   border-width: 10px 10px 20px 10px;
 
-  transition: background-color 2s, color 300ms;
+  /* transition: background-color 2s, color 300ms; */
 
  
 
 
-  /* height: ${props => props.height}; */
-  border-top-color: ${props => shade(0.02, props.color)};
+  height: ${props => props.height};
+  /* border-top-color: ${props => shade(0.02, props.color)};
   border-bottom-color: ${props => shade(0.3, props.color)};
   border-left-color: ${props => shade(0.09, props.color)};
-  border-right-color: ${props => shade(0.09, props.color)};
+  border-right-color: ${props => shade(0.09, props.color)}; */
+
+  
 
   border-radius: 8px;
 
@@ -108,15 +111,15 @@ export const KeyContainer = styled.div`
 
   }
 
-
+  border-style: solid;
   transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
 
-  &:active {
+  /* &:active {
     transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
     transform: translateY(2px) scaleX(0.98);
     /* transform-origin: -100, 200; */
     /* animation: ${keypress} 2s ; */
-  }
+  } */
   &:last-child {
     border-width: 10px 12px 20px 10px;
 
@@ -126,11 +129,8 @@ export const KeyContainer = styled.div`
     /* margin-bottom: 3px; */
     border-width: 10px 10px 20px 10px;
   }
-  border-style: solid;
 
-
-
-  &:hover::after{
+  &:hover::after {
     background-color:${props => shade(0.05, '#1fe3ac')};
     opacity: 0.5;
     transition: all 0.4s ease-in-out;
@@ -150,15 +150,15 @@ export const ActiveKeyContainer = styled(KeyContainer)`
     animation: ${keypress} 3s ease-out infinite;
     animation-delay: 2s;
   }
-  ${keypress}
-  ${({ active }) =>
+  /* ${keypress} */
+  /* ${({ active }) =>
     active &&
     `
 
     animation: 2s keypress 0.3 0s both;
 
 
-  `}
+  `} */
 `;
 
 const KeyTop = styled.div`
@@ -167,17 +167,18 @@ const KeyTop = styled.div`
   margin: -30px;
   position: relative;
   border-radius: 8px;
+  background-color: 'red';
 
   /* vertical & horizontal centering children */
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: ${props =>
+  /* background-image: ${props =>
     linearGradient({
       colorStops: [`${shade(0.05, props.color)} 0%`, `${lighten(0.2, props.color)} 50%`],
       toDirection: '-30deg',
       fallback: '#FFF'
-    })};
+    })}; */
 
   /* transition: all 0.3s; */
   /* z-index: 1; */
@@ -202,13 +203,14 @@ export const Span = styled.div`
   width: ${props => props.wt - 18}px;
 
   /* background-color: red; */
-  background: red;
+  /* background: red;
   background: ${props =>
     linearGradient({
       colorStops: [`${shade(0.05, props.color)} 0%`, `${lighten(0.2, props.color)} 50%`],
       toDirection: '-30deg',
       fallback: '#FFF'
-    })};
+    })}; */
+  
   /* background: ${props =>
     linearGradient({
       colorStops: [`${shade(0.05, props.color)} 0%`, `${lighten(0.09, props.color)} 50%`],
@@ -249,55 +251,43 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
 
   React.useEffect(() => {
     if (flatMap(activeKeys).includes(uniqueKeyName)) {
-      
       if (editMode) {
+        setNewKeys(p => ({ ...p, keys: { key1: activeKeys } }));
 
-        
-        setNewKeys(p => ({...p, keys: {key1: activeKeys} }))
-
-        
-        
         changeColor(editColor);
         setActive(true);
       } else {
         changeColor(activeColor);
+        setActive(true);
       }
     }
     return () => {
-      
       changeColor(defaultColor);
       setEditableKey(false);
       setActive(false);
-
     };
-  }, [activeKeys, addMode, editMode, uniqueKeyName]);
+  }, [activeKeys, addMode, editMode, setNewKeys, uniqueKeyName]);
 
   const addItem = key => {
-    const keyXLength = _.size(newKeys.keys.key1)
-   
-
+    const keyXLength = _.size(newKeys.keys.key1);
 
     // setNewKeys(p => ({ ...p, [keysLength]: key }));
-    const individualKeys = { ...newKeys.keys["key1"], [keyXLength]: key }
-    const keys = {"key1": individualKeys }
-    
+    const individualKeys = { ...newKeys.keys['key1'], [keyXLength]: key };
+    const keys = { key1: individualKeys };
+
     setNewKeys(p => ({ ...p, keys }));
-   
   };
   const removeItem = key => {
     const key1 = newKeys.keys.key1;
-    const newObj = _.filter(key1, function (v, k) {
-    
-      return(v !== key)
+    const newObj = _.filter(key1, function(v, k) {
+      return v !== key;
     });
 
-    const keys = { "key1": newObj }
-    
+    const keys = { key1: newObj };
+
     setNewKeys(p => ({ ...p, keys }));
   };
 
-      
-      
   const toggleKey = isActive => {
     if (isActive) {
       // addMode && removeItem(label);
@@ -321,6 +311,65 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
     }
   };
 
+
+  const { freq, scale, transform, opacity, borderTopColor, borderBottomColor, borderLeftColor, borderRightColor, background } = useSpring({
+    reverse: active,
+    from: {
+      scale: 10,
+      opacity: 0,
+      transform: 'translateY(-38.58%) scale(1.02)',
+      freq: '0.0175, 0.0',
+      borderTopColor:  `${shade(0.02, activeColor)}`,
+        borderBottomColor: `${shade(0.3, activeColor)}`,
+        borderLeftColor: `${shade(0.09, activeColor)}`,
+        borderRightColor:  `${shade(0.09, activeColor)}`,
+        
+        // background: `${
+        //   linearGradient({
+        //     colorStops: [`${shade(0.05, activeColor)} 0%`, `${lighten(0.2, activeColor)} 50%`],
+        //     toDirection: '-30deg',
+        //     fallback: '#FFF'
+        //   })}`,
+      background:'red'
+      // border: {
+      //   borderTopColor: `${shade(0.02, defaultColor)}`,
+      //   borderBottomColor: `${shade(0.3, defaultColor)}`,
+      //   borderLeftColor: `${shade(0.09, defaultColor)}`,
+      //   borderRightColor: `${shade(0.09, defaultColor)}`
+      // }
+    },
+    to: {
+      scale: 150,
+      opacity: 1,
+      transform: 'translateY(-0.58%) scale(1)',
+      freq: '0.0, 0.0',
+      // border: {
+      //   borderTopColor: `${shade(0.02, activeColor)}`,
+      //   borderBottomColor: `${shade(0.3, activeColor)}`,
+      //   borderLeftColor: `${shade(0.09, activeColor)}`,
+      //   borderRightColor: `${shade(0.09, activeColor)}`
+      // }
+     
+
+      borderTopColor:  `${shade(0.02, defaultColor)}`,
+        borderBottomColor: `${shade(0.3, defaultColor)}`,
+        borderLeftColor: `${shade(0.09, defaultColor)}`,
+      borderRightColor: `${shade(0.09, defaultColor)}`,
+
+      // background: `${
+      //   linearGradient({
+      //     colorStops: [`${shade(0.05, defaultColor)} 0%`, `${lighten(0.2, defaultColor)} 50%`],
+      //     toDirection: '-30deg',
+      //     fallback: '#FFF'
+      //   })}`,
+      background:'red',  
+        
+      
+    },
+    config: config.wobbly
+  });
+  console.log('⭐: Key -> borderBottomColor', borderBottomColor);
+
   return (
     <React.Fragment>
       <ConditionalWrap
@@ -331,41 +380,25 @@ export const Key = ({ label, keyName, uniqueKeyName, wt, ht, m, amin, key }) => 
           </animated.div>
         )}
       >
-        {active ? (
+        <animated.div style={{ transform, scale }}>
           <KeyContainer
             editableKey={editableKey}
             active={active}
             // active={active}
             defaultColor={defaultColor}
             activeColor={activeColor}
+            style={{borderTopColor, borderBottomColor, borderLeftColor, borderRightColor}}
             label={label}
             wt={wt}
             ht={ht}
             color={keyColor}
             onClick={keyClicked}
           >
-            <KeyTop wt={wt} ht={ht} color={keyColor}>
+            <KeyTop  wt={wt} ht={ht} color={keyColor}>
               <KeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</KeyChar>
             </KeyTop>
           </KeyContainer>
-        ) : (
-          <ActiveKeyContainer
-            editableKey={editableKey}
-            active={active}
-            // active={active}
-            defaultColor={defaultColor}
-            activeColor={activeColor}
-            label={label}
-            wt={wt}
-            ht={ht}
-            color={keyColor}
-            onClick={keyClicked}
-          >
-            <KeyTop container alignItems="center" justify="center" wt={wt} ht={ht} color={keyColor}>
-              <KeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</KeyChar>
-            </KeyTop>
-          </ActiveKeyContainer>
-        )}
+        </animated.div>
       </ConditionalWrap>
     </React.Fragment>
   );
