@@ -68,6 +68,7 @@ const KeyItems = keyItem => {
       from: {
         // position: 'absolute',
         opacity: 0,
+        // position: 'absolute',
         transform: 'translate3d(0,-40px,0)'
       },
       enter: {
@@ -76,7 +77,7 @@ const KeyItems = keyItem => {
       },
       leave: {
         opacity: 0,
-        transform: 'translate3d(0,-40px,0)'
+        transform: 'translate3d(-30px,-40px,0)'
       },
       config: config.wobbly,
       delay: 100
@@ -92,9 +93,10 @@ const KeyItems = keyItem => {
             style={{
               ...props,
               display: 'flex',
-              flexOverflow: 'wrap',
+              // flexOverflow: 'wrap',
               position: 'relative',
-              padding: '1rem'
+              
+             
             }}
           >
             
@@ -112,22 +114,16 @@ const KeyItems = keyItem => {
   );
 };
 
-const renderAddedKeys = keybind => {
+export const renderAddedKeys = keybind => {
   return (
     <>
       {Object.values(keybind).map((keyItem, keyIndex) => {
         return (
-          <KbdKeyList
-            key={keyIndex}
-            dense={true}
-            button={true}
-            disableGutters={true}
-            alignItems="flex-end"
-          >
-            {/* <Badge badgeContent={keyIndex+1} color="primary" variant="dot" > */}
-            <KeyItems keyItem={keyItem} />
-            {/* </Badge> */}
-          </KbdKeyList>
+          
+            
+          <KeyItems key={keyIndex} keyItem={keyItem} />
+           
+         
         );
       })}
     </>
