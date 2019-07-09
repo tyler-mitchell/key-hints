@@ -15,6 +15,12 @@ const useStyles = makeStyles(theme => ({
   paper: {
     width: '80%',
     maxHeight: 435
+  },
+
+  fabButton: {
+    backgroundImage: 'linear-gradient(to right, #1FA2FF 0%, #12D8FA 51%, #1FA2FF 100%)',
+
+    '&:hover': { backgroundColor: 'red' }
   }
 }));
 
@@ -26,7 +32,6 @@ export const NewSheetButton = () => {
   const [sheetNames] = useGlobalState('sheetNames');
 
   function handleButtonClick() {
-    
     setOpen(true);
   }
 
@@ -44,6 +49,7 @@ export const NewSheetButton = () => {
         color="primary"
         variant="extended"
         size="small"
+        className={classes.fabButton}
         style={{ bottom: '17px', position: 'absolute' }}
         button
         onClick={handleButtonClick}
@@ -65,3 +71,4 @@ export const NewSheetButton = () => {
     </>
   );
 };
+

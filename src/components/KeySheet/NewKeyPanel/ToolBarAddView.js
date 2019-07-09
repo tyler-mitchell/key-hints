@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 
 // Material components
 import {
-
   makeStyles,
   Paper,
   Input,
@@ -50,7 +49,6 @@ const useStyles = makeStyles({
   }
 });
 
-
 const SearchIcon = styled(Search)`
   margin-right: ${({ theme }) => theme.spacing.unit};
   color: ${({ theme }) => theme.palette.text.secondary};
@@ -69,36 +67,24 @@ export const ToolBarAddView = props => {
   const classes = useStyles();
   const [drawerState, setDrawerState] = useGlobalState('drawerState');
   const [editMode, setEditMode] = useGlobalState('editMode');
-  const [activeKeys, setActiveKeys] = useGlobalState('activeKeys') ;
+  const [activeKeys, setActiveKeys] = useGlobalState('activeKeys');
   const [addMode, setAddMode] = useGlobalState('addMode');
   const [newKeys] = useGlobalState('newKeys');
-  const [isSelected] = useGlobalState('selectedItem')
-  const {curKeyTable, addNewKeyToFirebase, updateKeyToFirebase } = React.useContext(KeyTableContext);
-  
+  const [isSelected] = useGlobalState('selectedItem');
+  const { curKeyTable, addNewKeyToFirebase, updateKeyToFirebase } = React.useContext(
+    KeyTableContext
+  );
 
-  
   React.useEffect(() => {
-    
     return () => {
-      addMode && setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }))
-      
-    }
-  },[addMode])
-  
+      addMode && setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }));
+    };
+  }, [addMode]);
 
   const handleSaveKeyClick = () => {
-    
-   
-    addNewKeyToFirebase(newKeys)
+    addNewKeyToFirebase(newKeys);
     setGlobalState('addMode', false);
-  
-    
-    
- 
-    
   };
-
-
 
   return (
     <Paper elevation={0} className={classes.root}>
@@ -113,37 +99,33 @@ export const ToolBarAddView = props => {
       <InputSearch {...rest} disableUnderline onChange={onChange} />
 
       <Divider className={classes.divider} />
-      
-        <>
-          <Grid item>
-            
-            
-              <>
-                <Button
-                  onClick={handleSaveKeyClick}
-                  className={theme.button}
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                >
-                  <SaveIcon />
-                  Save
-                </Button>
-                <Button
-                  onClick={() => setAddMode(false)}
-                  className={theme.button}
-                  variant="contained"
-                  color="secondary"
-                  size="small"
-                >
-                  <SaveIcon />
-                  Cancel
-                </Button>
-              </>
 
-          </Grid>
-        </>
-      
+      <>
+        <Grid item>
+          <>
+            <Button
+              onClick={handleSaveKeyClick}
+              className={theme.button}
+              variant="contained"
+              color="primary"
+              size="small"
+            >
+              <SaveIcon />
+              Save
+            </Button>
+            <Button
+              onClick={() => setAddMode(false)}
+              className={theme.button}
+              variant="contained"
+              color="secondary"
+              size="small"
+            >
+              <SaveIcon />
+              Cancel
+            </Button>
+          </>
+        </Grid>
+      </>
     </Paper>
   );
 };
