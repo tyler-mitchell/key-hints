@@ -144,7 +144,7 @@ export const KeySheet = props => {
 
       {curKeyTable && (
         <>
-          <Card ref={anchorRef(popupState)} style={{ height: '470px', borderRadius: '10px'}}>
+          <Card ref={anchorRef(popupState)} style={{ height: '470px', borderRadius: '10px' }}>
             {/* <SwipeableViews
               resistance={true}
               axis="y"
@@ -164,31 +164,31 @@ export const KeySheet = props => {
               <CategoryMenu popupState={popupState} />
 
               <CardContent>
-              
+
                 {!isEmpty(curKeyTable.data().table) && (
-                  <KeyList height={360} keyTableKeys={filterKeyTable(curKeyTable, curCategory)} keyTable={curKeyTable.data().table}/>
+                  <KeyList height={360} keyTableKeys={filterKeyTable(curKeyTable, curCategory)} keyTable={curKeyTable.data().table} />
                 )}
-            <div
-              style={{
+                <div
+                  style={{
                     bottom: 7,
-                
-                pointerEvents: 'none',
-                alignItems: 'center',
-                position: 'absolute',
-                height: '120%',
+
+                    pointerEvents: 'none',
+                    alignItems: 'center',
+                    position: 'absolute',
+                    height: '120%',
                     width: '100%',
-                
-                paddingBottom: '100px',
-                // border: 'solid',
-                borderRadius: "10px 10px 60px 60px",
-                
-                clipPath: 'polygon(1% 0, 99% 0, 99% 99%, 1% 99% )',
-                left: 0,
-                right: 0,
-              }}
-            >
-              <NewKeyPanel />
-            </div>
+
+                    paddingBottom: '100px',
+                    // border: 'solid',
+                    borderRadius: "10px 10px 60px 60px",
+
+                    clipPath: 'polygon(1% 0, 99% 0, 99% 99%, 1% 99% )',
+                    left: 0,
+                    right: 0,
+                  }}
+                >
+                  <NewKeyPanel />
+                </div>
               </CardContent>
             </>
 

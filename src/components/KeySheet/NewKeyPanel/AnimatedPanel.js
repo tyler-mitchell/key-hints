@@ -22,7 +22,7 @@ const FAST = { tension: 1000, friction: 100 }
 
 export const AnimatedPanel = ({children})  => {
   const [{ y }, set] = useSpring(() => ({ y: INITIAL }))
-  const bind = useGesture(({ delta: [, y], down }) => set({ y: y > 400 ? 780 : !down ? OFFSET : y + OFFSET, config: !down || y > 400 ? SLOW : FAST }))
+  // const bind = useGesture(({ delta: [, y], down }) => set({ y: y > 400 ? 780 : !down ? OFFSET : y + OFFSET, config: !down || y > 400 ? SLOW : FAST }))
   const opacity = y.interpolate([180, 400], [0.2, 1], 'clamp')
   const [addMode] = useGlobalState('addMode')
   const transform = y.interpolate([OFFSET, 250], [40, 0], 'clamp').interpolate(val => `translate3d(0,${val}px,0)`)
@@ -32,7 +32,7 @@ export const AnimatedPanel = ({children})  => {
   },[addMode])
   return (
     <>
-      <View {...bind()} style={{ transform: y.interpolate(y => `translate3d(0,${y}px,0)`) }}>
+      <View  style={{ transform: y.interpolate(y => `translate3d(0,${y}px,0)`) }}>
         {children}
       </View>
     </>

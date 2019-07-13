@@ -6,7 +6,17 @@ import { shade, linearGradient, lighten } from 'polished';
 import Layer from '@material-ui/core/Box';
 import { FlashingContext } from './FlashingContext';
 import { Card, Grid, Paper } from '@material-ui/core';
-import { useSpring, animated, useTransition, config, interpolate, extrapolate, Easing } from 'react-spring';
+import { Textfit } from 'react-textfit';
+import {
+  useSpring,
+  animated,
+  useTransition,
+  config,
+  interpolate,
+  extrapolate,
+  Easing
+} from 'react-spring';
+import fitty from 'fitty';
 import Typography from '@material-ui/core/Typography';
 import {
   ArrowBack as LeftArrowIcon,
@@ -21,6 +31,8 @@ import { useGlobalState } from '../../state';
 import _ from 'lodash';
 
 import flatMap from 'lodash/flatMap';
+import KeyText from './KeyText/KeyText';
+import { TextField } from '@material-ui/core';
 
 const Column = props => <Box {...props} />;
 
@@ -145,7 +157,6 @@ export const KeyContainer = styled(animated.div)`
 KeyContainer.defaultProps = {};
 const AnimatedKeyContainer = animated(KeyContainer);
 
-
 export const ActiveKeyContainer = styled(KeyContainer)`
   border-top-color: ${props => shade(0.02, props.color)};
   border-bottom-color: ${props => shade(0.3, props.color)};
@@ -183,9 +194,9 @@ const KeyTop = styled(animated.div)`
   /* overflow: hidden; */
 
   /* vertical & horizontal centering children */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
+
+  
   /* background-image: ${props =>
     linearGradient({
       colorStops: [`${shade(0.05, props.color)} 0%`, `${lighten(0.2, props.color)} 50%`],
@@ -197,43 +208,33 @@ const KeyTop = styled(animated.div)`
   /* z-index: 1; */
 `;
 
-export const KeyChar = styled.div`
+export const BottomKeyChar = styled.div`
   font-size: 15px;
   font-family: 'Nunito';
   font-weight: bold;
   color: rgba(0, 0, 0, 0.45);
   user-select: none;
+  position: 'relative';
+  transform: rotateX(8deg) translateY(33px) scale(1);
+  /* text-align: center; */
+`;
+export const KeyChar = styled.div`
+  font-size: 0.5vw;
+  font-family: 'Nunito';
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.45);
+  user-select: none;
+
   /* text-align: center; */
 `;
 
 export const Span = styled.div`
-
   top: 0;
   position: relative;
   padding-top: 5px;
   border-radius: 8px;
-  height: ${props => props.ht * 0.7}px;
-  width: ${props => props.wt - 18}px;
-
-  /* background-color: red; */
-  /* background: red;
-  background: ${props =>
-    linearGradient({
-      colorStops: [`${shade(0.05, props.color)} 0%`, `${lighten(0.2, props.color)} 50%`],
-      toDirection: '-30deg',
-      fallback: '#FFF'
-    })}; */
-  
-  /* background: ${props =>
-    linearGradient({
-      colorStops: [`${shade(0.05, props.color)} 0%`, `${lighten(0.09, props.color)} 50%`],
-      toDirection: '-30deg',
-      fallback: '#FFF'
-    })}; */
-
+  ${'1200px'};
   transition: 1s ease;
-
-
 `;
 
 const ConditionalWrap = ({ condition, wrap, children }) => {
@@ -402,16 +403,23 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
         //     toDirection: '-30deg',
         //     fallback: '#FFF'
         //   })}`,
-      },
-      
+      }
     ],
 
     x: active ? 1 : 0,
     config: { mass: 1, tension: 180, friction: 12, duration: 200 }
   });
 
-  console.log('⭐: Key -> borderBottomColor', borderBottomColor);
-  
+  const keyTopTextRef = React.useRef(null);
+  //   React.useLayoutEffect(() => {
+  //     fitty(keyTopTextRef.current, {
+  //         maxSize: 15,
+  //         minSize: 5,
+  //         multiLine: false
+  //     });
+  // });
+
+  const [testInput, setTestInput] = React.useState('');
   return (
     <React.Fragment>
       <ConditionalWrap
@@ -427,7 +435,6 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
           style={
             {
               // transform,
-              
             }
           }
         >
@@ -442,7 +449,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
               borderTopColor,
               borderBottomColor,
               borderLeftColor,
-              borderRightColor,
+              borderRightColor
               // transform
               // transform: x
               //   .interpolate({
@@ -458,8 +465,50 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
             onClick={keyClicked}
           >
             <KeyTop wt={wt} ht={ht} color={keyColor} style={{ background }}>
-              <KeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</KeyChar>
+              {/* <KeyChar ref={keyTopTextRef}>Basic Editing the view port</KeyChar> */}
+              {/* <BottomKeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</BottomKeyChar> */}
+              {/* <Grid container justify="center" item xs zeroMinWidth> */}
+              {/* <KeyText
+                  text="Basic Editing the view port and here is some more text"
+                /> */}
+
+              {/* <div
+                style={{
+                  height: `${ht * 0.7}px`,
+                  width: `${wt - 17}px`,
+                  margin: '0 auto',
+                  overflow: 'hidden',
+                  fontSize: '10px',
+                  lineHeight: '12px'
+                }}
+              >
+                Hello world this is just a test for how much we can fit
+              </div> */}
+
+
+ <KeyText testText={testInput} keyTopHeight={ht * 0.7} keyTopWidth={wt - 17} />
+
+              {/* </Grid> */}
             </KeyTop>
+            {/* <div
+              style={{
+                height: '10px',
+                width: '70px',
+                position: 'absolute',
+                zIndex: 8,
+                transform: 'traslateY(0px)',
+                top: '300px'
+              }}
+            >
+              <TextField
+                style={{ position: 'relative' }}
+                value={testInput}
+                onChange={e => {
+                  setTestInput(e.target.value);
+                }}
+                variant="outlined"
+              />
+            </div> */}
           </AnimatedKeyContainer>
         </animated.div>
       </ConditionalWrap>
