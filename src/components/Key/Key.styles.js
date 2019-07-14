@@ -490,7 +490,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
 
               {/* </Grid> */}
             </KeyTop>
-            {/* <div
+            <div
               style={{
                 height: '10px',
                 width: '70px',
@@ -508,7 +508,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
                 }}
                 variant="outlined"
               />
-            </div> */}
+            </div>
           </AnimatedKeyContainer>
         </animated.div>
       </ConditionalWrap>

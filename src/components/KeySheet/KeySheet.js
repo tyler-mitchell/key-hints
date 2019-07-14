@@ -27,6 +27,7 @@ import { NewKeyPanel } from './NewKeyPanel/NewKeyPanel';
 import { CategoryMenu } from './CategoryMenu/CategoryMenu';
 
 import { filter, isEmpty } from 'lodash';
+import { keyMapFilter } from '../Keyboard/KeyMapData';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -122,6 +123,8 @@ export const KeySheet = props => {
   const [listRef] = useGlobalState('listRef');
   React.useEffect(() => {
     return () => {
+      
+      
       setGlobalState('selectedCategoryIndex', -1);
       setCurCategory('All');
     };
@@ -129,6 +132,8 @@ export const KeySheet = props => {
 
   // Functions
   function filterKeyTable(ktable, category) {
+    const x = keyMapFilter(curKeyTable.data().table)
+    console.log("⭐: filterKeyTable -> x", x)
     if (category !== 'All') {
       return filter(curKeyTable.data().table, key => {
         return key.category.toUpperCase() === category;
@@ -137,13 +142,15 @@ export const KeySheet = props => {
       return Object.keys(curKeyTable.data().table).sort();
     }
   }
-
+  
   return (
     <React.Fragment>
       {loadingUKTC && <CircularProgress className={classes.progress} />}
 
       {curKeyTable && (
         <>
+         
+        
           <Card ref={anchorRef(popupState)} style={{ height: '470px', borderRadius: '10px' }}>
             {/* <SwipeableViews
               resistance={true}

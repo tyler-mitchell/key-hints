@@ -12,7 +12,7 @@ const itemSize = index => {
 const Row = props => {
   const { data, index, style, ...others } = props;
   const { keyTableKeys, keyTable } = data;
-  console.log("🔥🔥: keyTableKeys", keyTableKeys)
+  
   const shortcutObjectKey = keyTableKeys[index]
   
 
