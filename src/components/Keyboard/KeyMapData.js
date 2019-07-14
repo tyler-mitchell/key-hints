@@ -3,6 +3,7 @@
 import React from 'react';
 
 import _ from 'lodash'
+import { Layers } from '@material-ui/icons';
 
 
 
@@ -57,7 +58,52 @@ const keyTable = {
   }
 }
 
+function getModDifference(keyData, mod) {
+  return(_.chain(keyData).pickBy((shortcut) => 
+      _.difference( mod, _.values(shortcut.keys.key1)).length === 0
+      ).pickBy((o)=>!_.isEmpty(o)).value()
+  )
+}
+function objectDifference(object, base) {
+	function changes(object, base) {
+		return _.transform(object, function(result, value, key) {
+			if (!_.isEqual(value, base[key])) {
+				result[key] = (_.isObject(value) && _.isObject(base[key])) ? changes(value, base[key]) : value;
+			}
+		});
+	}
+	return changes(object, base);
+}
+function filteredData(combinations, data) {
+  let newData = data
+  let relevantMods = []
+  
 
+
+ 
+  const filteredArr = _.chain(combinations).map((mod, i) => {
+    const diff = getModDifference(newData, mod)
+    newData = objectDifference(newData, diff)
+
+    if (_.isEmpty(diff)) {
+      return(diff)
+    }
+    else {
+      relevantMods.push(mod)
+      return({ [mod]: diff})
+    }
+    // return (_.isEmpty(diff) ? diff : { [mod]: diff})
+  }).filter((o) => !_.isEmpty(o)).value()
+
+  const newObj = {}
+  for (let o in filteredArr) {
+    const key = Object.keys(filteredArr[o])
+    const objData = filteredArr[o][key]
+    newObj[key] = objData
+  }
+
+  return [newObj, _.reverse(relevantMods)]
+}
 function k_combinations(set, k) {
 	var i, j, combs, head, tailcombs;
 	
@@ -107,53 +153,56 @@ function combinations(set) {
 	}
 	return _.reverse(combs);
 }
-function getModDifference(keyData, mod) {
-  return(_.chain(keyData).pickBy((shortcut) => 
-      _.difference( mod, _.values(shortcut.keys.key1)).length === 0
-      ).pickBy((o)=>!_.isEmpty(o)).value()
-  )
-}
-function filteredData(combinations, data) {
-  let newData = data
-  let modArr = []
-  const filteredArr = _.chain(combinations).map((mod, i) => {
-    const diff = getModDifference(newData, mod)
-    newData = difference(newData, diff)
-    return (_.isEmpty(diff) ? diff : { [mod]: diff})
-  }).filter((o) => !_.isEmpty(o)).value()
-
-  const newObj = {}
-  for (let o in filteredArr) {
-    const key = Object.keys(filteredArr[o])
-    const objData = filteredArr[o][key]
-    newObj[key] = objData
-  }
-  return newObj
-}
-function difference(object, base) {
-	function changes(object, base) {
-		return _.transform(object, function(result, value, key) {
-			if (!_.isEqual(value, base[key])) {
-				result[key] = (_.isObject(value) && _.isObject(base[key])) ? changes(value, base[key]) : value;
-			}
-		});
-	}
-	return changes(object, base);
-}
-
 // const organizedMods = filteredData(modifierCombinations, keyTable)
 
+// TODO: 
+// account for scenario: 
+//    if active mapped keys include [CTRL+C] and [CTRL+SHIFT+D],
+//    activate the lowest derivative ([CTRL+C] in this case)
+// single keys (having no modifiers) are on the same layer
 
+// filter modifiers using new filtered key table---
+// use the new 'relavent modifiers' list to determine which shortcut Layers
+// should be active by default
+
+// ** no layers with common modifiers should be active at the same time **
+// ** each shortcut displayed in on the key map can have only one key that are not modifiers 
+//    ( which means that each shortcut is split into two portions -- [...modifiers, key] )
 export function keyMapFilter(kt) {
+
+
   const modifierKeys = ["Alt", "Ctrl", "Shift", "Capslock", "Tab"]
-  console.log("⭐: Test keyTable", keyTable)
-  console.log("🚀: Real keyTablet", kt)
+  
+  
   const modifierCombinations = combinations(modifierKeys)
+  const [filteredKeyMap, relevantMods] = filteredData(modifierCombinations, kt)
   
 
-  // console.log("🔥: keyTable", keyTable)
-  console.log("🚀: keyMapFilter -> filteredData(modifierCombinations, kt)", filteredData(modifierCombinations, kt))
+  const defaultActiveMods = getDefaultActiveMods(relevantMods)
 
-  return filteredData(modifierCombinations, kt)
+  // console.log("⭐: keyMapFilter -> relevantMods", relevantMods)
+  // console.log("⭐: keyMapFilter -> modifierCombinations", modifierCombinations)
+  
+  console.log("⭐: keyMapFilter -> defaultActiveMods", defaultActiveMods)
+  const activeFilteredKeys = _.pick(filteredKeyMap, [...defaultActiveMods])
+  console.log("🚀: keyMapFilter -> activeFilteredKeys", activeFilteredKeys)
+  
+ 
+  return filteredKeyMap
 }
 
+
+function getDefaultActiveMods(relMods) {
+  const defaultActiveMods = _.reduce(relMods, (result, cur) => {
+    if (cur.length === 1) {
+      result.push(cur)
+    }
+    if(!( _.intersection(_.flatten(result), _.flatten(cur)).length > 0)) {
+      result.push(cur)
+    }
+    return result
+  }, [])
+
+
+  return defaultActiveMods
+}
