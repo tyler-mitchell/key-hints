@@ -3,7 +3,9 @@
 import React from 'react';
 
 import _ from 'lodash'
+import move from 'lodash-move'
 import { Layers } from '@material-ui/icons';
+import { setGlobalState } from '../../state';
 
 
 
@@ -59,8 +61,23 @@ const keyTable = {
 }
 
 function getModDifference(keyData, mod) {
-  return(_.chain(keyData).pickBy((shortcut) => 
-      _.difference( mod, _.values(shortcut.keys.key1)).length === 0
+  return (_.chain(keyData).pickBy((shortcut) => {
+    const diff = _.difference(mod, _.values(shortcut.keys.key1));
+    
+    const isDiff = diff.length === 0;
+
+    // temporary implementation--the 'main key' will be determined by the user upon creation
+    if (isDiff) {
+      
+      const mainKey = _.difference(_.values(shortcut.keys.key1), mod)
+      
+      mainKey.length === 1 && (shortcut.keys["mainKey"] = mainKey[0])
+      
+      
+    }
+    
+    return (isDiff)
+  }
       ).pickBy((o)=>!_.isEmpty(o)).value()
   )
 }
@@ -165,6 +182,7 @@ function combinations(set) {
 // use the new 'relavent modifiers' list to determine which shortcut Layers
 // should be active by default
 
+// ** each layer has a unique color **
 // ** no layers with common modifiers should be active at the same time **
 // ** each shortcut displayed in on the key map can have only one key that are not modifiers 
 //    ( which means that each shortcut is split into two portions -- [...modifiers, key] )
@@ -172,37 +190,84 @@ export function keyMapFilter(kt) {
 
 
   const modifierKeys = ["Alt", "Ctrl", "Shift", "Capslock", "Tab"]
+  const singleKeys = [['0'],['1'],['2'],['3'],['4'],['5'],['6'],['7'],['8'],['9'],['A'],['B'],['C'],['D'],['E'],['F'],['G'],['H'],['I'],['J'],['K'],['L'],['M'],['N'],['O'],['P'],['Q'],['R'],['S'],['T'],['U'],['V'],['W'],['X'],['Y'],['Z']];
+
+  const modifierCombinations = _.concat(combinations(modifierKeys), singleKeys) 
   
-  
-  const modifierCombinations = combinations(modifierKeys)
   const [filteredKeyMap, relevantMods] = filteredData(modifierCombinations, kt)
-  
-
-  const defaultActiveMods = getDefaultActiveMods(relevantMods)
-
-  // console.log("⭐: keyMapFilter -> relevantMods", relevantMods)
-  // console.log("⭐: keyMapFilter -> modifierCombinations", modifierCombinations)
-  
-  console.log("⭐: keyMapFilter -> defaultActiveMods", defaultActiveMods)
-  const activeFilteredKeys = _.pick(filteredKeyMap, [...defaultActiveMods])
-  console.log("🚀: keyMapFilter -> activeFilteredKeys", activeFilteredKeys)
-  
  
+  
+  
+  
+  
+  
+  const arrUserActiveModifiers = getDefaultActiveMods(relevantMods)
+  console.log(`⭐: keyMapFilter -> filteredKeyMap`, filteredKeyMap)
+  console.log(`⭐: keyMapFilter -> arrUserActiveModifiers`, arrUserActiveModifiers)
+
+  function getVisibleKeyMap(object, arr) {
+  
+    const filtered = _.pickBy(object, (o, key) => { 
+  
+      const arrToString = _.map(arr, (i) => i.toString())
+      return(_.includes(arrToString, key))
+  
+     })
+      
+      return filtered
+  }
+  const activeFilteredKeys = getVisibleKeyMap(filteredKeyMap, arrUserActiveModifiers)
+  
+  function swap(relMods, oldActiveLayer, newActiveLayer) {
+    const oldIndex = _.findIndex(relMods, (e)=> `${e}`===`${oldActiveLayer}`)
+    console.log(`⭐: swap -> oldIndex`,oldIndex)
+    const newIndex = _.findIndex(relMods, (e)=> `${e}`===`${newActiveLayer}`)
+    console.log(`⭐: swap -> newIndex`, newIndex)
+    const relModsToStringArr = _.map(relMods, (i) => i.toString())
+    
+    const newArr = move(relMods, newIndex, oldIndex )
+    console.log(`⭐: keyMapFilter -> relevantMods`, relMods)
+    console.log(`⭐: swap -> newArr`, newArr)
+    return newArr
+  }
+
+  
+  console.log(`⭐: keyMapFilter -> _.indexOf(["Ctrl"])`, _.findIndex(relevantMods, (e)=> `${e}`===`${["Ctrl"]}`))
+
+  const oldLayer= ["Ctrl"]
+  const newLayer = ["Ctrl", "Shift"]
+  
+  const testarrUserActiveModifiers = getDefaultActiveMods(swap(relevantMods, oldLayer, newLayer))
+  console.log(`⭐: keyMapFilter -> testarrUserActiveModifiers`, testarrUserActiveModifiers)
+  
+  
+  
+
+  setGlobalState('activeLayers', activeFilteredKeys)
+  
+  
   return filteredKeyMap
 }
 
 
 function getDefaultActiveMods(relMods) {
+  
+
   const defaultActiveMods = _.reduce(relMods, (result, cur) => {
-    if (cur.length === 1) {
-      result.push(cur)
-    }
-    if(!( _.intersection(_.flatten(result), _.flatten(cur)).length > 0)) {
+    // if (cur.length === 1) {
+    //   result.push(cur)
+    // }
+    
+    // if (!(_.intersection(_.flatten(result), _.flatten(cur)).length > 0) || (cur.length===1)) {
+    if (!(_.intersection(_.flatten(result), _.flatten(cur)).length > 0)) {
+      
       result.push(cur)
     }
     return result
   }, [])
 
+  
+  
 
   return defaultActiveMods
 }

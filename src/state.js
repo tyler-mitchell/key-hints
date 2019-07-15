@@ -21,6 +21,9 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
   selectedCategoryIndex: -1,
   selectedKeySheet: 0,
   addMode: false,
+  keyMapMode: false,
+  activeLayers: null,
+  keyTopRef: null,
   
   newKeys: {
     keys: { key1: {} },

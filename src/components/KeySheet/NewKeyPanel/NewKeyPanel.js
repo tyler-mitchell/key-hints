@@ -34,6 +34,8 @@ import { useTheme } from '@material-ui/styles';
 import { AnimatedPanel } from './AnimatedPanel';
 
 import { usePopupState, bindTrigger, bindPopover, bindHover } from 'material-ui-popup-state/hooks';
+import KeyText from '../../Key/KeyText/KeyText';
+import { Portal } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 
 const useStyles = makeStyles({
@@ -82,6 +84,10 @@ export const NewKeyPanel = props => {
     { key: 3, label: 'React' },
     { key: 4, label: 'Vue.js' }
   ]);
+
+
+  const [keyTopText, setKeyTopText] = React.useState('');
+  const [keyTopRef] = useGlobalState('keyTopRef')
   return (
     <>
       <AnimatedPanel>
@@ -122,6 +128,19 @@ export const NewKeyPanel = props => {
                     placeholder="description"
                     onChange={event => handleDescriptionChange(event)}
                   />
+                </Grid>
+                <Grid item>
+                <TextField
+                style={{ position: 'relative' }}
+                value={keyTopText}
+                onChange={e => {
+                  setKeyTopText(e.target.value);
+                }}
+                variant="outlined"
+                  />
+                  {keyTopRef && <Portal container={ keyTopRef.current}>
+                  <KeyText  testText={keyTopText} keyTopHeight={50 * 0.7} keyTopWidth={50 - 17} />
+                  </Portal>}
                 </Grid>
                 <Grid item>
                   <ButtonGroup

@@ -27,7 +27,7 @@ import {
 import './key.css';
 import { FlashingKey } from './FlashingKey';
 
-import { useGlobalState } from '../../state';
+import { useGlobalState, setGlobalState } from '../../state';
 import _ from 'lodash';
 
 import flatMap from 'lodash/flatMap';
@@ -243,7 +243,8 @@ const ConditionalWrap = ({ condition, wrap, children }) => {
 };
 export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, key }) => {
   const defaultColor = '#FFFFFF';
-  const activeColor = '#1fe3ac';
+  // const activeColor = '#1fe3ac';
+  const [activeColor, setActiveColor] = React.useState('#1fe3ac')
   const editColor = '#FFB822';
   const [keyColor, changeColor] = React.useState(defaultColor);
 
@@ -251,6 +252,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
   const [editableKey, setEditableKey] = React.useState(false);
 
   const [editMode, setEditMode] = useGlobalState('editMode');
+  const [keyMapMode, setKeyMapMode] = useGlobalState('keyMapMode');
   const [activeKeys, setActiveKeys] = useGlobalState('activeKeys');
 
   const [addMode] = useGlobalState('addMode');
@@ -262,15 +264,43 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
     UpArrow: <UpArrowIcon>{label}</UpArrowIcon>,
     DownArrow: <DownArrowIcon>{label}</DownArrowIcon>
   };
-
+  const [activeLayers, setActiveLayers] = useGlobalState('activeLayers')
+  const keyMapColors = ['#FF0B00', '#3cb44b', '#FFE433', '#21A6FF', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080'];
+  
   React.useEffect(() => {
+    if (keyMapMode && activeLayers) { 
+    
+      
+      let colorIndex = 0;
+      _.forEach(activeLayers, (layer) => {
+        
+          _.forEach(layer, (keyProp) => {
+            
+            
+
+            const isInMap = _.includes(keyProp.keys.key1, label)
+            if (isInMap && _.includes(keyProp.keys.key1, uniqueKeyName)) {
+             
+              setActiveColor(keyMapColors[colorIndex]);
+              setActive(true);
+            }
+          })
+          colorIndex += 1;
+          
+        })
+        
+      
+    }
     if (flatMap(activeKeys).includes(uniqueKeyName)) {
       if (editMode) {
         setNewKeys(p => ({ ...p, keys: { key1: activeKeys } }));
 
         changeColor(editColor);
         setActive(true);
-      } else {
+      } 
+      
+      else {
+        
         changeColor(activeColor);
         setActive(true);
       }
@@ -280,8 +310,14 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
       setEditableKey(false);
       setActive(false);
     };
-  }, [activeKeys, addMode, editMode, setNewKeys, uniqueKeyName]);
+  }, [activeKeys, addMode, editMode, setNewKeys, uniqueKeyName, keyMapMode]);
 
+  React.useLayoutEffect(() => {
+    if (active) {
+      
+      setGlobalState('keyTopRef', keyTopRef)
+    }
+  },[active])
   const addItem = key => {
     const keyXLength = _.size(newKeys.keys.key1);
 
@@ -357,19 +393,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
         0.2,
         activeColor
       )} 50%)`
-      // background:  `${
-      //   linearGradient(
-      //     colorStops: [shade(0.05, activeColor) '0%', lighten(0.2, activeColor) 50%],
-      //     toDirection: '-30deg',
-      //     fallback: '#FFF'
-      //   )}`,
-
-      // border: {
-      //   borderTopColor: `${shade(0.02, defaultColor)}`,
-      //   borderBottomColor: `${shade(0.3, defaultColor)}`,
-      //   borderLeftColor: `${shade(0.09, defaultColor)}`,
-      //   borderRightColor: `${shade(0.09, defaultColor)}`
-      // }
+      
     },
     to: [
       {
@@ -377,18 +401,8 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
         y: 1,
         scale: 150,
         opacity: 1,
-
         transform: 'translateY(0px) scale(1)',
-        // transform: 'translateY(-0.58%) scale(1)',
-        // transform: 'scale(0.98)',
         freq: '0.0, 0.0',
-        // border: {
-        //   borderTopColor: `${shade(0.02, activeColor)}`,
-        //   borderBottomColor: `${shade(0.3, activeColor)}`,
-        //   borderLeftColor: `${shade(0.09, activeColor)}`,
-        //   borderRightColor: `${shade(0.09, activeColor)}`
-        // }
-
         borderTopColor: `${shade(0.02, defaultColor)}`,
         borderBottomColor: `${shade(0.3, defaultColor)}`,
         borderLeftColor: `${shade(0.09, defaultColor)}`,
@@ -397,12 +411,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
           0.2,
           defaultColor
         )} 50%)`
-        // background: `${
-        //   linearGradient({
-        //     colorStops: [`${shade(0.05, defaultColor)} 0%`, `${lighten(0.2, defaultColor)} 50%`],
-        //     toDirection: '-30deg',
-        //     fallback: '#FFF'
-        //   })}`,
+        
       }
     ],
 
@@ -420,6 +429,11 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
   // });
 
   const [testInput, setTestInput] = React.useState('');
+  let keyTopRef = React.useRef(null);
+  
+  
+
+
   return (
     <React.Fragment>
       <ConditionalWrap
@@ -464,14 +478,14 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
             color={keyColor}
             onClick={keyClicked}
           >
-            <KeyTop wt={wt} ht={ht} color={keyColor} style={{ background }}>
+            <KeyTop ref={keyTopRef} wt={wt} ht={ht} color={keyColor} style={{ background }}>
               {/* <KeyChar ref={keyTopTextRef}>Basic Editing the view port</KeyChar> */}
               {/* <BottomKeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</BottomKeyChar> */}
               {/* <Grid container justify="center" item xs zeroMinWidth> */}
               {/* <KeyText
                   text="Basic Editing the view port and here is some more text"
                 /> */}
-
+              
               {/* <div
                 style={{
                   height: `${ht * 0.7}px`,
@@ -486,9 +500,11 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
               </div> */}
 
 
- <KeyText testText={testInput} keyTopHeight={ht * 0.7} keyTopWidth={wt - 17} />
+                
 
               {/* </Grid> */}
+
+              
             </KeyTop>
             <div
               style={{

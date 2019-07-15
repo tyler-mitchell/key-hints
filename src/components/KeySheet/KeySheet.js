@@ -28,6 +28,7 @@ import { CategoryMenu } from './CategoryMenu/CategoryMenu';
 
 import { filter, isEmpty } from 'lodash';
 import { keyMapFilter } from '../Keyboard/KeyMapData';
+import { Button } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -132,8 +133,6 @@ export const KeySheet = props => {
 
   // Functions
   function filterKeyTable(ktable, category) {
-    const x = keyMapFilter(curKeyTable.data().table)
-    console.log("⭐: filterKeyTable -> x", x)
     if (category !== 'All') {
       return filter(curKeyTable.data().table, key => {
         return key.category.toUpperCase() === category;
@@ -141,16 +140,21 @@ export const KeySheet = props => {
     } else {
       return Object.keys(curKeyTable.data().table).sort();
     }
-  }
+  };
   
+  function handleKeyMapMode(){
+    keyMapFilter(curKeyTable.data().table);
+    setGlobalState('keyMapMode', true);
+  }
   return (
     <React.Fragment>
       {loadingUKTC && <CircularProgress className={classes.progress} />}
 
-      {curKeyTable && (
+      {(curKeyTable) && (
         <>
          
-        
+          <Button variant="contained" onClick={handleKeyMapMode}>Key Map</Button>
+
           <Card ref={anchorRef(popupState)} style={{ height: '470px', borderRadius: '10px' }}>
             {/* <SwipeableViews
               resistance={true}
@@ -160,6 +164,7 @@ export const KeySheet = props => {
               containerStyle={{ height: '500px' }}
             > */}
             <>
+              
               <CardHead className={classes.appBar} indicatorColor="primary" textColor="primary" />
               <Grid container xs={12} style={{}} justify="center" alignItems="center" />
               <SearchInput
