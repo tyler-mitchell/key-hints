@@ -274,42 +274,22 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
   const keyMapColors = ['#FF0B00', '#3cb44b', '#FFE433', '#21A6FF', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080'];
   const [activeKeyMapKeys, setActiveKeyMapKeys] = useGlobalState('activeKeyMapKeys')
   React.useEffect(() => {
-    if (keyMapMode && activeLayers.keyMapObject) { 
-      
-      const layers = activeLayers.keyMapObject
-      let colorIndex = 0;
-      _.forEach(layers, (layer) => {
-        
-          _.forEach(layer, (keyProp) => {
-            
-            
+    if (keyMapMode && activeLayers) { 
+      _.forEach(activeLayers, (layer, colorIndex) => {
+          const isMainKey = _.includes(layer.mainKeys, label) 
+          const isModifier = _.includes(layer.layer, label) 
 
-            const isInMap = _.includes(keyProp.keys.key1, label)
-            const keyvals = _.valuesIn(keyProp.keys.key1)
-            
-            if (isInMap && _.includes(keyProp.keys.key1, uniqueKeyName)) {
-              
-              
-              
-              // const hasCommonElements = _.intersection(keyvals, activeKeyMapKeys).length > 0
-              
-              
-                const newAKM = activeKeyMapKeys
-                newAKM.push(label)
-                setActiveColor(keyMapColors[colorIndex]);
-                setActiveKeyMapKeys(newAKM); setActive(true);
-              
-
-
-              
-              
-              
-            }
-          })
-          colorIndex += 1;
+        if (isMainKey) {
+          setActiveColor(keyMapColors[colorIndex]);
+          setActive(true);
           
-        })
-        
+        } else if (isModifier) {
+          setActiveColor(keyMapColors[colorIndex]);
+          setActive(true);
+        }
+      })
+      // colorIndex += 1;
+      
       
     }
     if (flatMap(activeKeys).includes(uniqueKeyName)) {

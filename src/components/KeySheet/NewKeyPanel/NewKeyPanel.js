@@ -94,9 +94,9 @@ export const NewKeyPanel = props => {
 
   const [keyTopText, setKeyTopText] = React.useState('');
   const [keyTopRefs] = useGlobalState('keyTopTextRefs');
-  console.log(`⭐: keyTopRefs`, keyTopRefs)
+
   const [keyTopRefKey] = useGlobalState('lastKeyRef');
-  console.log(`⭐: keyTopRefKey`, keyTopRefKey)
+
 
 
   return (
