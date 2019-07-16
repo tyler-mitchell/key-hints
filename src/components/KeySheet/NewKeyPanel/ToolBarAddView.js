@@ -82,6 +82,7 @@ export const ToolBarAddView = props => {
   }, [addMode]);
 
   const handleSaveKeyClick = () => {
+    
     addNewKeyToFirebase(newKeys);
     setGlobalState('addMode', false);
   };

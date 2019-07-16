@@ -23,12 +23,15 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
   addMode: false,
   keyMapMode: false,
   activeLayers: null,
-  keyTopRef: null,
+  keyTopTextRefs: {},
+  activeKeyMapKeys: [],
+  lastKeyRef: null,
   
   newKeys: {
     keys: { key1: {} },
     description: 'no description',
-    category: 'none'
+    category: 'none',
+    keyMapDescription: ''
   },
   sheetCategory: 'All',
   sheetNames: {},

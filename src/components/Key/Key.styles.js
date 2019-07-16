@@ -210,12 +210,18 @@ const KeyTop = styled(animated.div)`
 
 export const BottomKeyChar = styled.div`
   font-size: 15px;
+  position: absolute;
+  z-index: 4;
+  
   font-family: 'Nunito';
   font-weight: bold;
   color: rgba(0, 0, 0, 0.45);
   user-select: none;
-  position: 'relative';
-  transform: rotateX(8deg) translateY(33px) scale(1);
+  width: auto;
+  height: auto;
+  /* position: 'relative'; */
+  transform: rotateX(8deg) translateY(34px) scale(1);
+  
   /* text-align: center; */
 `;
 export const KeyChar = styled.div`
@@ -266,23 +272,38 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
   };
   const [activeLayers, setActiveLayers] = useGlobalState('activeLayers')
   const keyMapColors = ['#FF0B00', '#3cb44b', '#FFE433', '#21A6FF', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080'];
-  
+  const [activeKeyMapKeys, setActiveKeyMapKeys] = useGlobalState('activeKeyMapKeys')
   React.useEffect(() => {
-    if (keyMapMode && activeLayers) { 
-    
+    if (keyMapMode && activeLayers.keyMapObject) { 
       
+      const layers = activeLayers.keyMapObject
       let colorIndex = 0;
-      _.forEach(activeLayers, (layer) => {
+      _.forEach(layers, (layer) => {
         
           _.forEach(layer, (keyProp) => {
             
             
 
             const isInMap = _.includes(keyProp.keys.key1, label)
+            const keyvals = _.valuesIn(keyProp.keys.key1)
+            
             if (isInMap && _.includes(keyProp.keys.key1, uniqueKeyName)) {
-             
-              setActiveColor(keyMapColors[colorIndex]);
-              setActive(true);
+              
+              
+              
+              // const hasCommonElements = _.intersection(keyvals, activeKeyMapKeys).length > 0
+              
+              
+                const newAKM = activeKeyMapKeys
+                newAKM.push(label)
+                setActiveColor(keyMapColors[colorIndex]);
+                setActiveKeyMapKeys(newAKM); setActive(true);
+              
+
+
+              
+              
+              
             }
           })
           colorIndex += 1;
@@ -294,9 +315,10 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
     if (flatMap(activeKeys).includes(uniqueKeyName)) {
       if (editMode) {
         setNewKeys(p => ({ ...p, keys: { key1: activeKeys } }));
-
+        
         changeColor(editColor);
         setActive(true);
+        
       } 
       
       else {
@@ -315,7 +337,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
   React.useLayoutEffect(() => {
     if (active) {
       
-      setGlobalState('keyTopRef', keyTopRef)
+      setGlobalState('lastKeyRef', label)
     }
   },[active])
   const addItem = key => {
@@ -428,8 +450,14 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
   //     });
   // });
 
+
+  setGlobalState('keyTopTextRefs', v => ({ ...v, [label]: keyTopTextRef }))
+  
+  
   const [testInput, setTestInput] = React.useState('');
-  let keyTopRef = React.useRef(null);
+  // let keyTopRef = React.useRef(null);
+
+
   
   
 
@@ -478,9 +506,8 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
             color={keyColor}
             onClick={keyClicked}
           >
-            <KeyTop ref={keyTopRef} wt={wt} ht={ht} color={keyColor} style={{ background }}>
+            <KeyTop ref={keyTopTextRef} wt={wt} ht={ht} color={keyColor} style={{ background }}>
               {/* <KeyChar ref={keyTopTextRef}>Basic Editing the view port</KeyChar> */}
-              {/* <BottomKeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</BottomKeyChar> */}
               {/* <Grid container justify="center" item xs zeroMinWidth> */}
               {/* <KeyText
                   text="Basic Editing the view port and here is some more text"
@@ -506,7 +533,9 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
 
               
             </KeyTop>
-            <div
+            <BottomKeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</BottomKeyChar>
+
+            {/* <div
               style={{
                 height: '10px',
                 width: '70px',
@@ -524,7 +553,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
                 }}
                 variant="outlined"
               />
-            </div>
+            </div> */}
           </AnimatedKeyContainer>
         </animated.div>
       </ConditionalWrap>

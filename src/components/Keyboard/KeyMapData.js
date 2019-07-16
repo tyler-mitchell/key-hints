@@ -99,27 +99,29 @@ function filteredData(combinations, data) {
 
  
   const filteredArr = _.chain(combinations).map((mod, i) => {
+   
+   
     const diff = getModDifference(newData, mod)
-    newData = objectDifference(newData, diff)
+       newData = objectDifference(newData, diff)
 
     if (_.isEmpty(diff)) {
-      return(diff)
+      return (diff)
     }
     else {
       relevantMods.push(mod)
-      return({ [mod]: diff})
+      return ({ [mod]: diff })
     }
-    // return (_.isEmpty(diff) ? diff : { [mod]: diff})
   }).filter((o) => !_.isEmpty(o)).value()
 
-  const newObj = {}
-  for (let o in filteredArr) {
-    const key = Object.keys(filteredArr[o])
-    const objData = filteredArr[o][key]
-    newObj[key] = objData
-  }
+  // const keyMapObject = {}
+  // for (let o in filteredArr) {
+  //   const key = Object.keys(filteredArr[o])
+  //   const objData = filteredArr[o][key]
+  //   keyMapObject[key] = objData
+  // }
+  // const modifierArray = _.reverse(relevantMods)
 
-  return [newObj, _.reverse(relevantMods)]
+  return {keyMapObject, modifierArray}
 }
 function k_combinations(set, k) {
 	var i, j, combs, head, tailcombs;
@@ -188,86 +190,73 @@ function combinations(set) {
 //    ( which means that each shortcut is split into two portions -- [...modifiers, key] )
 export function keyMapFilter(kt) {
 
-
-  const modifierKeys = ["Alt", "Ctrl", "Shift", "Capslock", "Tab"]
+  const modifierKeys = ["Ctrl", "Alt", "Shift", "Capslock", "Tab"]
   const singleKeys = [['0'],['1'],['2'],['3'],['4'],['5'],['6'],['7'],['8'],['9'],['A'],['B'],['C'],['D'],['E'],['F'],['G'],['H'],['I'],['J'],['K'],['L'],['M'],['N'],['O'],['P'],['Q'],['R'],['S'],['T'],['U'],['V'],['W'],['X'],['Y'],['Z']];
-
   const modifierCombinations = _.concat(combinations(modifierKeys), singleKeys) 
   
-  const [filteredKeyMap, relevantMods] = filteredData(modifierCombinations, kt)
- 
+  // const [filteredKeyMap, relevantMods] = filteredData(modifierCombinations, kt)
+  const keyMap = filteredData(modifierCombinations, kt)
   
-  
-  
-  
-  
-  const arrUserActiveModifiers = getDefaultActiveMods(relevantMods)
+  // const testarrUserActiveModifiers = getDefaultActiveMods(swap(relevantMods, oldLayer, newLayer), filteredKeyMap)
+  const filteredKeyMap = getDefaultActiveMods(keyMap.modifierArray, keyMap.keyMapObject)
+  console.log(`⭐: keyMapFilter -> keyMap.modifierArray`, keyMap.modifierArray)
   console.log(`⭐: keyMapFilter -> filteredKeyMap`, filteredKeyMap)
-  console.log(`⭐: keyMapFilter -> arrUserActiveModifiers`, arrUserActiveModifiers)
-
-  function getVisibleKeyMap(object, arr) {
+  setGlobalState('activeLayers', filteredKeyMap)
   
-    const filtered = _.pickBy(object, (o, key) => { 
-  
-      const arrToString = _.map(arr, (i) => i.toString())
-      return(_.includes(arrToString, key))
-  
-     })
-      
-      return filtered
-  }
-  const activeFilteredKeys = getVisibleKeyMap(filteredKeyMap, arrUserActiveModifiers)
-  
-  function swap(relMods, oldActiveLayer, newActiveLayer) {
-    const oldIndex = _.findIndex(relMods, (e)=> `${e}`===`${oldActiveLayer}`)
-    console.log(`⭐: swap -> oldIndex`,oldIndex)
-    const newIndex = _.findIndex(relMods, (e)=> `${e}`===`${newActiveLayer}`)
-    console.log(`⭐: swap -> newIndex`, newIndex)
-    const relModsToStringArr = _.map(relMods, (i) => i.toString())
-    
-    const newArr = move(relMods, newIndex, oldIndex )
-    console.log(`⭐: keyMapFilter -> relevantMods`, relMods)
-    console.log(`⭐: swap -> newArr`, newArr)
-    return newArr
-  }
-
-  
-  console.log(`⭐: keyMapFilter -> _.indexOf(["Ctrl"])`, _.findIndex(relevantMods, (e)=> `${e}`===`${["Ctrl"]}`))
-
-  const oldLayer= ["Ctrl"]
-  const newLayer = ["Ctrl", "Shift"]
-  
-  const testarrUserActiveModifiers = getDefaultActiveMods(swap(relevantMods, oldLayer, newLayer))
-  console.log(`⭐: keyMapFilter -> testarrUserActiveModifiers`, testarrUserActiveModifiers)
-  
-  
-  
-
-  setGlobalState('activeLayers', activeFilteredKeys)
-  
-  
-  return filteredKeyMap
+  return keyMap
 }
 
 
-function getDefaultActiveMods(relMods) {
-  
+function swap(relMods, oldActiveLayer, newActiveLayer) {
+  const oldIndex = _.findIndex(relMods, (e)=> `${e}`===`${oldActiveLayer}`)
+  const newIndex = _.findIndex(relMods, (e)=> `${e}`===`${newActiveLayer}`)
+  const newArr = move(relMods, newIndex, oldIndex )
+  return newArr
+}
 
-  const defaultActiveMods = _.reduce(relMods, (result, cur) => {
-    // if (cur.length === 1) {
-    //   result.push(cur)
-    // }
+
+
+
+function getDefaultActiveMods(userModsArr, filteredKeyMap, oldLayer = null, newLayer = null) {
+
+  
+  const modifierArray = (oldLayer && newLayer) ? swap(userModsArr, oldLayer, newLayer) : userModsArr
+
+
+  // const mainKeyArr = [];
+  const defaultActiveMods = _.reduce(modifierArray, (result, cur,k) => {
+    const resultArr = _.flatten(result.res);
     
-    // if (!(_.intersection(_.flatten(result), _.flatten(cur)).length > 0) || (cur.length===1)) {
-    if (!(_.intersection(_.flatten(result), _.flatten(cur)).length > 0)) {
-      
-      result.push(cur)
+    const mainKey = _.valuesIn(filteredKeyMap[cur])[0].keys.mainKey;
+    console.log(`⭐: filteredKeyMap[cur]`, _.valuesIn(filteredKeyMap[cur]))
+    console.log(`🟢🟢🟢: getDefaultActiveMods -> mainKey`, mainKey)
+    const noHasKey = cur[0].length === 1 ? !(_.includes(result.mainKeyArr, cur[0])) :  (mainKey && !(_.includes(result.mainKeyArr, mainKey)) )
+    
+
+    
+    
+
+    const curArr = _.flatten(cur)
+    console.log(`⭐: getDefaultActiveMods -> mainKey`, mainKey)
+    const numCommonElements = _.intersection(resultArr, curArr).length
+    if (!(numCommonElements > 0) && noHasKey ) {
+     
+      cur[0].length === 1 ? result.mainKeyArr.push(cur[0]) : result.mainKeyArr.push(mainKey) 
+      // result.mainKeyArr.push(mainKey) 
+      result.res.push(cur)
     }
     return result
-  }, [])
+  }, {res:[], mainKeyArr:[]})
+  console.log(`⭐: getDefaultActiveMods -> defaultActiveMods`, defaultActiveMods)
+
+  const keyMapObject = _.pickBy(filteredKeyMap, (o, key) => { 
+    const arrToString = _.map(defaultActiveMods.res, (i) => i.toString())
+    const isIncluded = _.includes(arrToString, key)
+    return(isIncluded)
+   })
+    
+    return {keyMapObject, modifierArray}
+  
 
   
-  
-
-  return defaultActiveMods
 }

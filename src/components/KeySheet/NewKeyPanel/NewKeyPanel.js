@@ -4,8 +4,6 @@ import { KeyTableContext } from '../../../context/KeyTableContext';
 import { KeySequence, renderAddedKeys } from './KeySequence';
 import styled from 'styled-components';
 
-
-
 import {
   makeStyles,
   Popover,
@@ -37,6 +35,7 @@ import { usePopupState, bindTrigger, bindPopover, bindHover } from 'material-ui-
 import KeyText from '../../Key/KeyText/KeyText';
 import { Portal } from '@material-ui/core';
 import { Button } from '@material-ui/core';
+import _ from 'lodash';
 
 const useStyles = makeStyles({
   buttonGroup: {
@@ -54,7 +53,7 @@ const useStyles = makeStyles({
     height: 38,
     margin: 6
   },
-  chip: {button:{marginRight: '15px'}}
+  chip: { button: { marginRight: '15px' } }
 });
 
 export const NewKeyPanel = props => {
@@ -62,10 +61,18 @@ export const NewKeyPanel = props => {
   const theme = useTheme();
   const classes = useStyles();
 
-  const [value, setValue] = React.useState({ description: null, category: null });
+  const [value, setValue] = React.useState({ description: null, category: null});
   const handleDescriptionChange = event => {
     const description = event.target.value;
     setValue(v => ({ ...v, description }));
+
+    console.log('⭐: value', value);
+    // setNewKeys(p => ({ ...p, category }))
+  };
+  const handleKeyMapDescription = event => {
+    const keyMapDescription = event.target.value;
+    setKeyTopText(keyMapDescription);
+    setValue(v => ({ ...v, keyMapDescription }));
 
     console.log('⭐: value', value);
     // setNewKeys(p => ({ ...p, category }))
@@ -75,8 +82,8 @@ export const NewKeyPanel = props => {
     popupId: 'demoPopover'
   });
 
-  const chipColors = ['#f47c7c', '#6bd5e1', '#a1de93', '#ffd98e', '#ff8364',];
-  
+  const chipColors = ['#f47c7c', '#6bd5e1', '#a1de93', '#ffd98e', '#ff8364'];
+
   const [chipData, setChipData] = React.useState([
     { key: 0, label: 'Angular' },
     { key: 1, label: 'jQuery' },
@@ -85,9 +92,13 @@ export const NewKeyPanel = props => {
     { key: 4, label: 'Vue.js' }
   ]);
 
-
   const [keyTopText, setKeyTopText] = React.useState('');
-  const [keyTopRef] = useGlobalState('keyTopRef')
+  const [keyTopRefs] = useGlobalState('keyTopTextRefs');
+  console.log(`⭐: keyTopRefs`, keyTopRefs)
+  const [keyTopRefKey] = useGlobalState('lastKeyRef');
+  console.log(`⭐: keyTopRefKey`, keyTopRefKey)
+
+
   return (
     <>
       <AnimatedPanel>
@@ -113,9 +124,8 @@ export const NewKeyPanel = props => {
             theme={theme}
             placeholder="Search…"
             inputProps={{ 'aria-label': 'Search' }}
+            keyMapDescription={keyTopText}
           />
-          
-          
           <Divider />
           <List>
             <TableRow style={{ display: 'flex', justifyContent: 'flex-start' }} divider>
@@ -130,36 +140,40 @@ export const NewKeyPanel = props => {
                   />
                 </Grid>
                 <Grid item>
-                <TextField
-                style={{ position: 'relative' }}
-                value={keyTopText}
-                onChange={e => {
-                  setKeyTopText(e.target.value);
-                }}
-                variant="outlined"
+                  <TextField
+                    style={{ position: 'relative' }}
+                    value={keyTopText}
+                    onChange={event => handleKeyMapDescription(event)}
+                    variant="outlined"
                   />
-                  {keyTopRef && <Portal container={ keyTopRef.current}>
-                  <KeyText  testText={keyTopText} keyTopHeight={50 * 0.7} keyTopWidth={50 - 17} />
-                  </Portal>}
+                  {keyTopRefs[keyTopRefKey] && (
+                    <Portal container={keyTopRefs[keyTopRefKey].current}>
+                      <KeyText
+                        testText={keyTopText}
+                        keyTopHeight={50 * 0.7}
+                        keyTopWidth={50 - 17}
+                      />
+                    </Portal>
+                  )}
                 </Grid>
                 <Grid item>
                   <ButtonGroup
                     className={classes.buttonGroup}
-                    
                     variant={value.category ? 'contained' : 'outlined'}
                     color="primary"
                     aria-label="Split button"
                   >
-                    <Button size="small" className={classes.buttonGroup}>{value.category}</Button>
+                    <Button size="small" className={classes.buttonGroup}>
+                      {value.category}
+                    </Button>
                     <Button
-                     
                       {...bindTrigger(popupState)}
                       color="primary"
                       className={classes.buttonGroup}
                       size="small"
                       aria-haspopup="true"
                     >
-                      <ArrowDropDownIcon fontSize="small"/>
+                      <ArrowDropDownIcon fontSize="small" />
                     </Button>
                   </ButtonGroup>
                   <Popover
@@ -184,21 +198,23 @@ export const NewKeyPanel = props => {
                       horizontal: 'center'
                     }}
                   >
-                    <Grid container  justify="flex-start" alignItems="flex-start">
+                    <Grid container justify="flex-start" alignItems="flex-start">
                       {chipData.map((data, i) => {
                         let icon;
-                        const chipColor = chipColors[i % chipColors.length] 
+                        const chipColor = chipColors[i % chipColors.length];
                         if (data.label === value.category) {
-                          icon = <CheckIcon />
-                        } 
+                          icon = <CheckIcon />;
+                        }
 
                         return (
                           <Chip
                             key={data.key}
-                            icon={<Zoom timeout={300} in={data.label === value.category}><CheckIcon/></Zoom>}
+                            icon={
+                              <Zoom timeout={300} in={data.label === value.category}>
+                                <CheckIcon />
+                              </Zoom>
+                            }
                             label={data.label}
-                           
-                            
                             clickable={true}
                             size="small"
                             onClick={() => {
@@ -206,7 +222,7 @@ export const NewKeyPanel = props => {
                               setValue(v => ({ ...v, category: selectedChip }));
                               console.log('⭐: VALUE ON CHIP CLICK', value);
                             }}
-                            style={{ margin: '3px', backgroundColor: chipColor}} 
+                            style={{ margin: '3px', backgroundColor: chipColor }}
                             className={classes.chip}
                           />
                         );
