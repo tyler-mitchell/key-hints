@@ -7,10 +7,15 @@ import Paper from '@material-ui/core/Paper'
 
 export const CategoryPaper = styled(Paper)`
   height: 471px;
+  
+  
   margin-right: 10px;
   display: block;
   overflow-x: hidden;
-  width: 200px;
+  width: auto;
+  
+  border-radius: 30px;
+  
 
   &::-webkit-scrollbar {
     width: 5px;
@@ -91,12 +96,13 @@ export const useStyles = makeStyles(theme => ({
     display: 'flex'
   },
   popper: {
-    zIndex: 0,
-
+    zIndex: 500,
+    borderRadius: '30px',
     position: 'absolute',
     display: 'block'
   },
   paper: {
+
     height: '471px',
     marginRight: '10px',
     display: 'block',

@@ -27,7 +27,7 @@ import { NewKeyPanel } from './NewKeyPanel/NewKeyPanel';
 import { CategoryMenu } from './CategoryMenu/CategoryMenu';
 
 import { filter, isEmpty } from 'lodash';
-import { keyMapFilter } from '../Keyboard/KeyMapData';
+import { initializeKeyMap } from '../Keyboard/KeyMapData';
 import { Button } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
@@ -143,7 +143,7 @@ export const KeySheet = props => {
   };
   
   function handleKeyMapMode(){
-    keyMapFilter(curKeyTable.data().table);
+    initializeKeyMap(curKeyTable.data().table);
     setGlobalState('keyMapMode', true);
   }
   return (

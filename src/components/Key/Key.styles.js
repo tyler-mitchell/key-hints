@@ -274,17 +274,18 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
   const keyMapColors = ['#FF0B00', '#3cb44b', '#FFE433', '#21A6FF', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080'];
   const [activeKeyMapKeys, setActiveKeyMapKeys] = useGlobalState('activeKeyMapKeys')
   React.useEffect(() => {
-    if (keyMapMode && activeLayers) { 
+    if (keyMapMode && activeLayers && uniqueKeyName) { 
       _.forEach(activeLayers, (layer, colorIndex) => {
+
           const isMainKey = _.includes(layer.mainKeys, label) 
           const isModifier = _.includes(layer.layer, label) 
-
+        
         if (isMainKey) {
           setActiveColor(keyMapColors[colorIndex]);
           setActive(true);
           
         } else if (isModifier) {
-          setActiveColor(keyMapColors[colorIndex]);
+          setActiveColor(shade(0.4, keyMapColors[colorIndex]));
           setActive(true);
         }
       })

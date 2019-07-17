@@ -11,55 +11,55 @@ import { result } from 'lodash-es';
 
 
 
-const keyTable = {
+// const keyTable = {
 
   
   
-  "000": {
-    categories: [""],
-    description: "",
-    keys:{ key1: ["Ctrl", "X"]}
+//   "000": {
+//     categories: [""],
+//     description: "",
+//     keys:{ key1: ["Ctrl", "X"]}
     
-  },
-  "001": {
-    categories: [""],
+//   },
+//   "001": {
+//     categories: [""],
 
-    description: "",
-    keys: { key1: ["Ctrl", 'Alt', "X"] }
+//     description: "",
+//     keys: { key1: ["Ctrl", 'Alt', "X"] }
     
-  },
-  "002": {
-    categories: [""],
+//   },
+//   "002": {
+//     categories: [""],
 
-    description: "",
-    keys: { key1: ["Ctrl", 'Alt', "Z"] }
+//     description: "",
+//     keys: { key1: ["Ctrl", 'Alt', "Z"] }
     
-  },
-  "003": {
-    categories: [""],
+//   },
+//   "003": {
+//     categories: [""],
 
-    description: "",
-    keys: { key1: ["Ctrl", "C"] }
+//     description: "",
+//     keys: { key1: ["Ctrl", "C"] }
     
-  },
-  "004": {
-    categories: [""],
-    description: "",
-    keys: { key1: ["Shift", "B"] }
+//   },
+//   "004": {
+//     categories: [""],
+//     description: "",
+//     keys: { key1: ["Shift", "B"] }
     
-  },
-  "005": {
-    categories: [""],
-    description: "",
-    keys: { key1: ["Ctrl", 'Alt', "C"] }
+//   },
+//   "005": {
+//     categories: [""],
+//     description: "",
+//     keys: { key1: ["Ctrl", 'Alt', "C"] }
     
-  },
-  "006": {
-    categories: [""],
-    description: "",
-    keys: { key1: ["Tab", "C"] }
-  }
-}
+//   },
+//   "006": {
+//     categories: [""],
+//     description: "",
+//     keys: { key1: ["Tab", "C"] }
+//   }
+// }
 
 function getModDifference(keyData, mod) {
   return (_.chain(keyData).pickBy((shortcut) => {
@@ -68,14 +68,14 @@ function getModDifference(keyData, mod) {
     const isDiff = diff.length === 0;
 
     // temporary implementation--the 'main key' will be determined by the user upon creation
-    if (isDiff) {
+    // if (isDiff) {
       
-      const mainKey = _.difference(_.values(shortcut.keys.key1), mod)
+    //   const mainKey = _.difference(_.values(shortcut.keys.key1), mod)
       
-      mainKey.length === 1 && (shortcut.keys["mainKey"] = mainKey[0])
+    //   mainKey.length === 1 && (shortcut.keys["mainKey"] = mainKey[0])
       
       
-    }
+    // }
     
     return (isDiff)
   }
@@ -194,70 +194,66 @@ function combinations(set) {
 // ** no layers with common modifiers should be active at the same time **
 // ** each shortcut displayed in on the key map can have only one key that are not modifiers 
 //    ( which means that each shortcut is split into two portions -- [...modifiers, key] )
-export function keyMapFilter(kt) {
+export function initializeKeyMap(keyTable) {
 
   const modifierKeys = ["Ctrl", "Alt", "Shift", "Capslock", "Tab"]
   const singleKeys = [['0'],['1'],['2'],['3'],['4'],['5'],['6'],['7'],['8'],['9'],['A'],['B'],['C'],['D'],['E'],['F'],['G'],['H'],['I'],['J'],['K'],['L'],['M'],['N'],['O'],['P'],['Q'],['R'],['S'],['T'],['U'],['V'],['W'],['X'],['Y'],['Z']];
   const modifierCombinations = _.concat(combinations(modifierKeys), singleKeys) 
   
-
-  const keyMap = filteredData(modifierCombinations, kt)
-
-  const filteredKeyMap = getDefaultActiveMods(keyMap)
+  const allLayers = filteredData(modifierCombinations, keyTable)
+  
+  const { activeLayers, layerKeys} = getActiveLayers(allLayers)
  
-  
-  setGlobalState('activeLayers', filteredKeyMap)
-  
-  
-  return keyMap
+  setGlobalState('allLayers', allLayers)
+  setGlobalState('activeLayers', activeLayers)
+  setGlobalState('layerKeys', layerKeys)
 }
 
 
 function swap(keyMap, oldActiveLayer, newActiveLayer) {
-  const oldIndex = _.findIndex(keyMap, (e)=> `${e}`===`${oldActiveLayer}`)
-  const newIndex = _.findIndex(keyMap, (e)=> `${e}`===`${newActiveLayer}`)
-  const newArr = move(keyMap, newIndex, oldIndex )
+
+  const oldIndex = _.findIndex(keyMap, (e)=> `${e.layer}`===`${oldActiveLayer}`)
+  const newIndex = _.findIndex(keyMap, (e)=> `${e.layer}`===`${newActiveLayer}`)
+  const newArr = move(keyMap, newIndex, oldIndex)
+  
   return newArr
 }
 
 
 
 
-function getDefaultActiveMods(filteredKeyMap, oldLayer = null, newLayer = null) {
+export function getActiveLayers(filteredKeyMap, oldLayer = null, newLayer = null) {
 console.log(`⭐: filteredKeyMap`, filteredKeyMap)
 
-  
-  const keyMap = (oldLayer && newLayer) ? swap(filteredKeyMap, oldLayer, newLayer) : filteredKeyMap
+// const singleKeys = [['0'],['1'],['2'],['3'],['4'],['5'],['6'],['7'],['8'],['9'],['A'],['B'],['C'],['D'],['E'],['F'],['G'],['H'],['I'],['J'],['K'],['L'],['M'],['N'],['O'],['P'],['Q'],['R'],['S'],['T'],['U'],['V'],['W'],['X'],['Y'],['Z']];
 
+  const allLayers = (oldLayer && newLayer) ? swap(filteredKeyMap, oldLayer, newLayer) : filteredKeyMap
 
- 
-  let layerArray = []
-  const defaultActiveMods = _.reduce(keyMap, (result, cur,k) => {
-    console.log(`⭐:  layerArray`, layerArray)
-    
-  
-  
+  let layerData = []
+  let layerKeys = { allLayerKeys: [], activeLayerKeys: []}
+  const activeLayers = _.reduce(allLayers, (result, cur, k) => {
     
     const allKeys = _.union(cur.layer, cur.mainKeys)
-    console.log(`⭐: getDefaultActiveMods -> allKeys`, allKeys)
+    const numCommonElements = _.intersection(layerData, allKeys).length
+    const hasNoCommonElements = !(numCommonElements > 0)
     
-    
-  
-    const numCommonElements = _.intersection(layerArray, allKeys).length
-    if (!(numCommonElements > 0)  ) {
-     
-     
-      // result.mainKeyArr.push(mainKey) 
-      layerArray = _.concat(layerArray, allKeys)
+    // const notSingleKey = _.includes(singleKeys, cur.layer)
+
+    layerKeys.allLayerKeys.push(cur.layer)
+    if (hasNoCommonElements) {
+      layerData = _.concat(layerData, allKeys);
+      (cur.layer.length !== 1) && layerKeys.activeLayerKeys.push(cur.layer);
       result.push(cur)
+
     }
     return result
   }, [])
-  console.log(`⭐: defaultActiveMods`, defaultActiveMods)
+  console.log(`⭐: activeLayers`, activeLayers)
+  console.log(`⭐: getActiveLayers -> layerKeys`, layerKeys)
 
   
     
-    return defaultActiveMods
+    return {activeLayers, layerKeys}
   
 
   

@@ -99,7 +99,7 @@ const renderIcon = keyLabel => {
     return keyLabel;
   }
 };
-const renderKeys = keybind => {
+export const renderKeys = keybind => {
   return (
     <>
       {Object.values(keybind).map((keyItem, keyIndex) => {
@@ -177,6 +177,28 @@ const renderAddedKeys = keybind => {
     </>
   );
 };
+
+export const renderCategoryItem = layerKey => {
+  console.log(`⭐: layerKey`, layerKey);
+  return (
+    <Grid container justify="center" alignItems="center" direction="row" wrap="nowrap">
+      {/* <Badge badgeContent={keyIndex+1} color="primary" variant="dot" > */}
+      {layerKey.map((kb, index, array) => {
+        console.log(`⭐: kb`, kb);
+        return (
+          <Grid item key={index}>
+            <KbdKey key={index}>
+              <KBD>{renderIcon(kb)}</KBD>
+              {index !== layerKey.length - 1 && '+'}
+            </KbdKey>
+          </Grid>
+        );
+      })}
+      {/* </Badge> */}
+      </Grid>
+  );
+};
+
 const KBD = styled.kbd`
   display: inline-block;
   min-width: auto;
@@ -216,23 +238,21 @@ export const KeyListItem = props => {
   const [, setEditMode] = useGlobalState('editMode');
   const [selection, setSelection] = useGlobalState('selectedItem');
   const [alreadySelected, setAlreadySelected] = React.useState(false);
-  
 
   const popupState = usePopupState({ variant: 'popover', popupId: 'demoMenu' });
   React.useEffect(() => {
-
     if (selection !== index) {
       setAlreadySelected(false);
-    } 
-  }, [selection]);
+    }
+  }, [index, selection]);
   const itemClicked = index => {
     // if (!alreadySelected) {
-      setSelection(index);
-      setActiveKeys(keybind['key1']);
-      setGlobalState('curShortcutObjectKey', shortcutObjectKey);
-      console.log("⭐: shortcutObjectKey", shortcutObjectKey)
-      setGlobalState('activeKeysIndex', index);
-      setAlreadySelected(true);
+    setSelection(index);
+    setActiveKeys(keybind['key1']);
+    setGlobalState('curShortcutObjectKey', shortcutObjectKey);
+    console.log('⭐: shortcutObjectKey', shortcutObjectKey);
+    setGlobalState('activeKeysIndex', index);
+    setAlreadySelected(true);
     // }
     if (selection !== index) {
       setEditMode(false);
@@ -244,35 +264,32 @@ export const KeyListItem = props => {
       button
       style={{ ...styles }}
       divider
-      dense 
+      dense
       // component={Grid}
       container
       direction="row"
       // justify="center"
-      
+
       focusRipple
       key={index}
       onClick={() => itemClicked(index)}
       selected={selection === index}
-   
     >
       {/* <Grid  item direction="row" xs={12} alignItems="center" justify="flex-end" wrap="nowrap"> */}
-        <Grid item xs={4} justify="flext-start">
-          <ListItemText
-            primary={<Typography variant="keylabel">{text}</Typography>}
-            disableTypography={true}
-          />
-        </Grid>
+      <Grid item xs={4} justify="flext-start">
+        <ListItemText
+          primary={<Typography variant="keylabel">{text}</Typography>}
+          disableTypography={true}
+        />
+      </Grid>
 
-        <Grid xs={8}  container item justify="flex-end" direction="row">
-          <List>{renderKeys(keybind)}</List>
-        </Grid>
-        
-          <ListItemAction/>
-       
+      <Grid xs={8} container item justify="flex-end" direction="row">
+        <List>{renderKeys(keybind)}</List>
+      </Grid>
+
+      <ListItemAction />
 
       {/* </Grid> */}
-      
     </ListItem>
   );
 };

@@ -23,6 +23,8 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
   addMode: false,
   keyMapMode: false,
   activeLayers: null,
+  allLayers: null,
+  layerKeys: [],
   keyTopTextRefs: {},
   activeKeyMapKeys: [],
   lastKeyRef: null,

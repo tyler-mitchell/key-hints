@@ -13,12 +13,15 @@ import { useGlobalState, setGlobalState, clearKeySelection } from '../../../stat
 
 import styled from 'styled-components';
 
-import {
-  Folder as FolderIcon
-} from '@material-ui/icons';
+import { Folder as FolderIcon } from '@material-ui/icons';
 
 import { useStyles, CategoryPaper } from './CategoryMenu.styles';
 import { KeyTableContext } from '../../../context/KeyTableContext';
+import { renderCategoryItem } from '../KeyList/KeyListItem';
+import { getActiveLayers } from '../../Keyboard/KeyMapData';
+import { Grid } from '@material-ui/core';
+import { GridListTile } from '@material-ui/core';
+import { GridList } from '@material-ui/core';
 
 import {
   Divider,
@@ -32,17 +35,23 @@ import {
   Paper
 } from '@material-ui/core';
 
-export const CategoryMenu = ({popupState}) => {
+export const CategoryMenu = ({ popupState }) => {
   const classes = useStyles();
 
   const [drawerState] = useGlobalState('drawerState');
- 
+
   const { open, ...bindPopState } = bindPopper(popupState);
 
-  const [selectedIndex, setSelectedIndex] = useGlobalState('selectedCategoryIndex')
-  const [curCategory, setCurCategory] = useGlobalState('sheetCategory')
+  const [selectedIndex, setSelectedIndex] = useGlobalState('selectedCategoryIndex');
+  const [curCategory, setCurCategory] = useGlobalState('sheetCategory');
   const [listRef] = useGlobalState('listRef');
   const { curKeyTable, loadingUKTC } = React.useContext(KeyTableContext);
+
+  const [keyMapMode] = useGlobalState('keyMapMode');
+  const [allLayers] = useGlobalState('allLayers');
+  const [layerKeys, setLayerKeys] = useGlobalState('layerKeys');
+
+  const { newLayerKeys } = getActiveLayers();
 
   function handleListCategoryClick(event, index, category) {
     clearKeySelection();
@@ -54,45 +63,53 @@ export const CategoryMenu = ({popupState}) => {
     listRef.current.resetAfterIndex(0, false);
   }
 
-
-
   return (
     <>
       <Popper
         placement="left-start"
         className={classes.popper}
         open={drawerState}
+      
         {...bindPopState}
       >
         <Fade in={popupState} timeout={250}>
           <CategoryPaper>
-            <List>
-              <ListItem
-                button
-                onClick={e => handleListCategoryClick(e, -1, 'All')}
-                selected={selectedIndex === -1}
-                key={'All'}
-              >
-                <ListItemIcon>
-                  <FolderIcon />
-                </ListItemIcon>
-                <ListItemText primary={'All'} />
-              </ListItem>
-              <Divider />
-
-              {(curKeyTable.data().categories || []).map((category, index) => (
+            {keyMapMode ? (
+              <List >
+                {layerKeys.allLayerKeys.map((keybind) => (
+                  <ListItem button key={keybind}>{renderCategoryItem(keybind)}</ListItem>
+                 ))} 
+                {/* <ListItem>{renderKeys()}</ListItem> */}
+              </List>
+            ) : (
+              <List>
                 <ListItem
                   button
-                  onClick={e => handleListCategoryClick(e, index, category)}
-                  selected={selectedIndex === index}
-                  key={category}
+                  onClick={e => handleListCategoryClick(e, -1, 'All')}
+                  selected={selectedIndex === -1}
+                  key={'All'}
                 >
-                  <Badge>
-                    <ListItemText primary={startCase(toLower(category))} />
-                  </Badge>
+                  <ListItemIcon>
+                    <FolderIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={'All'} />
                 </ListItem>
-              ))}
-            </List>
+                <Divider />
+
+                {(curKeyTable.data().categories || []).map((category, index) => (
+                  <ListItem
+                    button
+                    onClick={e => handleListCategoryClick(e, index, category)}
+                    selected={selectedIndex === index}
+                    key={category}
+                  >
+                    <Badge>
+                      <ListItemText primary={startCase(toLower(category))} />
+                    </Badge>
+                  </ListItem>
+                ))}
+              </List>
+            )}
             <Divider />
           </CategoryPaper>
         </Fade>
