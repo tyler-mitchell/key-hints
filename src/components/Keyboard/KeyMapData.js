@@ -202,6 +202,7 @@ function combinations(set) {
 //    ( which means that each shortcut is split into two portions -- [...modifiers, key] )
 const modifierKeys = ["Ctrl", "Alt", "Shift", "Capslock", "Tab", "Win"]
 export function initializeKeyMap(keyTable) {
+console.log(`⭐: INITIALIZING KEY MAP`)
 
   const singleKeys = [['0'],['1'],['2'],['3'],['4'],['5'],['6'],['7'],['8'],['9'],['A'],['B'],['C'],['D'],['E'],['F'],['G'],['H'],['I'],['J'],['K'],['L'],['M'],['N'],['O'],['P'],['Q'],['R'],['S'],['T'],['U'],['V'],['W'],['X'],['Y'],['Z']];
   const modifierCombinations = _.concat(combinations(modifierKeys), singleKeys) 
@@ -215,6 +216,9 @@ export function initializeKeyMap(keyTable) {
   setGlobalState('allLayers', allLayers)
   setGlobalState('activeLayers', activeLayers)
   setGlobalState('layerKeys', layerKeys)
+
+
+  console.log(`----------------------------------------------------`)
 }
 
 
@@ -227,23 +231,96 @@ function swap(keyMap, oldActiveLayer, newActiveLayer) {
   return newArr
 }
 
+function testswap(keyMap, newActiveLayer) {
+
+  // const oldIndex = _.findIndex(keyMap, (e)=> `${e.layer}`===`${oldActiveLayer}`)
+  const newLayerIndex = _.findIndex(keyMap, (e)=> `${e.layer}`===`${newActiveLayer}`)
+  const newArr = move(keyMap, newLayerIndex, 0)
+  
+  return newArr
+}
+function swapLayerKeys(keyMap, newActiveLayer) {
+
+  // const oldIndex = _.findIndex(keyMap, (e)=> `${e.layer}`===`${oldActiveLayer}`)
+  const newLayerIndex = _.findIndex(keyMap, (e)=> `${e.keybind}`===`${newActiveLayer}`)
+  const newArr = move(keyMap, newLayerIndex, 0)
+  
+  return newArr
+}
 
 
 
-export function getActiveLayers(filteredKeyMap, oldLayer = null, newLayer = null) {
-console.log(`⭐: filteredKeyMap`, filteredKeyMap)
+
+
+
+export function getActiveLayers(filteredKeyMap,  oldLayer = null, newLayer = null) {
+  console.log(`⭐: filteredKeyMap`, filteredKeyMap);
 
 // const singleKeys = [['0'],['1'],['2'],['3'],['4'],['5'],['6'],['7'],['8'],['9'],['A'],['B'],['C'],['D'],['E'],['F'],['G'],['H'],['I'],['J'],['K'],['L'],['M'],['N'],['O'],['P'],['Q'],['R'],['S'],['T'],['U'],['V'],['W'],['X'],['Y'],['Z']];
-const keyMapColors = ['#FF0B00', '#3cb44b', '#FFE433', '#21A6FF', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080'];
   const allLayers = (oldLayer && newLayer) ? swap(filteredKeyMap, oldLayer, newLayer) : filteredKeyMap;
 
   let layerData = [];
   let layerKeys = [];
-  let i = 0;
- 
+
   const activeLayers = _.reduce(allLayers, (result, cur, index) => {
   
-    const color = keyMapColors[i];
+    // const color = keyMapColors[i];
+    const allKeys = _.union(cur.layer, cur.mainKeys);
+    const numCommonElements = _.intersection(layerData, allKeys).length;
+    const hasNoCommonElements = !(numCommonElements > 0);
+
+    
+    
+    if (cur.keyArr[0].length !== 1) {
+      layerKeys.push({ keybind: cur.layer, active: false, color: cur.color, id: index })
+    }
+
+    if (hasNoCommonElements) {
+      layerData = _.concat(layerData, allKeys);
+      if (!_.isEmpty(layerKeys) && (cur.keyArr[0].length !== 1)) {
+        _.last(layerKeys).active = true;
+        
+      }
+      
+
+      result.push(cur)
+      
+    }
+    
+    return result
+  }, []);
+  console.log(`⭐: activeLayers`, activeLayers);
+  
+  // _.unionBy(layerKeys, {active: true, color: "#21A6FF", keybind: ["Shift"]}, "active")
+  // console.log(`⭐: getActiveLayers -> _.unionBy(layerKeys, {active: true, color: "#21A6FF", keybind: ["Shift"]}, "active")`, _.unionBy([{ keybind: ["Shift"], active: false, color: "#21A6FF"  }], layerKeys, 'active'))
+  
+  
+  console.log(`⭐: getActiveLayers -> layerKeys`, layerKeys)
+    return {activeLayers, layerKeys}
+}
+
+
+
+
+
+export function updateActiveLayers(filteredKeyMap, layerKeys, newLayer = null) {
+console.log(`⭐:BEFORE filteredKeyMap`, filteredKeyMap)
+console.log(`⭐BEFORE: updateActiveLayers -> layerKeys`, layerKeys)
+
+
+// const singleKeys = [['0'],['1'],['2'],['3'],['4'],['5'],['6'],['7'],['8'],['9'],['A'],['B'],['C'],['D'],['E'],['F'],['G'],['H'],['I'],['J'],['K'],['L'],['M'],['N'],['O'],['P'],['Q'],['R'],['S'],['T'],['U'],['V'],['W'],['X'],['Y'],['Z']];
+  const allLayers = newLayer && testswap(filteredKeyMap, newLayer) 
+  const tempLayerKeys = newLayer && swapLayerKeys(layerKeys, newLayer) 
+  console.log(`⭐: updateActiveLayers -> newLayer`, newLayer)
+  console.log(`⭐AFTER LAYER KEY SWAP`, tempLayerKeys)
+
+  let layerData = [];
+ 
+  
+ 
+  
+  const activeLayers = _.reduce(allLayers, (result, cur, index) => {
+    // const color = keyMapColors[i];
     const allKeys = _.union(cur.layer, cur.mainKeys);
     const numCommonElements = _.intersection(layerData, allKeys).length;
     const hasNoCommonElements = !(numCommonElements > 0);
@@ -251,10 +328,6 @@ const keyMapColors = ['#FF0B00', '#3cb44b', '#FFE433', '#21A6FF', '#f58231', '#9
  
    
     
-    if (cur.keyArr[0].length !== 1) {
-      
-      layerKeys.push({ keybind: cur.layer, active: false, color })
-    }
     
     
 
@@ -262,23 +335,35 @@ const keyMapColors = ['#FF0B00', '#3cb44b', '#FFE433', '#21A6FF', '#f58231', '#9
     if (hasNoCommonElements) {
       layerData = _.concat(layerData, allKeys);
       if (!_.isEmpty(layerKeys) && (cur.keyArr[0].length !== 1)) {
-        _.last(layerKeys).active = true;
+        // _.last(layerKeys).active = true;
+
+        tempLayerKeys[index].active = true
+     
         
       } 
-
+      
       result.push(cur)
       
+    } else{
+      
+      tempLayerKeys[index] && (tempLayerKeys[index].active = false)
     }
     
-    i++;
     return result
   }, [])
-  console.log(`⭐: activeLayers`, activeLayers)
   
+  // console.log(`⭐AFTER: updateActiveLayers -> layerKeys`, layerKeys)
+  
+  // console.log(`⭐: updateActiveLayers -> tempLayerKeys`, tempLayerKeys)
+  // console.log(`⭐NEW ACTIVE LAYER DATA: `, activeLayers)
 
-  
-    
-    return {activeLayers, layerKeys}
+  const newLayerKeysArr = _.sortBy(tempLayerKeys, )
+  setGlobalState('layerKeys', tempLayerKeys)
+  setGlobalState('activeLayers', activeLayers)
+  console.log(`----------------------------------------------------`)
+
+
+  return {activeLayers, layerKeys}
   
 
   

@@ -18,7 +18,7 @@ import { Folder as FolderIcon } from '@material-ui/icons';
 import { useStyles, CategoryPaper } from './CategoryMenu.styles';
 import { KeyTableContext } from '../../../context/KeyTableContext';
 import { renderCategoryItem } from '../KeyList/KeyListItem';
-import { getActiveLayers } from '../../Keyboard/KeyMapData';
+import { getActiveLayers, updateActiveLayers } from '../../Keyboard/KeyMapData';
 import { Switch } from '@material-ui/core';
 import { Grid } from '@material-ui/core';
 import { GridListTile } from '@material-ui/core';
@@ -122,8 +122,24 @@ export const CategoryMenu = ({ popupState }) => {
   const [allLayers] = useGlobalState('allLayers');
   const [layerKeys, setLayerKeys] = useGlobalState('layerKeys');
 
-  const { newLayerKeys } = getActiveLayers();
+  
+
+  React.useEffect(() => {
+  
+    
+    // const { newLayerKeys } = 
+  
+    
+  // effect dependency array
+  }, [keyMapMode])
   const switchClasses = useSwitchStyles();
+
+  function handleSwitchClick(layer) {
+
+    
+    updateActiveLayers(allLayers, layerKeys, layer)
+    console.log(`????????????: handleSwitchClick -> layerKeys`, layerKeys)
+  }
   function handleListCategoryClick(event, index, category) {
     clearKeySelection();
 
@@ -164,7 +180,8 @@ export const CategoryMenu = ({ popupState }) => {
                           <Switch
                             layerColor={layer.color}
                             color="primary"
-                            // checked={layer.active}
+                            onClick={() => handleSwitchClick(layer.keybind)}
+                            checked={layer.active}
                           />
                         </ThemeProvider>
                       </ListItemIcon>

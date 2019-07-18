@@ -179,12 +179,12 @@ const renderAddedKeys = keybind => {
 };
 
 export const renderCategoryItem = layerKey => {
-  console.log(`⭐: layerKey`, layerKey);
+ 
   return (
     <Grid container justify="center" alignItems="center" direction="row" wrap="nowrap">
       {/* <Badge badgeContent={keyIndex+1} color="primary" variant="dot" > */}
       {layerKey.map((kb, index, array) => {
-        console.log(`⭐: kb`, kb);
+        
         return (
           <Grid item key={index}>
             <KbdKey key={index}>

@@ -280,7 +280,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
           const isMainKey = _.includes(layer.mainKeys, label) 
           const isModifier = _.includes(layer.layer, label) 
           const isSingleKey = layer.keyArr[0].length === 1
-          console.log(`⭐: Key -> layer.keyArr`, layer.layer)
+         
         
         if (isMainKey) {
           
@@ -319,7 +319,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
       setEditableKey(false);
       setActive(false);
     };
-  }, [activeKeys, addMode, editMode, setNewKeys, uniqueKeyName, keyMapMode]);
+  }, [activeKeys, addMode, editMode, setNewKeys, uniqueKeyName, keyMapMode, activeLayers]);
 
   React.useLayoutEffect(() => {
     if (active) {
