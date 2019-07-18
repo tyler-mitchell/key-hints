@@ -19,11 +19,16 @@ import { useStyles, CategoryPaper } from './CategoryMenu.styles';
 import { KeyTableContext } from '../../../context/KeyTableContext';
 import { renderCategoryItem } from '../KeyList/KeyListItem';
 import { getActiveLayers } from '../../Keyboard/KeyMapData';
+import { Switch } from '@material-ui/core';
 import { Grid } from '@material-ui/core';
 import { GridListTile } from '@material-ui/core';
 import { GridList } from '@material-ui/core';
+import _ from 'lodash';
+import { useSwitchStyle } from './KeySwitch';
+import { createMuiTheme } from '@material-ui/core';
 
 import {
+  makeStyles,
   Divider,
   Badge,
   List,
@@ -34,6 +39,72 @@ import {
   Fade,
   Paper
 } from '@material-ui/core';
+
+
+import { ThemeProvider } from '@material-ui/styles';
+// const theme = createMuiTheme({
+//   palette: {
+//     primary: 'purple',
+//     secondary: 'green',
+//   },
+//   status: {
+//     danger: 'orange',
+//   },
+// });
+
+
+const useSwitchStyles = makeStyles({
+  // style rule
+  foo: props => ({
+    backgroundColor: props.backgroundColor
+  }),
+  bar: {
+    // CSS property
+    color: props => props.color
+  }
+});
+
+
+// {
+//   "classes": {
+//     "root": "MuiSwitch-root",
+//     "edgeStart": "MuiSwitch-edgeStart",
+//     "edgeEnd": "MuiSwitch-edgeEnd",
+//     "switchBase": "MuiSwitch-switchBase",
+//     "colorPrimary": "MuiSwitch-colorPrimary",
+//     "colorSecondary": "MuiSwitch-colorSecondary",
+//     "checked": "Mui-checked",
+//     "disabled": "Mui-disabled",
+//     "input": "MuiSwitch-input",
+//     "thumb": "MuiSwitch-thumb",
+//     "track": "MuiSwitch-track"
+//   },
+//   "className": "sc-kAzzGY kDsFDX"
+// }
+const LayerSwitch = styled(({ layerColor, ...otherProps }) => <Switch {...otherProps} />)`
+
+
+  
+  &.MuiSwitch-switchBase {
+    &.MuiSwitch-checked + .MuiSwitch-track {
+      color: ${({ layerColor }) => layerColor};
+      background-color: ${({layerColor}) => layerColor};
+
+    }
+    
+    
+  }
+  
+
+
+
+
+
+
+
+`;
+
+const switchStyle = color => {};
 
 export const CategoryMenu = ({ popupState }) => {
   const classes = useStyles();
@@ -52,7 +123,7 @@ export const CategoryMenu = ({ popupState }) => {
   const [layerKeys, setLayerKeys] = useGlobalState('layerKeys');
 
   const { newLayerKeys } = getActiveLayers();
-
+  const switchClasses = useSwitchStyles();
   function handleListCategoryClick(event, index, category) {
     clearKeySelection();
 
@@ -62,6 +133,7 @@ export const CategoryMenu = ({ popupState }) => {
 
     listRef.current.resetAfterIndex(0, false);
   }
+  function isLayerActive(layerKey) {}
 
   return (
     <>
@@ -69,16 +141,37 @@ export const CategoryMenu = ({ popupState }) => {
         placement="left-start"
         className={classes.popper}
         open={drawerState}
-      
         {...bindPopState}
       >
         <Fade in={popupState} timeout={250}>
           <CategoryPaper>
             {keyMapMode ? (
-              <List >
-                {layerKeys.allLayerKeys.map((keybind) => (
-                  <ListItem button key={keybind}>{renderCategoryItem(keybind)}</ListItem>
-                 ))} 
+              <List>
+                {layerKeys.map(layer => {
+                  
+                  
+                  
+            
+                  return (
+                    <ListItem disableRipple button key={layer.keybind}>
+                      <ListItemIcon>
+                        <ThemeProvider theme={createMuiTheme({
+                          palette: {
+                            primary: {
+                              main: `${layer.color}`
+                            }
+                        }})}>
+                          <Switch
+                            layerColor={layer.color}
+                            color="primary"
+                            // checked={layer.active}
+                          />
+                        </ThemeProvider>
+                      </ListItemIcon>
+                      {renderCategoryItem(layer.keybind)}
+                    </ListItem>
+                  );
+                })}
                 {/* <ListItem>{renderKeys()}</ListItem> */}
               </List>
             ) : (
@@ -117,4 +210,3 @@ export const CategoryMenu = ({ popupState }) => {
     </>
   );
 };
-

@@ -279,13 +279,19 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
 
           const isMainKey = _.includes(layer.mainKeys, label) 
           const isModifier = _.includes(layer.layer, label) 
+          const isSingleKey = layer.keyArr[0].length === 1
+          console.log(`⭐: Key -> layer.keyArr`, layer.layer)
         
         if (isMainKey) {
-          setActiveColor(keyMapColors[colorIndex]);
+          
+         setActiveColor(layer.color)
+        //  setActiveColor(keyMapColors[colorIndex])
+          
           setActive(true);
           
         } else if (isModifier) {
-          setActiveColor(shade(0.4, keyMapColors[colorIndex]));
+          setActiveColor(shade(0.4, layer.color));
+          // setActiveColor(shade(0.4, keyMapColors[colorIndex]));
           setActive(true);
         }
       })
