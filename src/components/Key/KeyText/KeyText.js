@@ -6,7 +6,7 @@ import { Grid } from '@material-ui/core';
 import { Textfit } from 'react-textfit';
 import { useGlobalState } from '../../../state';
 
-const KeyText = ({ keyTopHeight, testText, keyTopWidth, keyTopText, children }) => {
+const KeyText = ({ keyTopHeight, testText, keyTopWidth, keyTopText, fontOpacity, children }) => {
   const [bind, { height: textHeight, width: textWidth }] = useMeasure();
   const [scale, setScale] = React.useState(1);
   const [text, setText] = React.useState(null);
@@ -34,18 +34,10 @@ const KeyText = ({ keyTopHeight, testText, keyTopWidth, keyTopText, children }) 
         <div
           style={{
             display: '-webkit-box',
-
-            // width: 'inherit',
-
-            // height: 'inherit',
-
-            // margin: '1px 1px',
             textAlign: 'center',
             lineHeight: '1',
             WebkitLineClamp: '5',
             WebkitBoxOrient: 'vertical',
-
-            // overflow: 'hidden',
             textOverflow: 'ellipsis'
           }}
         >

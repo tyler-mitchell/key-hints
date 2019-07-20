@@ -8,79 +8,12 @@ import { Layers } from '@material-ui/icons';
 import { setGlobalState } from '../../state';
 import { result } from 'lodash-es';
 
-
-
-
-// const keyTable = {
-
-  
-  
-//   "000": {
-//     categories: [""],
-//     description: "",
-//     keys:{ key1: ["Ctrl", "X"]}
-    
-//   },
-//   "001": {
-//     categories: [""],
-
-//     description: "",
-//     keys: { key1: ["Ctrl", 'Alt', "X"] }
-    
-//   },
-//   "002": {
-//     categories: [""],
-
-//     description: "",
-//     keys: { key1: ["Ctrl", 'Alt', "Z"] }
-    
-//   },
-//   "003": {
-//     categories: [""],
-
-//     description: "",
-//     keys: { key1: ["Ctrl", "C"] }
-    
-//   },
-//   "004": {
-//     categories: [""],
-//     description: "",
-//     keys: { key1: ["Shift", "B"] }
-    
-//   },
-//   "005": {
-//     categories: [""],
-//     description: "",
-//     keys: { key1: ["Ctrl", 'Alt', "C"] }
-    
-//   },
-//   "006": {
-//     categories: [""],
-//     description: "",
-//     keys: { key1: ["Tab", "C"] }
-//   }
-// }
-
 function getModDifference(keyData, mod) {
   return (_.chain(keyData).pickBy((shortcut) => {
     const diff = _.difference(mod, _.values(shortcut.keys.key1));
-    
     const isDiff = diff.length === 0;
-
-    // temporary implementation--the 'main key' will be determined by the user upon creation
-    // if (isDiff) {
-      
-    //   const mainKey = _.difference(_.values(shortcut.keys.key1), mod)
-      
-    //   mainKey.length === 1 && (shortcut.keys["mainKey"] = mainKey[0])
-      
-      
-    // }
-    
     return (isDiff)
-  }
-      ).pickBy((o)=>!_.isEmpty(o)).value()
-  )
+  }).pickBy((o)=>!_.isEmpty(o)).value())
 }
 function objectDifference(object, base) {
 	function changes(object, base) {
@@ -97,9 +30,9 @@ function filteredData(combinations, data, colors) {
   let newData = data
   let colorIndex = 0;
   
-  const filteredArr = _.chain(combinations).map((layer, i) => {
+  const filteredArr = _.chain(combinations).map((layer) => {
    
-    
+    let i = 0;
     const data = getModDifference(newData, layer)
     newData = objectDifference(newData, data)
 
@@ -110,42 +43,30 @@ function filteredData(combinations, data, colors) {
       const keys = _.keys(data)
       
       const diffData = _.reduce(data, (result, next) => {
-        const mainKey = next.keys.key1[_.size(next.keys.key1) - 1]
+
+        const key1 = next.keys.key1;
+        const mainKey = key1[_.size(key1) - 1];
+        (key1[0].length === 1) ? (result.isSingleKey = true) : (result.isSingleKey = false);
+        (!_.includes(result.mainKeys, mainKey)) && result.mainKeys.push(mainKey)
         
-        !_.includes(result.mainKeys, mainKey) && result.mainKeys.push(mainKey)
-        
-        result.keyArr.push(_.values(next.keys.key1))
+        result.keyArr.push(_.values(key1))
         result.keyDescription.push(next.keyDescription)
         return (result)
-        
-        
-        
-      }, { keyArr: [], mainKeys: [], keyDescription: [] })
+      }, { keyArr: [], mainKeys: [], keyDescription: [], isSingleKey: false })
       
-      const {keyArr, mainKeys, keyDescription} = diffData
+      const { keyArr, mainKeys, keyDescription, isSingleKey } = diffData;
       const allKeys = _.union(layer, mainKeys);
-      // const keyArr = _.map(diff, (o) => {
-      //   const mainKey = o.keys.key1[_.size(o.keys.key1) - 1]
-      //   !_.includes(mainKeys, mainKey) && mainKeys.push(mainKey)
-        
-      //   return (_.values(o.keys.key1))
-      // })
-
-      
-      // const color = keyArr[0].length === 1 ? colors[0] : colors[colorIndex++]
-      const filteredObj = { keys, keyArr, layer, data, mainKeys, allKeys, keyDescription }
+      const filteredObj = { keys, keyArr, layer, data, mainKeys, allKeys, keyDescription, isSingleKey }
       return (filteredObj)
     }
   }).filter((o) => !_.isEmpty(o)).value();
   
-
-  const filteredDataWithColor = _.chain(filteredArr).reverse().map(o => {
+  let count = 0;
+  const filteredDataWithColor = _.chain(filteredArr).reverse().map((o, i) => {
     const color = o.keyArr[0].length === 1 ? singleKeyLayerColor : colors[colorIndex++];
-    return (_.extend({ color }, o))
+    const index = o.isSingleKey ? null : (count++);
+    return (_.extend({ color, index }, o))
   }).value();
-
-  
-  // return (_.reverse(filteredArr))
   return (filteredDataWithColor)
 }
 function k_combinations(set, k) {
@@ -197,22 +118,7 @@ function combinations(set) {
 	}
 	return _.reverse(combs);
 }
-// const organizedMods = filteredData(modifierCombinations, keyTable)
 
-// TODO: 
-// account for scenario: 
-//    if active mapped keys include [CTRL+C] and [CTRL+SHIFT+D],
-//    activate the lowest derivative ([CTRL+C] in this case)
-// single keys (having no modifiers) are on the same layer
-
-// filter modifiers using new filtered key table---
-// use the new 'relavent modifiers' list to determine which shortcut Layers
-// should be active by default
-
-// ** each layer has a unique color **
-// ** no layers with common modifiers should be active at the same time **
-// ** each shortcut displayed in on the key map can have only one key that are not modifiers 
-//    ( which means that each shortcut is split into two portions -- [...modifiers, key] )
 const modifierKeys = ["Ctrl", "Alt", "Shift", "Capslock", "Tab", "Win"]
 export function initializeKeyMap(keyTable) {
 
@@ -251,19 +157,6 @@ function testswap(keyMap, newActiveLayer) {
   
   return newArr
 }
-function swapLayerKeys(keyMap, newActiveLayer) {
-
-  // const oldIndex = _.findIndex(keyMap, (e)=> `${e.layer}`===`${oldActiveLayer}`)
-  const newLayerIndex = _.findIndex(keyMap, (e)=> `${e.keybind}`===`${newActiveLayer}`)
-  const newArr = move(keyMap, newLayerIndex, 0)
-  
-  return newArr
-}
-
-
-
-
-
 
 export function getActiveLayers(filteredKeyMap,  oldLayer = null, newLayer = null) {
 
@@ -274,7 +167,7 @@ export function getActiveLayers(filteredKeyMap,  oldLayer = null, newLayer = nul
   let layerKeys = [];
   let i = 0;
 
-  const activeLayers = _.reduce(allLayers, (result, cur, index) => {
+  const activeLayers = _.reduce(filteredKeyMap, (result, cur, index) => {
   
     // const color = keyMapColors[i];
     const allKeys = _.union(cur.layer, cur.mainKeys);
@@ -315,58 +208,26 @@ export function getActiveLayers(filteredKeyMap,  oldLayer = null, newLayer = nul
 
 
 
-export function updateActiveLayers(filteredKeyMap, layerKeys, newLayer = null) {
-
-// const singleKeys = [['0'],['1'],['2'],['3'],['4'],['5'],['6'],['7'],['8'],['9'],['A'],['B'],['C'],['D'],['E'],['F'],['G'],['H'],['I'],['J'],['K'],['L'],['M'],['N'],['O'],['P'],['Q'],['R'],['S'],['T'],['U'],['V'],['W'],['X'],['Y'],['Z']];
+export function updateActiveLayers(filteredKeyMap, newLayer = null) {
   const allLayers = newLayer && testswap(filteredKeyMap, newLayer) 
-  const tempLayerKeys = newLayer && swapLayerKeys(layerKeys, newLayer) 
-  
-
-
-  let layerData = [];
-
   const reducedMap = _.reduce(allLayers, (result, cur, index) => {
-    // const color = keyMapColors[i];
-    const allKeys = _.union(cur.layer, cur.mainKeys);
-    const numCommonElements = _.intersection(layerData, cur.allKeys).length;
-    const hasNoCommonElements = !(numCommonElements > 0);
-    // tempLayerKeys[index].active = false
+
+    const hasNoCommonElements = !(_.intersection(result.layerData, cur.allKeys).length > 0);
+
     if (hasNoCommonElements) {
-      layerData = _.concat(layerData, cur.allKeys);
-      if (!_.isEmpty(tempLayerKeys) && (cur.keyArr[0].length !== 1)) {
-        // _.last(layerKeys).active = true;
-        const layerKey = _.find(tempLayerKeys, (o) => `${o.keybind}` === `${cur.layer}`)
-        layerKey.active = true;
-        
-        // tempLayerKeys[index].active = true
+      result.layerData.push(...cur.allKeys);
+      if (!cur.isSingleKey) {
+        result.layerIndices.add(cur.index)
       } 
-      
       result.activeLayers.push(cur)
-      
-    } else{
-      const layerKey = _.find(tempLayerKeys, (o) => `${o.keybind}` === `${cur.layer}`)
-      layerKey && (layerKey.active = false);
-      tempLayerKeys[index] && (tempLayerKeys[index].active = false);
-    }
-    
+    } 
     return result
-  }, {activeLayers:[], layerIndices: []})
+  }, {activeLayers:[], layerIndices: new Set([]), layerData: []})
   
-  // console.log(`⭐AFTER: updateActiveLayers -> layerKeys`, layerKeys)
   
-  // console.log(`⭐: updateActiveLayers -> tempLayerKeys`, tempLayerKeys)
-  // console.log(`⭐NEW ACTIVE LAYER DATA: `, activeLayers)
+  const { activeLayers, layerIndices} = reducedMap;
 
-  const { activeLayers, layerIndices } = reducedMap;
-  const sortedLayerKeys = _.sortBy(tempLayerKeys, 'id')
-  setGlobalState('layerKeys', sortedLayerKeys)
-  setGlobalState('activeLayers', activeLayers)
-  console.log(`🚀🚀🚀🚀🚀🚀🚀🚀: update -> activeLayers`, activeLayers)
-  console.log(`🚀🚀🚀🚀🚀🚀🚀🚀: update -> layerKeys`, layerKeys)
-
-  console.log(`----------------------------------------------------`)
-
-  return {activeLayers, layerKeys}
+  return {layerIndices, activeLayers}
 }
 
 
@@ -378,28 +239,10 @@ export function updateActiveLayers(filteredKeyMap, layerKeys, newLayer = null) {
 
 
 
-export function updateActiveSingleLayer(filteredKeyMap, layerKeys, newLayer = null) {
+export function updateActiveSingleLayer(filteredKeyMap, layerKeys, index = null) {
   console.log(`⭐:BEFORE filteredKeyMap`, filteredKeyMap)
   console.log(`⭐BEFORE: updateActiveLayers -> layerKeys`, layerKeys)
-  
-  
-  var newLayerKeys = _.cloneDeep(layerKeys) 
-
-  const activeLayer = [_.find(filteredKeyMap, (o) => `${o.layer}` === `${newLayer}`)];
-  
-  _.forEach(newLayerKeys, (obj) => {
-    if (`${obj.keybind}` === `${newLayer}`){
-      
-      console.log(`⭐: updateActiveSingleLayer -> true`, true)
-      obj.active = true;
-    } else {
-      obj.active = false;
-      console.log(`⭐: updateActiveSingleLayer -> false`, false)
-    }
-  })
-  console.log(`⭐: newLayerKeys`, newLayerKeys)
-
-  setGlobalState('layerKeys', newLayerKeys)
+  const activeLayer = [_.find(filteredKeyMap, (o) => o.index === index)];
   setGlobalState('activeLayers', activeLayer)
 
   

@@ -69,23 +69,49 @@ export const CategoryMenu = ({ popupState }) => {
 
   const [keyMapMode] = useGlobalState('keyMapMode');
   const [allLayers] = useGlobalState('allLayers');
-  const [layerKeys, setLayerKeys] = useGlobalState('layerKeys');
-  const [checkedIndex, setCheckedIndex] = React.useState(0);
-  const showMultipleLayers = useBoolean(true);
+  const [layerKeys] = useGlobalState('layerKeys');
   
 
-  // React.useEffect(() => {
-  //   // const { newLayerKeys } =
-  //   // effect dependency array
-  // }, [showMultipleLayers]);
+  const [checkedIndex, setCheckedIndex] = React.useState(0);
+  const showMultipleLayers = useBoolean(true);
+  const [layerIndices,setLayerIndices] = React.useState(new Set([]))
+  const [state, setState] = React.useState({index: null, layer: null})
+
+  React.useEffect(() => {
+    console.log(`⭐: TRIGGERED -> useEffect `);
+    const delayCalculation = setTimeout(() => {
+
+      if (showMultipleLayers.value) {
+        const { layerIndices: newIndices, activeLayers: newActiveLayers } = updateActiveLayers(allLayers, state.layer)
+        setGlobalState('activeLayers', newActiveLayers)
+        setLayerIndices(newIndices);
+      } else {
+        updateActiveSingleLayer(allLayers, layerKeys, state.index);
+        setLayerIndices(new Set([state.index]));
+      }
+      
+    }, 100)
+
+    return ()=> clearTimeout(delayCalculation)
+    
+  }, [state, showMultipleLayers]);
+
+
+
   const switchClasses = useSwitchStyles();
 
-  function handleSwitchClick(layer, event) {
-    updateActiveLayers(allLayers, layerKeys, layer);
+   async function handleSwitchClick(layer, index) {
+     console.log(`⭐: TRIGGERED -> handleSwitchClick `);
+     setState({index, layer});
+    //  const data =  await  updateActiveLayers(allLayers, state.layer)
+    //  const { layerIndices: newIndices, activeLayers: newActiveLayers } = data;
+  //  await 
+  
+    
   }
   function handleCheckBoxClick(layer, index) {
     setCheckedIndex(index)
-    updateActiveSingleLayer(allLayers, layerKeys, layer);
+    updateActiveSingleLayer(allLayers, layerKeys, index);
   }
   function handleListCategoryClick(event, index, category) {
     clearKeySelection();
@@ -99,8 +125,9 @@ export const CategoryMenu = ({ popupState }) => {
 
   function handleMultiLayerOption() {
     showMultipleLayers.toggle()
+    console.log(`⭐: handleMultiLayerOption -> showMultipleLayers`, showMultipleLayers)
   }
-  function isLayerActive(layerKey) {}
+
 
   return (
     <>
@@ -149,14 +176,16 @@ export const CategoryMenu = ({ popupState }) => {
                             }
                           })}
                         >
-                          {showMultipleLayers.value ? (
+                          {true ? (
                             <Switch
-                              edge="start"
-                              layerColor={layer.color}
-                              color="primary"
-                              onChange={(event) => handleSwitchClick(layer.keybind, event)}
-                              checked={layer.active}
+                            edge="start"
+                            layerColor={layer.color}
+                            color="primary"
+                            onClick={() => handleSwitchClick(layer.keybind, index)}
+                            // checked={(layer.id === state.index )}
+                            checked={(layer.id === state.index )|| layerIndices.has(layer.id)}
                             />
+
                           ) : (
                               <Checkbox
                                 color="primary"

@@ -64,6 +64,7 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
   activeLayers: null,
   allLayers: null,
   layerKeys: [],
+  activeLayerIndices: new Set([]),
   keyTopTextRefs: {},
   activeKeyMapKeys: [],
   lastKeyRef: null,

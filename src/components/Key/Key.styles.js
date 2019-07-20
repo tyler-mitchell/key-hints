@@ -26,6 +26,7 @@ import {
   ArrowDownward as DownArrowIcon
 } from '@material-ui/icons';
 import './key.css';
+
 import { FlashingKey } from './FlashingKey';
 
 import { useGlobalState, setGlobalState } from '../../state';
@@ -33,6 +34,7 @@ import _ from 'lodash';
 
 import flatMap from 'lodash/flatMap';
 import KeyText from './KeyText/KeyText';
+import { motion } from 'framer-motion';
 import { TextField } from '@material-ui/core';
 
 const Column = props => <Box {...props} />;
@@ -312,6 +314,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
     y,
     transform,
     opacity,
+    fontOpacity,
     borderTopColor,
     borderBottomColor,
     borderLeftColor,
@@ -325,7 +328,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
       y: 0,
       scale: 10,
       opacity: modifierStyle.opacity,
-
+      fontOpacity: 1, 
       // transform: 'translateY(-38.58%) scale(1.02)',
       // transform: 'scale(1)',
 
@@ -346,6 +349,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
       {
         x: 1,
         y: 1,
+        fontOpacity: 0, 
         scale: 150,
         opacity: 1,
         transform: 'translateY(0px) scale(1)',
@@ -361,9 +365,8 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
         )} 50%)`
       }
     ],
-
     // transform: keyMapMode ? 'translateY(1.5px) scale(0.98)' :'translateY(0px) scale(1)',
-    x: active ? 1 : 0,
+    // x: active ? 1 : 0,
     config: { mass: 1, tension: 180, friction: 12, duration: 1000 }
   });
 
@@ -431,12 +434,13 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
             color={keyColor}
             onClick={keyClicked}
           >
-            <KeyTop  wt={wt} ht={ht} color={keyColor} style={{ background }}>
+            <KeyTop  wt={wt} ht={ht} color={keyColor} style={{ background, }}>
               {/* <KeyChar ref={keyTopTextRef}>Basic Editing the view port</KeyChar> */}
 
               <div
                 ref={keyTopTextRef}
                 style={{
+                  // color: x.interpolate(x=>`rgba(0, 0, 0, ${x})`),
                   height: ht * 0.7 * 0.95,
                   width: (wt - 17) * 0.95,
                   alignItems: 'center',
@@ -445,7 +449,8 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
                   fontFamily: 'Karla, sans-serif'
                 }}
               >
-                {!addMode && <KeyText keyTopText={keyTopText} />}
+                <KeyText keyTopText={keyTopText}/>
+                {/* {!addMode && <KeyText keyTopText={keyTopText} style={{opacity: 0}} />} */}
               </div>
 
               {/* {(!keyMapMode) && <KeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</KeyChar>} */}
