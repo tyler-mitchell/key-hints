@@ -20,21 +20,10 @@ export default function KeyTableProvider({ children }) {
       .doc(user.uid)
       .collection('KeyTables')
 
-
-
-
-
-
-  
-
-
-
-
   const [curKeyTable, setCurKeyTable] = React.useState(false);
   const [userKTC, loadingUKTC, errUKTC] = useCollection(userKTColRef);
   const [docIndex, setDocIndex] = React.useState(null);
   const [sheetAdded, setSheetAdded] = React.useState(false)
-  
   const [curShortcutObjectKey, setCurShortcutObjectKey] = useGlobalState('curShortcutObjectKey')
 
   React.useEffect(()=>{
@@ -45,17 +34,11 @@ export default function KeyTableProvider({ children }) {
       const docChanges = userKTC.docChanges()
       const len = docChanges.length;
 
-    
-
-      
-
-
       const newDoc = (() => {
         if (sheetAdded && len && (docChanges[len - 1].type === 'added')) {
          selectNewSheet(docChanges[len-1].newIndex)
           setSheetAdded(false)
           return docChanges[len - 1].doc
-          
           
         } else {
           setSheetAdded(false)
@@ -63,81 +46,46 @@ export default function KeyTableProvider({ children }) {
         }
       })()
      
-      
-      
       setCurKeyTable(newDoc ? newDoc : curDoc)
-      
-    
+
     }
-    
- 
 
   }, [userKTC, docIndex, loadingUKTC])
 
   
   const addNewKeyToFirebase = (newKey) => {
+    console.log('------------------------------------------');
+    console.log(`⭐: addNewKeyToFirebase -> newKey`, newKey);
     
-    const keyID = firebase.firestore.Timestamp.now().toMillis()
-    const keyNum = Object.keys(curKeyTable.data().table).length
+    const keyID = firebase.firestore.Timestamp.now().toMillis();
+    const keyNum = Object.keys(curKeyTable.data().table).length;
     const update = {};
-    update[`table.${keyID}`] = newKey
-  
-    
-    
+    update[`table.${keyID}`] = newKey;
 
-    
-    curKeyTable.ref.update(update)
-    setGlobalState('activeKeys', newKey.keys.key1)
-    setGlobalState('selectedItem', keyNum )
-    setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }))
+    curKeyTable.ref.update(update);
+    setGlobalState('activeKeys', newKey.keys.key1);
+    setGlobalState('selectedItem', keyNum);
+    setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }));
+    setCurShortcutObjectKey(keyID);
 
-    setCurShortcutObjectKey(keyID)
-    
-
-   
-    
-    
-    
-    
-    
-   
   }
   const updateKeyToFirebase = (newKey) => {
-   
-
+  
     const update = {};
-
     update[`table.${curShortcutObjectKey}`] = newKey
     curKeyTable.ref.update(update)
     setGlobalState('activeKeys', newKey.keys.key1)
-    
-   
   }
 
   const addNewKeySheet = name => {
     const newDocRef = userKTColRef.doc(name);
-   
     newDocRef.set({ categories: [], table: {} });
     setSheetAdded(true);
-    
- // setCurKeyTable(userKTC.docs.docChanges()[0])
-   
-    // setCurKeyTable(newDocRef)
-    
-    // const newDocRef = userDocumentRef.collection('KeyTables').doc(name)
-    //   newDocRef.set({ categories: [], table: [] }).then(() => {
-
-    // });
-    
-   
-    
-    
   }
-  const [activeKeys] = useGlobalState('activeKeys');
+
   const deleteKeySheet = (index) => {
     setGlobalState('sheetNames', {})
     userKTC.docs[index].ref.delete()
-
   }
   const deleteShortcut = () => {
     setGlobalState('sheetNames', {})
@@ -147,13 +95,11 @@ export default function KeyTableProvider({ children }) {
     curKeyTable.ref.update(update)
     clearKeySelection()
     
-    console.log("⭐: activeKeys", activeKeys)
-    
+ 
 
     setGlobalState('selectedItem', null )
 
   }
-  
 
   const ctx = {
     // currentUser,

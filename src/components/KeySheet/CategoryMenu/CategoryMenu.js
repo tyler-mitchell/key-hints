@@ -18,15 +18,16 @@ import { Folder as FolderIcon } from '@material-ui/icons';
 import { useStyles, CategoryPaper } from './CategoryMenu.styles';
 import { KeyTableContext } from '../../../context/KeyTableContext';
 import { renderCategoryItem } from '../KeyList/KeyListItem';
-import { getActiveLayers, updateActiveLayers } from '../../Keyboard/KeyMapData';
+import { getActiveLayers, updateActiveLayers, updateActiveSingleLayer } from '../../Keyboard/KeyMapData';
 import { Switch } from '@material-ui/core';
 import { Grid } from '@material-ui/core';
 import { GridListTile } from '@material-ui/core';
 import { GridList } from '@material-ui/core';
 import _ from 'lodash';
 import { useSwitchStyle } from './KeySwitch';
+import { Checkbox } from '@material-ui/core';
 import { createMuiTheme } from '@material-ui/core';
-
+import useBoolean from 'react-hanger/useBoolean';
 import {
   makeStyles,
   Divider,
@@ -40,18 +41,7 @@ import {
   Paper
 } from '@material-ui/core';
 
-
 import { ThemeProvider } from '@material-ui/styles';
-// const theme = createMuiTheme({
-//   palette: {
-//     primary: 'purple',
-//     secondary: 'green',
-//   },
-//   status: {
-//     danger: 'orange',
-//   },
-// });
-
 
 const useSwitchStyles = makeStyles({
   // style rule
@@ -64,47 +54,6 @@ const useSwitchStyles = makeStyles({
   }
 });
 
-
-// {
-//   "classes": {
-//     "root": "MuiSwitch-root",
-//     "edgeStart": "MuiSwitch-edgeStart",
-//     "edgeEnd": "MuiSwitch-edgeEnd",
-//     "switchBase": "MuiSwitch-switchBase",
-//     "colorPrimary": "MuiSwitch-colorPrimary",
-//     "colorSecondary": "MuiSwitch-colorSecondary",
-//     "checked": "Mui-checked",
-//     "disabled": "Mui-disabled",
-//     "input": "MuiSwitch-input",
-//     "thumb": "MuiSwitch-thumb",
-//     "track": "MuiSwitch-track"
-//   },
-//   "className": "sc-kAzzGY kDsFDX"
-// }
-const LayerSwitch = styled(({ layerColor, ...otherProps }) => <Switch {...otherProps} />)`
-
-
-  
-  &.MuiSwitch-switchBase {
-    &.MuiSwitch-checked + .MuiSwitch-track {
-      color: ${({ layerColor }) => layerColor};
-      background-color: ${({layerColor}) => layerColor};
-
-    }
-    
-    
-  }
-  
-
-
-
-
-
-
-
-`;
-
-const switchStyle = color => {};
 
 export const CategoryMenu = ({ popupState }) => {
   const classes = useStyles();
@@ -121,33 +70,35 @@ export const CategoryMenu = ({ popupState }) => {
   const [keyMapMode] = useGlobalState('keyMapMode');
   const [allLayers] = useGlobalState('allLayers');
   const [layerKeys, setLayerKeys] = useGlobalState('layerKeys');
-
+  const [checkedIndex, setCheckedIndex] = React.useState(0);
+  const showMultipleLayers = useBoolean(true);
   
 
-  React.useEffect(() => {
-  
-    
-    // const { newLayerKeys } = 
-  
-    
-  // effect dependency array
-  }, [keyMapMode])
+  // React.useEffect(() => {
+  //   // const { newLayerKeys } =
+  //   // effect dependency array
+  // }, [showMultipleLayers]);
   const switchClasses = useSwitchStyles();
 
-  function handleSwitchClick(layer) {
-
-    
-    updateActiveLayers(allLayers, layerKeys, layer)
-    console.log(`????????????: handleSwitchClick -> layerKeys`, layerKeys)
+  function handleSwitchClick(layer, event) {
+    updateActiveLayers(allLayers, layerKeys, layer);
+  }
+  function handleCheckBoxClick(layer, index) {
+    setCheckedIndex(index)
+    updateActiveSingleLayer(allLayers, layerKeys, layer);
   }
   function handleListCategoryClick(event, index, category) {
     clearKeySelection();
-
+    
     setSelectedIndex(index);
     setCurCategory(category);
     setGlobalState('addMode', false);
 
     listRef.current.resetAfterIndex(0, false);
+  }
+
+  function handleMultiLayerOption() {
+    showMultipleLayers.toggle()
   }
   function isLayerActive(layerKey) {}
 
@@ -162,34 +113,68 @@ export const CategoryMenu = ({ popupState }) => {
         <Fade in={popupState} timeout={250}>
           <CategoryPaper>
             {keyMapMode ? (
-              <List>
-                {layerKeys.map(layer => {
-                  
-                  
-                  
-            
+              <List
+                dense
+              >
+                <ListItem button onClick={handleMultiLayerOption}>
+                  <ListItemIcon>
+                    <Checkbox
+                      edge="start"
+                      checked={showMultipleLayers.value}
+                      // tabIndex={-1}
+
+                      inputProps={{
+                        'aria-label': 'show multiple layers'
+                      }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary="Show multiple layers" />
+                </ListItem>
+                <Divider />
+
+                {layerKeys.map((layer, index) => {
                   return (
-                    <ListItem disableRipple button key={layer.keybind}>
+                    <ListItem
+                      button
+                      disableRipple
+                      key={layer.keybind}
+                    >
                       <ListItemIcon>
-                        <ThemeProvider theme={createMuiTheme({
-                          palette: {
-                            primary: {
-                              main: `${layer.color}`
+                        <ThemeProvider
+                          theme={createMuiTheme({
+                            palette: {
+                              primary: {
+                                main: `${layer.color}`
+                              }
                             }
-                        }})}>
-                          <Switch
-                            layerColor={layer.color}
-                            color="primary"
-                            onClick={() => handleSwitchClick(layer.keybind)}
-                            checked={layer.active}
-                          />
+                          })}
+                        >
+                          {showMultipleLayers.value ? (
+                            <Switch
+                              edge="start"
+                              layerColor={layer.color}
+                              color="primary"
+                              onChange={(event) => handleSwitchClick(layer.keybind, event)}
+                              checked={layer.active}
+                            />
+                          ) : (
+                              <Checkbox
+                                color="primary"
+                                disableRipple
+                              onClick={() => handleCheckBoxClick(layer.keybind, index)}
+                              edge="start"
+                              checked={index === checkedIndex}
+                              inputProps={{
+                                'aria-label': `${layer.keybind} layer`
+                              }}
+                            />
+                          )}
                         </ThemeProvider>
                       </ListItemIcon>
                       {renderCategoryItem(layer.keybind)}
                     </ListItem>
                   );
                 })}
-                {/* <ListItem>{renderKeys()}</ListItem> */}
               </List>
             ) : (
               <List>

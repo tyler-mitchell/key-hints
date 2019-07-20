@@ -153,7 +153,7 @@ export const KeySheet = props => {
       {(curKeyTable) && (
         <>
          
-          <Button variant="contained" onClick={handleKeyMapMode}>Key Map</Button>
+          
 
           <Card ref={anchorRef(popupState)} style={{ height: '470px', borderRadius: '10px' }}>
             {/* <SwipeableViews
@@ -172,6 +172,7 @@ export const KeySheet = props => {
                 placeholder="Search…"
                 inputProps={{ 'aria-label': 'Search' }}
               />
+              <Button variant="contained" onClick={handleKeyMapMode}>Key Map</Button>
               <Divider />
               <CategoryMenu popupState={popupState} />
 

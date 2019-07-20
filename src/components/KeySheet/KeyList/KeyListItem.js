@@ -181,7 +181,7 @@ const renderAddedKeys = keybind => {
 export const renderCategoryItem = layerKey => {
  
   return (
-    <Grid container justify="center" alignItems="center" direction="row" wrap="nowrap">
+    <Grid container justify="flex-start" alignItems="center" direction="row" wrap="nowrap">
       {/* <Badge badgeContent={keyIndex+1} color="primary" variant="dot" > */}
       {layerKey.map((kb, index, array) => {
         
@@ -250,7 +250,6 @@ export const KeyListItem = props => {
     setSelection(index);
     setActiveKeys(keybind['key1']);
     setGlobalState('curShortcutObjectKey', shortcutObjectKey);
-    console.log('⭐: shortcutObjectKey', shortcutObjectKey);
     setGlobalState('activeKeysIndex', index);
     setAlreadySelected(true);
     // }

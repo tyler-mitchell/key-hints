@@ -36,6 +36,7 @@ import KeyText from '../../Key/KeyText/KeyText';
 import { Portal } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import _ from 'lodash';
+import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles({
   buttonGroup: {
@@ -61,20 +62,23 @@ export const NewKeyPanel = props => {
   const theme = useTheme();
   const classes = useStyles();
 
-  const [value, setValue] = React.useState({ description: null, category: null});
+  const [value, setValue] = React.useState({
+    category: null,
+    description: null,
+    keyDescription: null
+  });
   const handleDescriptionChange = event => {
     const description = event.target.value;
+    console.log('⭐: value', value);
     setValue(v => ({ ...v, description }));
 
-    console.log('⭐: value', value);
     // setNewKeys(p => ({ ...p, category }))
   };
-  const handleKeyMapDescription = event => {
-    const keyMapDescription = event.target.value;
-    setKeyTopText(keyMapDescription);
-    setValue(v => ({ ...v, keyMapDescription }));
+  const handleKeyDescription = event => {
+    const keyDescription = event.target.value;
+    setKeyTopText(keyDescription);
+    setValue(v => ({ ...v, keyDescription }));
 
-    console.log('⭐: value', value);
     // setNewKeys(p => ({ ...p, category }))
   };
   const popupState = usePopupState({
@@ -94,11 +98,15 @@ export const NewKeyPanel = props => {
 
   const [keyTopText, setKeyTopText] = React.useState('');
   const [keyTopRefs] = useGlobalState('keyTopTextRefs');
-
   const [keyTopRefKey] = useGlobalState('lastKeyRef');
-
-
-
+  React.useEffect(() => {
+  
+    // componentDidMount(), componentDidUpdate()
+  console.log(`⭐: USE EFFECT value`, value)
+    
+  
+    
+  }, [newKeys])
   return (
     <>
       <AnimatedPanel>
@@ -111,7 +119,6 @@ export const NewKeyPanel = props => {
               height: 4,
               transform: 'translateY(-10px)',
               backgroundColor: 'rgba(220,220,220,0.2)',
-
               bottom: -5,
               borderRadius: 4,
               position: 'relative',
@@ -123,6 +130,7 @@ export const NewKeyPanel = props => {
           <ToolBarAddView
             theme={theme}
             placeholder="Search…"
+            keyInfo={value}
             inputProps={{ 'aria-label': 'Search' }}
             keyMapDescription={keyTopText}
           />
@@ -143,15 +151,13 @@ export const NewKeyPanel = props => {
                   <TextField
                     style={{ position: 'relative' }}
                     value={keyTopText}
-                    onChange={event => handleKeyMapDescription(event)}
+                    onChange={event => handleKeyDescription(event)}
                     variant="outlined"
                   />
                   {keyTopRefs[keyTopRefKey] && (
-                    <Portal container={keyTopRefs[keyTopRefKey].current}>
+                    <Portal container={keyTopRefs[keyTopRefKey].current} style={{height: 'inherit', width:'inherit'}}>
                       <KeyText
-                        testText={keyTopText}
-                        keyTopHeight={50 * 0.7}
-                        keyTopWidth={50 - 17}
+                        keyTopText={keyTopText}
                       />
                     </Portal>
                   )}
@@ -187,7 +193,6 @@ export const NewKeyPanel = props => {
                         display: 'flex',
                         justifyContent: 'center',
                         flexWrap: 'wrap',
-
                         padding: '5px 2px',
                         borderRadius: '20px',
                         maxWidth: '175px'

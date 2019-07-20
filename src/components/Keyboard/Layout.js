@@ -89,7 +89,7 @@ export const secondRow = {
   PageDown: ['PgDn', regularSize]
 };
 export const thirdRow = {
-  CapsLock: ['Capslock', capslockSize],
+  CapsLock: ['Capslock', capslockSize, 'modifier'],
   KeyA: ['A', regularSize],
   KeyS: ['S', regularSize],
   KeyD: ['D', regularSize],

@@ -17,7 +17,7 @@ import {
 } from '@material-ui/core';
 import { useGlobalState, clearKeySelection, setGlobalState } from '../../state';
 import { KeyTableContext } from '../../context/KeyTableContext';
-
+import {useNumber}  from "react-hanger";
 // Material icons
 import {
   Search,
@@ -86,6 +86,7 @@ export const SearchInput = props => {
   
   const handleAddClick = () => {
     clearKeySelection();
+    setGlobalState('keyMapMode', false);
     setGlobalState('addMode', v => !v);
   };
  
@@ -102,6 +103,16 @@ export const SearchInput = props => {
     setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }))
   }
 
+  const [fonts] = useGlobalState('devFonts')
+  const [currentFont] = useGlobalState('currentFont')
+  const [fontIndex, setFontIndex] = React.useState(0);
+  
+  const changeFont = () => {
+
+    const newIndex = fontIndex === fonts.length-1 ? 0 : fontIndex + 1 
+    setFontIndex(newIndex)
+    setGlobalState('currentFont', fonts[fontIndex]);
+  }
   return (
     <Paper elevation={0} className={classes.root}>
       <IconButton
@@ -115,10 +126,12 @@ export const SearchInput = props => {
       <InputSearch {...rest} disableUnderline onChange={onChange} />
 
       <Divider className={classes.divider} />
+      <Button onClick={changeFont}>{currentFont} </Button>
       {editMode ? (
         <>
           <Grid container spacing={1}>
             <Grid item>
+              
               <Button
                 className={theme.button}
                 variant="contained"
@@ -141,7 +154,8 @@ export const SearchInput = props => {
         </>
       ) : (
         <>
-          <Grid item>
+            <Grid item>
+              
             {!addMode && <Button
               onClick={() => handleEditClick()}
               className={theme.button}

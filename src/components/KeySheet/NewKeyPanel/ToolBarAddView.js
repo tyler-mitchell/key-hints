@@ -63,27 +63,29 @@ const InputSearch = styled(Input)`
 `;
 
 export const ToolBarAddView = props => {
-  const { theme, className, onChange, style, ...rest } = props;
+  const { theme, className, onChange, style, keyInfo,  ...rest } = props;
   const classes = useStyles();
   const [drawerState, setDrawerState] = useGlobalState('drawerState');
-  const [editMode, setEditMode] = useGlobalState('editMode');
-  const [activeKeys, setActiveKeys] = useGlobalState('activeKeys');
+  
   const [addMode, setAddMode] = useGlobalState('addMode');
-  const [newKeys] = useGlobalState('newKeys');
-  const [isSelected] = useGlobalState('selectedItem');
-  const { curKeyTable, addNewKeyToFirebase, updateKeyToFirebase } = React.useContext(
-    KeyTableContext
-  );
+  const [newKeys, setNewKeys] = useGlobalState('newKeys');
+  // const [keyDescription, setKeyDescription] = React.useState('')
+  const { curKeyTable, addNewKeyToFirebase, updateKeyToFirebase } = React.useContext(KeyTableContext);
 
   React.useEffect(() => {
+    console.log(`⭐: TOOLBAR EFFECT  -> keyINFO`, keyInfo)
+    console.log(`⭐: TOOL BAR EFFECT-> newKEYS`, newKeys)
     return () => {
-      addMode && setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }));
+      // addMode && setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }));
     };
-  }, [addMode]);
+  }, [addMode, keyInfo, newKeys]);
 
+
+  
   const handleSaveKeyClick = () => {
-    
-    addNewKeyToFirebase(newKeys);
+    const newKey = {...newKeys, ...keyInfo};
+    console.log(`⭐: handleSaveKeyClick -> newKey`, newKey)
+    addNewKeyToFirebase(newKey);
     setGlobalState('addMode', false);
   };
 

@@ -4,6 +4,45 @@ import React from 'react';
 import { useSpring, animated, config } from 'react-spring';
 import useColorLoop from './components/Key/FlashingKey';
 
+// FAVORITES:
+// 'Raleway, sans-serif', 
+const fonts = [
+  'Hammersmith One, sans-serif',
+  'Karla, sans-serif',
+  'Basic, sans-serif',
+  'Ramabhadra, sans-serif',
+  'NTR, sans-serif',
+  'K2D, sans-serif',
+  ]
+  
+// const fonts = [
+//   'Karla, sans-serif',
+//   'Raleway, sans-serif',
+//   'Noto Sans, sans-serif',
+//   'Fira Sans, sans-serif',
+//   'Heebo, sans-serif',
+//   'Fira Sans Condensed, sans-serif',
+//   'Maven Pro, sans-serif',
+//   'Hammersmith One, sans-serif',
+//   'DM Sans, sans-serif',
+//   'Tauri, sans-serif',
+//   'Basic, sans-serif',
+//   'IBM Plex Sans Condensed, sans-serif',
+//   'Ramabhadra, sans-serif',
+//   'K2D, sans-serif',
+//   'NTR, sans-serif',
+//   'Maven Pro, sans-serif',
+//   'Saira, sans-serif',
+//   'ZCOOL QingKe HuangYou, cursive',
+//   ]
+// const fonts = [
+//   'Karla, sans-serif',
+//   'Fira Sans Condensed, sans-serif',
+//   'DM Sans, sans-serif',
+//   ]
+  
+  
+  
 const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalState({
 
   activeKeys: {},
@@ -33,11 +72,13 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
     keys: { key1: {} },
     description: 'no description',
     category: 'none',
-    keyMapDescription: ''
+    keyDescription: ''
   },
   sheetCategory: 'All',
   sheetNames: {},
-  curShortcutObjectKey: null
+  curShortcutObjectKey: null,
+  devFonts: fonts,
+  currentFont: 'Encode Sans Expanded, sans-serif',
     
 
 });
@@ -58,4 +99,9 @@ export const selectNewSheet = (index) => {
 
 }
 
+export const cycleFonts = () => {
+
+}
 export { GlobalStateProvider, useGlobalState, setGlobalState };
+
+
