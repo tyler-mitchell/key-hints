@@ -4,13 +4,8 @@ import { Box, Flex } from '@rebass/grid';
 import Space from '@rebass/space';
 import Layer from '@material-ui/core/Box';
 import {
-  KeyContainer,
-  ActiveKeyContainer,
-  KeyChar,
-  Span,
-  KeyWrapper,
   Key
-} from '../Key/Key.styles';
+} from '../Key/Key';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
@@ -44,24 +39,6 @@ import { EditRounded } from '@material-ui/icons';
 import { useSpring, animated, useTransition } from 'react-spring';
 
 
-const theme = {
-  colors: {
-    primary: 'palevioletred',
-    primaryLight: 'pink',
-    secondary: 'gray',
-    white: 'red'
-  },
-  radii: {
-    medium: 3
-  },
-  fonts: {},
-  button: {
-    margin: '90px'
-  },
-  input: {
-    display: 'none'
-  }
-};
 
 const Highlight = styled(Layer)`
   flex-wrap: wrap;
@@ -77,21 +54,7 @@ const Highlight = styled(Layer)`
 
 Highlight.defaultProps = {};
 
-const EditPanel = styled(Paper)`
-  padding: 15px 15px 15px 15px;
-  display: inline-block;
-  radius: 30px;
-  border-radius: 20px;
-  /* position: 'relative';
-  z-index: -20; */
-`;
 
-const KeyItem = styled(Grid)`
-/* &:last-child {
-    border-width: 10px 12px 50px 10px;
-  } */
-
-`;
 
 
 const calculateMargin = (i, len) => {

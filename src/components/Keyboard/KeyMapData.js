@@ -127,7 +127,7 @@ export function initializeKeyMap(keyTable) {
   const modifierCombinations = _.concat(combinations(modifierKeys), singleKeys) 
   
   const colorTestArr = ["1", "2", "3","4","5","6","7","8","9","10","11","12","13","14","15","16", "17","18","19","20"]
-  const keyMapColors = ['#FF0B00',  '#FFE433', '#21A6FF', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080'];
+  const keyMapColors = ['#f76262',  '#FFE433', '#21A6FF', '#ff8a5c', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080'];
   const allLayers = filteredData(modifierCombinations, keyTable, keyMapColors)
   
   const { activeLayers, layerKeys} = getActiveLayers(allLayers)
@@ -140,16 +140,8 @@ export function initializeKeyMap(keyTable) {
 }
 
 
-function swap(keyMap, oldActiveLayer, newActiveLayer) {
 
-  const oldIndex = _.findIndex(keyMap, (e)=> `${e.layer}`===`${oldActiveLayer}`)
-  const newIndex = _.findIndex(keyMap, (e)=> `${e.layer}`===`${newActiveLayer}`)
-  const newArr = move(keyMap, newIndex, oldIndex)
-  
-  return newArr
-}
-
-function testswap(keyMap, newActiveLayer) {
+function swap(keyMap, newActiveLayer) {
 
   // const oldIndex = _.findIndex(keyMap, (e)=> `${e.layer}`===`${oldActiveLayer}`)
   const newLayerIndex = _.findIndex(keyMap, (e)=> `${e.layer}`===`${newActiveLayer}`)
@@ -161,7 +153,7 @@ function testswap(keyMap, newActiveLayer) {
 export function getActiveLayers(filteredKeyMap,  oldLayer = null, newLayer = null) {
 
 // const singleKeys = [['0'],['1'],['2'],['3'],['4'],['5'],['6'],['7'],['8'],['9'],['A'],['B'],['C'],['D'],['E'],['F'],['G'],['H'],['I'],['J'],['K'],['L'],['M'],['N'],['O'],['P'],['Q'],['R'],['S'],['T'],['U'],['V'],['W'],['X'],['Y'],['Z']];
-  const allLayers = (oldLayer && newLayer) ? swap(filteredKeyMap, oldLayer, newLayer) : filteredKeyMap;
+  
 
   let layerData = [];
   let layerKeys = [];
@@ -171,7 +163,6 @@ export function getActiveLayers(filteredKeyMap,  oldLayer = null, newLayer = nul
   
     // const color = keyMapColors[i];
     const allKeys = _.union(cur.layer, cur.mainKeys);
-    // const numCommonElements = _.intersection(layerData, allKeys).length;
     const hasNoCommonElements = !(_.intersection(layerData, allKeys).length > 0);
     
     
@@ -195,21 +186,12 @@ export function getActiveLayers(filteredKeyMap,  oldLayer = null, newLayer = nul
     return result
   }, []);
   
-  // _.unionBy(layerKeys, {active: true, color: "#21A6FF", keybind: ["Shift"]}, "active")
-  // console.log(`⭐: getActiveLayers -> _.unionBy(layerKeys, {active: true, color: "#21A6FF", keybind: ["Shift"]}, "active")`, _.unionBy([{ keybind: ["Shift"], active: false, color: "#21A6FF"  }], layerKeys, 'active'))
-  
-  
-  
-  console.log(`🚀🚀🚀🚀🚀🚀🚀🚀: getActiveLayers -> activeLayers`, activeLayers)
-    return {activeLayers, layerKeys}
+  return {activeLayers, layerKeys}
 }
 
 
-
-
-
 export function updateActiveLayers(filteredKeyMap, newLayer = null) {
-  const allLayers = newLayer && testswap(filteredKeyMap, newLayer) 
+  const allLayers = newLayer && swap(filteredKeyMap, newLayer) 
   const reducedMap = _.reduce(allLayers, (result, cur, index) => {
 
     const hasNoCommonElements = !(_.intersection(result.layerData, cur.allKeys).length > 0);
@@ -230,24 +212,9 @@ export function updateActiveLayers(filteredKeyMap, newLayer = null) {
   return {layerIndices, activeLayers}
 }
 
-
-
-
-
-
-
-
-
-
 export function updateActiveSingleLayer(filteredKeyMap, layerKeys, index = null) {
   console.log(`⭐:BEFORE filteredKeyMap`, filteredKeyMap)
   console.log(`⭐BEFORE: updateActiveLayers -> layerKeys`, layerKeys)
   const activeLayer = [_.find(filteredKeyMap, (o) => o.index === index)];
   setGlobalState('activeLayers', activeLayer)
-
-  
-  
-
-  
-  
 }
