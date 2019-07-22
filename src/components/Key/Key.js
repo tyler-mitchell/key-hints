@@ -69,6 +69,10 @@ const methods = state => {
       state.activeColor = keyColor;
       state.keyTopText = keyTopText;
       state.active = true;
+    },
+    resetActiveColor() {
+      state.activeColor = defaultActiveColor;
+      this.setInactive();
     }
   };
 };
@@ -87,7 +91,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
   // use methods hook
   const [
     { active, activeColor, defaultColor, keyTopText }, // <- latest state
-    { setActive, setInactive, setActiveMapKey } // <- callbacks for modifying state
+    { setActive, setInactive, setActiveMapKey, resetActiveColor } // <- callbacks for modifying state
   ] = useMethods(methods, initialState);
 
   const iconLabels = {
@@ -102,6 +106,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
     if (flatMap(activeKeys).includes(uniqueKeyName)) {
       if (editMode) {
         console.log(`⭐:-------------- Key -> EDIT MODE ---------------`, editMode);
+        
         setNewKeys(p => ({ ...p, keys: { key1: activeKeys } }));
         setActive();
       } else {
@@ -123,7 +128,8 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
     }
 
     return () => {
-      setInactive();
+
+      resetActiveColor();
     };
   }, [activeKeys, addMode, editMode, keyMapMode, activeLayers]);
 
@@ -153,18 +159,18 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
   };
 
   const toggleKey = isActive => {
-    
+    if (isActive) {
+      removeItem(label);
+      setInactive();
+    } else {
+      addItem(label);
+      setActive();
+    }
   };
 
   const keyClicked = () => {
     if (editMode || addMode) {
-      if (active) {
-        removeItem(label);
-        setInactive();
-      } else {
-        addItem(label);
-        setActive();
-      }
+      toggleKey(active)
     }
   };
 
@@ -203,7 +209,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
         )} 50%)`
       }
     ],
-    config: { mass: 1, tension: 180, friction: 12, duration: 1000 }
+    config: { mass: 1, tension: 180, friction: 12, duration: 300 }
   });
 
   const keyTopTextRef = React.useRef(null);
