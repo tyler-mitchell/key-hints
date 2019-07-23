@@ -41,11 +41,12 @@ import { TextField } from '@material-ui/core';
 export const KeyContainer = styled(animated.div)`
   /* transform: scaleX(0.95); */
   /* padding: 0 1.5px; */
-  margin: ${props => props.margin};
+  /* margin: ${props => props.margin}; */
+  
   /* margin-right: 3px; */
   box-sizing: border-box;
 
-  display: block;
+
   position: absolute;
   width: ${props => props.wt}px;
   height: ${props => props.ht}px;
@@ -60,11 +61,11 @@ export const KeyContainer = styled(animated.div)`
   justify-content: center;
   align-items: center;
   position: relative;
-
+  
   /* transition: filter .3s; */
 
   &:hover {
-    background-position: 0 0, 0 0;
+    /* background-position: 0 0, 0 0; */
     /* transition-duration: 0.5s; */
     /* background: inherit; */
 
@@ -72,13 +73,9 @@ export const KeyContainer = styled(animated.div)`
   }
 
   border-style: solid;
-  transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1), filter 0.5s;
+  /* transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1), filter 0.5s, flex 300ms; */
 
-  &:active {
-    /* transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1); */
-    transform: translateY(2px) scaleX(0.98);
-    /* transform-origin: -100, 200; */
-  }
+  
   &:last-child {
     /* border-width: 10px 12px 20px 10px; */
   }

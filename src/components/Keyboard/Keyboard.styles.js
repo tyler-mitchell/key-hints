@@ -4,33 +4,33 @@ import { Flex } from '@rebass/grid';
 import { makeStyles } from '@material-ui/styles';
 import { tint, shade, linearGradient, lighten } from 'polished';
 import Container from '@material-ui/core/Container';
-import { Grid } from '@material-ui/core/';
+import { Grid} from '@material-ui/core/';
 import Box from '@material-ui/core/Box';
 import React from 'react';
 import { useSpring, animated, Keyframes } from 'react-spring';
 
 
 export const Row = styled(Grid)`
- 
-
   
   ${zIndex};
-  ${position};
-
-  
+  ${position};  
 
 
 `;
 
 Row.defaultProps = {};
+
+
 export const InnerFrame = styled(Grid)`
   /* position: sticky; */
   /* display: inline-block; */
 
   /* flex-grow: 1, */
-
-  box-sizing: border-box;
-
+  /* max-width: '1000px'; */
+  /* box-sizing: border-box; */
+  width: inherit;
+  height: inherit;
+  position: relative;
   /* animation: fader 6s infinite; */
   color: black;
   background: ${shade(0.7, '#f9f9f9')};
@@ -39,6 +39,7 @@ export const InnerFrame = styled(Grid)`
   padding-right: 2px;
   padding-left: 2px;
   border-radius: 10px;
+  margin: 1px;
   box-shadow: 0 0 0 4px hsl(0, 0%, 60%), 0 0 0 5px hsl(0, 0%, 90%), 0 0 0 3px hsl(0, 0%, 80%);
 `;
 

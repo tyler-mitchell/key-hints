@@ -39,13 +39,15 @@ function Dashboard() {
       <main className={style.content}>
         <div className={style.appBarSpacer} />
         <Container maxWidth="lg" className={style.container}>
-          <Grid container direction="column" justify="space-around" spacing={2} alignItems="center">
+          <Grid container direction="column" justify="center" spacing={2} alignItems="center">
             
-              <Grid item xs={12}>
+            <Container fixed>
+              
                 {/* Keyboard */}
 
                 <Keyboard  />
-              </Grid>
+              
+              </Container>
               <Grid item xs={12}>
 
 

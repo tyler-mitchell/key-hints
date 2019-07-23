@@ -217,7 +217,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
   const [isModifier, setIsModifier] = React.useState(false);
 
   return (
-    <React.Fragment>
+
       <ConditionalWrap
         condition={editMode && active}
         wrap={(children, flashing) => (
@@ -267,6 +267,5 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
           )}
         </AnimatedKeyContainer>
       </ConditionalWrap>
-    </React.Fragment>
   );
 };

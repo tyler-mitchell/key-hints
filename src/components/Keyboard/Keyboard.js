@@ -32,11 +32,14 @@ import {
 
 import { Row, useKeyboardStyle, InnerFrame, Cover } from './Keyboard.styles';
 // import styled from '@xstyled/styled-components'
-import { ThemeProvider } from 'styled-components';
-import { tint, shade, linearGradient, lighten } from 'polished';
+
+import { tint, shade, linearGradient, lighten, timingFunctions } from 'polished';
 import Container from '@material-ui/core/Container';
 import { EditRounded } from '@material-ui/icons';
 import { useSpring, animated, useTransition } from 'react-spring';
+import { motion } from 'framer-motion';
+import { ThemeProvider } from '@material-ui/styles';
+import { createMuiTheme } from '@material-ui/core';
 
 
 
@@ -55,7 +58,7 @@ const Highlight = styled(Layer)`
 Highlight.defaultProps = {};
 
 
-
+const GridItem = motion.custom(Grid);
 
 const calculateMargin = (i, len) => {
 
@@ -72,24 +75,103 @@ const calculateMargin = (i, len) => {
 }
 const renderRow = row => {
   const len = Object.keys(row).length
+  const variants = {
+    tapStart: {
+      scale: 0.98,
+      y: '2px',
+    },
+    init: {
+      // scale: 1,
+      // y: '0px',
+    }
+  }
+
+  const tapped = (tap=false) => {
+    const o = {
+
+      animate: "tapStart",
+      transition: { yoyo: Infinity, repeatDelay: 1 }
+    };
+
+    const i = {
+
+      animate: "init",
+     
+    };
+
+    
+    if (tap) {
+      return o
+    } else {
+      return i
+    }
+  }
   return Object.keys(row).map((keyName, i) => (
     
+    <ThemeProvider theme={theme}>
+      <GridItem
+        item
+        
      
-        <Key
-          item
-          label={row[keyName][0]}
-          key={i}
-          margin={calculateMargin(i, len)}
-          uniqueKeyName={keyName in excludedKeys ? null : row[keyName][0]}
-          keyName={keyName}
-          wt={`${row[keyName][1]}`}
-          ht={`${keySize}`}
-          keySize={keySize}
-        />
+        
+        whileTap={{
+          scale: 0.98,
+          y: '2px',
+          
+          transition: {
+            type: "inertia",
+            velocity: -20 ,
+            min: .98,
+            max: 1,
+            damping: 300,
+            stiffness: 100,
+
+          }
+          
+        }}
+        animate="tapStart"
+       
+          
+          
+
+        
+       
+      >
+          
+          <Key
+            item
+            label={row[keyName][0]}
+            key={i}
+            margin={calculateMargin(i, len)}
+            uniqueKeyName={keyName in excludedKeys ? null : row[keyName][0]}
+            keyName={keyName}
+            wt={`${row[keyName][1]}`}
+            ht={`${keySize}`}
+            keySize={keySize}
+          />
+      </GridItem>
+    </ThemeProvider>
+      
      
    
   ));
 };
+
+
+const theme = createMuiTheme({
+  overrides: {
+    MuiGrid: {
+      
+      container: {
+          margin: 0
+        },
+        item: {
+          margin: '0 1.5px',
+
+      },
+    },
+  },
+});
 
 const KeyboardContainer = () => {
   // React.useEffect(() => {
@@ -98,12 +180,14 @@ const KeyboardContainer = () => {
   // },[editMode]);
   
   return (
-    <React.Fragment>
-      <Cover>
+    
+      // <Cover>
 
         <FlashingProvider>
-        <InnerFrame container alignItems="center" justify="center" direction="column"  >
-          <Row
+        <InnerFrame container justify="center" >
+        <ThemeProvider theme={theme}>
+            <Row
+              justify="center"
             container
             direction="row"
             wrap="nowrap"
@@ -115,7 +199,8 @@ const KeyboardContainer = () => {
           >
             {renderRow(firstRow)}
           </Row>
-          <Row
+            <Row
+              justify="center"
             container
             direction="row"
             wrap="nowrap"
@@ -127,11 +212,13 @@ const KeyboardContainer = () => {
           >
             {renderRow(secondRow)}
           </Row>
-          <Row
+            <Row
+              justify="center"
             container
             direction="row"
             wrap="nowrap"
-            item={true}
+              item={true}
+              
             // justify="space-evenly"
             alignItems="stretch"
             xs={12}
@@ -139,7 +226,8 @@ const KeyboardContainer = () => {
           >
             {renderRow(thirdRow)}
           </Row>
-          <Row
+            <Row
+              justify="center"
             container
             direction="row"
             wrap="nowrap"
@@ -151,7 +239,8 @@ const KeyboardContainer = () => {
           >
             {renderRow(fourthRow)}
           </Row>
-          <Row
+            <Row
+              justify="center"
             container
             direction="row"
             wrap="nowrap"
@@ -163,10 +252,10 @@ const KeyboardContainer = () => {
           >
             {renderRow(fifthRow)}
           </Row>
+        </ThemeProvider>
           </InnerFrame>
         </FlashingProvider>
-      </Cover>
-    </React.Fragment>
+      // </Cover>
   );
 };
 

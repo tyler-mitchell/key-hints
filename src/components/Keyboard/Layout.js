@@ -32,11 +32,15 @@ export const mw = keySize * 15;
 
 
 const regularSize =  keySize;
-//   R1: 1*14 + 2*1 = 16      = 16 -> 16 +  16x = 16(1.5)   +  16    = 40 - 40  =  0
-//   R2: 1.5 + 1*13 + 1.5     = 16 -> 16 +  16x = 16(1.5)   +  16    = 40 - 40  =  0
+//   R1: 1*14 + 2*1 = 16      = 16 -> 16 +  16x = 15(1.5) + 1   +  16    = 40 - 40  =  0
+//   R2: 1.5 + 1*13 + 1.5     = 16 -> 16 +  16x = 15(1.5) + 1   +  16    = 40 - 40  =  0
 //   R3: 1.75 + 1*12 + 2.25   = 16 -> 16 +  15x = 15(1.5)   +  16    = 40 - 38.5 =  1.5
 //   R4: 2.25 + 1*12 + 1.25   = 16 -> 16 +  15x = 15(1.5)   +  16    = 40 - 38.5 =  1.5
 //   R5: 1.25*3 + 6.25 + 1*6  = 16 -> 16 +  11x = 11(1.5)   +  16    = 40 - 29.5 =  7.5
+
+
+
+// R
 
 
 // R1
@@ -45,13 +49,13 @@ const backspaceSize = 2 * keySize;
 const tabSize = 1.5 * keySize;
 const backslashSize = 1.5 * keySize;
 // R3
-const capslockSize = 1.75 * keySize + 3.5 ;
+const capslockSize =( 1.75+.041) * keySize 
 const enterSize = 2.25 * keySize;
 // R4
 const shiftSize = 2.25 * keySize;
-const rshiftSize = 1.75 * keySize + 3.5 
+const rshiftSize = (1.75+.041) * keySize 
 // R5
-const spaceSize = 6.25 * keySize + 15.5;
+const spaceSize = (6.25 + 0.207)* keySize ;
 const specialSize = 1.25 * keySize;
 
 export const firstRow = {
