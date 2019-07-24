@@ -28,42 +28,36 @@ export const InnerFrame = styled(Grid)`
   /* flex-grow: 1, */
   /* max-width: '1000px'; */
   /* box-sizing: border-box; */
-  width: inherit;
-  height: inherit;
+  width: 'inherit';
+  height: 'inherit';
   position: relative;
   /* animation: fader 6s infinite; */
   color: black;
   background: ${shade(0.7, '#f9f9f9')};
-  padding-bottom: 3px;
-  padding-top: 2px;
-  padding-right: 2px;
-  padding-left: 2px;
-  border-radius: 10px;
-  margin: 1px;
-  box-shadow: 0 0 0 4px hsl(0, 0%, 60%), 0 0 0 5px hsl(0, 0%, 90%), 0 0 0 3px hsl(0, 0%, 80%);
+  padding-bottom: 4px;
+  padding-top: 3px;
+  padding-right: 3px;
+  padding-left: 3px;
+  
+
+
+  
 `;
 
 export const Cover = styled.div`
-
-  background: '#f9f9f9';
-  /* display: inline-block; */
-  box-shadow:
-    2px 2px 2px 2px rgba(0, 0, 0, 0.1),
-    0 8px 6px rgba(0, 0, 0, 0.1),
-    0 8px 6px rgba(0, 0, 0, 0.1),
-    0 16px 16px rgba(0, 0, 0, 0.1),
-    8px 10px 10px rgba(0, 0, 0, 0.1),
-    8px 10px 10px rgba(0, 0, 0, 0.1);
-  /* box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.1), 0 1px 6px rgba(0, 0, 0, 0.05),
-    0 8px 8px rgba(0, 0, 0, 0.1), 0 16px 16px rgba(0, 0, 0, 0.1), 8px 10px 10px rgba(0, 0, 0, 0.15),
-    8px 10px 10px rgba(0, 0, 0, 0.15); */
-  padding: 8px;
-  border-radius: 20px;
-  border-style: solid;
-  border-top-color: ${shade(0.02, '#f9f9f9')};
-  border-bottom-color: ${shade(0.33, '#f9f9f9')};
-  border-left-color: ${shade(0.09, '#f9f9f9')};
-  border-right-color: ${shade(0.2, '#f9f9f9')};
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.6) 0, rgba(39, 37, 37, 0.74) 60%);
+  
+  padding: 2px;
+  margin: 10px;
+  background: #fdfdfd;
+  -webkit-box-shadow: inset 0 0 11px 0 black;
+  box-shadow: inset 0 0 11px 0 black;
+  border-radius: 10px;
+  
 `;
 export const useKeyboardStyle = makeStyles({
   root: {

@@ -41,13 +41,13 @@ function Dashboard() {
         <Container maxWidth="lg" className={style.container}>
           <Grid container direction="column" justify="center" spacing={2} alignItems="center">
             
-            <Container fixed>
+            
               
                 {/* Keyboard */}
 
                 <Keyboard  />
               
-              </Container>
+            
               <Grid item xs={12}>
 
 

@@ -64,7 +64,7 @@ export default function KeyTableProvider({ children }) {
 
     curKeyTable.ref.update(update);
     setGlobalState('activeKeys', newKey.keys.key1);
-    setGlobalState('selectedItem', keyNum);
+    setGlobalState('selectedItem', keyID);
     setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }));
     setCurShortcutObjectKey(keyID);
 

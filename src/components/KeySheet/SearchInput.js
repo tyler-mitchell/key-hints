@@ -123,10 +123,9 @@ export const SearchInput = props => {
         <MenuIcon />
       </IconButton>
       <SearchIcon theme={theme} />
-      <InputSearch {...rest} disableUnderline onChange={onChange} />
+      <InputSearch {...rest} disableUnderline onChange={onChange} onFocus={()=> console.log("HELLO WORLDDDDD")} />
 
       <Divider className={classes.divider} />
-      <Button onClick={changeFont}>{currentFont} </Button>
       {editMode ? (
         <>
           <Grid container spacing={1}>

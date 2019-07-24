@@ -236,28 +236,34 @@ export const KeyListItem = props => {
 
   const [, setActiveKeys] = useGlobalState('activeKeys');
   const [, setEditMode] = useGlobalState('editMode');
-  const [selection, setSelection] = useGlobalState('selectedItem');
+  const [selectedItem, setSelectedItem] = useGlobalState('selectedItem');
   const [alreadySelected, setAlreadySelected] = React.useState(false);
-
+  const [curShortcutObjectKey] = useGlobalState('curShortcutObjectKey');
+  const [selected, setSelected] = React.useState(curShortcutObjectKey === shortcutObjectKey)
   const popupState = usePopupState({ variant: 'popover', popupId: 'demoMenu' });
   React.useEffect(() => {
-    if (selection !== index) {
+    if (selectedItem !== shortcutObjectKey) {
       setAlreadySelected(false);
     }
-  }, [index, selection]);
-  const itemClicked = index => {
+    
+  }, [selectedItem]);
+  const itemClicked = shortcutObjectKey => {
     // if (!alreadySelected) {
-    setSelection(index);
-    setActiveKeys(keybind['key1']);
-    setGlobalState('curShortcutObjectKey', shortcutObjectKey);
-    setGlobalState('activeKeysIndex', index);
-    setAlreadySelected(true);
-    // }
-    if (selection !== index) {
-      setEditMode(false);
-    }
-  };
-
+      setSelectedItem(shortcutObjectKey);
+      
+      setActiveKeys(keybind['key1']);
+      setGlobalState('curShortcutObjectKey', shortcutObjectKey);
+      setGlobalState('activeKeysIndex', shortcutObjectKey);
+      setAlreadySelected(true);
+      // }
+      if (selectedItem !== shortcutObjectKey) {
+        setEditMode(false);
+      }
+      console.log(`⭐: selection`, selectedItem)
+      console.log(`⭐: shortcutobjectKey`, shortcutObjectKey)
+      console.log(`⭐: selection === shortcutObjectKey`, selectedItem === shortcutObjectKey)
+    };
+    
   return (
     <ListItem
       button
@@ -271,8 +277,8 @@ export const KeyListItem = props => {
 
       focusRipple
       key={index}
-      onClick={() => itemClicked(index)}
-      selected={selection === index}
+      onClick={() => itemClicked(shortcutObjectKey)}
+      selected={selectedItem === shortcutObjectKey}
     >
       {/* <Grid  item direction="row" xs={12} alignItems="center" justify="flex-end" wrap="nowrap"> */}
       <Grid item xs={4} justify="flext-start">

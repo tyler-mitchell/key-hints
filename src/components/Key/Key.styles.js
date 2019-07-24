@@ -44,10 +44,10 @@ export const KeyContainer = styled(animated.div)`
   /* margin: ${props => props.margin}; */
   
   /* margin-right: 3px; */
-  box-sizing: border-box;
 
 
-  position: absolute;
+
+
   width: ${props => props.wt}px;
   height: ${props => props.ht}px;
   cursor: pointer;
@@ -65,7 +65,7 @@ export const KeyContainer = styled(animated.div)`
   /* transition: filter .3s; */
 
   &:hover {
-    /* background-position: 0 0, 0 0; */
+    background-position: 0 0, 0 0;
     /* transition-duration: 0.5s; */
     /* background: inherit; */
 
@@ -73,7 +73,7 @@ export const KeyContainer = styled(animated.div)`
   }
 
   border-style: solid;
-  /* transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1), filter 0.5s, flex 300ms; */
+  transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1), filter 0.5s;
 
   
   &:last-child {

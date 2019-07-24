@@ -28,6 +28,7 @@ import { CategoryMenu } from './CategoryMenu/CategoryMenu';
 
 import { filter, isEmpty } from 'lodash';
 import { initializeKeyMap } from '../Keyboard/KeyMapData';
+import { pickBy } from 'lodash-es';
 import { Button } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
@@ -131,6 +132,33 @@ export const KeySheet = props => {
     };
   }, [curKeyTable, setCurCategory]);
 
+
+
+  const [filteredKeyTable, setFilteredKeyTable] = React.useState(null);
+  const [searchText, setSearchText] = React.useState('')
+  function onChange(e) {
+    setSearchText(e.target.value)
+    console.log("SEARCH TEXT", searchText)
+  }
+
+  const [selection] = useGlobalState('selectedItem')
+  
+  React.useEffect(() => {
+    
+    
+    if (curKeyTable) {
+      if (searchText.length === 0) {
+        const fktb = filterKeyTable(curKeyTable, curCategory);
+        console.log("DEFAULT FILTERED KEY TABLE: " ,fktb)
+        setFilteredKeyTable(fktb);
+      } else {
+        const fktb = filterSearchKeyTable(curKeyTable);
+        console.log(`⭐: SEARCH FILTERED KEY TABLE`, fktb)
+        setFilteredKeyTable(fktb);
+        console.log(`⭐: selection`, selection)
+      }
+    }
+  }, [curKeyTable, curCategory, searchText])
   // Functions
   function filterKeyTable(ktable, category) {
     if (category !== 'All') {
@@ -138,14 +166,26 @@ export const KeySheet = props => {
         return key.category.toUpperCase() === category;
       });
     } else {
-      return Object.keys(curKeyTable.data().table).sort();
+      console.log("SORT KEYS: ")
+      return curKeyTable.data().table
     }
+  };
+  function filterSearchKeyTable(ktable) {
+      const fktb = pickBy(curKeyTable.data().table, (key) => {
+        return key.description.toLowerCase().indexOf(searchText.toLowerCase()) !== -1;
+      }); 
+    const keys= Object.keys(fktb).sort();
+    
+    console.log("filterSearchKeyTable: ", fktb)
+    return fktb;
+    
   };
   
   function handleKeyMapMode(){
     initializeKeyMap(curKeyTable.data().table);
     setGlobalState('keyMapMode', true);
   }
+  
   return (
     <React.Fragment>
       {loadingUKTC && <CircularProgress className={classes.progress} />}
@@ -169,6 +209,7 @@ export const KeySheet = props => {
               <Grid container xs={12} style={{}} justify="center" alignItems="center" />
               <SearchInput
                 theme={theme}
+                onChange={onChange}
                 placeholder="Search…"
                 inputProps={{ 'aria-label': 'Search' }}
               />
@@ -178,8 +219,8 @@ export const KeySheet = props => {
 
               <CardContent>
 
-                {!isEmpty(curKeyTable.data().table) && (
-                  <KeyList height={360} keyTableKeys={filterKeyTable(curKeyTable, curCategory)} keyTable={curKeyTable.data().table} />
+                {!isEmpty(filteredKeyTable) && (
+                  <KeyList height={360} keyTableKeys={Object.keys(filteredKeyTable).sort()} keyTable={filteredKeyTable} />
                 )}
                 <div
                   style={{

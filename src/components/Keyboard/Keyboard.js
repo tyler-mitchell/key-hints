@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import './keyboard.css'
 import { Box, Flex } from '@rebass/grid';
 import Space from '@rebass/space';
 import Layer from '@material-ui/core/Box';
@@ -75,40 +75,20 @@ const calculateMargin = (i, len) => {
 }
 const renderRow = row => {
   const len = Object.keys(row).length
-  const variants = {
-    tapStart: {
-      scale: 0.98,
-      y: '2px',
-    },
-    init: {
-      // scale: 1,
-      // y: '0px',
-    }
-  }
-
-  const tapped = (tap=false) => {
-    const o = {
-
-      animate: "tapStart",
-      transition: { yoyo: Infinity, repeatDelay: 1 }
-    };
-
-    const i = {
-
-      animate: "init",
-     
-    };
-
-    
-    if (tap) {
-      return o
+  
+  const getMarginTheme = (index) => {
+    if (index === 0) {
+      return themeStart;
+    } else if (index === len - 1) {
+      return themeEnd;
     } else {
-      return i
+      return theme;
     }
   }
+  
   return Object.keys(row).map((keyName, i) => (
     
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={getMarginTheme(i)}>
       <GridItem
         item
         
@@ -119,23 +99,13 @@ const renderRow = row => {
           y: '2px',
           
           transition: {
-            type: "inertia",
-            velocity: -20 ,
-            min: .98,
-            max: 1,
-            damping: 300,
-            stiffness: 100,
-
+            type: "spring",
+            damping: 100,
+            stiffness: 400,
           }
           
         }}
-        animate="tapStart"
-       
-          
-          
 
-        
-       
       >
           
           <Key
@@ -167,11 +137,51 @@ const theme = createMuiTheme({
         },
         item: {
           margin: '0 1.5px',
-
       },
     },
   },
 });
+const themeStart = createMuiTheme({
+  overrides: {
+    MuiGrid: {
+      
+      container: {
+          margin: 0
+        },
+        item: {
+          marginRight: '1.5px'
+      },
+    },
+  },
+});
+const themeEnd = createMuiTheme({
+  overrides: {
+    MuiGrid: {
+      
+      container: {
+          margin: 0
+        },
+        item: {
+          marginLeft: '1.5px',
+      },
+    },
+  },
+});
+
+const rowTheme = createMuiTheme({
+  overrides: {
+    MuiGrid: {
+      
+      container: {
+          margin: 0
+        },
+        item: {
+          margin: 0
+      },
+    },
+  },
+});
+
 
 const KeyboardContainer = () => {
   // React.useEffect(() => {
@@ -181,81 +191,82 @@ const KeyboardContainer = () => {
   
   return (
     
-      // <Cover>
-
+      <Cover fixed className="marvel-device iphone-x" >
+        <div className="inner-shadow" style={{ opacity: 0.5 }} />
         <FlashingProvider>
-        <InnerFrame container justify="center" >
-        <ThemeProvider theme={theme}>
-            <Row
+        <div className="screen">
+          <InnerFrame container justify="center" alignItems="center" direction="column"  spacing={0}>
+          {/* <ThemeProvider theme={rowTheme}> */}
+              <Row
               justify="center"
-            container
-            direction="row"
-            wrap="nowrap"
-            item={true}
-            // justify="space-evenly"
-            // alignItems="stretch"
-            xs={12}
-            zIndex={1}
-          >
-            {renderRow(firstRow)}
-          </Row>
-            <Row
-              justify="center"
-            container
-            direction="row"
-            wrap="nowrap"
-            item={true}
-            // justify="space-evenly"
-            // alignItems="stretch"
-            xs={12}
-            zIndex={2}
-          >
-            {renderRow(secondRow)}
-          </Row>
-            <Row
-              justify="center"
-            container
-            direction="row"
-            wrap="nowrap"
-              item={true}
+              container
+              direction="row"
+              wrap="nowrap"
+                item
+                xs={11}
+            
+              zIndex={1}
+            >
+              {renderRow(firstRow)}
+            </Row>
+              <Row
+                justify="center"
+              container
+              direction="row"
+              wrap="nowrap"
+              item
+              // justify="space-evenly"
+              // alignItems="stretch"
+              xs={11}
+              zIndex={2}
+            >
+              {renderRow(secondRow)}
+            </Row>
+              <Row
+                justify="center"
+              container
+              direction="row"
+              wrap="nowrap"
+                item
+                xs={11}
+              // justify="space-evenly"
               
-            // justify="space-evenly"
-            alignItems="stretch"
-            xs={12}
-            zIndex={3}
-          >
-            {renderRow(thirdRow)}
-          </Row>
-            <Row
-              justify="center"
-            container
-            direction="row"
-            wrap="nowrap"
-            item={true}
-            // justify="space-evenly"
-            // alignItems="stretch"
-            xs={12}
-            zIndex={4}
-          >
-            {renderRow(fourthRow)}
-          </Row>
-            <Row
-              justify="center"
-            container
-            direction="row"
-            wrap="nowrap"
-            item={true}
-            // justify="space-evenly"
-            // alignItems="stretch"
-            xs={12}
-            zIndex={5}
-          >
-            {renderRow(fifthRow)}
-          </Row>
-        </ThemeProvider>
-          </InnerFrame>
+        
+              zIndex={3}
+            >
+              {renderRow(thirdRow)}
+            </Row>
+              <Row
+                justify="center"
+              container
+              direction="row"
+              wrap="nowrap"
+              item
+              // justify="space-evenly"
+              // alignItems="stretch"
+              xs={11}
+              zIndex={4}
+            >
+              {renderRow(fourthRow)}
+            </Row>
+              <Row
+                justify="center"
+              container
+              direction="row"
+              wrap="nowrap"
+              item={true}
+              // justify="space-evenly"
+              // alignItems="stretch"
+              xs={11}
+              zIndex={5}
+            >
+              {renderRow(fifthRow)}
+            </Row>
+          {/* </ThemeProvider> */}
+            </InnerFrame>
+        </div>
         </FlashingProvider>
-      // </Cover>
+       </Cover>
   );
 };
 

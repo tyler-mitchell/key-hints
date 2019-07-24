@@ -55,13 +55,7 @@ const KeyList = props => {
       <VariableSizeList
         height={height}
         itemCount={others.keyTableKeys.length}
-        itemSize={index => {
-         
-          
-    
-      
-        return (50)
-      }}
+        itemSize={index => {return (50)}}
         outerElementType={List}                 
         ref={listRef}
         itemData={others}

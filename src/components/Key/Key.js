@@ -38,6 +38,7 @@ import flatMap from 'lodash/flatMap';
 import KeyText from './KeyText/KeyText';
 import { motion } from 'framer-motion';
 import { TextField } from '@material-ui/core';
+import { useBoolean } from 'react-hanger';
 
 const ConditionalWrap = ({ condition, wrap, children }) => {
   const [flashing] = React.useContext(FlashingContext);
@@ -57,22 +58,22 @@ const methods = state => {
   return {
     setActive() {
       state.keyColor = defaultActiveColor;
-      state.active = true;
+      // state.active = true;
     },
     setInactive() {
       state.keyColor = defaultColor;
       state.keyTopText = '';
-      state.active = false;
+      // state.active = false;
     },
     setActiveMapKey(keyColor, keyTopText) {
       console.log(`⭐: setActiveMapKey -> keyColor`, keyColor);
       state.activeColor = keyColor;
       state.keyTopText = keyTopText;
-      state.active = true;
+      // state.active = true;
     },
     resetActiveColor() {
       state.activeColor = defaultActiveColor;
-      this.setInactive();
+      // this.setInactive();
     }
   };
 };
@@ -90,10 +91,13 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
 
   // use methods hook
   const [
-    { active, activeColor, defaultColor, keyTopText }, // <- latest state
-    { setActive, setInactive, setActiveMapKey, resetActiveColor } // <- callbacks for modifying state
+    {  activeColor, defaultColor, keyTopText }, // <- latest state
+    { setActiveMapKey, resetActiveColor } // <- callbacks for modifying state
   ] = useMethods(methods, initialState);
 
+
+
+  const setActive = useBoolean(false);
   const iconLabels = {
     LeftArrow: <LeftArrowIcon>{label}</LeftArrowIcon>,
     RightArrow: <RightArrowIcon>{label}</RightArrowIcon>,
@@ -108,37 +112,40 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
         console.log(`⭐:-------------- Key -> EDIT MODE ---------------`, editMode);
         
         setNewKeys(p => ({ ...p, keys: { key1: activeKeys } }));
-        setActive();
+        setActive.setTrue();
       } else {
-        setActive();
+        setActive.setTrue();
       }
-    } else if (keyMapMode && !editMode && activeLayers && uniqueKeyName) {
+    }
+    
+    if (keyMapMode && !editMode && activeLayers && uniqueKeyName) {
       _.forEach(activeLayers, (layer, colorIndex) => {
         const mainKeyIndex = _.indexOf(layer.mainKeys, label);
         const isMod = _.includes(layer.layer, label);
-        const isSingleKey = layer.keyArr[0].length === 1;
+        
 
         if (mainKeyIndex >= 0) {
           setActiveMapKey(layer.color, layer.keyDescription[mainKeyIndex]);
         } else if (isMod) {
           setIsModifier(true);
           setActiveMapKey(layer.color, label);
+          setActive.setTrue();
         }
       });
     }
 
     return () => {
-
-      resetActiveColor();
+      setActive.setFalse();
+      // setInactive();
     };
   }, [activeKeys, addMode, editMode, keyMapMode, activeLayers]);
 
   // UseLayoutEffect Hook
   React.useLayoutEffect(() => {
-    if (active && addMode) {
+    if (setActive.value && addMode) {
       setGlobalState('lastKeyRef', label);
     }
-  }, [active]);
+  }, [setActive.value]);
 
   // Functions
   const addItem = key => {
@@ -161,16 +168,16 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
   const toggleKey = isActive => {
     if (isActive) {
       removeItem(label);
-      setInactive();
+      setActive.setFalse();
     } else {
       addItem(label);
-      setActive();
+      setActive.setTrue();
     }
   };
 
   const keyClicked = () => {
     if (editMode || addMode) {
-      toggleKey(active)
+      toggleKey(setActive.value)
     }
   };
 
@@ -181,10 +188,8 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
     borderRightColor,
     background
   } = useSpring({
-    reverse: active,
+    reverse: setActive.value,
     from: {
-      // transform: 'translateY(-38.58%) scale(1.02)',
-      // transform: 'scale(1)',
       borderTopColor: `${shade(0.02, activeColor)}`,
       borderBottomColor: `${shade(0.3, activeColor)}`,
       borderLeftColor: `${shade(0.09, activeColor)}`,
@@ -197,7 +202,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
     },
     to: [
       {
-        transform: 'translateY(0px) scale(1)',
+        
         borderTopColor: `${shade(0.02, defaultColor)}`,
         borderBottomColor: `${shade(0.3, defaultColor)}`,
         borderLeftColor: `${shade(0.09, defaultColor)}`,
@@ -219,7 +224,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
   return (
 
       <ConditionalWrap
-        condition={editMode && active}
+        condition={editMode && setActive.value}
         wrap={(children, flashing) => (
           <animated.div key={key} style={flashing}>
             {children}
@@ -227,7 +232,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
         )}
       >
         <AnimatedKeyContainer
-          active={active}
+          active={setActive.value}
           // active={active}
           margin={margin}
           style={{
@@ -244,6 +249,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
           <KeyTop wt={wt} ht={ht} style={{ background }}>
             {/* <KeyChar ref={keyTopTextRef}>Basic Editing the view port</KeyChar> */}
 
+          {keyMapMode &&
             <div
               ref={keyTopTextRef}
               style={{
@@ -257,12 +263,12 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
               }}
             >
               <KeyText keyTopText={keyTopText} />
-              {/* {!addMode && <KeyText keyTopText={keyTopText} style={{opacity: 0}} />} */}
-            </div>
+      
+            </div>}
 
             {/* {(!keyMapMode) && <KeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</KeyChar>} */}
           </KeyTop>
-          {((active && !isModifier) || !keyMapMode) && (
+          {((setActive.value && !isModifier) || !keyMapMode) && (
             <BottomKeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</BottomKeyChar>
           )}
         </AnimatedKeyContainer>
