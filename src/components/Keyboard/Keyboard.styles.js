@@ -35,7 +35,7 @@ export const InnerFrame = styled(Grid)`
   color: black;
   
   background: ${shade(0.7, '#f9f9f9')};
-  padding-bottom: 2px;
+  padding-bottom: 1px;
   padding-top: 2px;
   padding-right: 2px;
   padding-left: 2px;
@@ -55,10 +55,8 @@ export const Cover = styled.div`
   
   padding: 2px;
   margin: 10px;
-  background: #fdfdfd;
-  -webkit-box-shadow: inset 0 0 11px 0 black;
-  box-shadow: inset 0 0 11px 0 black;
-  border-radius: 10px;
+
+  
   
 `;
 export const useKeyboardStyle = makeStyles({

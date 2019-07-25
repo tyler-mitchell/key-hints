@@ -58,6 +58,7 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     height: '471px',
+    
     marginRight: '10px',
     display: 'block',
     overflow: 'scroll'
@@ -195,7 +196,13 @@ export const KeySheet = props => {
          
           
 
-          <Card ref={anchorRef(popupState)} style={{ height: '470px', borderRadius: '10px' }}>
+          <Card
+            ref={anchorRef(popupState)}
+            style={{
+              height: '470px',
+              
+              borderRadius: '10px'
+            }}>
             {/* <SwipeableViews
               resistance={true}
               axis="y"
@@ -224,7 +231,7 @@ export const KeySheet = props => {
                 )}
                 <div
                   style={{
-                    bottom: 7,
+                    bottom: 14,
 
                     pointerEvents: 'none',
                     alignItems: 'center',
@@ -232,10 +239,10 @@ export const KeySheet = props => {
                     height: '120%',
                     width: '100%',
 
-                    paddingBottom: '100px',
+                    paddingBottom: '100x',
                     // border: 'solid',
                     borderRadius: "10px 10px 60px 60px",
-
+                   
                     clipPath: 'polygon(1% 0, 99% 0, 99% 99%, 1% 99% )',
                     left: 0,
                     right: 0,

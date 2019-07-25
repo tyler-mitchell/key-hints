@@ -14,7 +14,7 @@ import styled from 'styled-components';
 
 
 
-const OFFSET = 105
+const OFFSET = 130
 const INITIAL = 780
 // const SLOW = config.gentle
 const SLOW = 	{ mass: 1, tension: 200, friction: 14 }
@@ -28,7 +28,7 @@ export const AnimatedPanel = ({children})  => {
   const transform = y.interpolate([OFFSET, 250], [40, 0], 'clamp').interpolate(val => `translate3d(0,${val}px,0)`)
 
   React.useEffect(() => {
-    addMode ?  set({ y: OFFSET, config: SLOW}) : set({ y: 565, config: FAST })
+    addMode ?  set({ y: OFFSET, config: SLOW}) : set({ y: 590, config: FAST })
   },[addMode])
   return (
     <>
