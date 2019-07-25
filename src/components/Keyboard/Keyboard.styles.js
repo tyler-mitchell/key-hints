@@ -33,11 +33,13 @@ export const InnerFrame = styled(Grid)`
   position: relative;
   /* animation: fader 6s infinite; */
   color: black;
+  
   background: ${shade(0.7, '#f9f9f9')};
-  padding-bottom: 4px;
-  padding-top: 3px;
-  padding-right: 3px;
-  padding-left: 3px;
+  padding-bottom: 2px;
+  padding-top: 2px;
+  padding-right: 2px;
+  padding-left: 2px;
+  
   
 
 
