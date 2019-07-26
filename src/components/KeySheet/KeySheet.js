@@ -182,10 +182,7 @@ export const KeySheet = props => {
     
   };
   
-  function handleKeyMapMode(){
-    initializeKeyMap(curKeyTable.data().table);
-    setGlobalState('keyMapMode', true);
-  }
+  
   
   return (
     <React.Fragment>
@@ -193,14 +190,10 @@ export const KeySheet = props => {
 
       {(curKeyTable) && (
         <>
-         
-          
-
           <Card
             ref={anchorRef(popupState)}
             style={{
               height: '470px',
-              
               borderRadius: '10px'
             }}>
             {/* <SwipeableViews
@@ -220,7 +213,6 @@ export const KeySheet = props => {
                 placeholder="Search…"
                 inputProps={{ 'aria-label': 'Search' }}
               />
-              <Button variant="contained" onClick={handleKeyMapMode}>Key Map</Button>
               <Divider />
               <CategoryMenu popupState={popupState} />
 

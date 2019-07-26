@@ -91,15 +91,9 @@ export const ToolBarAddView = props => {
 
   return (
     <Paper elevation={0} className={classes.root}>
-      <IconButton
-        className={classes.iconButton}
-        aria-label="Menu"
-        onClick={() => setDrawerState(!drawerState)}
-      >
-        <MenuIcon />
-      </IconButton>
-      <SearchIcon theme={theme} />
-      <InputSearch {...rest} disableUnderline onChange={onChange} />
+      
+     
+     
 
       <Divider className={classes.divider} />
 
