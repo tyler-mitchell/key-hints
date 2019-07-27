@@ -139,12 +139,18 @@ export const SearchInput = props => {
   };
   const variants = {
     open: {
-      opacity: 1, width: '200px',
-      transition: {
-       
-        staggerChildren: 0.3,
-    },},
-    closed: { opacity: 0, width: '0px' }
+      opacity: [0, 0.6, 0.9, 1],
+      x: '6px',
+      
+      width: '200px',
+      
+      // transition: {
+      //   delay: 1,
+      //   x: { type: "spring", stiffness: 100 },
+      //   default: { duration: 2 },
+      // }
+    },
+    closed: { opacity: [.5, 0, 0, 0], x: '-22px', width: '0px',   }
   };
   const [isOpen, toggleOpen] = useCycle(false, true);
   return (
@@ -154,8 +160,7 @@ export const SearchInput = props => {
           <IconButton
             className={classes.iconButton}
             aria-label="Menu"
-            style={{ marginRight: '10px' }}
-
+            // style={{ marginRight: '10px' }}
             onClick={() => setDrawerState(!drawerState)}
           >
             <MenuIcon />
@@ -167,38 +172,44 @@ export const SearchInput = props => {
           <motion.div>
             <IconButton
               onClick={() => toggleOpen()}
+        
+              
               style={{
-                display: 'inline-block'
+                display: 'inline-block',
+                position: 'relative',
+                
+                // background: 'white'
               }}
             >
-              <Search size="small" />
+              <Search  size="small" />
             </IconButton>
           </motion.div>
           <motion.div
-            initial={false}
+            initial="closed"
             animate={isOpen ? 'open' : 'closed'}
             variants={variants}
-            style={{ display: 'inline-block', margin: '10px' }}
+            
+            // initial={{ '--width': '0px' }}
+
+            // style={{ display: 'inline-block', margin: '10px' }}
           >
             <TextField
               type="search"
               variant="outlined"
               margin="dense"
-              style={{width: '100%'}}
+              style={{ width: 'inherit' }}
               // SelectProps={{
               //   MenuProps: {
               //     className: classes.menu,
               //   },
               // }}
-              
+
               disabled={!isOpen}
               {...rest}
               disableUnderline
               onChange={onChange}
             />
           </motion.div>
-
-          
         </Grid>
 
         {/* <Button
@@ -211,7 +222,7 @@ export const SearchInput = props => {
           <KeyboardIcon style={{}}/>
         </Button> */}
         <Grid item xs={3}>
-          {editMode ? (
+          {editMode && (
             <>
               <Grid container spacing={1}>
                 <Grid item>
@@ -235,24 +246,7 @@ export const SearchInput = props => {
                 </Grid>
               </Grid>
             </>
-          ) : (
-            <>
-              <Grid item>
-                {!addMode && (
-                  <Button
-                    onClick={handleAddClick}
-                    className={theme.button}
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                  >
-                    <AddIcon />
-                    Add
-                  </Button>
-                )}
-              </Grid>
-            </>
-          )}
+          ) }
         </Grid>
         <Grid item container justify="flex-end" xs={3}>
           <ToggleButtonGroup size="small" value={view} exclusive onChange={handleChange}>

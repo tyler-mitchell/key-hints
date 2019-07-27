@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -16,12 +17,12 @@ import Paper from '@material-ui/core/Paper';
 
 import { KeyTableContext } from '../../context/KeyTableContext';
 import { usePopupState, anchorRef } from 'material-ui-popup-state/hooks';
-import { AppBar, Divider, CircularProgress, Grid } from '@material-ui/core';
+import { AppBar, Divider, CircularProgress, Grid, CardActionArea } from '@material-ui/core';
 
 import { FirebaseContext } from '../utils/firebase';
 
 import 'firebase/firestore';
-import { useGlobalState, setGlobalState } from '../../state';
+import { useGlobalState, setGlobalState, clearKeySelection } from '../../state';
 import SwipeableViews from 'react-swipeable-views';
 import { NewKeyPanel } from './NewKeyPanel/NewKeyPanel';
 import { CategoryMenu } from './CategoryMenu/CategoryMenu';
@@ -29,8 +30,19 @@ import { CategoryMenu } from './CategoryMenu/CategoryMenu';
 import { filter, isEmpty } from 'lodash';
 import { initializeKeyMap } from '../Keyboard/KeyMapData';
 import { pickBy } from 'lodash-es';
+import { bindTrigger, bindPopover } from 'material-ui-popup-state';
+import { useMeasure } from '../hooks/helpers';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ButtonGroup } from '@material-ui/core';
+import { Popper } from '@material-ui/core';
+import { Popover } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
+import { Add as AddIcon } from '@material-ui/icons';
+import { Fab } from '@material-ui/core';
+import { CardActions } from '@material-ui/core';
 import { Button } from '@material-ui/core';
-
+import { useInput, useBoolean, useNumber, useArray, useOnMount, useOnUnmount } from 'react-hanger';
+import { array } from 'prop-types';
 const useStyles = makeStyles(theme => ({
   appBar: {
     color: 'white',
@@ -58,7 +70,7 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     height: '471px',
-    
+
     marginRight: '10px',
     display: 'block',
     overflow: 'scroll'
@@ -112,54 +124,47 @@ export const KeySheet = props => {
   const [curCategory, setCurCategory] = useGlobalState('sheetCategory');
   const [addMode] = useGlobalState('addMode');
 
-  // Card View Index
-  const [viewIndex, setViewIndex] = React.useState(0);
-
+  
   // Category Menu popup state
-  const popupState = usePopupState({ variant: 'popper', popupId: 'demoPopper' });
+  const popupState = usePopupState({ variant: 'popper', popupId: 'demoPopper', isOpen: true });
 
   // useEffect
-  React.useEffect(() => {
-    addMode ? setViewIndex(1) : setViewIndex(0);
-  }, [addMode]);
+  
+
+  // button popper
+  const buttonPopupState = usePopupState({ variant: 'popover', popupId: 'demoMenu' });
 
   const [listRef] = useGlobalState('listRef');
   React.useEffect(() => {
     return () => {
-      
-      
       setGlobalState('selectedCategoryIndex', -1);
       setCurCategory('All');
     };
   }, [curKeyTable, setCurCategory]);
 
-
-
   const [filteredKeyTable, setFilteredKeyTable] = React.useState(null);
-  const [searchText, setSearchText] = React.useState('')
+  const [searchText, setSearchText] = React.useState('');
   function onChange(e) {
-    setSearchText(e.target.value)
-    console.log("SEARCH TEXT", searchText)
+    setSearchText(e.target.value);
+    console.log('SEARCH TEXT', searchText);
   }
 
-  const [selection] = useGlobalState('selectedItem')
-  
+  const [selection] = useGlobalState('selectedItem');
+
   React.useEffect(() => {
-    
-    
     if (curKeyTable) {
       if (searchText.length === 0) {
         const fktb = filterKeyTable(curKeyTable, curCategory);
-        console.log("DEFAULT FILTERED KEY TABLE: " ,fktb)
+        console.log('DEFAULT FILTERED KEY TABLE: ', fktb);
         setFilteredKeyTable(fktb);
       } else {
         const fktb = filterSearchKeyTable(curKeyTable);
-        console.log(`⭐: SEARCH FILTERED KEY TABLE`, fktb)
+        console.log(`⭐: SEARCH FILTERED KEY TABLE`, fktb);
         setFilteredKeyTable(fktb);
-        console.log(`⭐: selection`, selection)
+        console.log(`⭐: selection`, selection);
       }
     }
-  }, [curKeyTable, curCategory, searchText])
+  }, [curKeyTable, curCategory, searchText]);
   // Functions
   function filterKeyTable(ktable, category) {
     if (category !== 'All') {
@@ -167,35 +172,54 @@ export const KeySheet = props => {
         return key.category.toUpperCase() === category;
       });
     } else {
-      console.log("SORT KEYS: ")
-      return curKeyTable.data().table
+      console.log('SORT KEYS: ');
+      return curKeyTable.data().table;
     }
-  };
+  }
   function filterSearchKeyTable(ktable) {
-      const fktb = pickBy(curKeyTable.data().table, (key) => {
-        return key.description.toLowerCase().indexOf(searchText.toLowerCase()) !== -1;
-      }); 
-    const keys= Object.keys(fktb).sort();
-    
-    console.log("filterSearchKeyTable: ", fktb)
+    const fktb = pickBy(curKeyTable.data().table, key => {
+      return key.description.toLowerCase().indexOf(searchText.toLowerCase()) !== -1;
+    });
+    const keys = Object.keys(fktb).sort();
+
+    console.log('filterSearchKeyTable: ', fktb);
     return fktb;
-    
+  }
+  const handleAddClick = () => {
+    clearKeySelection();
+    setGlobalState('keyMapMode', false);
+    setGlobalState('addMode', v => !v);
+    setActions([
+      { id: 'save', component: SaveAction, clickFunction: handleAddClick },
+      { id: 'cancel', component: CancelAction, clickFunction: handleCancelClick }
+    ]);
   };
-  
-  
-  
+  const handleCancelClick = () => {
+    setGlobalState('addMode', v => !v);
+  };
+  const [, { height, width }] = useMeasure();
+  // const actions = useArray([
+  //   { id: 'add', add: AddAction, clickFunction: handleAddClick },
+  //   { id: 'save', save: SaveAction, clickFunction: handleAddClick },
+  //   { id: 'cancel', cancel: CancelAction, clickFunction: handleAddClick }
+  // ]);
+  const [actions, setActions] = React.useState([
+    { id: 'add', component: AddAction, clickFunction: handleAddClick }
+  ]);
+  const id = 'fab-reference';
   return (
     <React.Fragment>
       {loadingUKTC && <CircularProgress className={classes.progress} />}
 
-      {(curKeyTable) && (
+      {curKeyTable && (
         <>
           <Card
             ref={anchorRef(popupState)}
             style={{
               height: '470px',
               borderRadius: '10px'
-            }}>
+            }}
+          >
             {/* <SwipeableViews
               resistance={true}
               axis="y"
@@ -203,52 +227,162 @@ export const KeySheet = props => {
               slideStyle={{ height: '100%' }}
               containerStyle={{ height: '500px' }}
             > */}
-            <>
-              
-              <CardHead className={classes.appBar} indicatorColor="primary" textColor="primary" />
-              <Grid container xs={12} style={{}} justify="center" alignItems="center" />
-              <SearchInput
-                theme={theme}
-                onChange={onChange}
-                placeholder="Search…"
-                inputProps={{ 'aria-label': 'Search' }}
-              />
-              <Divider />
-              <CategoryMenu popupState={popupState} />
 
-              <CardContent>
+            <CardHead className={classes.appBar} indicatorColor="primary" textColor="primary" />
+            <Grid container xs={12} style={{}} justify="center" alignItems="center" />
+            <SearchInput
+              theme={theme}
+              onChange={onChange}
+              placeholder="Search…"
+              inputProps={{ 'aria-label': 'Search' }}
+            />
+            <Divider />
+            <CategoryMenu popupState={popupState} />
 
-                {!isEmpty(filteredKeyTable) && (
-                  <KeyList height={360} keyTableKeys={Object.keys(filteredKeyTable).sort()} keyTable={filteredKeyTable} />
-                )}
-                <div
-                  style={{
-                    bottom: 14,
+            <CardContent>
+              {!isEmpty(filteredKeyTable) && (
+                // height: 360
+                <KeyList
+                  height={340}
+                  keyTableKeys={Object.keys(filteredKeyTable).sort()}
+                  keyTable={filteredKeyTable}
+                />
+              )}
+              <div
+                style={{
+                  bottom: 30,
 
-                    pointerEvents: 'none',
-                    alignItems: 'center',
-                    position: 'absolute',
-                    height: '120%',
-                    width: '100%',
+                  pointerEvents: 'none',
+                  alignItems: 'center',
+                  position: 'absolute',
+                  height: '120%',
+                  width: '100%',
 
-                    paddingBottom: '100x',
-                    // border: 'solid',
-                    borderRadius: "10px 10px 60px 60px",
-                   
-                    clipPath: 'polygon(1% 0, 99% 0, 99% 99%, 1% 99% )',
-                    left: 0,
-                    right: 0,
-                  }}
-                >
-                  <NewKeyPanel />
-                </div>
-              </CardContent>
-            </>
+                  // paddingBottom: '100px',
+                  // border: 'solid',
+                  borderRadius: '10px 10px 200px 200px',
 
+                  clipPath: 'polygon(1% 0, 99% 0, 99% 99%, 1% 99% )',
+                  left: 0,
+                  right: 0
+                }}
+              >
+                <NewKeyPanel />
+              </div>
+            </CardContent>
+
+            <CardActions disableSpacing style={{ height: '1px' }} />
             {/* </SwipeableViews> */}
           </Card>
+
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              position: 'absolute',
+              right: width,
+              bottom: height + 15,
+              borderRadius: '3px'
+            }}
+          >
+            {/* {actions.map((obj, index, key) => {
+                const Component = obj['component'];
+                return (
+                  <Component
+                    transition={{ delay: 3 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    clickFunction={obj.clickFunction}
+                    key={obj.id}
+                  />
+                );
+              })} */}
+
+            <motion.div onClick={handleAddClick}    onTransitionEnd={onTransitionEnd} animate={!addMode ? "openAddButton" : "closedAddButton" } variants={actionVariants} ><AddAction       clickFunction={handleAddClick} /></motion.div>
+            <motion.div onClick={()=>{}}            onTransitionEnd={onTransitionEnd} animate={ addMode ? "openAddButton" : "closedAddButton" }  variants={actionVariants} ><SaveAction      clickFunction={handleCancelClick} /></motion.div>
+            <motion.div onClick={handleCancelClick} onTransitionEnd={onTransitionEnd} animate={ addMode ? "openAddButton" : "closedAddButton" }  variants={actionVariants} ><CancelAction    clickFunction={handleCancelClick} /></motion.div>
+          </div>
         </>
       )}
     </React.Fragment>
   );
+};
+
+function onTransitionEnd() {
+  return("")
+}
+const AddAction = ({ animate, clickFunction, ...props }) => (
+  
+    <Fab
+  
+      // variant="outlined"
+      color="primary"
+      size="small"
+    >
+      <AddIcon />
+    </Fab>
+
+);
+const SaveAction = ({ animate, clickFunction, ...props }) => (
+
+    <Fab
+    
+      // variant="outlined"
+      color="primary"
+      size="small"
+    >
+      A
+    </Fab>
+
+);
+const CancelAction = ({ clickFunction, ...props }) => (
+  
+    <Fab
+      // onClick={clickFunction}
+      // variant="outlined"
+      color="error"
+      size="small"
+    >
+      B
+    </Fab>
+
+);
+
+const actionVariants = {
+  openAddButton: {
+   
+    opacity: 1,
+    scale: 1,
+    
+    display: 'initial',
+    
+  },
+  closedAddButton: {
+    opacity: 0,
+    scale: 0,
+    
+    transitionEnd: {
+      display: 'none',
+      delay: 1,
+    }
+  },
+  closedSaveButton: {
+    opacity: 0,
+    scale: 0,
+    
+    transitionEnd: {
+      display: 'none',
+      delay: 0.3,
+    }
+  },
+  closedCancelButton: {
+    opacity: 0,
+    scale: 0,
+    
+    transitionEnd: {
+      display: 'none',
+      delay: .5,
+    }
+  },
+
 };
