@@ -37,7 +37,7 @@ import { ButtonGroup } from '@material-ui/core';
 import { Popper } from '@material-ui/core';
 import { Popover } from '@material-ui/core';
 import { IconButton } from '@material-ui/core';
-import { Add as AddIcon } from '@material-ui/icons';
+import { Add as AddIcon, CancelOutlined as CancelIcon, Save as SaveIcon} from '@material-ui/icons';
 import { Fab } from '@material-ui/core';
 import { CardActions } from '@material-ui/core';
 import { Button } from '@material-ui/core';
@@ -275,7 +275,7 @@ export const KeySheet = props => {
             {/* </SwipeableViews> */}
           </Card>
 
-          <div
+          {/* <div
             style={{
               display: 'flex',
               justifyContent: 'center',
@@ -284,7 +284,7 @@ export const KeySheet = props => {
               bottom: height + 15,
               borderRadius: '3px'
             }}
-          >
+          > */}
             {/* {actions.map((obj, index, key) => {
                 const Component = obj['component'];
                 return (
@@ -298,10 +298,10 @@ export const KeySheet = props => {
                 );
               })} */}
 
-            <motion.div onClick={handleAddClick}    onTransitionEnd={onTransitionEnd} animate={!addMode ? "openAddButton" : "closedAddButton" } variants={actionVariants} ><AddAction       clickFunction={handleAddClick} /></motion.div>
-            <motion.div onClick={()=>{}}            onTransitionEnd={onTransitionEnd} animate={ addMode ? "openAddButton" : "closedAddButton" }  variants={actionVariants} ><SaveAction      clickFunction={handleCancelClick} /></motion.div>
-            <motion.div onClick={handleCancelClick} onTransitionEnd={onTransitionEnd} animate={ addMode ? "openAddButton" : "closedAddButton" }  variants={actionVariants} ><CancelAction    clickFunction={handleCancelClick} /></motion.div>
-          </div>
+            <motion.div onClick={handleAddClick}    initial={{position:"absolute" , right: width, bottom: height + 15,}} custom={1} onTransitionEnd={onTransitionEnd}  animate={!addMode ? "openAddButton" : "closedAddButton"} variants={actionVariants} ><AddAction       clickFunction={handleAddClick} /></motion.div>
+            <motion.div onClick={()=>{}}            initial={{position:"absolute" , right: width + 40, bottom: height + 15,}} custom={1.1} onTransitionEnd={onTransitionEnd} animate={   addMode ? "openSaveButton" : "closedSaveButton"}  variants={actionVariants} ><SaveAction      clickFunction={handleCancelClick} /></motion.div>
+            <motion.div onClick={handleCancelClick} initial={{position:"absolute" , right: width, bottom: height + 15,}} custom={1} onTransitionEnd={onTransitionEnd} animate={   addMode ? "openCancelButton" : "closedCancelButton"}  variants={actionVariants} ><CancelAction  clickFunction={handleCancelClick} /></motion.div>
+          {/* </div> */}
         </>
       )}
     </React.Fragment>
@@ -317,9 +317,10 @@ const AddAction = ({ animate, clickFunction, ...props }) => (
   
       // variant="outlined"
       color="primary"
-      size="small"
+    size="small"
+    
     >
-      <AddIcon />
+      <AddIcon style={{fontSmoothing: 'antialiased'}}/>
     </Fab>
 
 );
@@ -329,9 +330,10 @@ const SaveAction = ({ animate, clickFunction, ...props }) => (
     
       // variant="outlined"
       color="primary"
-      size="small"
+    size="small"
+    
     >
-      A
+      <SaveIcon style={{fontSmoothing: 'antialiased'}}/>
     </Fab>
 
 );
@@ -340,49 +342,98 @@ const CancelAction = ({ clickFunction, ...props }) => (
     <Fab
       // onClick={clickFunction}
       // variant="outlined"
-      color="error"
-      size="small"
+      color="secondary"
+    size="small"
+    
     >
-      B
+      <CancelIcon style={{fontSmoothing: 'antialiased'}}/>
     </Fab>
 
 );
 
 const actionVariants = {
-  openAddButton: {
+  openAddButton: i => ({
    
     opacity: 1,
     scale: 1,
+    y: 0,
+    x: 0,
     
     display: 'initial',
+    transition: {
+      delay: 0.1,
+      type: "spring",
+      restSpeed: 0.3
+    }
     
-  },
+  }),
+  openSaveButton: i => ({
+    y: 0,
+    x: 0,
+    opacity: [0, 0.37, 0.81, 1],
+    scale: [0,1,1,1],
+    marginRight: 5,
+    display: 'initial',
+    transition: {
+      delay: 0.2,
+      type: "spring",
+   
+      restSpeed: 1
+    }
+    
+  }),
+  openCancelButton: i => ({
+    y: 0,
+  
+    opacity: 1,
+    scale: 1,
+    display: 'initial',
+    
+    transition: {
+      delay: 0.1,
+      type: "spring",
+   
+      restSpeed: 10
+    }
+    
+  }),
   closedAddButton: {
     opacity: 0,
     scale: 0,
     
-    transitionEnd: {
+    transitionEnd: {     
       display: 'none',
-      delay: 1,
     }
+ 
+    
   },
   closedSaveButton: {
     opacity: 0,
     scale: 0,
     
-    transitionEnd: {
+    x: 45,
+    transitionEnd: {     
       display: 'none',
-      delay: 0.3,
     }
+ 
+    
   },
   closedCancelButton: {
     opacity: 0,
     scale: 0,
-    
-    transitionEnd: {
+  
+    transition: {     
+      delay: 0.1,
+      
       display: 'none',
-      delay: .5,
+    },
+    transitionEnd: {     
+   
+      display: 'none',
     }
+ 
+    
   },
+  
 
 };
