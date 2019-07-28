@@ -123,7 +123,7 @@ export const KeySheet = props => {
   const { curKeyTable, loadingUKTC, docIndex } = React.useContext(KeyTableContext);
   const [curCategory, setCurCategory] = useGlobalState('sheetCategory');
   const [addMode] = useGlobalState('addMode');
-
+  const [editMode] = useGlobalState('editMode');
   
   // Category Menu popup state
   const popupState = usePopupState({ variant: 'popper', popupId: 'demoPopper', isOpen: true });
@@ -197,6 +197,18 @@ export const KeySheet = props => {
   const handleCancelClick = () => {
     setGlobalState('addMode', v => !v);
   };
+
+
+
+  const [saveClicked, setSaveClicked] = React.useState(0);
+  const handleSaveClick = (e) => {
+    setSaveClicked(saveClicked + 1);
+  }
+
+
+
+ 
+
   const [, { height, width }] = useMeasure();
   // const actions = useArray([
   //   { id: 'add', add: AddAction, clickFunction: handleAddClick },
@@ -267,7 +279,7 @@ export const KeySheet = props => {
                   right: 0
                 }}
               >
-                <NewKeyPanel />
+                <NewKeyPanel saveClicked={saveClicked}  />
               </div>
             </CardContent>
 
@@ -299,8 +311,8 @@ export const KeySheet = props => {
               })} */}
 
             <motion.div onClick={handleAddClick}    initial={{position:"absolute" , right: width, bottom: height + 15,}} custom={1} onTransitionEnd={onTransitionEnd}  animate={!addMode ? "openAddButton" : "closedAddButton"} variants={actionVariants} ><AddAction       clickFunction={handleAddClick} /></motion.div>
-            <motion.div onClick={()=>{}}            initial={{position:"absolute" , right: width + 40, bottom: height + 15,}} custom={1.1} onTransitionEnd={onTransitionEnd} animate={   addMode ? "openSaveButton" : "closedSaveButton"}  variants={actionVariants} ><SaveAction      clickFunction={handleCancelClick} /></motion.div>
-            <motion.div onClick={handleCancelClick} initial={{position:"absolute" , right: width, bottom: height + 15,}} custom={1} onTransitionEnd={onTransitionEnd} animate={   addMode ? "openCancelButton" : "closedCancelButton"}  variants={actionVariants} ><CancelAction  clickFunction={handleCancelClick} /></motion.div>
+            <motion.div onClick={handleSaveClick}            initial={{position:"absolute" , right: width + 40, bottom: height + 15,}} custom={1.1} onTransitionEnd={onTransitionEnd} animate={   (addMode || editMode) ? "openSaveButton" : "closedSaveButton"}  variants={actionVariants} ><SaveAction      clickFunction={handleCancelClick} /></motion.div>
+            <motion.div onClick={handleCancelClick} initial={{position:"absolute" , right: width, bottom: height + 15,}} custom={1} onTransitionEnd={onTransitionEnd} animate={   (addMode || editMode) ? "openCancelButton" : "closedCancelButton"}  variants={actionVariants} ><CancelAction  clickFunction={handleCancelClick} /></motion.div>
           {/* </div> */}
         </>
       )}

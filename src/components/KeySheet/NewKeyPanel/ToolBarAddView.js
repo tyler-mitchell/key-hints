@@ -91,12 +91,7 @@ export const ToolBarAddView = props => {
 
   return (
     <Paper elevation={0} className={classes.root}>
-      
-     
-     
-
       <Divider className={classes.divider} />
-
       <>
         <Grid item>
           <>

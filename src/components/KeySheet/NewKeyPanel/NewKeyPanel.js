@@ -57,27 +57,27 @@ const useStyles = makeStyles({
   chip: { button: { marginRight: '15px' } }
 });
 
-export const NewKeyPanel = props => {
+export const NewKeyPanel = ({saveClicked , ...props}) => {
   const [newKeys, setNewKeys] = useGlobalState('newKeys');
   const theme = useTheme();
   const classes = useStyles();
 
-  const [value, setValue] = React.useState({
+  const [keyInfo, setKeyInfo] = React.useState({
     category: null,
     description: null,
     keyDescription: null
   });
   const handleDescriptionChange = event => {
     const description = event.target.value;
-    console.log('⭐: value', value);
-    setValue(v => ({ ...v, description }));
+    console.log('⭐: value', keyInfo);
+    setKeyInfo(v => ({ ...v, description }));
 
     // setNewKeys(p => ({ ...p, category }))
   };
   const handleKeyDescription = event => {
     const keyDescription = event.target.value;
     setKeyTopText(keyDescription);
-    setValue(v => ({ ...v, keyDescription }));
+    setKeyInfo(v => ({ ...v, keyDescription }));
 
     // setNewKeys(p => ({ ...p, category }))
   };
@@ -99,20 +99,37 @@ export const NewKeyPanel = props => {
   const [keyTopText, setKeyTopText] = React.useState('');
   const [keyTopRefs] = useGlobalState('keyTopTextRefs');
   const [keyTopRefKey] = useGlobalState('lastKeyRef');
+
+  // Key Table Context
+  const { curKeyTable, addNewKeyToFirebase, updateKeyToFirebase } = React.useContext(KeyTableContext);
+
+
   React.useEffect(() => {
-  
-    // componentDidMount(), componentDidUpdate()
-  console.log(`⭐: USE EFFECT value`, value)
+    if(saveClicked !== 0) {const newKey = {...newKeys, ...keyInfo};
+    console.log(`⭐: handleSaveKeyClick -> newKey`, newKey)
+    addNewKeyToFirebase(newKey);
+    setGlobalState('addMode', false);}
+    
     
   
     
-  }, [newKeys])
+  }, [saveClicked])
+
+
+  const handleSaveKeyClick = () => {
+    const newKey = {...newKeys, ...keyInfo};
+    console.log(`⭐: handleSaveKeyClick -> newKey`, newKey)
+    addNewKeyToFirebase(newKey);
+    setGlobalState('addMode', false);
+  };
   return (
     <>
       <AnimatedPanel>
         {/* <Grid container alignItems="flex-start">  */}
 
         <CardContent style={{ borderRadius: 15, background: 'white' }}>
+
+
           <div
             style={{
               width: 50,
@@ -120,20 +137,18 @@ export const NewKeyPanel = props => {
               transform: 'translateY(-10px)',
               backgroundColor: 'rgba(220,220,220,0.2)',
               bottom: -5,
+              top: 3,
               borderRadius: 4,
               position: 'relative',
               margin: '0 auto',
+              marginBottom: 46,
               left: 0,
               right: 0
             }}
           />
-          <ToolBarAddView
-            theme={theme}
-            placeholder="Search…"
-            keyInfo={value}
-            inputProps={{ 'aria-label': 'Search' }}
-            keyMapDescription={keyTopText}
-          />
+
+          {renderAddedKeys(newKeys.keys)}
+          
           <Divider />
           <List>
             <TableRow style={{ display: 'flex', justifyContent: 'flex-start' }} divider>
@@ -165,12 +180,12 @@ export const NewKeyPanel = props => {
                 <Grid item>
                   <ButtonGroup
                     className={classes.buttonGroup}
-                    variant={value.category ? 'contained' : 'outlined'}
+                    variant={keyInfo.category ? 'contained' : 'outlined'}
                     color="primary"
                     aria-label="Split button"
                   >
                     <Button size="small" className={classes.buttonGroup}>
-                      {value.category}
+                      {keyInfo.category}
                     </Button>
                     <Button
                       {...bindTrigger(popupState)}
@@ -207,7 +222,7 @@ export const NewKeyPanel = props => {
                       {chipData.map((data, i) => {
                         let icon;
                         const chipColor = chipColors[i % chipColors.length];
-                        if (data.label === value.category) {
+                        if (data.label === keyInfo.category) {
                           icon = <CheckIcon />;
                         }
 
@@ -215,7 +230,7 @@ export const NewKeyPanel = props => {
                           <Chip
                             key={data.key}
                             icon={
-                              <Zoom timeout={300} in={data.label === value.category}>
+                              <Zoom timeout={300} in={data.label === keyInfo.category}>
                                 <CheckIcon />
                               </Zoom>
                             }
@@ -224,8 +239,8 @@ export const NewKeyPanel = props => {
                             size="small"
                             onClick={() => {
                               const selectedChip = data.label;
-                              setValue(v => ({ ...v, category: selectedChip }));
-                              console.log('⭐: VALUE ON CHIP CLICK', value);
+                              setKeyInfo(v => ({ ...v, category: selectedChip }));
+                              console.log('⭐: VALUE ON CHIP CLICK', keyInfo);
                             }}
                             style={{ margin: '3px', backgroundColor: chipColor }}
                             className={classes.chip}
@@ -248,7 +263,7 @@ export const NewKeyPanel = props => {
                   /> */}
                 </Grid>
               </Grid>
-              {renderAddedKeys(newKeys.keys)}
+              
             </TableRow>
           </List>
           {/* <Grid item xs={4}>

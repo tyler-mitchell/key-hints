@@ -27,6 +27,8 @@ import {
 
 import _ from 'lodash';
 import { useTransition, animated, config, useSpring } from 'react-spring';
+import { motion, AnimatePresence } from 'framer-motion';
+import { usePrevious } from '../../hooks/helpers';
 
 export const KeySequence = ({ newKeys, category, children }) => {
   return (
@@ -38,6 +40,58 @@ export const KeySequence = ({ newKeys, category, children }) => {
   );
 };
 
+const variants = {
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      delay: 0.15
+    }
+  },
+  hide: {
+    opacity: 0,
+    scale: 0,
+    transition: {
+      delay: 0.15
+    }
+  }
+};
+const pluses = {
+  show: {
+    opacity: 1,
+    scale: 1,
+    
+  },
+  hide: {
+    opacity: 0,
+    scale: 0,
+    
+  }
+};
+const variantContainer = {
+  show: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      when: "afterChildren",
+      staggeredChildren: 0.5,
+      
+      
+    }
+  },
+  hide: {
+    
+    transition: {
+      when: "afterChildren",
+      // delayChildren: 0.5,
+      staggeredChildren: 0.5,
+     
+      // staggerChildren: 0.5, delayChildren: 0.5
+    }
+  }
+};
+
+
 const KeyItems = keyItem => {
   // const items = Object.keys(keyItem).map((k, index) => (keyItem[k]));
 
@@ -47,69 +101,89 @@ const KeyItems = keyItem => {
 
   const [sequence, setSequence] = React.useState([]);
   const [count, setCount] = React.useState(0);
-
+  const prevSequence = usePrevious(sequence);
   React.useEffect(() => {
-    
     setSequence(
       _.chain(newKeys.keys.key1)
         .toArray()
         .value()
         .map((v, i) => ({ kb: v, index: i }))
     );
-  }, [ newKeys]);
-
- 
-  const transitions = useTransition(
-    sequence,
-    // _.toArray(keyItem.key1),
-
-    item => item.index,
-    {
-      from: {
-        // position: 'absolute',
-        opacity: 0,
-        // position: 'absolute',
-        transform: 'translate3d(0,-40px,0)'
-      },
-      enter: {
-        opacity: 1,
-        transform: 'translate3d(0,0px,0)'
-      },
-      leave: {
-        opacity: 0,
-        transform: 'translate3d(-30px,-40px,0)'
-      },
-      config: config.wobbly,
-      delay: 100
-    }
-  );
+    console.log(`⭐: sequence`, sequence);
+  }, [newKeys, sequence]);
 
   return (
-    <div style={{ display: 'flex', flexOverflow: 'wrap', position: 'relative', padding: '1rem' }}>
-      {
-        transitions.map(({ item, key, props }) => (
-          <animated.div
-            key={key}
+    <div
+      style={{
+        display: 'flex',
+        position: 'absolute',
+        padding: '1rem',
+        left: 10,
+        top: 0,
+        // overflow: 'hidden',
+        justifyContent: 'center'
+      }}
+    >
+      <AnimatePresence>
+        {sequence.map((shortcut, index) => (
+          <motion.div
+            initial="hide"
+            animate="show"
+            exit="hide"
+            positionTransition
+            variants={variantContainer}
+            key={shortcut.kb + "container"}
             style={{
-              ...props,
               display: 'flex',
-              // flexOverflow: 'wrap',
               position: 'relative',
               
-             
+           
+              // overflow: 'hidden',
+              justifyContent: 'center'
             }}
           >
+            <motion.div
+              key={shortcut.kb}
+              variants={variants}
+              positionTransition
+              style={{
+                display: 'flex',
+                
+                // flexOverflow: 'wrap',
+                position: 'relative'
+              }}
+            >
+              <KBD>{renderIcon(shortcut.kb)}</KBD>
+            </motion.div>
+            {/* {shortcut.index !== sequence.length - 1 && ( */}
+            <motion.div
             
+                positionTransition
+              key={shortcut.index}
+                initial={false}
+                animate={(shortcut.index !== sequence.length - 1) ? "show" : "hide"}
+                variants={pluses}
+                // initial={{ opacity: 0, scale: 0 }}
+                // animate={{ opacity: 1, scale: 1 }}
+                // exit={{ opacity: 0, scale: 2 }}
+                    style={{
+                  display: 'flex',
+                  // flexOverflow: 'wrap',
+                      position: 'relative',
+                  
 
-            <KBD >{renderIcon(item.kb)}</KBD>
-
-            {item.index !== sequence.length - 1 && (
-              <IconButton size="small" color="textSecondary">
-                <AddIcon fontSize="small" />
-              </IconButton>
-            )}
-          </animated.div>
+                }}
+              >
+                
+                <IconButton size="small" color="textSecondary">
+                  <AddIcon fontSize="small" />
+                </IconButton>
+              </motion.div>
+            {/* )} */}
+            
+          </motion.div>
         ))}
+      </AnimatePresence>
     </div>
   );
 };
@@ -118,13 +192,7 @@ export const renderAddedKeys = keybind => {
   return (
     <>
       {Object.values(keybind).map((keyItem, keyIndex) => {
-        return (
-          
-            
-          <KeyItems key={keyIndex} keyItem={keyItem} />
-           
-         
-        );
+        return <KeyItems key={keyIndex} keyItem={keyItem} />;
       })}
     </>
   );
@@ -193,7 +261,6 @@ const KbdBadge = styled.div`
 const ORLabel = styled.span`
   font-size: 8px;
 `;
-
 
 const useKBDStyle = {
   display: 'inline-block',
