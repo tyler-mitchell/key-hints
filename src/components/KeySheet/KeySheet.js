@@ -189,10 +189,7 @@ export const KeySheet = props => {
     clearKeySelection();
     setGlobalState('keyMapMode', false);
     setGlobalState('addMode', v => !v);
-    setActions([
-      { id: 'save', component: SaveAction, clickFunction: handleAddClick },
-      { id: 'cancel', component: CancelAction, clickFunction: handleCancelClick }
-    ]);
+    
   };
   const handleCancelClick = () => {
     setGlobalState('addMode', v => !v);

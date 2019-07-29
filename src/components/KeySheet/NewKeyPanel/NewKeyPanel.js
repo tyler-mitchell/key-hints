@@ -36,9 +36,35 @@ import KeyText from '../../Key/KeyText/KeyText';
 import { Portal } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import _ from 'lodash';
+import { CardHeader, AppBar } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles({
+  root: {
+    display: 'flex',
+        position: 'absolute',
+        // padding: '1rem',
+        // left: 10,
+     
+    top: 30,
+    left: 0,
+    right: 0,
+    width: '90%',
+    height: '80px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+        overflow: 'hidden',
+        justifyContent: 'flex-end',
+
+    padding: '10px 10px',
+
+    borderRadius: '5px',
+   
+    
+    
+    alignItems: 'center'
+    // borderRadius: 0
+  },
   buttonGroup: {
     borderRadius: '13px'
   },
@@ -56,7 +82,12 @@ const useStyles = makeStyles({
   },
   chip: { button: { marginRight: '15px' } }
 });
-
+const CardHead = styled(AppBar)`
+  &&& {
+    position: relative;
+    background: white;
+  }
+`;
 export const NewKeyPanel = ({saveClicked , ...props}) => {
   const [newKeys, setNewKeys] = useGlobalState('newKeys');
   const theme = useTheme();
@@ -146,10 +177,34 @@ export const NewKeyPanel = ({saveClicked , ...props}) => {
               right: 0
             }}
           />
-
-          {renderAddedKeys(newKeys.keys)}
           
-          <Divider />
+          <Paper
+      className={classes.root}
+      elevation={1}
+      style={{
+        
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          // backgroundImage: 'radial-gradient( circle farthest-corner at 12.3% 19.3%,  rgba(32, 156, 238, 1) 0%, rgba(95,209,249,1) 100.2% )',
+          // backgroundImage: 'linear-gradient( 111.5deg, rgba(20,100,196,1) 0.4%, rgba(32, 156, 238, 1) 100.2% )',
+          backgroundImage: 'radial-gradient( circle farthest-corner at -20% 20%,  rgba(149,219,254,1) 0%, rgba(32, 156, 238, 1) 100.1% )',
+          // backgroundColor: '#209CEE',
+      
+
+          width: '5%'
+          
+        }}
+      />
+           
+ 
+          
+          {/* <Divider /> */}
           <List>
             <TableRow style={{ display: 'flex', justifyContent: 'flex-start' }} divider>
               <Grid container direction="row" alignItems="flex-end" spacing={1} xs={12}>
@@ -196,7 +251,9 @@ export const NewKeyPanel = ({saveClicked , ...props}) => {
                     >
                       <ArrowDropDownIcon fontSize="small" />
                     </Button>
-                  </ButtonGroup>
+                    </ButtonGroup>
+                    
+                    
                   <Popover
                     {...bindPopover(popupState)}
                     anchorOrigin={{
@@ -261,7 +318,8 @@ export const NewKeyPanel = ({saveClicked , ...props}) => {
                     setNewKeys(p => ({ ...p, category }));
                   }}
                   /> */}
-                </Grid>
+                  </Grid>
+                  {renderAddedKeys(newKeys.keys)}
               </Grid>
               
             </TableRow>
@@ -278,6 +336,7 @@ export const NewKeyPanel = ({saveClicked , ...props}) => {
               />
             </Grid> */}
           />
+        </Paper>
         </CardContent>
         {/* </Grid> */}
       </AnimatedPanel>

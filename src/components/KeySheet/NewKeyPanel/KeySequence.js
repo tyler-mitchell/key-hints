@@ -12,7 +12,8 @@ import {
   Typography,
   Chip,
   Grid,
-  TextField
+  TextField,
+  makeStyles
 } from '@material-ui/core';
 
 import { useGlobalState, setGlobalState } from '../../../state';
@@ -29,6 +30,7 @@ import _ from 'lodash';
 import { useTransition, animated, config, useSpring } from 'react-spring';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePrevious } from '../../hooks/helpers';
+import { Paper } from '@material-ui/core';
 
 export const KeySequence = ({ newKeys, category, children }) => {
   return (
@@ -90,11 +92,54 @@ const variantContainer = {
     }
   }
 };
+const useStyles = makeStyles({
+  root: {
+    display: 'flex',
+        position: 'absolute',
+        // padding: '1rem',
+        // left: 10,
+     
+    top: 10,
+    left: 0,
+    right: 0,
+    width: '90%',
+    height: '80px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+        overflow: 'hidden',
+        justifyContent: 'flex-end',
+
+    padding: '10px 10px',
+
+    borderRadius: '5px',
+   
+    
+    
+    alignItems: 'center'
+    // borderRadius: 0
+  },
+  buttonGroup: {
+    borderRadius: '13px'
+  },
+  input: {
+    marginLeft: 8,
+    flex: 1
+  },
+  iconButton: {
+    padding: 10
+  },
+  divider: {
+    width: 1,
+    height: 38,
+    margin: 6
+  },
+  chip: { button: { marginRight: '15px' } }
+});
 
 
 const KeyItems = keyItem => {
   // const items = Object.keys(keyItem).map((k, index) => (keyItem[k]));
-
+  const classes = useStyles();
   const [items, setItems] = React.useState([]);
 
   const [newKeys, setNewKeys] = useGlobalState('newKeys');
@@ -113,17 +158,7 @@ const KeyItems = keyItem => {
   }, [newKeys, sequence]);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        position: 'absolute',
-        padding: '1rem',
-        left: 10,
-        top: 0,
-        // overflow: 'hidden',
-        justifyContent: 'center'
-      }}
-    >
+   
       <AnimatePresence>
         {sequence.map((shortcut, index) => (
           <motion.div
@@ -183,8 +218,8 @@ const KeyItems = keyItem => {
             
           </motion.div>
         ))}
+
       </AnimatePresence>
-    </div>
   );
 };
 
