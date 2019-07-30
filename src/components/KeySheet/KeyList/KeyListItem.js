@@ -283,8 +283,8 @@ export const KeyListItem = props => {
       {/* <Grid  item direction="row" xs={12} alignItems="center" justify="flex-end" wrap="nowrap"> */}
       <Grid item xs={4} justify="flext-start">
         <ListItemText
-          primary={<Typography variant="keylabel">{text}</Typography>}
-          disableTypography={true}
+          primary={<Typography variant="listItem">{text}</Typography>}
+          
         />
       </Grid>
 

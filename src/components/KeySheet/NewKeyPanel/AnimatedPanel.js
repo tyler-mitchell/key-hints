@@ -15,7 +15,7 @@ import { useMeasure } from '../../hooks/helpers';
 
 
 
-const OFFSET = 160
+const OFFSET = 300
 const INITIAL = 780
 // const SLOW = config.gentle
 const SLOW = 	{ mass: 1, tension: 200, friction: 14 }
@@ -77,12 +77,12 @@ export const View = props => {
           flex: 1,
           fontSize: '0.8em',
           zIndex: 5000,
-          
-          borderTopRightRadius: 15,
+          height: '150px',
           background: 'white',
+          borderTopRightRadius: 15,
           borderTopLeftRadius: 15,
-          borderBottomRightRadius: '100px',
-          borderBottomLeftRadius: '100px',
+          borderBottomRightRadius: 15,
+          borderBottomLeftRadius: 15,
           // padding: 24,
           userSelect: 'none',
           color: '#ffffffc0',

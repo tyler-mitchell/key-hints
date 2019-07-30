@@ -32,17 +32,18 @@ import { initializeKeyMap } from '../Keyboard/KeyMapData';
 import { pickBy } from 'lodash-es';
 import { bindTrigger, bindPopover } from 'material-ui-popup-state';
 import { useMeasure } from '../hooks/helpers';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useCycle } from 'framer-motion';
 import { ButtonGroup } from '@material-ui/core';
 import { Popper } from '@material-ui/core';
 import { Popover } from '@material-ui/core';
 import { IconButton } from '@material-ui/core';
-import { Add as AddIcon, CancelOutlined as CancelIcon, Save as SaveIcon} from '@material-ui/icons';
+import { Add as AddIcon, CancelOutlined as CancelIcon, Save as SaveIcon } from '@material-ui/icons';
 import { Fab } from '@material-ui/core';
 import { CardActions } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { useInput, useBoolean, useNumber, useArray, useOnMount, useOnUnmount } from 'react-hanger';
 import { array } from 'prop-types';
+import { Backdrop } from '@material-ui/core';
 const useStyles = makeStyles(theme => ({
   appBar: {
     color: 'white',
@@ -115,21 +116,39 @@ const CategoryPaper = styled(Paper)`
 &:-webkit-scrollbar { width: 0 !important } */
   }
 `;
+const BackDrop = styled(motion.div)`
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+
+  &::after {
+    content: '';
+    background: 'black';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+  }
+`;
 
 export const KeySheet = props => {
   const classes = useStyles();
   const theme = useTheme();
 
+  const [initialLayerIndices] = useGlobalState('initialLayerIndices');
+
   const { curKeyTable, loadingUKTC, docIndex } = React.useContext(KeyTableContext);
   const [curCategory, setCurCategory] = useGlobalState('sheetCategory');
   const [addMode] = useGlobalState('addMode');
   const [editMode] = useGlobalState('editMode');
-  
+
   // Category Menu popup state
   const popupState = usePopupState({ variant: 'popper', popupId: 'demoPopper', isOpen: true });
 
   // useEffect
-  
 
   // button popper
   const buttonPopupState = usePopupState({ variant: 'popover', popupId: 'demoMenu' });
@@ -189,24 +208,17 @@ export const KeySheet = props => {
     clearKeySelection();
     setGlobalState('keyMapMode', false);
     setGlobalState('addMode', v => !v);
-    
   };
   const handleCancelClick = () => {
     setGlobalState('addMode', v => !v);
   };
 
-
-
   const [saveClicked, setSaveClicked] = React.useState(0);
-  const handleSaveClick = (e) => {
+  const handleSaveClick = e => {
     setSaveClicked(saveClicked + 1);
-  }
+  };
 
-
-
- 
-
-  const [, { height, width }] = useMeasure();
+  const [, { height, width, top, left }] = useMeasure();
   // const actions = useArray([
   //   { id: 'add', add: AddAction, clickFunction: handleAddClick },
   //   { id: 'save', save: SaveAction, clickFunction: handleAddClick },
@@ -216,27 +228,46 @@ export const KeySheet = props => {
     { id: 'add', component: AddAction, clickFunction: handleAddClick }
   ]);
   const id = 'fab-reference';
+  const [zIndex, setZIndex] = React.useState(0);
   return (
     <React.Fragment>
       {loadingUKTC && <CircularProgress className={classes.progress} />}
 
       {curKeyTable && (
-        <>
+        <div style={{ position: 'relative' }}>
           <Card
             ref={anchorRef(popupState)}
             style={{
               height: '470px',
+              position: 'relative',
+              zIndex: zIndex,
+
               borderRadius: '10px'
             }}
           >
             {/* <SwipeableViews
-              resistance={true}
-              axis="y"
-              index={viewIndex}
-              slideStyle={{ height: '100%' }}
-              containerStyle={{ height: '500px' }}
-            > */}
-
+                resistance={true}
+                axis="y"
+                index={viewIndex}
+                slideStyle={{ height: '100%' }}
+                containerStyle={{ height: '500px' }}
+              > */}
+            <motion.div
+              initial={{ background: 'rgba(0, 0, 0, 0)' }}
+              animate={addMode ? 'openBackDrop' : 'closeBackDrop'}
+              variants={variants}
+              style={{
+                // background: 'rgba(0, 0, 0, 0.66)',
+                width: '100%',
+                height: '100%',
+                backgroundClip: 'context-box',
+                top: 0,
+                left: 0,
+                borderRadius: '10px',
+                position: 'absolute',
+                zIndex: 3
+              }}
+            />
             <CardHead className={classes.appBar} indicatorColor="primary" textColor="primary" />
             <Grid container xs={12} style={{}} justify="center" alignItems="center" />
             <SearchInput
@@ -246,7 +277,7 @@ export const KeySheet = props => {
               inputProps={{ 'aria-label': 'Search' }}
             />
             <Divider />
-            <CategoryMenu popupState={popupState} />
+            {initialLayerIndices && <CategoryMenu popupState={popupState} />}
 
             <CardContent>
               {!isEmpty(filteredKeyTable) && (
@@ -257,192 +288,187 @@ export const KeySheet = props => {
                   keyTable={filteredKeyTable}
                 />
               )}
-              <div
-                style={{
-                  bottom: 30,
-
-                  pointerEvents: 'none',
-                  alignItems: 'center',
-                  position: 'absolute',
-                  height: '120%',
-                  width: '100%',
-
-                  // paddingBottom: '100px',
-                  // border: 'solid',
-                  borderRadius: '10px 10px 200px 200px',
-
-                  clipPath: 'polygon(1% 0, 99% 0, 99% 99%, 1% 99% )',
-                  left: 0,
-                  right: 0
-                }}
-              >
-                <NewKeyPanel saveClicked={saveClicked}  />
-              </div>
             </CardContent>
-
             <CardActions disableSpacing style={{ height: '1px' }} />
             {/* </SwipeableViews> */}
           </Card>
 
-          {/* <div
+          <div
             style={{
-              display: 'flex',
-              justifyContent: 'center',
-              position: 'absolute',
-              right: width,
-              bottom: height + 15,
-              borderRadius: '3px'
-            }}
-          > */}
-            {/* {actions.map((obj, index, key) => {
-                const Component = obj['component'];
-                return (
-                  <Component
-                    transition={{ delay: 3 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    clickFunction={obj.clickFunction}
-                    key={obj.id}
-                  />
-                );
-              })} */}
+              bottom: 30,
 
-            <motion.div onClick={handleAddClick}    initial={{position:"absolute" , right: width, bottom: height + 15,}} custom={1} onTransitionEnd={onTransitionEnd}  animate={!addMode ? "openAddButton" : "closedAddButton"} variants={actionVariants} ><AddAction       clickFunction={handleAddClick} /></motion.div>
-            <motion.div onClick={handleSaveClick}            initial={{position:"absolute" , right: width + 40, bottom: height + 15,}} custom={1.1} onTransitionEnd={onTransitionEnd} animate={   (addMode || editMode) ? "openSaveButton" : "closedSaveButton"}  variants={actionVariants} ><SaveAction      clickFunction={handleCancelClick} /></motion.div>
-            <motion.div onClick={handleCancelClick} initial={{position:"absolute" , right: width, bottom: height + 15,}} custom={1} onTransitionEnd={onTransitionEnd} animate={   (addMode || editMode) ? "openCancelButton" : "closedCancelButton"}  variants={actionVariants} ><CancelAction  clickFunction={handleCancelClick} /></motion.div>
-          {/* </div> */}
-        </>
+              pointerEvents: 'none',
+              alignItems: 'center',
+              position: 'absolute',
+              height: '120%',
+              width: '100%',
+
+              // paddingBottom: '100px',
+              // border: 'solid',
+              borderRadius: '10px 10px 200px 200px',
+
+              clipPath: 'polygon(1% 0, 99% 0, 99% 99%, 1% 99% )',
+              left: 0,
+              right: 0
+            }}
+          >
+            <NewKeyPanel saveClicked={saveClicked} />
+          </div>
+          <motion.div
+            onClick={handleAddClick}
+            initial={{ position: 'absolute', right: width, bottom: height + 15 }}
+            custom={1}
+            onTransitionEnd={onTransitionEnd}
+            animate={!addMode ? 'openAddButton' : 'closedAddButton'}
+            variants={actionVariants}
+          >
+            <AddAction clickFunction={handleAddClick} />
+          </motion.div>
+          <motion.div
+            onClick={handleSaveClick}
+            initial={{ position: 'absolute', right: width + 40, bottom: height + 15 }}
+            custom={1.1}
+            onTransitionEnd={onTransitionEnd}
+            animate={addMode || editMode ? 'openSaveButton' : 'closedSaveButton'}
+            variants={actionVariants}
+          >
+            <SaveAction clickFunction={handleCancelClick} />
+          </motion.div>
+          <motion.div
+            onClick={handleCancelClick}
+            initial={{ position: 'absolute', right: width, bottom: height + 15 }}
+            custom={1}
+            onTransitionEnd={onTransitionEnd}
+            animate={addMode || editMode ? 'openCancelButton' : 'closedCancelButton'}
+            variants={actionVariants}
+          >
+            <CancelAction clickFunction={handleCancelClick} />
+          </motion.div>
+        </div>
       )}
     </React.Fragment>
   );
 };
 
 function onTransitionEnd() {
-  return("")
+  return '';
 }
 const AddAction = ({ animate, clickFunction, ...props }) => (
-  
-    <Fab
-  
-      // variant="outlined"
-      color="primary"
+  <Fab
+    // variant="outlined"
+    color="primary"
     size="small"
-    
-    >
-      <AddIcon style={{fontSmoothing: 'antialiased'}}/>
-    </Fab>
-
+  >
+    <AddIcon style={{ fontSmoothing: 'antialiased' }} />
+  </Fab>
 );
 const SaveAction = ({ animate, clickFunction, ...props }) => (
-
-    <Fab
-    
-      // variant="outlined"
-      color="primary"
+  <Fab
+    // variant="outlined"
+    color="primary"
     size="small"
-    
-    >
-      <SaveIcon style={{fontSmoothing: 'antialiased'}}/>
-    </Fab>
-
+  >
+    <SaveIcon style={{ fontSmoothing: 'antialiased' }} />
+  </Fab>
 );
 const CancelAction = ({ clickFunction, ...props }) => (
-  
-    <Fab
-      // onClick={clickFunction}
-      // variant="outlined"
-      color="secondary"
+  <Fab
+    // onClick={clickFunction}
+    // variant="outlined"
+    color="secondary"
     size="small"
-    
-    >
-      <CancelIcon style={{fontSmoothing: 'antialiased'}}/>
-    </Fab>
-
+  >
+    <CancelIcon style={{ fontSmoothing: 'antialiased' }} />
+  </Fab>
 );
+
+const variants = {
+  openBackDrop: {
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+
+    transition: {
+      duration: 2
+    }
+  },
+  closeBackDrop: {
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+
+    transition: {
+      duration: 2
+    }
+  }
+};
 
 const actionVariants = {
   openAddButton: i => ({
-   
     opacity: 1,
     scale: 1,
     y: 0,
     x: 0,
-    
+
     display: 'initial',
     transition: {
       delay: 0.1,
-      type: "spring",
+      type: 'spring',
       restSpeed: 0.3
     }
-    
   }),
   openSaveButton: i => ({
     y: 0,
     x: 0,
     opacity: [0, 0.37, 0.81, 1],
-    scale: [0,1,1,1],
+    scale: [0, 1, 1, 1],
     marginRight: 5,
     display: 'initial',
     transition: {
       delay: 0.2,
-      type: "spring",
-   
+      type: 'spring',
+
       restSpeed: 1
     }
-    
   }),
   openCancelButton: i => ({
     y: 0,
-  
+
     opacity: 1,
     scale: 1,
     display: 'initial',
-    
+
     transition: {
       delay: 0.1,
-      type: "spring",
-   
+      type: 'spring',
+
       restSpeed: 10
     }
-    
   }),
   closedAddButton: {
     opacity: 0,
     scale: 0,
-    
-    transitionEnd: {     
-      display: 'none',
+
+    transitionEnd: {
+      display: 'none'
     }
- 
-    
   },
   closedSaveButton: {
     opacity: 0,
     scale: 0,
-    
+
     x: 45,
-    transitionEnd: {     
-      display: 'none',
+    transitionEnd: {
+      display: 'none'
     }
- 
-    
   },
   closedCancelButton: {
     opacity: 0,
     scale: 0,
-  
-    transition: {     
-      delay: 0.1,
-      
-      display: 'none',
-    },
-    transitionEnd: {     
-   
-      display: 'none',
-    }
- 
-    
-  },
-  
 
+    transition: {
+      delay: 0.1,
+
+      display: 'none'
+    },
+    transitionEnd: {
+      display: 'none'
+    }
+  }
 };

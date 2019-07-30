@@ -61,13 +61,11 @@ const variants = {
 const pluses = {
   show: {
     opacity: 1,
-    scale: 1,
-    
+    scale: 1
   },
   hide: {
     opacity: 0,
-    scale: 0,
-    
+    scale: 0
   }
 };
 const variantContainer = {
@@ -75,19 +73,16 @@ const variantContainer = {
     opacity: 1,
     scale: 1,
     transition: {
-      when: "afterChildren",
-      staggeredChildren: 0.5,
-      
-      
+      when: 'afterChildren',
+      staggeredChildren: 0.5
     }
   },
   hide: {
-    
     transition: {
-      when: "afterChildren",
+      when: 'afterChildren',
       // delayChildren: 0.5,
-      staggeredChildren: 0.5,
-     
+      staggeredChildren: 0.5
+
       // staggerChildren: 0.5, delayChildren: 0.5
     }
   }
@@ -95,10 +90,10 @@ const variantContainer = {
 const useStyles = makeStyles({
   root: {
     display: 'flex',
-        position: 'absolute',
-        // padding: '1rem',
-        // left: 10,
-     
+    position: 'absolute',
+    // padding: '1rem',
+    // left: 10,
+
     top: 10,
     left: 0,
     right: 0,
@@ -106,15 +101,13 @@ const useStyles = makeStyles({
     height: '80px',
     marginLeft: 'auto',
     marginRight: 'auto',
-        overflow: 'hidden',
-        justifyContent: 'flex-end',
+    overflow: 'hidden',
+    justifyContent: 'flex-end',
 
     padding: '10px 10px',
 
     borderRadius: '5px',
-   
-    
-    
+
     alignItems: 'center'
     // borderRadius: 0
   },
@@ -136,7 +129,6 @@ const useStyles = makeStyles({
   chip: { button: { marginRight: '15px' } }
 });
 
-
 const KeyItems = keyItem => {
   // const items = Object.keys(keyItem).map((k, index) => (keyItem[k]));
   const classes = useStyles();
@@ -154,72 +146,60 @@ const KeyItems = keyItem => {
         .value()
         .map((v, i) => ({ kb: v, index: i }))
     );
-    console.log(`⭐: sequence`, sequence);
-  }, [newKeys, sequence]);
+   
+  }, [newKeys]);
 
   return (
-   
-      <AnimatePresence>
-        {sequence.map((shortcut, index) => (
+    <AnimatePresence>
+      {sequence.map((shortcut, index) => (
+        <motion.div
+          initial="hide"
+          animate="show"
+          exit="hide"
+          positionTransition
+          variants={variantContainer}
+          key={shortcut.kb + 'container'}
+          style={{
+            display: 'flex',
+            position: 'relative',
+
+            // overflow: 'hidden',
+            justifyContent: 'center'
+          }}
+        >
           <motion.div
-            initial="hide"
-            animate="show"
-            exit="hide"
+            key={shortcut.kb}
+            variants={variants}
             positionTransition
-            variants={variantContainer}
-            key={shortcut.kb + "container"}
             style={{
               display: 'flex',
-              position: 'relative',
-              
-           
-              // overflow: 'hidden',
-              justifyContent: 'center'
+
+              // flexOverflow: 'wrap',
+              position: 'relative'
             }}
           >
-            <motion.div
-              key={shortcut.kb}
-              variants={variants}
-              positionTransition
-              style={{
-                display: 'flex',
-                
-                // flexOverflow: 'wrap',
-                position: 'relative'
-              }}
-            >
-              <KBD>{renderIcon(shortcut.kb)}</KBD>
-            </motion.div>
-            {/* {shortcut.index !== sequence.length - 1 && ( */}
-            <motion.div
-            
-                positionTransition
-              key={shortcut.index}
-                initial={false}
-                animate={(shortcut.index !== sequence.length - 1) ? "show" : "hide"}
-                variants={pluses}
-                // initial={{ opacity: 0, scale: 0 }}
-                // animate={{ opacity: 1, scale: 1 }}
-                // exit={{ opacity: 0, scale: 2 }}
-                    style={{
-                  display: 'flex',
-                  // flexOverflow: 'wrap',
-                      position: 'relative',
-                  
-
-                }}
-              >
-                
-                <IconButton size="small" color="textSecondary">
-                  <AddIcon fontSize="small" />
-                </IconButton>
-              </motion.div>
-            {/* )} */}
-            
+            <KBD>{renderIcon(shortcut.kb)}</KBD>
           </motion.div>
-        ))}
 
-      </AnimatePresence>
+          <motion.div
+            positionTransition
+            key={shortcut.index}
+            initial={false}
+            animate={shortcut.index !== sequence.length - 1 ? 'show' : 'hide'}
+            variants={pluses}
+            style={{
+              display: 'flex',
+              // flexOverflow: 'wrap',
+              position: 'relative'
+            }}
+          >
+            <IconButton size="small" color="textSecondary">
+              <AddIcon fontSize="small" />
+            </IconButton>
+          </motion.div>
+        </motion.div>
+      ))}
+    </AnimatePresence>
   );
 };
 

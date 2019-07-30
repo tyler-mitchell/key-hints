@@ -1,6 +1,9 @@
 import palette from './palette';
 
 export default {
+  
+
+ 
   h1: {
     color: palette.text.primary,
     fontWeight: '500',
@@ -83,5 +86,12 @@ export default {
     fontFamily: 'Nunito',
     letterSpacing: '0.3px',
     lineHeight: '16px'
+  },
+  listItem: {
+    fontFamily: 'Muli, sans-serif',
+  fontWeight: '700',
+    color: palette.text.primary,
+
+    fontSize: '22px',
   }
 };

@@ -66,7 +66,7 @@ const methods = state => {
       // state.active = false;
     },
     setActiveMapKey(keyColor, keyTopText) {
-      console.log(`⭐: setActiveMapKey -> keyColor`, keyColor);
+      
       state.activeColor = keyColor;
       state.keyTopText = keyTopText;
       // state.active = true;
@@ -86,6 +86,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
 
   // global key state
   const [activeLayers] = useGlobalState('activeLayers');
+ 
   const [newKeys, setNewKeys] = useGlobalState('newKeys');
   const [activeKeys] = useGlobalState('activeKeys');
 
@@ -119,6 +120,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
     }
     
     if (keyMapMode && !editMode && activeLayers && uniqueKeyName) {
+    
       _.forEach(activeLayers, (layer, colorIndex) => {
         const mainKeyIndex = _.indexOf(layer.mainKeys, label);
         const isMod = _.includes(layer.layer, label);
@@ -249,7 +251,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
           <KeyTop wt={wt} ht={ht} style={{ background }}>
             {/* <KeyChar ref={keyTopTextRef}>Basic Editing the view port</KeyChar> */}
 
-          {keyMapMode &&
+          {(keyMapMode || addMode) &&
             <div
               ref={keyTopTextRef}
               style={{
@@ -262,7 +264,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
                 fontFamily: 'Karla, sans-serif'
               }}
             >
-              <KeyText keyTopText={keyTopText} />
+              {keyMapMode && <KeyText keyTopText={keyTopText} />}
       
             </div>}
 

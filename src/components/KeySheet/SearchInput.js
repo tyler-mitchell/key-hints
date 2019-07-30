@@ -128,7 +128,7 @@ export const SearchInput = props => {
   };
 
   function handleKeyMapMode() {
-    initializeKeyMap(curKeyTable.data().table);
+    // initializeKeyMap(curKeyTable.data().table);
     setGlobalState('keyMapMode', true);
   }
 

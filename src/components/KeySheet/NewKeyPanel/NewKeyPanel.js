@@ -25,7 +25,7 @@ import {
 } from '@material-ui/core';
 
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import CheckIcon from '@material-ui/icons/Check';
+
 import { a } from 'react-spring';
 import { ToolBarAddView } from './ToolBarAddView';
 import { useTheme } from '@material-ui/styles';
@@ -36,32 +36,41 @@ import KeyText from '../../Key/KeyText/KeyText';
 import { Portal } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import _ from 'lodash';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Backdrop } from '@material-ui/core';
+import { InputBase } from '@material-ui/core';
+import {
+  CheckCircleOutlineRounded as CheckIcon,
+  ErrorOutlineRounded as ErrorIcon
+} from '@material-ui/icons';
 import { CardHeader, AppBar } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles({
+  gridContainer: {
+    width: '95%'
+  },
   root: {
     display: 'flex',
-        position: 'absolute',
-        // padding: '1rem',
-        // left: 10,
-     
+    position: 'absolute',
+    // padding: '1rem',
+    // left: 10,
+    backgroundImage:
+      'radial-gradient( circle farthest-corner at 0% 0.5%,  rgb(247, 247, 248) 0.1%, rgb(244, 245, 245) 100.2% )',
     top: 30,
     left: 0,
     right: 0,
-    width: '90%',
+    width: '95%',
     height: '80px',
     marginLeft: 'auto',
     marginRight: 'auto',
-        overflow: 'hidden',
-        justifyContent: 'flex-end',
+    overflow: 'hidden',
+    justifyContent: 'flex-end',
 
     padding: '10px 10px',
 
     borderRadius: '5px',
-   
-    
-    
+
     alignItems: 'center'
     // borderRadius: 0
   },
@@ -88,7 +97,7 @@ const CardHead = styled(AppBar)`
     background: white;
   }
 `;
-export const NewKeyPanel = ({saveClicked , ...props}) => {
+export const NewKeyPanel = ({ saveClicked, ...props }) => {
   const [newKeys, setNewKeys] = useGlobalState('newKeys');
   const theme = useTheme();
   const classes = useStyles();
@@ -126,41 +135,51 @@ export const NewKeyPanel = ({saveClicked , ...props}) => {
     { key: 3, label: 'React' },
     { key: 4, label: 'Vue.js' }
   ]);
+  const [isKeyAvailable, setIsKeyAvailable] = React.useState(false);
 
   const [keyTopText, setKeyTopText] = React.useState('');
   const [keyTopRefs] = useGlobalState('keyTopTextRefs');
   const [keyTopRefKey] = useGlobalState('lastKeyRef');
-
+  const [allKeys] = useGlobalState('allKeys');
   // Key Table Context
-  const { curKeyTable, addNewKeyToFirebase, updateKeyToFirebase } = React.useContext(KeyTableContext);
-
-
+  const { curKeyTable, addNewKeyToFirebase, updateKeyToFirebase } = React.useContext(
+    KeyTableContext
+  );
+  function checkAvailability() {}
   React.useEffect(() => {
-    if(saveClicked !== 0) {const newKey = {...newKeys, ...keyInfo};
-    console.log(`⭐: handleSaveKeyClick -> newKey`, newKey)
-    addNewKeyToFirebase(newKey);
-    setGlobalState('addMode', false);}
-    
-    
-  
-    
-  }, [saveClicked])
+    const keys = _.values(newKeys.keys.key1);
+    if (keys in allKeys) {
+      setIsKeyAvailable(false);
+    } else {
+      setIsKeyAvailable(true);
+    }
 
+    console.log(`⭐: NewKeyPanel -> isKeyAvailable`, isKeyAvailable);
+
+    checkAvailability();
+    if (saveClicked !== 0) {
+      const newKey = { ...newKeys, ...keyInfo };
+      console.log(`⭐: handleSaveKeyClick -> newKey`, newKey);
+      addNewKeyToFirebase(newKey);
+      setGlobalState('addMode', false);
+    }
+  }, [addNewKeyToFirebase, allKeys, isKeyAvailable, keyInfo, newKeys, saveClicked]);
 
   const handleSaveKeyClick = () => {
-    const newKey = {...newKeys, ...keyInfo};
-    console.log(`⭐: handleSaveKeyClick -> newKey`, newKey)
+    const newKey = { ...newKeys, ...keyInfo };
+    console.log(`⭐: handleSaveKeyClick -> newKey`, newKey);
     addNewKeyToFirebase(newKey);
     setGlobalState('addMode', false);
   };
+
   return (
     <>
       <AnimatedPanel>
+      
         {/* <Grid container alignItems="flex-start">  */}
 
         <CardContent style={{ borderRadius: 15, background: 'white' }}>
-
-
+       
           <div
             style={{
               width: 50,
@@ -177,168 +196,225 @@ export const NewKeyPanel = ({saveClicked , ...props}) => {
               right: 0
             }}
           />
-          
-          <Paper
-      className={classes.root}
-      elevation={1}
-      style={{
-        
-      }}
-    >
-      <div
-        style={{
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          bottom: 0,
-          // backgroundImage: 'radial-gradient( circle farthest-corner at 12.3% 19.3%,  rgba(32, 156, 238, 1) 0%, rgba(95,209,249,1) 100.2% )',
-          // backgroundImage: 'linear-gradient( 111.5deg, rgba(20,100,196,1) 0.4%, rgba(32, 156, 238, 1) 100.2% )',
-          backgroundImage: 'radial-gradient( circle farthest-corner at -20% 20%,  rgba(149,219,254,1) 0%, rgba(32, 156, 238, 1) 100.1% )',
-          // backgroundColor: '#209CEE',
-      
 
-          width: '5%'
-          
-        }}
-      />
-           
- 
-          
-          {/* <Divider /> */}
-          <List>
-            <TableRow style={{ display: 'flex', justifyContent: 'flex-start' }} divider>
-              <Grid container direction="row" alignItems="flex-end" spacing={1} xs={12}>
-                <Grid item>
+          <Paper className={classes.root} elevation={0} style={{}}>
+            <motion.div
+              style={{
+                position: 'absolute',
+                right: 0,
+                top: 0,
+                bottom: 0,
+                // backgroundImage: 'radial-gradient( circle farthest-corner at 12.3% 19.3%,  rgba(32, 156, 238, 1) 0%, rgba(95,209,249,1) 100.2% )',
+                // backgroundImage: 'linear-gradient( 111.5deg, rgba(20,100,196,1) 0.4%, rgba(32, 156, 238, 1) 100.2% )',
+                backgroundImage:
+                  'radial-gradient( circle farthest-corner at -20% 20%,  rgba(149,219,254,1) 0%, rgba(32, 156, 238, 1) 100.1% )',
+                // backgroundColor: '#209CEE',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '7%'
+              }}
+            >
+              <AnimatePresence>
+                {isKeyAvailable ? (
+                  <motion.div
+                    key="success"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.3 }}
+                    style={{ position: 'absolute', fontSmooth: 'always' }}
+                    exit={{ scale: 0 }}
+                  >
+                    <CheckIcon fontSize="large" style={{ color: '#4be8bc' }} />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="error"
+                    initial={{ scale: 0 }}
+                    transition={{ delay: 0.3 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    style={{ fontSmooth: 'always' }}
+                  >
+                    <ErrorIcon fontSize="large" color="error" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* <AnimatePresence>
+                {isKeyAvailable && (
+                  <motion.div
+                  style={{
+                    position: "absolute",
+                    display: 'flex',
+                    top: 0,
+                    bottom: 0,
+                    }}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 3}}
+                    exit={{ scale: 0 }}
+                  >
+                    <CheckIcon fontSize="large" style={{ color: '#4be8bc' }} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+               <AnimatePresence>
+               {  !isKeyAvailable && (
+                  <motion.div
+                    
+                    style={{
+                      position: "absolute",
+                      display: 'flex',
+                      top: 0,
+                      bottom: 0,
+                      }}
+                      initial={{ scale: 0 }}
+                      
+                      animate={{ scale: 3 }}
+                      exit={{scale: 0}}
+                    >
+                      <ErrorIcon fontSize="large" color="error" />
+                    </motion.div>
+                  )}
+              </AnimatePresence> */}
+            </motion.div>
+            <div style={{ width: '95%' }}>
+              <Grid
+                className={classes.gridContainer}
+                container
+                direction="row"
+                alignItems="center"
+                justify="flex-start"
+                spacing={1}
+                xs={12}
+              >
+                <Grid item xs={4}>
+                  <Typography component="h6" variant="h6">
+                    Description
+                  </Typography>
+
                   <TextField
                     // value={newKeys.description}
-                    multiline
-                    rowsMax={2}
-                    placeholder="description"
+                    multiline={true}
+                    // variant="filled"
+                    fullWidth
+                    placeholder="enter shortcut description"
+
                     onChange={event => handleDescriptionChange(event)}
+                    rowsMax={3}
                   />
+                  {/* <TextField
+                  // value={newKeys.description}
+                  multiline
+                  variant="filled"
+                  rowsMax={2}
+                  placeholder="description"
+                  onChange={event => handleDescriptionChange(event)}
+                /> */}
                 </Grid>
-                <Grid item>
-                  <TextField
+                <Grid item xs={2}>
+                  <Typography component="h6" variant="h6">
+                    Key Label
+                  </Typography>
+                  <InputBase
                     style={{ position: 'relative' }}
                     value={keyTopText}
+                    variant="subtitle1"
+                    color="textSecondary"
+                    placeHolder="enter key top label"
                     onChange={event => handleKeyDescription(event)}
-                    variant="outlined"
                   />
                   {keyTopRefs[keyTopRefKey] && (
-                    <Portal container={keyTopRefs[keyTopRefKey].current} style={{height: 'inherit', width:'inherit'}}>
-                      <KeyText
-                        keyTopText={keyTopText}
-                      />
+                    <Portal
+                      container={keyTopRefs[keyTopRefKey].current}
+                      style={{ height: 'inherit', width: 'inherit' }}
+                    >
+                      <KeyText keyTopText={keyTopText} />
                     </Portal>
                   )}
                 </Grid>
-                <Grid item>
-                  <ButtonGroup
-                    className={classes.buttonGroup}
-                    variant={keyInfo.category ? 'contained' : 'outlined'}
-                    color="primary"
-                    aria-label="Split button"
-                  >
-                    <Button size="small" className={classes.buttonGroup}>
-                      {keyInfo.category}
-                    </Button>
-                    <Button
-                      {...bindTrigger(popupState)}
-                      color="primary"
-                      className={classes.buttonGroup}
-                      size="small"
-                      aria-haspopup="true"
-                    >
-                      <ArrowDropDownIcon fontSize="small" />
-                    </Button>
-                    </ButtonGroup>
-                    
-                    
-                  <Popover
-                    {...bindPopover(popupState)}
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'center'
-                    }}
-                    PaperProps={{
-                      style: {
-                        display: 'flex',
-                        justifyContent: 'center',
-                        flexWrap: 'wrap',
-                        padding: '5px 2px',
-                        borderRadius: '20px',
-                        maxWidth: '175px'
-                      }
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'center'
-                    }}
-                  >
-                    <Grid container justify="flex-start" alignItems="flex-start">
-                      {chipData.map((data, i) => {
-                        let icon;
-                        const chipColor = chipColors[i % chipColors.length];
-                        if (data.label === keyInfo.category) {
-                          icon = <CheckIcon />;
-                        }
-
-                        return (
-                          <Chip
-                            key={data.key}
-                            icon={
-                              <Zoom timeout={300} in={data.label === keyInfo.category}>
-                                <CheckIcon />
-                              </Zoom>
-                            }
-                            label={data.label}
-                            clickable={true}
-                            size="small"
-                            onClick={() => {
-                              const selectedChip = data.label;
-                              setKeyInfo(v => ({ ...v, category: selectedChip }));
-                              console.log('⭐: VALUE ON CHIP CLICK', keyInfo);
-                            }}
-                            style={{ margin: '3px', backgroundColor: chipColor }}
-                            className={classes.chip}
-                          />
-                        );
-                      })}
-                    </Grid>
-                  </Popover>
-
-                  {/* <TextField
-                  
-                  rows={3}
-                  rowsMax={3}
-                  
-                  placeholder="category"
-                  onChange={event => {
-                    const category = event.target.value;
-                    setNewKeys(p => ({ ...p, category }));
-                  }}
-                  /> */}
-                  </Grid>
+                <Grid container item xs={6} justify="flex-end">
                   {renderAddedKeys(newKeys.keys)}
+                </Grid>
+
+                {/* <Grid item>
+                <ButtonGroup
+                  className={classes.buttonGroup}
+                  variant={keyInfo.category ? 'contained' : 'outlined'}
+                  color="primary"
+                  aria-label="Split button"
+                >
+                  <Button size="small" className={classes.buttonGroup}>
+                    {keyInfo.category}
+                  </Button>
+                  <Button
+                    {...bindTrigger(popupState)}
+                    color="primary"
+                    className={classes.buttonGroup}
+                    size="small"
+                    aria-haspopup="true"
+                  >
+                    <ArrowDropDownIcon fontSize="small" />
+                  </Button>
+                </ButtonGroup>
+
+                <Popover
+                  {...bindPopover(popupState)}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center'
+                  }}
+                  PaperProps={{
+                    style: {
+                      display: 'flex',
+                      justifyContent: 'center',
+                      flexWrap: 'wrap',
+                      padding: '5px 2px',
+                      borderRadius: '20px',
+                      maxWidth: '175px'
+                    }
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center'
+                  }}
+                >
+                  <Grid container justify="flex-start" alignItems="flex-start">
+                    {chipData.map((data, i) => {
+                      let icon;
+                      const chipColor = chipColors[i % chipColors.length];
+                      if (data.label === keyInfo.category) {
+                        icon = <CheckIcon />;
+                      }
+
+                      return (
+                        <Chip
+                          key={data.key}
+                          icon={
+                            <Zoom timeout={300} in={data.label === keyInfo.category}>
+                              <CheckIcon />
+                            </Zoom>
+                          }
+                          label={data.label}
+                          clickable={true}
+                          size="small"
+                          onClick={() => {
+                            const selectedChip = data.label;
+                            setKeyInfo(v => ({ ...v, category: selectedChip }));
+                            console.log('⭐: VALUE ON CHIP CLICK', keyInfo);
+                          }}
+                          style={{ margin: '3px', backgroundColor: chipColor }}
+                          className={classes.chip}
+                        />
+                      );
+                    })}
+                  </Grid>
+                </Popover>
+              </Grid> */}
               </Grid>
-              
-            </TableRow>
-          </List>
-          {/* <Grid item xs={4}>
-              <TextareaAutosize
-                rowsMax={4}
-                aria-label="Maximum height"
-                placeholder="Maximum 4 rows"
-                onChange={event => {
-                  const description = event.target.value;
-                  setNewKeys(p => ({ ...p, description }));
-                }}
-              />
-            </Grid> */}
-          />
-        </Paper>
+            </div>
+          </Paper>
         </CardContent>
-        {/* </Grid> */}
       </AnimatedPanel>
     </>
   );

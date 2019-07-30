@@ -15,7 +15,8 @@ const KeyText = ({ keyTopHeight, testText, keyTopWidth, keyTopText, fontOpacity,
   return (
     
       <Textfit
-        style={{
+      style={{
+          pointerEvents: 'none',
           display: 'flex',
           // width: '90%',
           // height: '90%',

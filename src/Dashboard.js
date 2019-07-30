@@ -29,8 +29,7 @@ function Dashboard() {
           <Grid container direction="column" justify="center" spacing={2} alignItems="center">
             {/* Keyboard */}
 
-
-            <Grid item xs={12}>
+            <Grid item xs={12} style={{ position: 'relative', zIndex: 6 }}>
               <Keyboard />
             </Grid>
             <Grid
@@ -47,7 +46,15 @@ function Dashboard() {
               }}
             >
               <Grid item xs={12}>
-                <KeySheet category="All Keys" />
+              
+                  
+                      <KeySheet category="All Keys" />
+                   
+                  
+                  
+
+              
+   
               </Grid>
             </Grid>
           </Grid>

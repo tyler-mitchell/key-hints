@@ -29,6 +29,7 @@ function filteredData(combinations, data, colors) {
   const singleKeyLayerColor = '#1fe3ac';
   let newData = data
   let colorIndex = 0;
+  let allKeys = new Set([]);
   
   const filteredArr = _.chain(combinations).map((layer) => {
    
@@ -46,6 +47,7 @@ function filteredData(combinations, data, colors) {
 
         const key1 = next.keys.key1;
         const mainKey = key1[_.size(key1) - 1];
+        
         (key1[0].length === 1) ? (result.isSingleKey = true) : (result.isSingleKey = false);
         (!_.includes(result.mainKeys, mainKey)) && result.mainKeys.push(mainKey)
         
@@ -130,15 +132,20 @@ export function initializeKeyMap(keyTable) {
   const keyMapColors = ['#f76262',  '#FFE433', '#21A6FF', '#ff8a5c', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080'];
   const allLayers = filteredData(modifierCombinations, keyTable, keyMapColors)
   
-  const { activeLayers, layerKeys} = getActiveLayers(allLayers)
+  const { activeLayers, layerKeys, layerIndices} = getActiveLayers(allLayers)
+  console.log(`⭐: initializeKeyMap -> layerIndices`, layerIndices)
+
  
   setGlobalState('allLayers', allLayers)
+  console.log(`⭐: initializeKeyMap -> allLayers`, allLayers)
   setGlobalState('activeLayers', activeLayers)
+  console.log(`⭐: initializeKeyMap -> activeLayers`, activeLayers)
   setGlobalState('layerKeys', layerKeys)
+  setGlobalState('initialLayerIndices', layerIndices);
+  console.log(`⭐: initializeKeyMap -> layerKeys`, layerKeys)
 
 
 }
-
 
 
 function swap(keyMap, newActiveLayer) {
@@ -151,42 +158,33 @@ function swap(keyMap, newActiveLayer) {
 }
 
 export function getActiveLayers(filteredKeyMap,  oldLayer = null, newLayer = null) {
+console.log(`⭐: filteredKeyMap`, filteredKeyMap)
 
 // const singleKeys = [['0'],['1'],['2'],['3'],['4'],['5'],['6'],['7'],['8'],['9'],['A'],['B'],['C'],['D'],['E'],['F'],['G'],['H'],['I'],['J'],['K'],['L'],['M'],['N'],['O'],['P'],['Q'],['R'],['S'],['T'],['U'],['V'],['W'],['X'],['Y'],['Z']];
   
 
-  let layerData = [];
-  let layerKeys = [];
-  let i = 0;
 
-  const activeLayers = _.reduce(filteredKeyMap, (result, cur, index) => {
-  
-    // const color = keyMapColors[i];
-    const allKeys = _.union(cur.layer, cur.mainKeys);
-    const hasNoCommonElements = !(_.intersection(layerData, allKeys).length > 0);
-    
-    
-    
-    if (cur.keyArr[0].length !== 1) {
-      layerKeys.push({ keybind: cur.layer, active: false, color: cur.color, id: i++ })
-    }
+  const reducedMap = _.reduce(filteredKeyMap, (result, cur, index) => {
 
+    const hasNoCommonElements = !(_.intersection(result.layerData, cur.allKeys).length > 0);
+    if (!cur.isSingleKey) {
+      result.layerKeys.push({keybind: cur.layer, id: cur.index, color: cur.color});
+    } 
     if (hasNoCommonElements) {
-      layerData = _.concat(layerData, allKeys);
-      if (!_.isEmpty(layerKeys) && (cur.keyArr[0].length !== 1)) {
-        _.last(layerKeys).active = true;
-        
-      }
-      
-
-      result.push(cur)
-      
-    }
-    
+      result.layerData.push(...cur.allKeys);
+      if (!cur.isSingleKey) {
+        result.layerIndices.add(cur.index)
+      } 
+      result.activeLayers.push(cur)
+    } 
     return result
-  }, []);
+  }, { activeLayers: [], layerIndices: new Set([]), layerData: [], layerKeys: []})
   
-  return {activeLayers, layerKeys}
+
+  const { activeLayers, layerIndices, layerKeys} = reducedMap;
+  console.log(`⭐: layerIndicies`, layerIndices)
+  
+  return {activeLayers, layerKeys, layerIndices}
 }
 
 

@@ -3,7 +3,8 @@ import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import { FirebaseContext } from '../components/utils/firebase';
 import { KeyTable, TableTest } from '../components/KeySheet/SheetData';
 import { useGlobalState, setGlobalState, selectNewSheet, clearKeySelection } from '../state'
-
+import { initializeKeyMap } from '../components/Keyboard/KeyMapData';
+import _ from 'lodash';
 export const KeyTableContext = React.createContext(null);
 
 export const useKeyTable = () => React.useContext(KeyTableContext);
@@ -26,9 +27,9 @@ export default function KeyTableProvider({ children }) {
   const [sheetAdded, setSheetAdded] = React.useState(false)
   const [curShortcutObjectKey, setCurShortcutObjectKey] = useGlobalState('curShortcutObjectKey')
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
 
-    if (docIndex !== null  ) {
+    if (docIndex !== null) {
       
       const curDoc = userKTC.docs[docIndex]
       const docChanges = userKTC.docChanges()
@@ -36,7 +37,7 @@ export default function KeyTableProvider({ children }) {
 
       const newDoc = (() => {
         if (sheetAdded && len && (docChanges[len - 1].type === 'added')) {
-         selectNewSheet(docChanges[len-1].newIndex)
+          selectNewSheet(docChanges[len - 1].newIndex)
           setSheetAdded(false)
           return docChanges[len - 1].doc
           
@@ -50,9 +51,29 @@ export default function KeyTableProvider({ children }) {
 
     }
 
-  }, [userKTC, docIndex, loadingUKTC])
+  }, [userKTC, docIndex, loadingUKTC]);
 
+
+  React.useEffect(() => {
+    if (curKeyTable) {
+      initializeKeyMap(curKeyTable.data().table);
+      getAllKeys(curKeyTable.data().table);
+    }
   
+   
+    
+  }, [curKeyTable])
+
+
+  const getAllKeys = (table) => {
+
+    const keys = _.keyBy(table, (o) => {
+      return _.values(o.keys.key1);
+    });
+    setGlobalState('allKeys', keys);
+    console.log(`⭐: getAllKeys -> keys`, keys)
+  }
+
   const addNewKeyToFirebase = (newKey) => {
     console.log('------------------------------------------');
     console.log(`⭐: addNewKeyToFirebase -> newKey`, newKey);

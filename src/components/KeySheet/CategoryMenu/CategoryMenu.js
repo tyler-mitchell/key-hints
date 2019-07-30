@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import { startCase, toLower } from 'lodash';
 
@@ -54,6 +55,12 @@ const useSwitchStyles = makeStyles({
   }
 });
 
+function useDidMount() {
+  const [didMount, setDidMount] = React.useState(false)
+  React.useEffect(() => setDidMount(true), [])
+
+  return didMount
+}
 
 export const CategoryMenu = ({ popupState }) => {
   const classes = useStyles();
@@ -70,16 +77,22 @@ export const CategoryMenu = ({ popupState }) => {
   const [keyMapMode] = useGlobalState('keyMapMode');
   const [allLayers] = useGlobalState('allLayers');
   const [layerKeys] = useGlobalState('layerKeys');
+  const [initialLayerIndices] = useGlobalState('initialLayerIndices');
   
 
   const [checkedIndex, setCheckedIndex] = React.useState(0);
   const showMultipleLayers = useBoolean(true);
-  const [layerIndices,setLayerIndices] = React.useState(new Set([]))
+  const [layerIndices,setLayerIndices] = React.useState(initialLayerIndices)
   const [state, setState] = React.useState({index: null, layer: null})
+  const [initialRender, setInitialRender] = React.useState(true);
 
+  console.log(`⭐: CategoryMenu -> layerIndices`, initialLayerIndices)
+  const didMount = useDidMount();
   React.useEffect(() => {
-    console.log(`⭐: TRIGGERED -> useEffect `);
-    const delayCalculation = setTimeout(() => {
+    console.log(`⭐: CategoryMenu -> didMount`, didMount)
+    
+   const delayCalculation = didMount && setTimeout(() => {
+      console.log(`⭐: TRIGGERED -> useEffect `);
 
       if (showMultipleLayers.value) {
         const { layerIndices: newIndices, activeLayers: newActiveLayers } = updateActiveLayers(allLayers, state.layer)
@@ -92,17 +105,22 @@ export const CategoryMenu = ({ popupState }) => {
       
     }, 100)
 
-    return ()=> clearTimeout(delayCalculation)
+      return () => clearTimeout(delayCalculation)
     
-  }, [state, showMultipleLayers]);
+ 
+    
+    
+  }, [state, showMultipleLayers.value]);
 
 
 
   const switchClasses = useSwitchStyles();
 
    async function handleSwitchClick(layer, index) {
-     console.log(`⭐: TRIGGERED -> handleSwitchClick `);
-     setState({index, layer});
+     
+    
+       setState({ index, layer })
+
     //  const data =  await  updateActiveLayers(allLayers, state.layer)
     //  const { layerIndices: newIndices, activeLayers: newActiveLayers } = data;
   //  await 
@@ -159,7 +177,7 @@ export const CategoryMenu = ({ popupState }) => {
                 </ListItem>
                 <Divider />
 
-                {layerKeys.map((layer, index) => {
+                {initialLayerIndices && layerKeys.map((layer, index) => {
                   return (
                     <ListItem
                       button
