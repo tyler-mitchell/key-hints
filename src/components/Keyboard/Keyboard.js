@@ -191,82 +191,99 @@ const KeyboardContainer = () => {
   
   return (
     
-      <Cover fixed className="marvel-device iphone-x" >
-        <div className="inner-shadow" style={{ opacity: 0.5 }} />
-        <FlashingProvider>
-        <div className="screen">
-          <InnerFrame container justify="center" alignItems="center" direction="column"  spacing={0}>
-          {/* <ThemeProvider theme={rowTheme}> */}
-              <Row
-              justify="center"
-              container
-              direction="row"
-              wrap="nowrap"
-                item
-                xs={11}
-            
-              zIndex={1}
-            >
-              {renderRow(firstRow)}
-            </Row>
-              <Row
+      <Grid container direction="row" xs={12} alignItems="center" justify="flex-end">
+        <Cover fixed className="marvel-device iphone-x" >
+          <div className="inner-shadow" style={{ opacity: 0.5 }} />
+          <FlashingProvider>
+          <div className="screen">
+            <InnerFrame container justify="center" alignItems="center" direction="column"  spacing={0}>
+            {/* <ThemeProvider theme={rowTheme}> */}
+                <Row
                 justify="center"
-              container
-              direction="row"
-              wrap="nowrap"
-              item
-              // justify="space-evenly"
-              // alignItems="stretch"
-              xs={11}
-              zIndex={2}
-            >
-              {renderRow(secondRow)}
-            </Row>
-              <Row
-                justify="center"
-              container
-              direction="row"
-              wrap="nowrap"
-                item
-                xs={11}
-              // justify="space-evenly"
+                container
+                direction="row"
+                wrap="nowrap"
+                  item
+                  xs={11}
               
-        
-              zIndex={3}
-            >
-              {renderRow(thirdRow)}
-            </Row>
-              <Row
-                justify="center"
-              container
-              direction="row"
-              wrap="nowrap"
-              item
-              // justify="space-evenly"
-              // alignItems="stretch"
-              xs={11}
-              zIndex={4}
-            >
-              {renderRow(fourthRow)}
-            </Row>
-              <Row
-                justify="center"
-              container
-              direction="row"
-              wrap="nowrap"
-              item={true}
-              // justify="space-evenly"
-              // alignItems="stretch"
-              xs={11}
-              zIndex={5}
-            >
-              {renderRow(fifthRow)}
-            </Row>
-          {/* </ThemeProvider> */}
-            </InnerFrame>
-        </div>
-        </FlashingProvider>
-       </Cover>
+                zIndex={1}
+              >
+                {renderRow(firstRow)}
+              </Row>
+                <Row
+                  justify="center"
+                container
+                direction="row"
+                wrap="nowrap"
+                item
+                // justify="space-evenly"
+                // alignItems="stretch"
+                xs={11}
+                zIndex={2}
+              >
+                {renderRow(secondRow)}
+              </Row>
+                <Row
+                  justify="center"
+                container
+                direction="row"
+                wrap="nowrap"
+                  item
+                  xs={11}
+                // justify="space-evenly"
+                
+          
+                zIndex={3}
+              >
+                {renderRow(thirdRow)}
+              </Row>
+                <Row
+                  justify="center"
+                container
+                direction="row"
+                wrap="nowrap"
+                item
+                // justify="space-evenly"
+                // alignItems="stretch"
+                xs={11}
+                zIndex={4}
+              >
+                {renderRow(fourthRow)}
+              </Row>
+                <Row
+                  justify="center"
+                container
+                direction="row"
+                wrap="nowrap"
+                item={true}
+                // justify="space-evenly"
+                // alignItems="stretch"
+                xs={11}
+                zIndex={5}
+              >
+                {renderRow(fifthRow)}
+              </Row>
+            {/* </ThemeProvider> */}
+              </InnerFrame>
+          </div>
+          </FlashingProvider>
+         </Cover>
+        <Cover fixed style={{width: '250px'}} className="marvel-device iphone-x" >
+          <div className="inner-shadow" style={{ opacity: 0.5 }} />
+          <FlashingProvider>
+          <div className="screen">
+            <InnerFrame container justify="center" alignItems="center"  spacing={0}>
+            {/* <ThemeProvider theme={rowTheme}> */}
+             
+                
+                {renderRow(firstRow)}
+           
+            {/* </ThemeProvider> */}
+              </InnerFrame>
+          </div>
+          </FlashingProvider>
+         </Cover>
+      </Grid>
   );
 };
 

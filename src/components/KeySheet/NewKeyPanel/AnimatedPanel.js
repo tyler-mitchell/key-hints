@@ -9,13 +9,14 @@ import {Modal} from '@material-ui/core';
 import {useGlobalState} from '../../../state'
 import styled from 'styled-components';
 import { useMeasure } from '../../hooks/helpers';
+import { Card } from '@material-ui/core';
 
 
 
 
 
 
-const OFFSET = 300
+const OFFSET = 350
 const INITIAL = 780
 // const SLOW = config.gentle
 const SLOW = 	{ mass: 1, tension: 200, friction: 14 }
@@ -34,22 +35,23 @@ export const AnimatedPanel = ({children})  => {
   //   from: { boxShadow: boxShadow  },
   //   to:{ boxShadow: boxShadow}
   // })
-  const [{boxShadow}, setBoxShadow] = useSpring(() => ({ boxShadow: "0 0px 2px 2px rgba(0,0,0,0.25), 0 0px 2px 2px  rgba(0,0,0,0.22)" })); 
+
   const transform = y.interpolate([OFFSET, 250], [40, 0], 'clamp').interpolate(val => `translate3d(0,${val}px,0)`)
 
   React.useEffect(() => {
     if (addMode) {
       set({ y: OFFSET, config: SLOW })
       // setBoxShadow({boxShadow: "0 0px 0px rgba(0,0,0,0.25), 0 0px 0px rgba(0,0,0,0.22)"})
+
     } else {
-      setBoxShadow({boxShadow: "0 0px 5px -3px  rgba(0,0,0,0.25), 0 0px 5px -3px  rgba(0,0,0,0.22)"})
-      set({ y: 590, config: FAST })
+      set({ y: 535, config: FAST })
+     
     }
     
   },[addMode])
   return (
     <>
-      <View  style={{ boxShadow, transform: y.interpolate(y => `translate3d(0,${y}px,0)`) }}>
+      <View  style={{  transform: y.interpolate(y => `translate3d(0,${y}px,0)`) }}>
         {children}
       </View>
     </>
@@ -63,53 +65,58 @@ export const View = props => {
   return (
     // <div style={{ position: 'relative', clipPath: 'polygon(-50% -50%, 150% -50%, 100% 10%, 0% 10%)'}}>
     
-      <a.div
-      {...props}
-     
-        style={{
-          position: 'absolute',
-          pointerEvents: 'auto',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          top: 0,
-          margin: "0 21px",
-          flex: 1,
-          fontSize: '0.8em',
-          zIndex: 5000,
-          height: '150px',
-          background: 'white',
-          borderTopRightRadius: 15,
-          borderTopLeftRadius: 15,
-          borderBottomRightRadius: 15,
-          borderBottomLeftRadius: 15,
-          // padding: 24,
-          userSelect: 'none',
-          color: '#ffffffc0',
-        
-          
-  
-          
-          // clipPath: "inset(10px 20px 30px 40px)",
-          alignItems: 'center',
-          
-          ...props.style
-        }}>
-        {/* <div
+      
+        <a.div
+        {...props}
+       
           style={{
             position: 'absolute',
-            width: 50,
-            height: 4,
-            backgroundColor: 'rgba(220,220,220,0.4)',
-            top: 12,
-            borderRadius: 4,
-            margin: '0 auto',
+            pointerEvents: 'auto',
             left: 0,
-            right: 0
-          }}
-        /> */}
-        {props.children}
-      </a.div>
+            right: 0,
+            bottom: 0,
+            top: 0,
+            margin: "0 21px",
+            flex: 1,
+            fontSize: '0.8em',
+            zIndex: 5000,
+            height: '600px',
+            background: 'transparent',
+            borderTopRightRadius: 15,
+            borderTopLeftRadius: 15,
+            borderBottomRightRadius: 15,
+            borderBottomLeftRadius: 15,
+            // padding: 24,
+            userSelect: 'none',
+            color: '#ffffffc0',
+          
+            
+    
+            
+            // clipPath: "inset(10px 20px 30px 40px)",
+            alignItems: 'center',
+            
+            ...props.style
+          }}>
+          {/* <div
+            style={{
+              position: 'absolute',
+              width: 50,
+              height: 4,
+              backgroundColor: 'rgba(220,220,220,0.4)',
+              top: 12,
+              borderRadius: 4,
+              margin: '0 auto',
+              left: 0,
+              right: 0
+            }}
+          /> */}
+  
+
+          {props.children}
+   
+        </a.div>
+    
 
   )
 }

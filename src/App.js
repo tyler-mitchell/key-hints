@@ -1,3 +1,4 @@
+import { hot } from 'react-hot-loader/root';
 import React, { Component } from 'react';
 import { Router } from 'react-router-dom';
 
@@ -33,8 +34,8 @@ import { GlobalStateProvider } from './state';
 const browserHistory = createBrowserHistory();
 
 
-export default class App extends Component {
-  render() {
+const App = () => {
+
     return (
       <GlobalStateProvider>
         <FirebaseProvider>
@@ -49,5 +50,7 @@ export default class App extends Component {
         </FirebaseProvider>
       </GlobalStateProvider>
     );
-  }
+  
 }
+
+export default hot(App);

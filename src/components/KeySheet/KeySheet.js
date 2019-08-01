@@ -32,7 +32,7 @@ import { initializeKeyMap } from '../Keyboard/KeyMapData';
 import { pickBy } from 'lodash-es';
 import { bindTrigger, bindPopover } from 'material-ui-popup-state';
 import { useMeasure } from '../hooks/helpers';
-import { motion, AnimatePresence, useCycle } from 'framer-motion';
+import { motion, AnimatePresence, useCycle, useMotionValue } from 'framer-motion';
 import { ButtonGroup } from '@material-ui/core';
 import { Popper } from '@material-ui/core';
 import { Popover } from '@material-ui/core';
@@ -43,6 +43,7 @@ import { CardActions } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { useInput, useBoolean, useNumber, useArray, useOnMount, useOnUnmount } from 'react-hanger';
 import { array } from 'prop-types';
+import { animated, useSpring } from 'react-spring';
 import { Backdrop } from '@material-ui/core';
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -105,6 +106,7 @@ const CategoryPaper = styled(Paper)`
   overflow-x: hidden;
   width: 200px;
 
+
   &::-webkit-scrollbar {
     width: 5px;
   }
@@ -116,23 +118,17 @@ const CategoryPaper = styled(Paper)`
 &:-webkit-scrollbar { width: 0 !important } */
   }
 `;
-const BackDrop = styled(motion.div)`
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-
-  &::after {
-    content: '';
-    background: 'black';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-    pointer-events: none;
-  }
+const CardStyle = styled(Card)`
+  height: 470px;
+  position: relative;
+  z-index: 0;
+  border-radius: 15;
+  pointer-events: 'auto';
+  filter: 'drop-shadow(16px 16px 20px red)';
 `;
+
+const AnimatedCard = animated(CardStyle);
+
 
 export const KeySheet = props => {
   const classes = useStyles();
@@ -218,7 +214,11 @@ export const KeySheet = props => {
     setSaveClicked(saveClicked + 1);
   };
 
-  const [, { height, width, top, left }] = useMeasure();
+  const [bind, { height, width }] = useMeasure();
+
+
+  const {filter} = useSpring({filter: addMode ? [6, 200] : [0, 100] })
+  console.log(`⭐: width & height: `, width, height)
   // const actions = useArray([
   //   { id: 'add', add: AddAction, clickFunction: handleAddClick },
   //   { id: 'save', save: SaveAction, clickFunction: handleAddClick },
@@ -227,75 +227,81 @@ export const KeySheet = props => {
   const [actions, setActions] = React.useState([
     { id: 'add', component: AddAction, clickFunction: handleAddClick }
   ]);
-  const id = 'fab-reference';
+  
   const [zIndex, setZIndex] = React.useState(0);
   return (
     <React.Fragment>
       {loadingUKTC && <CircularProgress className={classes.progress} />}
 
       {curKeyTable && (
-        <div style={{ position: 'relative' }}>
-          <Card
+        <div style={{ position: 'relative' }} {...bind}>
+          
+            <AnimatedCard
+             
             ref={anchorRef(popupState)}
             style={{
-              height: '470px',
-              position: 'relative',
+              // pointerEvents: addMode ? 'none' : 'auto',
               zIndex: zIndex,
+              
+             
 
-              borderRadius: '10px'
             }}
-          >
-            {/* <SwipeableViews
-                resistance={true}
-                axis="y"
-                index={viewIndex}
-                slideStyle={{ height: '100%' }}
-                containerStyle={{ height: '500px' }}
-              > */}
+              // style={{
+              //   height: '470px',
+              //   position: 'relative',
+              //   filter: `blur(${blur}px)`,
+              //   zIndex: zIndex,
+              //   borderRadius: '10px'
+              // }}
+            >
             <motion.div
-              initial={{ background: 'rgba(0, 0, 0, 0)' }}
-              animate={addMode ? 'openBackDrop' : 'closeBackDrop'}
-              variants={variants}
-              style={{
-                // background: 'rgba(0, 0, 0, 0.66)',
-                width: '100%',
-                height: '100%',
-                backgroundClip: 'context-box',
-                top: 0,
-                left: 0,
-                borderRadius: '10px',
-                position: 'absolute',
-                zIndex: 3
-              }}
-            />
-            <CardHead className={classes.appBar} indicatorColor="primary" textColor="primary" />
-            <Grid container xs={12} style={{}} justify="center" alignItems="center" />
-            <SearchInput
-              theme={theme}
-              onChange={onChange}
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'Search' }}
-            />
-            <Divider />
-            {initialLayerIndices && <CategoryMenu popupState={popupState} />}
-
-            <CardContent>
-              {!isEmpty(filteredKeyTable) && (
-                // height: 360
-                <KeyList
-                  height={340}
-                  keyTableKeys={Object.keys(filteredKeyTable).sort()}
-                  keyTable={filteredKeyTable}
-                />
-              )}
-            </CardContent>
-            <CardActions disableSpacing style={{ height: '1px' }} />
-            {/* </SwipeableViews> */}
-          </Card>
+                
+              // initial={{ background: '#030303' }}
+                // onAnimationStart={() => blur.set(1)}
+                // animate={addMode ? 'openBackDrop' : 'closeBackDrop'}
+                variants={variants}
+                style={{
+                  // background: 'rgba(0, 0, 0, 0.66)',
+                  width: '100%',
+                  height: '100%',
+                  backgroundClip: 'context-box',
+                
+                  top: 0,
+                  left: 0,
+                  borderRadius: '10px',
+                  position: 'absolute',
+                  // zIndex: 3,
+                  
+                }}
+              />
+              <CardHead className={classes.appBar} indicatorColor="primary" textColor="primary" />
+              <Grid container xs={12} style={{}} justify="center" alignItems="center" />
+              <SearchInput
+                theme={theme}
+                onChange={onChange}
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'Search' }}
+              />
+              <Divider />
+              {initialLayerIndices && <CategoryMenu popupState={popupState} />}
+  
+              <CardContent>
+                {!isEmpty(filteredKeyTable) && (
+                  // height: 360
+                  <KeyList
+                    height={360}
+                    keyTableKeys={Object.keys(filteredKeyTable).sort()}
+                    keyTable={filteredKeyTable}
+                  />
+                )}
+              </CardContent>
+             
+            </AnimatedCard>
+        
 
           <div
             style={{
-              bottom: 30,
+              bottom: 0,
 
               pointerEvents: 'none',
               alignItems: 'center',
@@ -303,30 +309,33 @@ export const KeySheet = props => {
               height: '120%',
               width: '100%',
 
-              // paddingBottom: '100px',
+              paddingBottom: '100px',
               // border: 'solid',
               borderRadius: '10px 10px 200px 200px',
 
-              clipPath: 'polygon(1% 0, 99% 0, 99% 99%, 1% 99% )',
+              // clipPath: 'polygon(1% 0, 99% 0, 99% 99%, 1% 99% )',
+              clipPath: 'polygon(0% 0, 100% 0, 100% 100%, 0% 100% )',
               left: 0,
               right: 0
             }}
           >
             <NewKeyPanel saveClicked={saveClicked} />
           </div>
+          
           <motion.div
             onClick={handleAddClick}
-            initial={{ position: 'absolute', right: width, bottom: height + 15 }}
+            initial={{ position: 'absolute', right: -20 , bottom: -10 }}
             custom={1}
             onTransitionEnd={onTransitionEnd}
             animate={!addMode ? 'openAddButton' : 'closedAddButton'}
             variants={actionVariants}
-          >
+            >
+            
             <AddAction clickFunction={handleAddClick} />
           </motion.div>
           <motion.div
             onClick={handleSaveClick}
-            initial={{ position: 'absolute', right: width + 40, bottom: height + 15 }}
+            initial={{ position: 'absolute', right: 20, bottom: -10 }}
             custom={1.1}
             onTransitionEnd={onTransitionEnd}
             animate={addMode || editMode ? 'openSaveButton' : 'closedSaveButton'}
@@ -336,7 +345,7 @@ export const KeySheet = props => {
           </motion.div>
           <motion.div
             onClick={handleCancelClick}
-            initial={{ position: 'absolute', right: width, bottom: height + 15 }}
+            initial={{ position: 'absolute', right: -20, bottom: -10  }}
             custom={1}
             onTransitionEnd={onTransitionEnd}
             animate={addMode || editMode ? 'openCancelButton' : 'closedCancelButton'}
@@ -344,6 +353,7 @@ export const KeySheet = props => {
           >
             <CancelAction clickFunction={handleCancelClick} />
           </motion.div>
+   
         </div>
       )}
     </React.Fragment>
@@ -384,17 +394,20 @@ const CancelAction = ({ clickFunction, ...props }) => (
 
 const variants = {
   openBackDrop: {
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-
+    opacity: 0.1,
+    pointerEvents: 'auto',
+ 
     transition: {
-      duration: 2
+      duration: 0.5
     }
   },
   closeBackDrop: {
-    backgroundColor: 'rgba(0, 0, 0, 0)',
-
+    
+    opacity: 0,
+ 
+    pointerEvents: 'none',
     transition: {
-      duration: 2
+      duration: 0.3
     }
   }
 };
@@ -452,6 +465,7 @@ const actionVariants = {
   closedSaveButton: {
     opacity: 0,
     scale: 0,
+    
 
     x: 45,
     transitionEnd: {

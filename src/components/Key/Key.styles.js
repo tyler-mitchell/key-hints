@@ -141,7 +141,7 @@ export const KeyChar = styled.div`
   margin: 0 auto;
   overflow: hidden;
   font-size: 20px;
-  font-family: 'Nunito';
+
   font-weight: bold;
   color: rgba(0, 0, 0, 0.45);
   user-select: none;

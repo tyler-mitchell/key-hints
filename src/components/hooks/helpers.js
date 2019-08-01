@@ -21,6 +21,19 @@ export function useMeasure() {
 
 
 
+export const useDimensions = ref => {
+  const dimensions = useRef({ width: 0, height: 0 });
+
+  useEffect(() => {
+    dimensions.current.width = ref.current.offsetWidth;
+    dimensions.current.height = ref.current.offsetHeight;
+  }, []);
+
+  return dimensions.current;
+};
+
+
+
 export default function useMeasurer(ref, ...types) {
   const animationFrameID = useRef(null);
   const observer = useRef(null);
