@@ -54,7 +54,12 @@
     "cosmos:export": "cosmos-export"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "settings": {
+      "react": {
+        "version": "detect"
+      }
+    }
   },
   "browserslist": {
     "production": [

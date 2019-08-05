@@ -46,12 +46,13 @@ export const KeyContainer = styled(animated.div)`
   /* margin-right: 3px; */
 
 
+  
 
-
+  background: #ddd;
   width: ${props => props.wt}px;
   height: ${props => props.ht}px;
   cursor: pointer;
-  border-width: 10px 10px 20px 10px;
+  border-width: 8px 8px 15px 8px;
 
   /* transition: background-color 2s, color 300ms; */
 
@@ -63,16 +64,17 @@ export const KeyContainer = styled(animated.div)`
   position: relative;
   
   /* transition: filter .3s; */
-
+  
   &:hover {
     background-position: 0 0, 0 0;
     /* transition-duration: 0.5s; */
     /* background: inherit; */
 
-    filter: contrast(140%);
+    /* filter: contrast(140%); */
   }
 
   border-style: solid;
+  
   transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1), filter 0.5s;
 
   
@@ -109,10 +111,21 @@ export const ActiveKeyContainer = styled(KeyContainer)`
 
 export const KeyTop = styled(animated.div)`
   height: ${props => props.ht * 0.7}px;
-  width: ${props => props.wt - 17}px;
-  margin: -30px;
-  position: relative;
+  width: ${props => props.wt - 12}px;
+  
+  position: absolute;
+  /* border-width: 3px; */
+ 
+  
+  /* box-shadow:  0px 0px 3px 2px rgba(0,0,0,0.1); */
+  
+  
   border-radius: 8px;
+  
+ 
+  /* background-clip: border-box; */
+  box-sizing:border-box;
+
 `;
 
 export const BottomKeyChar = styled.div`
@@ -127,6 +140,7 @@ export const BottomKeyChar = styled.div`
   user-select: none;
   width: auto;
   height: auto;
+  
   /* position: 'relative'; */
   transform: rotateX(8deg) translateY(34px) scale(1);
 
@@ -154,7 +168,7 @@ export const Span = styled.div`
   position: relative;
   padding-top: 5px;
   border-radius: 8px;
-  ${'1200px'};
+  
   transition: 1s ease;
 `;
 

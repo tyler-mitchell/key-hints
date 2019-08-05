@@ -40,6 +40,99 @@ export const InnerFrame = styled(Grid)`
   padding-right: 2px;
   padding-left: 2px;
   
+
+
+  
+`;
+
+export const NumpadCover = styled.div`
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.6) 0, rgba(39, 37, 37, 0.74) 60%);
+  position: relative;
+  margin: 10px;
+  width: 230px;
+  height: inherit;
+
+  padding: 75px 20px 20px 20px;
+  background: #f9f9f9;
+  border: 1px solid white;
+
+
+    box-shadow: 
+    0 0 0 2px rgb(221, 221, 221);
+    /* 0 1px 0px 3px  rgb(128, 128, 128) */
+   
+    
+   
+    
+    
+  border-radius: 10px;
+  /* &::before {
+  width:  calc(100% - 13px);
+  height: calc(100% - 10px);
+  top: 0;
+  position: absolute;
+ 
+  content: '';
+
+  border-radius: 15px;
+  box-shadow: inset 0 0 0 5px rgb(219, 219, 219);
+ 
+  z-index: 1;
+} */
+  
+  
+`;
+export const NumpadInnerFrame = styled(Grid)`
+
+  position: relative;
+  /* animation: fader 6s infinite; */
+  color: black;
+  
+  margin: 1px;
+  background: ${shade(0.7, '#f9f9f9')};
+  padding: 3px;
+  border-radius: 10px;
+  
+ 
+
+ &::before {
+  width:  calc(96% );
+  height: calc(98%);
+
+  position: absolute;
+  content: '';
+
+
+  border-radius: 8px;
+  box-shadow: 
+ 
+  inset 0 0 1px 1px #737373,
+  0 0 0px 3px #737373,
+   0 0 0 5px rgb(219, 219, 219)
+  ;
+ 
+  
+} 
+ 
+
+ box-shadow: 
+    0 0 0 px #737373,
+    0 0 0 4px white,
+    0 0px 5px 1px rgb(124, 124, 124)
+
+   
+    
+    ; 
+   
+    
+
+
+  border-radius: 10px;
+  
   
 
 
@@ -53,12 +146,13 @@ export const Cover = styled.div`
   justify-content: center;
   background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.6) 0, rgba(39, 37, 37, 0.74) 60%);
   
-  padding: 2px;
+  padding-top: 2px;
   margin: 10px;
 
   
   
 `;
+
 export const useKeyboardStyle = makeStyles({
   root: {
     background: '#f9f9f9',

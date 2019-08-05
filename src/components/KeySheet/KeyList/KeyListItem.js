@@ -21,7 +21,7 @@ import {
   ToolTip,
   ClickAwayListener
 } from '@material-ui/core';
-
+import { shade } from 'polished';
 import { useGlobalState, setGlobalState } from '../../../state';
 import { KeyTable } from '../SheetData';
 import {
@@ -145,7 +145,7 @@ export const renderKeys = keybind => {
     </>
   );
 };
-const renderAddedKeys = keybind => {
+const renderAddedKeys = (keybind) => {
   return (
     <>
       {Object.values(keybind).map((keyItem, keyIndex) => {
@@ -160,7 +160,7 @@ const renderAddedKeys = keybind => {
             {/* <Badge badgeContent={keyIndex+1} color="primary" variant="dot" > */}
             {Object.keys(keyItem).map((kb, index, array) => (
               <KbdAddedKey key={index}>
-                <KBD>
+                <KBD >
                   {Array.isArray(keyItem[kb])
                     ? keyItem[kb].map((x, i, arr) =>
                         arr.length - 1 !== i ? (
@@ -185,7 +185,7 @@ const renderAddedKeys = keybind => {
   );
 };
 
-export const renderCategoryItem = layerKey => {
+export const renderCategoryItem = (layerKey, color) => {
  
   return (
     <Grid container justify="flex-start" alignItems="center" direction="row" wrap="nowrap">
@@ -194,8 +194,8 @@ export const renderCategoryItem = layerKey => {
         
         return (
           <Grid item key={index}>
-            <KbdKey key={index}>
-              <KBD>{renderIcon(kb)}</KBD>
+            <KbdKey  key={index}>
+              <KBD style={{ filter: `drop-shadow(-4px 0px 0px ${color})` }}>{renderIcon(kb)}</KBD>
               {index !== layerKey.length - 1 && '+'}
             </KbdKey>
           </Grid>

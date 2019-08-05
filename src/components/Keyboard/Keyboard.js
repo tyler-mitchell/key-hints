@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './keyboard.css'
+
 import { Box, Flex } from '@rebass/grid';
 import Space from '@rebass/space';
 import Layer from '@material-ui/core/Box';
@@ -18,19 +19,21 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import styled from 'styled-components';
 import { BackgroundRGB } from './Keyboard.styles';
 import { FlashingProvider } from '../Key/FlashingContext';
+import Mouse  from './Mouse';
 
 import {
-  firstRow,
-  secondRow,
-  thirdRow,
-  fourthRow,
-  fifthRow,
-  keySize,
-  mw,
-  excludedKeys
+    firstRow,
+    secondRow,
+    thirdRow,
+    fourthRow,
+    fifthRow,
+    keySize,
+    mw,
+    excludedKeys,
+    miscKeys
 } from './Layout';
 
-import { Row, useKeyboardStyle, InnerFrame, Cover } from './Keyboard.styles';
+import { Row, useKeyboardStyle, InnerFrame, Cover, NumpadCover, NumpadInnerFrame} from './Keyboard.styles';
 // import styled from '@xstyled/styled-components'
 
 import { tint, shade, linearGradient, lighten, timingFunctions } from 'polished';
@@ -73,7 +76,7 @@ const calculateMargin = (i, len) => {
     return `0 1.5px 0 1.5px`
   }
 }
-const renderRow = row => {
+const KeyRow = React.memo(({row}) => {
   const len = Object.keys(row).length
   
   const getMarginTheme = (index) => {
@@ -117,10 +120,60 @@ const renderRow = row => {
             keyName={keyName}
             wt={`${row[keyName][1]}`}
             ht={`${keySize}`}
-            keySize={keySize}
+          keySize={keySize}
+            borderWidth="10px 10px 20px 10px"
           />
       </GridItem>
     </ThemeProvider>
+      
+     
+   
+  ));
+});
+const renderMiscKeys = row => {
+  const len = Object.keys(row).length
+  
+
+  return Object.keys(row).map((keyName, i) => (
+    
+
+      <GridItem
+        item
+        
+     
+      style={{
+        
+       
+      }}
+        whileTap={{
+          scale: 0.98,
+          y: '2px',
+          
+          transition: {
+            type: "spring",
+            damping: 100,
+            stiffness: 400,
+          }
+          
+        }}
+
+      >
+          
+      <Key
+            
+            item
+            label={row[keyName][0]}
+            key={i}
+            margin={0}
+            uniqueKeyName={keyName in excludedKeys ? null : row[keyName][0]}
+            keyName={keyName}
+            wt={`${row[keyName][1]-10}`}
+            ht={`${keySize - 10}`}
+            borderWidth="5px 5px 10px 5px"
+            keySize={keySize}
+          />
+      </GridItem>
+
       
      
    
@@ -167,7 +220,6 @@ const themeEnd = createMuiTheme({
     },
   },
 });
-
 const rowTheme = createMuiTheme({
   overrides: {
     MuiGrid: {
@@ -176,11 +228,13 @@ const rowTheme = createMuiTheme({
           margin: 0
         },
         item: {
-          margin: 0
+          margin: '0 1.5px',
       },
     },
   },
 });
+
+
 
 
 const KeyboardContainer = () => {
@@ -191,98 +245,106 @@ const KeyboardContainer = () => {
   
   return (
     
-      <Grid container direction="row" xs={12} alignItems="center" justify="flex-end">
-        <Cover fixed className="marvel-device iphone-x" >
-          <div className="inner-shadow" style={{ opacity: 0.5 }} />
-          <FlashingProvider>
-          <div className="screen">
-            <InnerFrame container justify="center" alignItems="center" direction="column"  spacing={0}>
-            {/* <ThemeProvider theme={rowTheme}> */}
-                <Row
-                justify="center"
-                container
-                direction="row"
-                wrap="nowrap"
-                  item
-                  xs={11}
-              
-                zIndex={1}
-              >
-                {renderRow(firstRow)}
-              </Row>
-                <Row
+      <Grid container item direction="row" xs={12} alignItems="center" justify="center" wrap="nowrap">
+        <Grid item >
+          <Cover fixed className="marvel-device iphone-x" >
+            <div className="inner-shadow" style={{ opacity: 0.5 }} />
+            <FlashingProvider>
+            <div className="screen">
+              <InnerFrame container justify="center" alignItems="center" direction="column"  spacing={0}>
+              {/* <ThemeProvider theme={rowTheme}> */}
+                  <Row
                   justify="center"
-                container
-                direction="row"
-                wrap="nowrap"
-                item
-                // justify="space-evenly"
-                // alignItems="stretch"
-                xs={11}
-                zIndex={2}
-              >
-                {renderRow(secondRow)}
-              </Row>
-                <Row
-                  justify="center"
-                container
-                direction="row"
-                wrap="nowrap"
-                  item
-                  xs={11}
-                // justify="space-evenly"
+                  container
+                  direction="row"
+                  wrap="nowrap"
+                    item
+                    xs={11}
                 
-          
-                zIndex={3}
-              >
-                {renderRow(thirdRow)}
-              </Row>
-                <Row
-                  justify="center"
-                container
-                direction="row"
-                wrap="nowrap"
-                item
-                // justify="space-evenly"
-                // alignItems="stretch"
-                xs={11}
-                zIndex={4}
-              >
-                {renderRow(fourthRow)}
-              </Row>
-                <Row
-                  justify="center"
-                container
-                direction="row"
-                wrap="nowrap"
-                item={true}
-                // justify="space-evenly"
-                // alignItems="stretch"
-                xs={11}
-                zIndex={5}
-              >
-                {renderRow(fifthRow)}
-              </Row>
-            {/* </ThemeProvider> */}
-              </InnerFrame>
-          </div>
-          </FlashingProvider>
-         </Cover>
-        <Cover fixed style={{width: '250px'}} className="marvel-device iphone-x" >
-          <div className="inner-shadow" style={{ opacity: 0.5 }} />
-          <FlashingProvider>
-          <div className="screen">
-            <InnerFrame container justify="center" alignItems="center"  spacing={0}>
-            {/* <ThemeProvider theme={rowTheme}> */}
-             
-                
-                {renderRow(firstRow)}
-           
-            {/* </ThemeProvider> */}
-              </InnerFrame>
-          </div>
-          </FlashingProvider>
-         </Cover>
+                  zIndex={1}
+                >
+                 <KeyRow row={firstRow}/>
+                </Row>
+                  <Row
+                    justify="center"
+                  container
+                  direction="row"
+                  wrap="nowrap"
+                  item
+                  // justify="space-evenly"
+                  // alignItems="stretch"
+                  xs={11}
+                  zIndex={2}
+                >
+               <KeyRow row={secondRow}/>
+                </Row>
+                  <Row
+                    justify="center"
+                  container
+                  direction="row"
+                  wrap="nowrap"
+                    item
+                    xs={11}
+                  // justify="space-evenly"
+                  
+            
+                  zIndex={3}
+                >
+                 <KeyRow row={thirdRow}/>
+                </Row>
+                  <Row
+                    justify="center"
+                  container
+                  direction="row"
+                  wrap="nowrap"
+                  item
+                  // justify="space-evenly"
+                  // alignItems="stretch"
+                  xs={11}
+                  zIndex={4}
+                >
+                 <KeyRow row={fourthRow}/>
+                </Row>
+                  <Row
+                    justify="center"
+                  container
+                  direction="row"
+                  wrap="nowrap"
+                  item={true}
+                  // justify="space-evenly"
+                  // alignItems="stretch"
+                  xs={11}
+                  zIndex={5}
+                >
+                  <KeyRow row={fifthRow}/>
+                </Row>
+              {/* </ThemeProvider> */}
+                </InnerFrame>
+            </div>
+            </FlashingProvider>
+           </Cover>
+        </Grid>
+      <Grid item style={{display: 'flex', justifyContent: "center", alignItems:"center", paddingLeft: "75px"}} >
+       <Mouse/>
+          {/* <NumpadCover fixed   >
+            <div className="inner-shadow" style={{ opacity: 0.5 }} />
+            <FlashingProvider>
+            <div className="screen">
+              <NumpadInnerFrame container justify="center" alignItems="center"  spacing={1}>
+                <ThemeProvider theme={rowTheme}>
+
+                    
+ 
+                    
+                    {renderMiscKeys(miscKeys)}
+               
+       
+              </ThemeProvider>
+                </NumpadInnerFrame>
+            </div>
+            </FlashingProvider>
+           </NumpadCover> */}
+        </Grid>
       </Grid>
   );
 };

@@ -75,6 +75,7 @@ export const firstRow = {
   Backspace: ['Backspace', backspaceSize],
   PageUp: ['PgUp', regularSize]
 };
+
 export const secondRow = {
   Tab: ['Tab', tabSize],
   KeyQ: ['Q', regularSize],
@@ -145,6 +146,25 @@ export const fifthRow = {
   RightArrow: ['→', regularSize],
 };
 
+export const miscKeys = {
+  // Equal: ['=', regularSize*3],
+  Backquote: ['`', regularSize],
+  Digit1: ['1', regularSize],
+  Digit2: ['2', regularSize],
+  Digit3: ['3', regularSize],
+  Digit4: ['4', regularSize],
+  Digit5: ['5', regularSize],
+  Digit6: ['6', regularSize],
+  Digit7: ['7', regularSize],
+  Digit8: ['8', regularSize],
+  Digit9: ['9', regularSize],
+  Digit0: ['0', regularSize],
+  Minus: ['-', regularSize],
+  
+  // Equal: ['=', regularSize],
+  // Backspace: ['`', regularSize],
+  // PageUp: ['PgUp', regularSize]
+};
 
 // export const fifthRow = {
 //   ControlLeft: ['Ctrl', specialSize],

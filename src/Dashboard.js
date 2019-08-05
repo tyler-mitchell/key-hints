@@ -25,18 +25,18 @@ function Dashboard() {
 
       <main className={style.content}>
         <div className={style.appBarSpacer} />
-        <Container maxWidth="xl" className={style.container}>
-          <Grid container direction="column" justify="center" spacing={2} alignItems="center">
+        <Container maxWidth="lg" className={style.container}>
+          <Grid container direction="column" justify="center" spacing={2} alignItems="flex-start">
             {/* Keyboard */}
 
-            <Grid item container justify="flex-end" xs={12} style={{ position: 'relative', zIndex: 6 }}>
+            {/* <Grid item container justify="flex-end" xs={12} style={{ position: 'relative', zIndex: 6 }}> */}
               <Keyboard />
-            </Grid>
+            {/* </Grid> */}
             <Grid
               container
               item
               direction="row"
-              xs={8}
+              xs={12}
               spacing={3}
               justify="center"
               alignItems="center"

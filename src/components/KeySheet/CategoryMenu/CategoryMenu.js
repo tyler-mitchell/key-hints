@@ -218,7 +218,7 @@ export const CategoryMenu = ({ popupState }) => {
                           )}
                         </ThemeProvider>
                       </ListItemIcon>
-                      {renderCategoryItem(layer.keybind)}
+                      {renderCategoryItem(layer.keybind, layer.color)}
                     </ListItem>
                   );
                 })}
