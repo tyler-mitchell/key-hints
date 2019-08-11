@@ -1,14 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
-import { AnimatedKeyContainer, KeyTop, BottomKeyChar } from './Key.styles';
-import styled, { keyframes, css } from 'styled-components';
-import { findAll } from 'styled-components/test-utils';
-import { Box } from '@rebass/grid';
-import { shade, linearGradient, lighten } from 'polished';
-import Layer from '@material-ui/core/Box';
-import { FlashingContext } from './FlashingContext';
-import { Card, Grid, Paper } from '@material-ui/core';
-import { Textfit } from 'react-textfit';
+import React from "react";
+import { AnimatedKeyContainer, KeyChar, BottomKeyChar } from "./Key.styles";
+import styled, { keyframes, css } from "styled-components";
+import { findAll } from "styled-components/test-utils";
+import { Box } from "@rebass/grid";
+import { shade, linearGradient, lighten } from "polished";
+import Layer from "@material-ui/core/Box";
+import { FlashingContext } from "./FlashingContext";
+import { Card, Grid, Paper } from "@material-ui/core";
+import { Textfit } from "react-textfit";
+import { MouseIcon } from "./Icons";
 import {
   useSpring,
   animated,
@@ -17,28 +18,28 @@ import {
   interpolate,
   extrapolate,
   Easing
-} from 'react-spring';
-import fitty from 'fitty';
-import Typography from '@material-ui/core/Typography';
+} from "react-spring";
+import fitty from "fitty";
+import Typography from "@material-ui/core/Typography";
 import {
   ArrowBack as LeftArrowIcon,
   ArrowForward as RightArrowIcon,
   ArrowUpward as UpArrowIcon,
   ArrowDownward as DownArrowIcon
-} from '@material-ui/icons';
-import './key.css';
-import useMethods from 'use-methods';
+} from "@material-ui/icons";
+import "./key.css";
+import useMethods from "use-methods";
 
-import { FlashingKey } from './FlashingKey';
+import { FlashingKey } from "./FlashingKey";
 
-import { useGlobalState, setGlobalState } from '../../state';
-import _ from 'lodash';
+import { useGlobalState, setGlobalState } from "../../state";
+import _ from "lodash";
 
-import flatMap from 'lodash/flatMap';
-import KeyText from './KeyText/KeyText';
-import { motion } from 'framer-motion';
-import { TextField } from '@material-ui/core';
-import { useBoolean } from 'react-hanger';
+import flatMap from "lodash/flatMap";
+import KeyText from "./KeyText/KeyText";
+import { motion } from "framer-motion";
+import { TextField } from "@material-ui/core";
+import { useBoolean } from "react-hanger";
 
 const ConditionalWrap = ({ condition, wrap, children }) => {
   const [flashing] = React.useContext(FlashingContext);
@@ -47,14 +48,14 @@ const ConditionalWrap = ({ condition, wrap, children }) => {
 
 const initialState = {
   active: false,
-  activeColor: '#1fe3ac',
-  defaultColor: '#FFFFFF',
-  keyTopText: ''
+  activeColor: "#1fe3ac",
+  defaultColor: "#FFFFFF",
+  keyTopText: ""
 };
 
 const methods = state => {
-  const defaultActiveColor = '#1fe3ac';
-  const defaultColor = '#FFFFFF';
+  const defaultActiveColor = "#1fe3ac";
+  const defaultColor = "#FFFFFF";
   return {
     setActive() {
       state.keyColor = defaultActiveColor;
@@ -62,14 +63,14 @@ const methods = state => {
     },
     setInactiveMapKey() {
       state.keyColor = defaultColor;
-      state.keyTopText = '';
-      state.activeColor = '#1fe3ac';
+      state.keyTopText = "";
+      state.activeColor = "#1fe3ac";
       // state.active = false;
     },
     setActiveMapKey(keyColor, keyTopText) {
       state.activeColor = keyColor;
       state.keyTopText = keyTopText;
-      
+
       // state.active = true;
     },
     resetActiveColor() {
@@ -79,17 +80,30 @@ const methods = state => {
   };
 };
 
-export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, key }) => {
+export const Key = ({
+  label,
+  keyName,
+  margin,
+  uniqueKeyName,
+  wt,
+  ht,
+  m,
+  amin,
+  key,
+  KeyComponent,
+  KeyChar
+}) => {
   // global mode state
-  const [keyMapMode] = useGlobalState('keyMapMode');
-  const [editMode] = useGlobalState('editMode');
-  const [addMode] = useGlobalState('addMode');
+  const [keyMapMode] = useGlobalState("keyMapMode");
+  const [editMode] = useGlobalState("editMode");
+  const [addMode] = useGlobalState("addMode");
+  const [keyLabelAdded] = useGlobalState("keyLabelAdded");
 
   // global key state
-  const [activeLayers] = useGlobalState('activeLayers');
+  const [activeLayers] = useGlobalState("activeLayers");
 
-  const [newKeys, setNewKeys] = useGlobalState('newKeys');
-  const [activeKeys] = useGlobalState('activeKeys');
+  const [newKeys, setNewKeys] = useGlobalState("newKeys");
+  const [activeKeys] = useGlobalState("activeKeys");
 
   // use methods hook
   const [
@@ -103,17 +117,25 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
     RightArrow: <RightArrowIcon>{label}</RightArrowIcon>,
     UpArrow: <UpArrowIcon>{label}</UpArrowIcon>,
     DownArrow: <DownArrowIcon>{label}</DownArrowIcon>
+    // LeftClick: <UpArrowIcon>{label}</UpArrowIcon>,
+    // RightClick: <MouseIcon>{label}</MouseIcon>,
+    // MiddleMouseButton: <UpArrowIcon>{label}</UpArrowIcon>,
+    // ScrollUp: <UpArrowIcon>{label}</UpArrowIcon>,
+    // ScrollDown: <UpArrowIcon>{label}</UpArrowIcon>,
+    // DragMouse: <UpArrowIcon>{label}</UpArrowIcon>
   };
 
   // Use Effect Hook
   React.useEffect(() => {
     if (flatMap(activeKeys).includes(uniqueKeyName)) {
       if (editMode) {
-        console.log(`⭐:-------------- Key -> EDIT MODE ---------------`, editMode);
+        console.log(
+          `⭐:-------------- Key -> EDIT MODE ---------------`,
+          editMode
+        );
 
         setNewKeys(p => ({ ...p, keys: { key1: activeKeys } }));
         setActive.setTrue();
-        
       } else if (!keyMapMode) {
         setActive.setTrue();
       }
@@ -127,12 +149,11 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
         if (mainKeyIndex >= 0) {
           setActiveMapKey(layer.color, layer.keyDescription[mainKeyIndex]);
           setActive.setTrue();
-
         } else if (isMod) {
           setIsModifier(true);
           setActiveMapKey(layer.color, label);
           setActive.setTrue();
-        } 
+        }
       });
     }
 
@@ -146,14 +167,14 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
   // UseLayoutEffect Hook
   React.useLayoutEffect(() => {
     if (setActive.value && addMode) {
-      setGlobalState('lastKeyRef', label);
+      setGlobalState("lastKeyRef", label);
     }
   }, [setActive.value]);
 
   // Functions
   const addItem = key => {
     const index = _.size(newKeys.keys.key1);
-    const individualKeys = { ...newKeys.keys['key1'], [index]: key };
+    const individualKeys = { ...newKeys.keys["key1"], [index]: key };
     const keys = { key1: individualKeys };
     setNewKeys(p => ({ ...p, keys }));
   };
@@ -179,7 +200,7 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
   };
 
   const keyClicked = () => {
-    if (editMode || addMode) {
+    if ((editMode || addMode) && keyLabelAdded === false) {
       toggleKey(setActive.value);
     }
   };
@@ -197,11 +218,11 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
       borderBottomColor: `${shade(0.3, activeColor)}`,
       borderLeftColor: `${shade(0.09, activeColor)}`,
       borderRightColor: `${shade(0.09, activeColor)}`,
-      boxShadow: 'inset 0px 0px 10px rgba(0,0,0,0.5)',
-      background: `linear-gradient(-30deg, ${shade(0.05, activeColor)} 0%, ${lighten(
-        0.2,
+      boxShadow: "inset 0px 0px 10px rgba(0,0,0,0.5)",
+      background: `linear-gradient(-30deg, ${shade(
+        0.05,
         activeColor
-      )} 50%)`
+      )} 0%, ${lighten(0.2, activeColor)} 50%)`
     },
     to: [
       {
@@ -209,18 +230,18 @@ export const Key = ({ label, keyName, margin, uniqueKeyName, wt, ht, m, amin, ke
         borderBottomColor: `${shade(0.3, defaultColor)}`,
         borderLeftColor: `${shade(0.09, defaultColor)}`,
         borderRightColor: `${shade(0.09, defaultColor)}`,
-        boxShadow: 'inset 0px 0px 10px rgba(0,0,0,0.5)',
-        background: `linear-gradient(-30deg, ${shade(0.05, defaultColor)} 0%, ${lighten(
-          0.2,
+        boxShadow: "inset 0px 0px 10px rgba(0,0,0,0.5)",
+        background: `linear-gradient(-30deg, ${shade(
+          0.05,
           defaultColor
-        )} 50%)`
+        )} 0%, ${lighten(0.2, defaultColor)} 50%)`
       }
     ],
     config: { mass: 1, tension: 180, friction: 12, duration: 300 }
   });
 
   const keyTopTextRef = React.useRef(null);
-  setGlobalState('keyTopTextRefs', v => ({ ...v, [label]: keyTopTextRef }));
+  setGlobalState("keyTopTextRefs", v => ({ ...v, [label]: keyTopTextRef }));
   const [isModifier, setIsModifier] = React.useState(false);
 
   return (
@@ -244,7 +265,7 @@ backgroundColor: 'rgba(255, 255, 255, .2)',
 backdropFilter: 'blur(30px)',
       }}/> */}
       <AnimatedKeyContainer
-        active={setActive.value}
+        // active={setActive.value}
         // active={active}
         margin={margin}
         style={{
@@ -259,35 +280,40 @@ backdropFilter: 'blur(30px)',
         ht={ht}
         onClick={keyClicked}
       >
-        <KeyTop color={defaultColor} wt={wt} ht={ht}
+        <KeyChar
+          color={defaultColor}
+          wt={wt}
+          ht={ht}
           style={{
-            background,
+            background
             // backgroundClip: 'content-box',
-  }}>
+          }}
+        >
           {/* <KeyChar ref={keyTopTextRef}>Basic Editing the view port</KeyChar> */}
 
-          {(keyMapMode || addMode) &&
-            <div
-              ref={keyTopTextRef}
-              style={{
-                // color: x.interpolate(x=>`rgba(0, 0, 0, ${x})`),
-                height: ht * 0.7 * 0.95,
-                width: (wt - 17) * 0.95,
-                alignItems: 'center',
-                justifyContent: 'center',
-                overflow: 'hidden',
-                fontFamily: 'Karla, sans-serif'
-              }}
-            >
-              {keyMapMode && <KeyText keyTopText={keyTopText} />}
-      
-            </div>}
+          {keyName in iconLabels ? iconLabels[keyName] : label}
+          {/* <div
+            ref={keyTopTextRef}
+            style={{
+              // color: x.interpolate(x=>`rgba(0, 0, 0, ${x})`),
+              height: ht * 0.7 * 0.95,
+              width: (wt - 17) * 0.95,
+              alignItems: "center",
+              justifyContent: "center",
+              overflow: "hidden",
+              fontFamily: "Karla, sans-serif"
+            }}
+          >
+            {keyMapMode && <KeyText keyTopText={keyTopText} />}
+          </div> */}
 
           {/* {(!keyMapMode) && <KeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</KeyChar>} */}
-        </KeyTop>
+        </KeyChar>
         {/* {((setActive.value && !isModifier) || !keyMapMode) && (
-            <BottomKeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</BottomKeyChar>
-          )} */}
+          <BottomKeyChar>
+            {keyName in iconLabels ? iconLabels[keyName] : label}
+          </BottomKeyChar>
+        )} */}
       </AnimatedKeyContainer>
     </ConditionalWrap>
   );

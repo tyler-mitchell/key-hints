@@ -1,20 +1,20 @@
-import { createGlobalState } from 'react-hooks-global-state';
-import React from 'react';
+import { createGlobalState } from "react-hooks-global-state";
+import React from "react";
 
-import { useSpring, animated, config } from 'react-spring';
-import useColorLoop from './components/Key/FlashingKey';
+import { useSpring, animated, config } from "react-spring";
+import useColorLoop from "./components/Key/FlashingKey";
 
 // FAVORITES:
-// 'Raleway, sans-serif', 
+// 'Raleway, sans-serif',
 const fonts = [
-  'Hammersmith One, sans-serif',
-  'Karla, sans-serif',
-  'Basic, sans-serif',
-  'Ramabhadra, sans-serif',
-  'NTR, sans-serif',
-  'K2D, sans-serif',
-  ]
-  
+  "Hammersmith One, sans-serif",
+  "Karla, sans-serif",
+  "Basic, sans-serif",
+  "Ramabhadra, sans-serif",
+  "NTR, sans-serif",
+  "K2D, sans-serif"
+];
+
 // const fonts = [
 //   'Karla, sans-serif',
 //   'Raleway, sans-serif',
@@ -40,11 +40,12 @@ const fonts = [
 //   'Fira Sans Condensed, sans-serif',
 //   'DM Sans, sans-serif',
 //   ]
-  
-  
-  
-const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalState({
 
+const {
+  GlobalStateProvider,
+  setGlobalState,
+  useGlobalState
+} = createGlobalState({
   activeKeys: {},
   activeKeysIndex: null,
   editMode: false,
@@ -60,6 +61,7 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
   selectedCategoryIndex: -1,
   selectedKeySheet: 0,
   addMode: false,
+  keyLabelAdded: false,
   keyMapMode: false,
   activeLayers: null,
   allLayers: null,
@@ -70,41 +72,32 @@ const { GlobalStateProvider, setGlobalState, useGlobalState } = createGlobalStat
   keyTopTextRefs: {},
   activeKeyMapKeys: [],
   lastKeyRef: null,
-  
+
   newKeys: {
     keys: { key1: {} },
-    description: 'no description',
-    category: 'none',
-    keyDescription: ''
+    description: "no description",
+    category: "none",
+    keyDescription: ""
   },
-  sheetCategory: 'All',
+  sheetCategory: "All",
   sheetNames: {},
   curShortcutObjectKey: null,
   devFonts: fonts,
-  currentFont: 'Encode Sans Expanded, sans-serif',
-    
-
+  currentFont: "Encode Sans Expanded, sans-serif"
 });
 
-
-
 export const clearKeySelection = () => {
-  setGlobalState('selectedItem', null)
-  setGlobalState('activeKeys', {})
-  setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }))
-}
+  setGlobalState("selectedItem", null);
+  setGlobalState("activeKeys", {});
+  setGlobalState("newKeys", v => ({ ...v, keys: { key1: {} } }));
+};
 
-export const selectNewSheet = (index) => {
-  setGlobalState('selectedItem', null)
-  setGlobalState('activeKeys', {})
-  setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }))
-  setGlobalState('selectedKeySheet', index)
+export const selectNewSheet = index => {
+  setGlobalState("selectedItem", null);
+  setGlobalState("activeKeys", {});
+  setGlobalState("newKeys", v => ({ ...v, keys: { key1: {} } }));
+  setGlobalState("selectedKeySheet", index);
+};
 
-}
-
-export const cycleFonts = () => {
-
-}
+export const cycleFonts = () => {};
 export { GlobalStateProvider, useGlobalState, setGlobalState };
-
-

@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import styled, { keyframes, css } from 'styled-components';
-import { findAll } from 'styled-components/test-utils';
-import React from 'react';
-import { Box } from '@rebass/grid';
-import { shade, linearGradient, lighten } from 'polished';
-import Layer from '@material-ui/core/Box';
-import { FlashingContext } from './FlashingContext';
-import { Card, Grid, Paper } from '@material-ui/core';
-import { Textfit } from 'react-textfit';
+import styled, { keyframes, css } from "styled-components";
+import { findAll } from "styled-components/test-utils";
+import React from "react";
+import { Box } from "@rebass/grid";
+import { shade, linearGradient, lighten } from "polished";
+import Layer from "@material-ui/core/Box";
+import { FlashingContext } from "./FlashingContext";
+import { Card, Grid, Paper } from "@material-ui/core";
+import { Textfit } from "react-textfit";
 import {
   useSpring,
   animated,
@@ -16,27 +16,26 @@ import {
   interpolate,
   extrapolate,
   Easing
-} from 'react-spring';
-import fitty from 'fitty';
-import Typography from '@material-ui/core/Typography';
+} from "react-spring";
+import fitty from "fitty";
+import Typography from "@material-ui/core/Typography";
 import {
   ArrowBack as LeftArrowIcon,
   ArrowForward as RightArrowIcon,
   ArrowUpward as UpArrowIcon,
   ArrowDownward as DownArrowIcon
-} from '@material-ui/icons';
-import './key.css';
+} from "@material-ui/icons";
+import "./key.css";
 
-import { FlashingKey } from './FlashingKey';
+import { FlashingKey } from "./FlashingKey";
 
-import { useGlobalState, setGlobalState } from '../../state';
-import _ from 'lodash';
+import { useGlobalState, setGlobalState } from "../../state";
+import _ from "lodash";
 
-import flatMap from 'lodash/flatMap';
-import KeyText from './KeyText/KeyText';
-import { motion } from 'framer-motion';
-import { TextField } from '@material-ui/core';
-
+import flatMap from "lodash/flatMap";
+import KeyText from "./KeyText/KeyText";
+import { motion } from "framer-motion";
+import { TextField } from "@material-ui/core";
 
 export const KeyContainer = styled(animated.div)`
   /* transform: scaleX(0.95); */
@@ -88,14 +87,14 @@ export const KeyContainer = styled(animated.div)`
   }
 
   &:hover::after {
-    background-color: ${props => shade(0.05, '#1fe3ac')};
+    background-color: ${props => shade(0.05, "#1fe3ac")};
     opacity: 0.5;
     transition: all 0.4s ease-in-out;
   }
 `;
 
-
-
+const MiscKeyContainer = styled(KeyContainer)``;
+export const AnimatedMiscKeyContainer = animated(MiscKeyContainer);
 export const AnimatedKeyContainer = animated(KeyContainer);
 
 export const ActiveKeyContainer = styled(KeyContainer)`
@@ -112,20 +111,15 @@ export const ActiveKeyContainer = styled(KeyContainer)`
 export const KeyTop = styled(animated.div)`
   height: ${props => props.ht * 0.7}px;
   width: ${props => props.wt - 12}px;
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
-  /* border-width: 3px; */
- 
-  
-  /* box-shadow:  0px 0px 3px 2px rgba(0,0,0,0.1); */
-  
-  
-  border-radius: 8px;
-  
- 
-  /* background-clip: border-box; */
-  box-sizing:border-box;
 
+  /* text-align: center; */
+  user-select: none;
+  border-radius: 8px;
+  box-sizing: border-box;
 `;
 
 export const BottomKeyChar = styled.div`
@@ -133,14 +127,14 @@ export const BottomKeyChar = styled.div`
   position: absolute;
   z-index: 4;
 
-  font-family: 'Hammersmith One', sans-serif;
+  font-family: "Hammersmith One", sans-serif;
 
   font-weight: bold;
   color: rgba(0, 0, 0, 0.45);
   user-select: none;
   width: auto;
   height: auto;
-  
+
   /* position: 'relative'; */
   transform: rotateX(8deg) translateY(34px) scale(1);
 
@@ -168,7 +162,6 @@ export const Span = styled.div`
   position: relative;
   padding-top: 5px;
   border-radius: 8px;
-  
+
   transition: 1s ease;
 `;
-
