@@ -30,6 +30,7 @@ import _ from "lodash";
 import { useTransition, animated, config, useSpring } from "react-spring";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePrevious } from "../../hooks/helpers";
+import { renderIcon } from "../KeyList/KeyListItem";
 import { Button } from "@material-ui/core";
 import { Fab } from "@material-ui/core";
 import { Paper } from "@material-ui/core";
@@ -205,7 +206,7 @@ const KeyItems = keyItem => {
               position: "relative"
             }}
           >
-            {index === sequence.length - 1 && (
+            {/* {index === sequence.length - 1 && (
               <AddKeyLabelButton
                 onClick={() => {
                   setKeyLabelAdded(true);
@@ -217,9 +218,9 @@ const KeyItems = keyItem => {
               >
                 <AddIcon className={classes.KeyLabelButtonIcon} />
               </AddKeyLabelButton>
-            )}
+            )} */}
 
-            <KBD>{renderIcon(shortcut.kb)}</KBD>
+            {renderIcon(shortcut.kb)}
           </motion.div>
 
           <motion.div
@@ -252,49 +253,6 @@ export const renderAddedKeys = keybind => {
       })}
     </>
   );
-};
-
-const renderIcon = keyLabel => {
-  const iconLabels = {
-    "←": (
-      <LeftArrowIcon
-        fontSize="small"
-        style={{ display: "inline-block", verticalAlign: "middle" }}
-      >
-        {keyLabel}
-      </LeftArrowIcon>
-    ),
-    "→": (
-      <RightArrowIcon
-        fontSize="small"
-        style={{ display: "inline-block", verticalAlign: "middle" }}
-      >
-        {keyLabel}
-      </RightArrowIcon>
-    ),
-    "↑": (
-      <UpArrowIcon
-        fontSize="small"
-        style={{ display: "inline-block", verticalAlign: "middle" }}
-      >
-        {keyLabel}
-      </UpArrowIcon>
-    ),
-    "↓": (
-      <DownArrowIcon
-        fontSize="small"
-        style={{ display: "inline-block", verticalAlign: "middle" }}
-      >
-        {keyLabel}
-      </DownArrowIcon>
-    )
-  };
-
-  if (keyLabel in iconLabels) {
-    return iconLabels[keyLabel];
-  } else {
-    return keyLabel;
-  }
 };
 
 const KbdKeyList = styled(ListItem)``;
@@ -364,6 +322,7 @@ const KBD = styled.kbd`
   margin: 0px 4px;
   background: #fff;
   border-radius: 4px;
+
   /* box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.5); */
   /*Text Properties*/
   /* font: 10px Helvetica, serif ; */

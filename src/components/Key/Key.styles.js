@@ -61,7 +61,7 @@ export const KeyContainer = styled(animated.div)`
   justify-content: center;
   align-items: center;
   position: relative;
-  
+  backface-visibility: hidden;
   /* transition: filter .3s; */
   
   &:hover {
@@ -111,11 +111,11 @@ export const ActiveKeyContainer = styled(KeyContainer)`
 export const KeyTop = styled(animated.div)`
   height: ${props => props.ht * 0.7}px;
   width: ${props => props.wt - 12}px;
-  display: flex;
+  /* display: flex; */
   justify-content: center;
   align-items: center;
   position: absolute;
-
+  backface-visibility: hidden;
   /* text-align: center; */
   user-select: none;
   border-radius: 8px;
@@ -149,7 +149,7 @@ export const KeyChar = styled.div`
   margin: 0 auto;
   overflow: hidden;
   font-size: 20px;
-
+  backface-visibility: hidden;
   font-weight: bold;
   color: rgba(0, 0, 0, 0.45);
   user-select: none;

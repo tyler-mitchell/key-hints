@@ -57,6 +57,10 @@ import { CardHeader, AppBar } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles({
+  descriptionField: {
+    padding: 0,
+    background: "white"
+  },
   gridContainer: {
     width: "95%"
   },
@@ -330,17 +334,21 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
                 spacing={1}
                 xs={12}
               >
-                <Grid item xs={4}>
-                  <Typography component="h6" variant="h6">
-                    Description
-                  </Typography>
-
+                <Grid item xs={3}>
                   <TextField
                     // value={newKeys.description}
                     multiline={true}
-                    // variant="filled"
+                    variant="outlined"
+                    style={{
+                      margin: 0,
+                      "label + &": {
+                        marginTop: 0
+                      },
+
+                      background: "white"
+                    }}
                     fullWidth
-                    placeholder="enter shortcut description"
+                    placeholder="shortcut description"
                     onChange={event => handleDescriptionChange(event)}
                     rowsMax={3}
                   />
