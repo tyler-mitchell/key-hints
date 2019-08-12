@@ -17,6 +17,14 @@ import React from "react";
 // const specialSize = 1.25 * keySize;
 // const capslockSize = 1.77 * keySize;
 // const backspaceSize = 2 * keySize;
+import {
+  KeyChar,
+  KeyCharTopLeft,
+  KeyCharBottomCenter,
+  KeyCharTopCenter,
+  KeyCharCenter
+} from "../Key/Key.styles";
+import { Windows10Logo } from "../../assets";
 
 export const keySize = 70;
 export const mw = keySize * 15;
@@ -62,77 +70,86 @@ const spaceSize = (6.25 + 0.207) * keySize;
 const specialSize = 1.25 * keySize;
 
 export const firstRow = {
-  Backquote: ["`", regularSize],
-  Digit1: ["1", regularSize],
-  Digit2: ["2", regularSize],
-  Digit3: ["3", regularSize],
-  Digit4: ["4", regularSize],
-  Digit5: ["5", regularSize],
-  Digit6: ["6", regularSize],
-  Digit7: ["7", regularSize],
-  Digit8: ["8", regularSize],
-  Digit9: ["9", regularSize],
-  Digit0: ["0", regularSize],
-  Minus: ["-", regularSize],
-  Equal: ["=", regularSize],
-  Backspace: ["Backspace", backspaceSize],
-  PageUp: ["PgUp", regularSize]
+  Backquote: { label: "`", size: regularSize, KeyChar: KeyCharTopLeft },
+  Digit1: { label: "1", size: regularSize, KeyChar: KeyCharTopLeft },
+  Digit2: { label: "2", size: regularSize, KeyChar: KeyCharTopLeft },
+  Digit3: { label: "3", size: regularSize, KeyChar: KeyCharTopLeft },
+  Digit4: { label: "4", size: regularSize, KeyChar: KeyCharTopLeft },
+  Digit5: { label: "5", size: regularSize, KeyChar: KeyCharTopLeft },
+  Digit6: { label: "6", size: regularSize, KeyChar: KeyCharTopLeft },
+  Digit7: { label: "7", size: regularSize, KeyChar: KeyCharTopLeft },
+  Digit8: { label: "8", size: regularSize, KeyChar: KeyCharTopLeft },
+  Digit9: { label: "9", size: regularSize, KeyChar: KeyCharTopLeft },
+  Digit0: { label: "0", size: regularSize, KeyChar: KeyCharTopLeft },
+  Minus: { label: "-", size: regularSize, KeyChar: KeyCharTopLeft },
+  Equal: { label: "=", size: regularSize, KeyChar: KeyCharTopLeft },
+  Backspace: {
+    label: "Backspace",
+    size: backspaceSize,
+    KeyChar: KeyCharCenter
+  },
+  PageUp: { label: "PgUp", size: regularSize, KeyChar: KeyCharCenter }
 };
 
 export const secondRow = {
-  Tab: ["Tab", tabSize],
-  KeyQ: ["Q", regularSize],
-  KeyW: ["W", regularSize],
-  KeyE: ["E", regularSize],
-  KeyR: ["R", regularSize],
-  KeyT: ["T", regularSize],
-  KeyY: ["Y", regularSize],
-  KeyU: ["U", regularSize],
-  KeyI: ["I", regularSize],
-  KeyO: ["O", regularSize],
-  KeyP: ["P", regularSize],
-  BracketLeft: ["[", regularSize],
-  BracketRight: ["]", regularSize],
-  Backslash: ["\\", backslashSize],
-  PageDown: ["PgDn", regularSize]
+  Tab: { label: "Tab", size: tabSize, KeyChar: KeyCharCenter },
+  KeyQ: { label: "Q", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyW: { label: "W", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyE: { label: "E", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyR: { label: "R", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyT: { label: "T", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyY: { label: "Y", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyU: { label: "U", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyI: { label: "I", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyO: { label: "O", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyP: { label: "P", size: regularSize, KeyChar: KeyCharTopLeft },
+  BracketLeft: { label: "[", size: regularSize, KeyChar: KeyCharTopLeft },
+  BracketRight: { label: "]", size: regularSize, KeyChar: KeyCharTopLeft },
+  Backslash: { label: "\\", size: backslashSize, KeyChar: KeyCharTopLeft },
+  PageDown: { label: "PgDn", size: regularSize, KeyChar: KeyCharCenter }
 };
 export const thirdRow = {
-  CapsLock: ["Capslock", capslockSize, "modifier"],
-  KeyA: ["A", regularSize],
-  KeyS: ["S", regularSize],
-  KeyD: ["D", regularSize],
-  KeyF: ["F", regularSize],
-  KeyG: ["G", regularSize],
-  KeyH: ["H", regularSize],
-  KeyJ: ["J", regularSize],
-  KeyK: ["K", regularSize],
-  KeyL: ["L", regularSize],
-  Semicolon: [";", regularSize],
-  Quote: ["'", regularSize],
-  Enter: ["Enter", enterSize],
-  Insert: ["Insert", regularSize]
+  CapsLock: {
+    label: "Capslock",
+    size: capslockSize,
+    modifier: "modifier",
+    KeyChar: KeyCharCenter
+  },
+  KeyA: { label: "A", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyS: { label: "S", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyD: { label: "D", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyF: { label: "F", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyG: { label: "G", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyH: { label: "H", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyJ: { label: "J", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyK: { label: "K", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyL: { label: "L", size: regularSize, KeyChar: KeyCharTopLeft },
+  Semicolon: { label: ";", size: regularSize, KeyChar: KeyCharTopLeft },
+  Quote: { label: "'", size: regularSize, KeyChar: KeyCharTopLeft },
+  Enter: { label: "Enter", size: enterSize, KeyChar: KeyCharCenter },
+  Insert: { label: "Insert", size: regularSize, KeyChar: KeyCharCenter }
 };
 
 export const fourthRow = {
-  Shiftleft: ["Shift", shiftSize],
-  KeyZ: ["Z", regularSize],
-  KeyX: ["X", regularSize],
-  KeyC: ["C", regularSize],
-  KeyF: ["V", regularSize],
-  KeyH: ["B", regularSize],
-  KeyJ: ["N", regularSize],
-  KeyK: ["M", regularSize],
-  Comma: [",", regularSize],
-  Period: [".", regularSize],
-  Slash: ["/", regularSize],
-  ShiftRight: ["Shift", rshiftSize],
-  UpArrow: ["↑", regularSize],
-  Delete: ["Delete", regularSize]
+  Shiftleft: { label: "Shift", size: shiftSize, KeyChar: KeyCharCenter },
+  KeyZ: { label: "Z", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyX: { label: "X", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyC: { label: "C", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyF: { label: "V", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyH: { label: "B", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyJ: { label: "N", size: regularSize, KeyChar: KeyCharTopLeft },
+  KeyK: { label: "M", size: regularSize, KeyChar: KeyCharTopLeft },
+  Comma: { label: ",", size: regularSize, KeyChar: KeyCharTopLeft },
+  Period: { label: ".", size: regularSize, KeyChar: KeyCharTopLeft },
+  Slash: { label: "/", size: regularSize, KeyChar: KeyCharTopLeft },
+  ShiftRight: { label: "Shift", size: rshiftSize, KeyChar: KeyCharCenter },
+  UpArrow: { label: "↑", size: regularSize, KeyChar: KeyCharCenter },
+  Delete: { label: "Delete", size: regularSize, KeyChar: KeyCharCenter }
 };
 export const excludedKeys = {
-  ControlRight: ["Ctrl", specialSize],
-  ShiftRight: ["Shift", rshiftSize],
-  AltRight: ["Alt", specialSize]
+  ControlRight: { label: "Ctrl", size: specialSize, KeyChar: KeyCharTopLeft },
+  ShiftRight: { label: "Shift", size: rshiftSize, KeyChar: KeyCharTopLeft },
+  AltRight: { label: "Alt", size: specialSize, KeyChar: KeyCharTopLeft }
 };
 {
   /* <LeftArrowIcon>{label}</LeftArrowIcon>,
@@ -141,32 +158,56 @@ export const excludedKeys = {
 <DownArrowIcon>{label}</DownArrowIcon> */
 }
 export const fifthRow = {
-  ControlLeft: ["Ctrl", specialSize],
-  MetaLeft: ["⊞", specialSize],
-  AltLeft: ["Alt", specialSize],
-  Space: ["", spaceSize],
-  AltRight: ["Alt", regularSize],
-  ContextMenu: ["≣", regularSize],
-  ControlRight: ["Ctrl", regularSize],
-  LeftArrow: ["←", regularSize],
-  DownArrow: ["↓", regularSize],
-  RightArrow: ["→", regularSize]
+  ControlLeft: { label: "Ctrl", size: specialSize, KeyChar: KeyCharCenter },
+  MetaLeft: {
+    label: <Windows10Logo />,
+    size: specialSize,
+    KeyChar: KeyCharCenter
+  },
+  AltLeft: { label: "Alt", size: specialSize, KeyChar: KeyCharCenter },
+  Space: { label: "", size: spaceSize, KeyChar: KeyCharTopLeft },
+  AltRight: { label: "Alt", size: regularSize, KeyChar: KeyCharCenter },
+  ContextMenu: { label: "≣", size: regularSize, KeyChar: KeyCharCenter },
+  ControlRight: { label: "Ctrl", size: regularSize, KeyChar: KeyCharCenter },
+  LeftArrow: { label: "←", size: regularSize, KeyChar: KeyCharCenter },
+  DownArrow: { label: "↓", size: regularSize, KeyChar: KeyCharCenter },
+  RightArrow: { label: "→", size: regularSize, KeyChar: KeyCharCenter }
 };
 
 export const miscKeys = {
   // Equal: ['=', regularSize*3],
-  LeftClick: [<LeftMouseClickIcon />, regularSize],
-  MiddleMouseButton: [<MiddleMouseButtonIcon />, regularSize],
-  RightClick: [<RightMouseClickIcon />, regularSize],
-  ScrollUp: [<MouseScrollUpIcon />, regularSize],
-  ScrollDown: [<MouseScrollDownIcon />, regularSize],
-  DragMouse: ["", regularSize],
-  Digit6: ["", regularSize],
-  Digit7: ["", regularSize],
-  Digit8: ["", regularSize],
-  Digit9: ["", regularSize],
-  Digit0: ["", regularSize],
-  Minus: ["", regularSize]
+  LeftClick: {
+    label: <LeftMouseClickIcon />,
+    size: regularSize,
+    KeyChar: KeyChar
+  },
+  MiddleMouseButton: {
+    label: <MiddleMouseButtonIcon />,
+    size: regularSize,
+    KeyChar: KeyChar
+  },
+  RightClick: {
+    label: <RightMouseClickIcon />,
+    size: regularSize,
+    KeyChar: KeyChar
+  },
+  ScrollUp: {
+    label: <MouseScrollUpIcon />,
+    size: regularSize,
+    KeyChar: KeyChar
+  },
+  ScrollDown: {
+    label: <MouseScrollDownIcon />,
+    size: regularSize,
+    KeyChar: KeyChar
+  },
+  DragMouse: { label: "", size: regularSize, KeyChar: KeyCharTopLeft },
+  Digit6: { label: "", size: regularSize, KeyChar: KeyCharTopLeft },
+  Digit7: { label: "", size: regularSize, KeyChar: KeyCharTopLeft },
+  Digit8: { label: "", size: regularSize, KeyChar: KeyCharTopLeft },
+  Digit9: { label: "", size: regularSize, KeyChar: KeyCharTopLeft },
+  Digit0: { label: "", size: regularSize, KeyChar: KeyCharTopLeft },
+  Minus: { label: "", size: regularSize, KeyChar: KeyCharTopLeft }
 
   // Equal: ['=', regularSize],
   // Backspace: ['`', regularSize],

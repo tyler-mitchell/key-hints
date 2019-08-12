@@ -1,6 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
-import { AnimatedKeyContainer, KeyChar, BottomKeyChar } from "./Key.styles";
+import {
+  AnimatedKeyContainer,
+  BottomKeyChar,
+  KeyTop,
+  KeyCharCenter
+} from "./Key.styles";
 import styled, { keyframes, css } from "styled-components";
 import { findAll } from "styled-components/test-utils";
 import { Box } from "@rebass/grid";
@@ -211,9 +216,12 @@ export const Key = ({
     borderLeftColor,
     borderRightColor,
     background
+
+    // transform
   } = useSpring({
-    reverse: setActive.value,
-    from: {
+    reverse: !setActive.value,
+    reset: setActive.value,
+    to: {
       borderTopColor: `${shade(0.02, activeColor)}`,
       borderBottomColor: `${shade(0.3, activeColor)}`,
       borderLeftColor: `${shade(0.09, activeColor)}`,
@@ -224,19 +232,29 @@ export const Key = ({
         activeColor
       )} 0%, ${lighten(0.2, activeColor)} 50%)`
     },
-    to: [
-      {
-        borderTopColor: `${shade(0.02, defaultColor)}`,
-        borderBottomColor: `${shade(0.3, defaultColor)}`,
-        borderLeftColor: `${shade(0.09, defaultColor)}`,
-        borderRightColor: `${shade(0.09, defaultColor)}`,
-        boxShadow: "inset 0px 0px 10px rgba(0,0,0,0.5)",
-        background: `linear-gradient(-30deg, ${shade(
-          0.05,
-          defaultColor
-        )} 0%, ${lighten(0.2, defaultColor)} 50%)`
-      }
-    ],
+    from: {
+      borderTopColor: `${shade(0.02, defaultColor)}`,
+      borderBottomColor: `${shade(0.3, defaultColor)}`,
+      borderLeftColor: `${shade(0.09, defaultColor)}`,
+      borderRightColor: `${shade(0.09, defaultColor)}`,
+      boxShadow: "inset 0px 0px 10px rgba(0,0,0,0.5)",
+      background: `linear-gradient(-30deg, ${shade(
+        0.05,
+        defaultColor
+      )} 0%, ${lighten(0.2, defaultColor)} 50%)`
+    },
+    config: { mass: 1, tension: 180, friction: 12, duration: 2300 }
+  });
+  const { transform } = useSpring({
+    reverse: setActive.value,
+    reset: setActive.value,
+    from: {
+      transform: "scale(1)"
+    },
+    to: {
+      transform: "scale(0)"
+    },
+    delay: 600,
     config: { mass: 1, tension: 180, friction: 12, duration: 300 }
   });
 
@@ -280,35 +298,46 @@ backdropFilter: 'blur(30px)',
         ht={ht}
         onClick={keyClicked}
       >
-        <KeyChar
+        <KeyTop
           color={defaultColor}
           wt={wt}
           ht={ht}
           style={{
             background
+
             // backgroundClip: 'content-box',
           }}
         >
           {/* <KeyChar ref={keyTopTextRef}>Basic Editing the view port</KeyChar> */}
 
-          {keyName in iconLabels ? iconLabels[keyName] : label}
-          {/* <div
-            ref={keyTopTextRef}
-            style={{
-              // color: x.interpolate(x=>`rgba(0, 0, 0, ${x})`),
-              height: ht * 0.7 * 0.95,
-              width: (wt - 17) * 0.95,
-              alignItems: "center",
-              justifyContent: "center",
-              overflow: "hidden",
-              fontFamily: "Karla, sans-serif"
-            }}
-          >
-            {keyMapMode && <KeyText keyTopText={keyTopText} />}
-          </div> */}
+          {!keyMapMode && (
+            <KeyChar>
+              {keyName in iconLabels ? iconLabels[keyName] : label}
+            </KeyChar>
+          )}
+          {keyMapMode && (
+            <KeyCharCenter
+              ref={keyTopTextRef}
+              style={{ transform }}
+
+              // style={{
+              //   // color: x.interpolate(x=>`rgba(0, 0, 0, ${x})`),
+              //   // height: ht * 0.7 * 0.95,
+              //   // width: (wt - 17) * 0.95,
+              //   position: "absolute",
+              //   textAlign: "center",
+              //   alignItems: "center",
+              //   justifyContent: "center",
+              //   overflow: "hidden",
+              //   fontFamily: "Karla, sans-serif"
+              // }}
+            >
+              <KeyText active={setActive.value} keyTopText={keyTopText} />
+            </KeyCharCenter>
+          )}
 
           {/* {(!keyMapMode) && <KeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</KeyChar>} */}
-        </KeyChar>
+        </KeyTop>
         {/* {((setActive.value && !isModifier) || !keyMapMode) && (
           <BottomKeyChar>
             {keyName in iconLabels ? iconLabels[keyName] : label}

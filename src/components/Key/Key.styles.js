@@ -37,7 +37,7 @@ import KeyText from "./KeyText/KeyText";
 import { motion } from "framer-motion";
 import { TextField } from "@material-ui/core";
 
-export const KeyContainer = styled(animated.div)`
+export const AnimatedKeyContainer = styled(animated.div)`
   /* transform: scaleX(0.95); */
   /* padding: 0 1.5px; */
   /* margin: ${props => props.margin}; */
@@ -47,9 +47,15 @@ export const KeyContainer = styled(animated.div)`
 
   
 
-  background: #ddd;
+  /* background: #ddd; */
+ 
+  position: relative;
+  backface-visibility: hidden;
   width: ${props => props.wt}px;
   height: ${props => props.ht}px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   border-width: 8px 8px 15px 8px;
 
@@ -57,69 +63,91 @@ export const KeyContainer = styled(animated.div)`
 
   border-radius: 8px;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  backface-visibility: hidden;
+  
   /* transition: filter .3s; */
+  border-style: solid;
+  /* transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1), filter 0.5s; */
   
   &:hover {
-    background-position: 0 0, 0 0;
+    /* background-position: 0 0, 0 0; */
     /* transition-duration: 0.5s; */
     /* background: inherit; */
 
     /* filter: contrast(140%); */
   }
 
-  border-style: solid;
   
-  transition: transform 300ms cubic-bezier(0.075, 0.82, 0.165, 1), filter 0.5s;
 
   
-  &:last-child {
-    /* border-width: 10px 12px 20px 10px; */
-  }
 
-  &:first-child {
-    /* margin-bottom: 3px; */
-    /* border-width: 10px 10px 20px 10px; */
-  }
-
-  &:hover::after {
+  /* &:hover::after {
     background-color: ${props => shade(0.05, "#1fe3ac")};
     opacity: 0.5;
     transition: all 0.4s ease-in-out;
-  }
+    
+  } */
+  
 `;
 
-const MiscKeyContainer = styled(KeyContainer)``;
+const MiscKeyContainer = styled(AnimatedKeyContainer)``;
 export const AnimatedMiscKeyContainer = animated(MiscKeyContainer);
-export const AnimatedKeyContainer = animated(KeyContainer);
+// export const AnimatedKeyContainer = animated(KeyContainer);
 
-export const ActiveKeyContainer = styled(KeyContainer)`
+export const ActiveKeyContainer = styled(AnimatedKeyContainer)`
   border-top-color: ${props => shade(0.02, props.color)};
   border-bottom-color: ${props => shade(0.3, props.color)};
   border-left-color: ${props => shade(0.09, props.color)};
   border-right-color: ${props => shade(0.09, props.color)};
 
-  &:hover {
+  /* &:hover {
     animation-delay: 2s;
-  }
+  } */
 `;
 
 export const KeyTop = styled(animated.div)`
+  position: absolute;
+  display: flex;
+  user-select: none;
   height: ${props => props.ht * 0.7}px;
   width: ${props => props.wt - 12}px;
-  /* display: flex; */
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  backface-visibility: hidden;
-  /* text-align: center; */
-  user-select: none;
-  border-radius: 8px;
   box-sizing: border-box;
+  border-radius: 8px;
+  backface-visibility: hidden;
+
+  /* padding: 5px; */
+  /* padding-bottom: auto; */
+
+  /* text-align: left; */
+  /* text-align: center; */
+  font-family: "Karla", sans-serif;
+  /* font-family: "Hammersmith One", sans-serif; */
+
+  /* align-items: flex-start; */
+  /* justify-content: center; */
+  /* align-items: center; */
+`;
+export const KeyCharCenter = styled(animated.div)`
+  display: flex;
+  position: relative;
+  width: inherit;
+  align-items: center;
+  justify-content: center;
+  height: inherit;
+  margin: 0 auto;
+  will-change: transform, scale, opacity;
+`;
+
+export const KeyCharTopLeft = styled.div`
+  padding: 5px;
+`;
+
+export const KeyCharTopCenter = styled(motion.div)`
+  flex-direction: column;
+  /* text-align: center; */
+  /* top: 2px; */
+`;
+export const KeyCharBottomCenter = styled.div`
+  align-self: center;
 `;
 
 export const BottomKeyChar = styled.div`
@@ -142,6 +170,7 @@ export const BottomKeyChar = styled.div`
 `;
 export const KeyChar = styled.div`
   display: flex;
+  position: relative;
   width: inherit;
   align-items: center;
   justify-content: center;

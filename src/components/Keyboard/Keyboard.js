@@ -122,16 +122,16 @@ const KeyRow = React.memo(({ row }) => {
       >
         <Key
           item
-          label={row[keyName][0]}
+          label={row[keyName]["label"]}
           key={i}
           KeyComponent={AnimatedKeyContainer}
           margin={calculateMargin(i, len)}
-          uniqueKeyName={keyName in excludedKeys ? null : row[keyName][0]}
+          uniqueKeyName={keyName in excludedKeys ? null : row[keyName]["label"]}
           keyName={keyName}
-          wt={`${row[keyName][1]}`}
+          wt={`${row[keyName]["size"]}`}
           ht={`${keySize}`}
           keySize={keySize}
-          KeyChar={KeyTop}
+          KeyChar={row[keyName]["KeyChar"]}
           borderWidth="10px 10px 20px 10px"
         />
       </GridItem>
@@ -168,7 +168,7 @@ const renderMiscKeys = row => {
         ht={`${keySize - 10}`}
         borderWidth="5px 5px 10px 5px"
         keySize={keySize}
-        KeyChar={KeyTop}
+        KeyChar={row[keyName]["KeyChar"]}
       />
     </GridItem>
   ));
