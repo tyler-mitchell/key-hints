@@ -37,7 +37,7 @@ import KeyText from "./KeyText/KeyText";
 import { motion } from "framer-motion";
 import { TextField } from "@material-ui/core";
 
-export const AnimatedKeyContainer = styled(animated.div)`
+export const AnimatedKeyContainer = styled(motion.div)`
   /* transform: scaleX(0.95); */
   /* padding: 0 1.5px; */
   /* margin: ${props => props.margin}; */
@@ -104,16 +104,17 @@ export const ActiveKeyContainer = styled(AnimatedKeyContainer)`
   } */
 `;
 
-export const KeyTop = styled(animated.div)`
+export const KeyTop = styled(motion.div)`
   position: absolute;
   display: flex;
   user-select: none;
-  height: ${props => props.ht * 0.7}px;
+  height: ${props => props.ht * 0.73}px;
   width: ${props => props.wt - 12}px;
   box-sizing: border-box;
   border-radius: 8px;
   backface-visibility: hidden;
-
+  background-image: inherit;
+  z-index: 10;
   /* padding: 5px; */
   /* padding-bottom: auto; */
 
@@ -126,7 +127,7 @@ export const KeyTop = styled(animated.div)`
   /* justify-content: center; */
   /* align-items: center; */
 `;
-export const KeyCharCenter = styled(animated.div)`
+export const KeyCharCenter = styled(motion.div)`
   display: flex;
   position: relative;
   width: inherit;

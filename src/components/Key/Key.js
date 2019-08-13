@@ -9,7 +9,7 @@ import {
 import styled, { keyframes, css } from "styled-components";
 import { findAll } from "styled-components/test-utils";
 import { Box } from "@rebass/grid";
-import { shade, linearGradient, lighten } from "polished";
+import { shade, linearGradient, lighten, transparentize } from "polished";
 import Layer from "@material-ui/core/Box";
 import { FlashingContext } from "./FlashingContext";
 import { Card, Grid, Paper } from "@material-ui/core";
@@ -42,7 +42,7 @@ import _ from "lodash";
 
 import flatMap from "lodash/flatMap";
 import KeyText from "./KeyText/KeyText";
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { TextField } from "@material-ui/core";
 import { useBoolean } from "react-hanger";
 
@@ -116,7 +116,7 @@ export const Key = ({
     { setActiveMapKey, setInactiveMapKey } // <- callbacks for modifying state
   ] = useMethods(methods, initialState);
 
-  const setActive = useBoolean(false);
+  const active = useBoolean(false);
   const iconLabels = {
     LeftArrow: <LeftArrowIcon>{label}</LeftArrowIcon>,
     RightArrow: <RightArrowIcon>{label}</RightArrowIcon>,
@@ -140,9 +140,9 @@ export const Key = ({
         );
 
         setNewKeys(p => ({ ...p, keys: { key1: activeKeys } }));
-        setActive.setTrue();
+        active.setTrue();
       } else if (!keyMapMode) {
-        setActive.setTrue();
+        active.setTrue();
       }
     }
 
@@ -153,17 +153,17 @@ export const Key = ({
 
         if (mainKeyIndex >= 0) {
           setActiveMapKey(layer.color, layer.keyDescription[mainKeyIndex]);
-          setActive.setTrue();
+          active.setTrue();
         } else if (isMod) {
           setIsModifier(true);
           setActiveMapKey(layer.color, label);
-          setActive.setTrue();
+          active.setTrue();
         }
       });
     }
 
     return () => {
-      setActive.setFalse();
+      active.setFalse();
       setInactiveMapKey();
       // setInactive();
     };
@@ -171,10 +171,10 @@ export const Key = ({
 
   // UseLayoutEffect Hook
   React.useLayoutEffect(() => {
-    if (setActive.value && addMode) {
+    if (active.value && addMode) {
       setGlobalState("lastKeyRef", label);
     }
-  }, [setActive.value]);
+  }, [active.value]);
 
   // Functions
   const addItem = key => {
@@ -197,102 +197,104 @@ export const Key = ({
   const toggleKey = isActive => {
     if (isActive) {
       removeItem(label);
-      setActive.setFalse();
+      active.setFalse();
     } else {
       addItem(label);
-      setActive.setTrue();
+      active.setTrue();
     }
   };
 
   const keyClicked = () => {
     if ((editMode || addMode) && keyLabelAdded === false) {
-      toggleKey(setActive.value);
+      toggleKey(active.value);
     }
   };
 
-  const {
-    borderTopColor,
-    borderBottomColor,
-    borderLeftColor,
-    borderRightColor,
-    background
+  // const {
+  //   borderTopColor,
+  //   borderBottomColor,
+  //   borderLeftColor,
+  //   borderRightColor,
+  //   background
 
-    // transform
-  } = useSpring({
-    reverse: !setActive.value,
-    reset: setActive.value,
-    to: {
-      borderTopColor: `${shade(0.02, activeColor)}`,
-      borderBottomColor: `${shade(0.3, activeColor)}`,
-      borderLeftColor: `${shade(0.09, activeColor)}`,
-      borderRightColor: `${shade(0.09, activeColor)}`,
-      boxShadow: "inset 0px 0px 10px rgba(0,0,0,0.5)",
-      background: `linear-gradient(-30deg, ${shade(
-        0.05,
-        activeColor
-      )} 0%, ${lighten(0.2, activeColor)} 50%)`
-    },
-    from: {
-      borderTopColor: `${shade(0.02, defaultColor)}`,
-      borderBottomColor: `${shade(0.3, defaultColor)}`,
-      borderLeftColor: `${shade(0.09, defaultColor)}`,
-      borderRightColor: `${shade(0.09, defaultColor)}`,
-      boxShadow: "inset 0px 0px 10px rgba(0,0,0,0.5)",
-      background: `linear-gradient(-30deg, ${shade(
-        0.05,
-        defaultColor
-      )} 0%, ${lighten(0.2, defaultColor)} 50%)`
-    },
-    config: { mass: 1, tension: 180, friction: 12, duration: 2300 }
-  });
-  const { transform } = useSpring({
-    reverse: setActive.value,
-    reset: setActive.value,
-    from: {
-      transform: "scale(1)"
-    },
-    to: {
-      transform: "scale(0)"
-    },
-    delay: 600,
-    config: { mass: 1, tension: 180, friction: 12, duration: 300 }
-  });
+  //   // transform
+  // } = useSpring({
+  //   reverse: !setActive.value,
+  //   reset: setActive.value,
+  //   to: {
+  //     borderTopColor: `${shade(0.02, activeColor)}`,
+  //     borderBottomColor: `${shade(0.3, activeColor)}`,
+  //     borderLeftColor: `${shade(0.09, activeColor)}`,
+  //     borderRightColor: `${shade(0.09, activeColor)}`,
+  //     boxShadow: "inset 0px 0px 10px rgba(0,0,0,0.5)",
+  //     background: `linear-gradient(-30deg, ${shade(
+  //       0.05,
+  //       activeColor
+  //     )} 0%, ${lighten(0.2, activeColor)} 50%)`
+  //   },
+  //   from: {
+  //     borderTopColor: `${shade(0.02, defaultColor)}`,
+  //     borderBottomColor: `${shade(0.3, defaultColor)}`,
+  //     borderLeftColor: `${shade(0.09, defaultColor)}`,
+  //     borderRightColor: `${shade(0.09, defaultColor)}`,
+  //     boxShadow: "inset 0px 0px 10px rgba(0,0,0,0.5)",
+  //     background: `linear-gradient(-30deg, ${shade(
+  //       0.05,
+  //       defaultColor
+  //     )} 0%, ${lighten(0.2, defaultColor)} 50%)`
+  //   },
+  //   config: { mass: 1, tension: 180, friction: 12, duration: 2300 }
+  // });
+  // const { transform } = useSpring({
+  //   reverse: setActive.value,
+  //   reset: setActive.value,
+  //   from: {
+  //     transform: "scale(1)"
+  //   },
+  //   to: {
+  //     transform: "scale(0)"
+  //   },
+  //   delay: 600,
+  //   config: { mass: 1, tension: 180, friction: 12, duration: 300 }
+  // });
 
   const keyTopTextRef = React.useRef(null);
   setGlobalState("keyTopTextRefs", v => ({ ...v, [label]: keyTopTextRef }));
   const [isModifier, setIsModifier] = React.useState(false);
 
+  const controls = useAnimation();
+
+  React.useEffect(() => {
+    controls.start(active.value ? "active" : "inactive");
+  }, [activeColor, active]);
+
   return (
     <ConditionalWrap
-      condition={editMode && setActive.value}
+      condition={editMode && active.value}
+      style={{ backfaceVisibility: "hidden", filter: "blur(0)" }}
       wrap={(children, flashing) => (
         <animated.div key={key} style={flashing}>
           {children}
         </animated.div>
       )}
     >
-      {/* <div style={{
-        position: 'absolute',
-        zIndex: 5,
-width: `${wt}px`,
-height: `${ht}px`,
-boxShadow: '0 0 1rem 0 rgba(0, 0, 0, .2)',
-borderRadius: '5px',
-backgroundColor: 'rgba(255, 255, 255, .2)',
+      {/* <motion.div animate={controls} style={{ backfaceVisibility: "hidden" }}> */}
+      {/* <ShadowOverlay
+        width={wt}
+        height={ht}
+        custom={{ activeColor, defaultColor }}
+        animate={controls}
+        variants={keyTopVariants}
+      /> */}
 
-backdropFilter: 'blur(30px)',
-      }}/> */}
       <AnimatedKeyContainer
         // active={setActive.value}
         // active={active}
         margin={margin}
-        style={{
-          background,
-          borderTopColor,
-          borderBottomColor,
-          borderLeftColor,
-          borderRightColor
-        }}
+        custom={{ activeColor, defaultColor }}
+        animate={controls}
+        variants={variants}
+        transition={{ duration: 0.3 }}
         label={label}
         wt={wt}
         ht={ht}
@@ -302,11 +304,11 @@ backdropFilter: 'blur(30px)',
           color={defaultColor}
           wt={wt}
           ht={ht}
-          style={{
-            background
+          // style={{
+          //   background
 
-            // backgroundClip: 'content-box',
-          }}
+          //   // backgroundClip: 'content-box',
+          // }}
         >
           {/* <KeyChar ref={keyTopTextRef}>Basic Editing the view port</KeyChar> */}
 
@@ -315,35 +317,90 @@ backdropFilter: 'blur(30px)',
               {keyName in iconLabels ? iconLabels[keyName] : label}
             </KeyChar>
           )}
-          {keyMapMode && (
-            <KeyCharCenter
-              ref={keyTopTextRef}
-              style={{ transform }}
-
-              // style={{
-              //   // color: x.interpolate(x=>`rgba(0, 0, 0, ${x})`),
-              //   // height: ht * 0.7 * 0.95,
-              //   // width: (wt - 17) * 0.95,
-              //   position: "absolute",
-              //   textAlign: "center",
-              //   alignItems: "center",
-              //   justifyContent: "center",
-              //   overflow: "hidden",
-              //   fontFamily: "Karla, sans-serif"
-              // }}
-            >
-              <KeyText active={setActive.value} keyTopText={keyTopText} />
-            </KeyCharCenter>
-          )}
+          {/* {keyMapMode && (
+              <KeyCharCenter
+                ref={keyTopTextRef}
+                // style={{ transform }}
+  
+                // style={{
+                //   // color: x.interpolate(x=>`rgba(0, 0, 0, ${x})`),
+                //   // height: ht * 0.7 * 0.95,
+                //   // width: (wt - 17) * 0.95,
+                //   position: "absolute",
+                //   textAlign: "center",
+                //   alignItems: "center",
+                //   justifyContent: "center",
+                //   overflow: "hidden",
+                //   fontFamily: "Karla, sans-serif"
+                // }}
+              >
+                <KeyText active={active.value} keyTopText={keyTopText} />
+              </KeyCharCenter>
+            )} */}
 
           {/* {(!keyMapMode) && <KeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</KeyChar>} */}
         </KeyTop>
         {/* {((setActive.value && !isModifier) || !keyMapMode) && (
-          <BottomKeyChar>
-            {keyName in iconLabels ? iconLabels[keyName] : label}
-          </BottomKeyChar>
-        )} */}
+            <BottomKeyChar>
+              {keyName in iconLabels ? iconLabels[keyName] : label}
+            </BottomKeyChar>
+          )} */}
       </AnimatedKeyContainer>
+      {/* </motion.div> */}
     </ConditionalWrap>
   );
 };
+
+const variants = {
+  active: ({ activeColor }) => ({
+    // y: -10,
+
+    borderTopColor: `${shade(0.02, activeColor)}`,
+    borderBottomColor: `${shade(0.3, activeColor)}`,
+    borderLeftColor: `${shade(0.09, activeColor)}`,
+    borderRightColor: `${shade(0.09, activeColor)}`,
+    // boxShadow: " 0px 0px 0px 3px rgba(0,0,0,0.5)",
+    // boxShadow: " 0px 0px 8px 0px black",
+    backgroundImage: `linear-gradient(-30deg, ${shade(
+      0.05,
+      activeColor
+    )} 0%, ${lighten(0.2, activeColor)} 50%)`
+  }),
+
+  inactive: ({ defaultColor }) => ({
+    // y: 0,
+    borderTopColor: `${shade(0.02, defaultColor)}`,
+    borderBottomColor: `${shade(0.3, defaultColor)}`,
+    borderLeftColor: `${shade(0.09, defaultColor)}`,
+    borderRightColor: `${shade(0.09, defaultColor)}`,
+    // boxShadow: " 0px 0px 0px 0px rgba(0,0,0,0.5)",
+    // boxShadow: " 0px 0px 0px 0px black",
+    backgroundImage: `linear-gradient(-30deg, ${shade(
+      0.05,
+      defaultColor
+    )} 0%, ${lighten(0.2, defaultColor)} 50%)`
+  })
+};
+
+const keyTopVariants = {
+  active: ({ activeColor }) => ({
+    backgroundImage: transparentize(0.3, activeColor)
+  }),
+
+  inactive: ({ defaultColor }) => ({
+    backgroundImage: transparentize(0.3, defaultColor)
+  })
+};
+
+const ShadowOverlay = styled(motion.div)`
+  position: absolute;
+  /* background: rgba(255, 255, 255, 0.8); */
+
+  border-radius: 8px;
+  backface-visibility: hidden;
+  backdrop-filter: blur(1px);
+  width: ${({ width }) => width}px;
+  height: ${({ height }) => height}px;
+  z-index: 5;
+  transform: translateZ(0);
+`;

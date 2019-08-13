@@ -133,6 +133,7 @@ const KeyRow = React.memo(({ row }) => {
           keySize={keySize}
           KeyChar={row[keyName]["KeyChar"]}
           borderWidth="10px 10px 20px 10px"
+          style={{ backfaceVisibility: "hidden", transform: "translateZ(0)" }}
         />
       </GridItem>
     </ThemeProvider>
