@@ -34,6 +34,8 @@ import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import { initializeKeyMap } from "../Keyboard/KeyMapData";
 import { motion, useCycle, AnimatePresence } from "framer-motion";
+import { CategoryMenu } from "./CategoryMenu/CategoryMenu";
+import { ButtonGroup } from "@material-ui/core";
 import { InputAdornment } from "@material-ui/core";
 import { Tooltip } from "@material-ui/core";
 import { TextField } from "@material-ui/core";
@@ -90,6 +92,7 @@ export const SearchInput = props => {
   const [addMode, setAddMode] = useGlobalState("addMode");
   const [newKeys] = useGlobalState("newKeys");
   const [isSelected] = useGlobalState("selectedItem");
+  const [initialLayerIndices] = useGlobalState("initialLayerIndices");
   const {
     curKeyTable,
     addNewKeyToFirebase,
@@ -173,14 +176,17 @@ export const SearchInput = props => {
           direction="row"
           alignItems="center"
         >
-          <IconButton
-            className={classes.iconButton}
-            aria-label="Menu"
-            // style={{ marginRight: '10px' }}
-            onClick={() => setDrawerState(!drawerState)}
-          >
-            <MenuIcon />
-          </IconButton>
+          {initialLayerIndices && <CategoryMenu />}
+          {/* <ButtonGroup>
+            <Button
+              className={classes.iconButton}
+              aria-label="Menu"
+              // style={{ marginRight: '10px' }}
+              onClick={() => setDrawerState(!drawerState)}
+            >
+              <MenuIcon />
+            </Button>
+          </ButtonGroup> */}
 
           <Divider className={classes.divider} />
 

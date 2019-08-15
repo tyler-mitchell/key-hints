@@ -108,6 +108,7 @@ const KeyRow = React.memo(({ row }) => {
   return Object.keys(row).map((keyName, i) => (
     <ThemeProvider theme={getMarginTheme(i)}>
       <GridItem
+        style={{ transform: "translateZ(0)", backfaceVisibility: "hidden" }}
         item
         whileTap={{
           scale: 0.98,
@@ -133,7 +134,6 @@ const KeyRow = React.memo(({ row }) => {
           keySize={keySize}
           KeyChar={row[keyName]["KeyChar"]}
           borderWidth="10px 10px 20px 10px"
-          style={{ backfaceVisibility: "hidden", transform: "translateZ(0)" }}
         />
       </GridItem>
     </ThemeProvider>

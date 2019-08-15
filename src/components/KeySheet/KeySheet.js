@@ -317,7 +317,6 @@ export const KeySheet = props => {
               inputProps={{ "aria-label": "Search" }}
             />
             <Divider />
-            {initialLayerIndices && <CategoryMenu popupState={popupState} />}
 
             <CardContent>
               {!isEmpty(filteredKeyTable) && (

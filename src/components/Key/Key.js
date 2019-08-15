@@ -9,7 +9,13 @@ import {
 import styled, { keyframes, css } from "styled-components";
 import { findAll } from "styled-components/test-utils";
 import { Box } from "@rebass/grid";
-import { shade, linearGradient, lighten, transparentize } from "polished";
+import {
+  shade,
+  linearGradient,
+  lighten,
+  transparentize,
+  grayscale
+} from "polished";
 import Layer from "@material-ui/core/Box";
 import { FlashingContext } from "./FlashingContext";
 import { Card, Grid, Paper } from "@material-ui/core";
@@ -42,7 +48,13 @@ import _ from "lodash";
 
 import flatMap from "lodash/flatMap";
 import KeyText from "./KeyText/KeyText";
-import { motion, useAnimation } from "framer-motion";
+import {
+  motion,
+  useAnimation,
+  useMotionValue,
+  useTransform,
+  transform
+} from "framer-motion";
 import { TextField } from "@material-ui/core";
 import { useBoolean } from "react-hanger";
 
@@ -266,7 +278,7 @@ export const Key = ({
 
   React.useEffect(() => {
     controls.start(active.value ? "active" : "inactive");
-  }, [activeColor, active]);
+  }, [activeColor, activeLayers, active]);
 
   return (
     <ConditionalWrap
@@ -290,6 +302,7 @@ export const Key = ({
       <AnimatedKeyContainer
         // active={setActive.value}
         // active={active}
+        // style={{ filter: `opacity(${grayscale})` }}
         margin={margin}
         custom={{ activeColor, defaultColor }}
         animate={controls}
@@ -354,21 +367,30 @@ export const Key = ({
 const variants = {
   active: ({ activeColor }) => ({
     // y: -10,
-
+    // borderRadius: ["20%", "20%", "50%", "50%", "20%"],
+    // rotateY: 180,
+    // rotateX: -160,
     borderTopColor: `${shade(0.02, activeColor)}`,
+    // scale: [1.02, 1, 0.95, 1.1, 1],
+    opacity: [0.8, 0.9, 1],
     borderBottomColor: `${shade(0.3, activeColor)}`,
     borderLeftColor: `${shade(0.09, activeColor)}`,
     borderRightColor: `${shade(0.09, activeColor)}`,
+    // transition: { type: "spring", mass: 0.5 },
     // boxShadow: " 0px 0px 0px 3px rgba(0,0,0,0.5)",
     // boxShadow: " 0px 0px 8px 0px black",
+    filter: `grayscale(${[300, 200, 400]})`,
     backgroundImage: `linear-gradient(-30deg, ${shade(
       0.05,
       activeColor
-    )} 0%, ${lighten(0.2, activeColor)} 50%)`
+    )} 0%, ${lighten(0.1, activeColor)} 50%)`
   }),
 
   inactive: ({ defaultColor }) => ({
     // y: 0,
+    // rotateY: 180,
+    // rotateX: 0,
+
     borderTopColor: `${shade(0.02, defaultColor)}`,
     borderBottomColor: `${shade(0.3, defaultColor)}`,
     borderLeftColor: `${shade(0.09, defaultColor)}`,
