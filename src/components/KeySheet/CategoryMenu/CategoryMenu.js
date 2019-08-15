@@ -4,13 +4,15 @@ import { startCase, toLower } from 'lodash';
 
 import {
   usePopupState,
-  bindToggle,
-  bindPopper,
-  anchorRef,
-  bindTrigger
+  bindTrigger,
+  bindMenu
 } from 'material-ui-popup-state/hooks';
 
-import { useGlobalState, setGlobalState, clearKeySelection } from '../../../state';
+import {
+  useGlobalState,
+  setGlobalState,
+  clearKeySelection
+} from '../../../state';
 
 import styled from 'styled-components';
 
@@ -18,8 +20,15 @@ import { Folder as FolderIcon } from '@material-ui/icons';
 
 import { useStyles, CategoryPaper } from './CategoryMenu.styles';
 import { KeyTableContext } from '../../../context/KeyTableContext';
-import { renderCategoryItem } from '../KeyList/KeyListItem';
-import { getActiveLayers, updateActiveLayers, updateActiveSingleLayer } from '../../Keyboard/KeyMapData';
+import {
+  renderCategoryItem,
+  RenderSelectedCategory
+} from '../KeyList/KeyListItem';
+import {
+  getActiveLayers,
+  updateActiveLayers,
+  updateActiveSingleLayer
+} from '../../Keyboard/KeyMapData';
 import { Switch } from '@material-ui/core';
 import { Grid } from '@material-ui/core';
 import { GridListTile } from '@material-ui/core';
@@ -29,6 +38,12 @@ import { useSwitchStyle } from './KeySwitch';
 import { Checkbox } from '@material-ui/core';
 import { createMuiTheme } from '@material-ui/core';
 import useBoolean from 'react-hanger/useBoolean';
+import { motion } from 'framer-motion';
+import { Portal } from '@material-ui/core';
+import { Menu, MenuItem } from '@material-ui/core';
+
+import { Button } from '@material-ui/core';
+import { ButtonGroup } from '@material-ui/core';
 import {
   makeStyles,
   Divider,
@@ -41,9 +56,11 @@ import {
   Fade,
   Paper
 } from '@material-ui/core';
+import { Menu as MenuIcon } from '@material-ui/icons';
 
 import { ThemeProvider } from '@material-ui/styles';
 
+const CategoryButton = motion.custom(Grid);
 const useSwitchStyles = makeStyles({
   // style rule
   foo: props => ({
@@ -56,20 +73,22 @@ const useSwitchStyles = makeStyles({
 });
 
 function useDidMount() {
-  const [didMount, setDidMount] = React.useState(false)
-  React.useEffect(() => setDidMount(true), [])
+  const [didMount, setDidMount] = React.useState(false);
+  React.useEffect(() => setDidMount(true), []);
 
-  return didMount
+  return didMount;
 }
 
-export const CategoryMenu = ({ popupState }) => {
+export const CategoryMenu = () => {
   const classes = useStyles();
 
   const [drawerState] = useGlobalState('drawerState');
 
-  const { open, ...bindPopState } = bindPopper(popupState);
+  const popupState = usePopupState({ variant: 'popover', popupId: 'demoMenu' });
 
-  const [selectedIndex, setSelectedIndex] = useGlobalState('selectedCategoryIndex');
+  const [selectedIndex, setSelectedIndex] = useGlobalState(
+    'selectedCategoryIndex'
+  );
   const [curCategory, setCurCategory] = useGlobalState('sheetCategory');
   const [listRef] = useGlobalState('listRef');
   const { curKeyTable, loadingUKTC } = React.useContext(KeyTableContext);
@@ -78,62 +97,57 @@ export const CategoryMenu = ({ popupState }) => {
   const [allLayers] = useGlobalState('allLayers');
   const [layerKeys] = useGlobalState('layerKeys');
   const [initialLayerIndices] = useGlobalState('initialLayerIndices');
-  
 
   const [checkedIndex, setCheckedIndex] = React.useState(0);
   const showMultipleLayers = useBoolean(true);
-  const [layerIndices,setLayerIndices] = React.useState(initialLayerIndices)
-  const [state, setState] = React.useState({index: null, layer: null})
+  const [layerIndices, setLayerIndices] = React.useState(initialLayerIndices);
+  const [state, setState] = React.useState({ index: null, layer: null });
   const [initialRender, setInitialRender] = React.useState(true);
 
-  console.log(`⭐: CategoryMenu -> layerIndices`, initialLayerIndices)
+  // Portal ref
+  const container = React.useRef(null);
+  console.log(`⭐: CategoryMenu -> layerIndices`, initialLayerIndices);
   const didMount = useDidMount();
   React.useEffect(() => {
-    console.log(`⭐: CategoryMenu -> didMount`, didMount)
-    
-   const delayCalculation = didMount && setTimeout(() => {
-      console.log(`⭐: TRIGGERED -> useEffect `);
+    console.log(`⭐: CategoryMenu -> didMount`, didMount);
 
-      if (showMultipleLayers.value) {
-        const { layerIndices: newIndices, activeLayers: newActiveLayers } = updateActiveLayers(allLayers, state.layer)
-        setGlobalState('activeLayers', newActiveLayers)
-        setLayerIndices(newIndices);
-      } else {
-        updateActiveSingleLayer(allLayers, layerKeys, state.index);
-        setLayerIndices(new Set([state.index]));
-      }
-      
-    }, 100)
+    const delayCalculation =
+      didMount &&
+      setTimeout(() => {
+        console.log(`⭐: TRIGGERED -> useEffect `);
 
-      return () => clearTimeout(delayCalculation)
-    
- 
-    
-    
+        if (showMultipleLayers.value) {
+          const {
+            layerIndices: newIndices,
+            activeLayers: newActiveLayers
+          } = updateActiveLayers(allLayers, state.layer);
+          setGlobalState('activeLayers', newActiveLayers);
+          setLayerIndices(newIndices);
+        } else {
+          updateActiveSingleLayer(allLayers, layerKeys, state.index);
+          setLayerIndices(new Set([state.index]));
+        }
+      }, 100);
+
+    return () => clearTimeout(delayCalculation);
   }, [state, showMultipleLayers.value]);
-
-
 
   const switchClasses = useSwitchStyles();
 
-   async function handleSwitchClick(layer, index) {
-     
-    
-       setState({ index, layer })
+  async function handleSwitchClick(layer, index) {
+    setState({ index, layer });
 
     //  const data =  await  updateActiveLayers(allLayers, state.layer)
     //  const { layerIndices: newIndices, activeLayers: newActiveLayers } = data;
-  //  await 
-  
-    
+    //  await
   }
   function handleCheckBoxClick(layer, index) {
-    setCheckedIndex(index)
+    setCheckedIndex(index);
     updateActiveSingleLayer(allLayers, layerKeys, index);
   }
   function handleListCategoryClick(event, index, category) {
     clearKeySelection();
-    
+
     setSelectedIndex(index);
     setCurCategory(category);
     setGlobalState('addMode', false);
@@ -142,120 +156,155 @@ export const CategoryMenu = ({ popupState }) => {
   }
 
   function handleMultiLayerOption() {
-    showMultipleLayers.toggle()
-    console.log(`⭐: handleMultiLayerOption -> showMultipleLayers`, showMultipleLayers)
+    showMultipleLayers.toggle();
+    console.log(
+      `⭐: handleMultiLayerOption -> showMultipleLayers`,
+      showMultipleLayers
+    );
   }
-
-
-  return (
-    <>
-      <Popper
-        placement="left-start"
-        className={classes.popper}
-        open={drawerState}
-        {...bindPopState}
+  return [
+    <div>
+      <ButtonGroup
+        disableRipple={true}
+        style={{ height: '50px' }}
+        disableFocusRipple
       >
-        <Fade in={popupState} timeout={250}>
-          <CategoryPaper>
-            {keyMapMode ? (
-              <List
-                dense
-              >
-                <ListItem button onClick={handleMultiLayerOption}>
-                  <ListItemIcon>
-                    <Checkbox
-                      edge="start"
-                      checked={showMultipleLayers.value}
-                      // tabIndex={-1}
+        <Button
+          {...bindTrigger(popupState)}
+          className={classes.iconButton}
+          aria-label="Menu"
+          onClick={popupState.toggle}
+          // style={{ marginRight: '10px' }}
+        >
+          <MenuIcon />
+        </Button>
+        <Button
+          disable
+          style={{
+            textTransform: 'none',
+            padding: '5px',
+            backgroundColor: 'transparent'
+          }}
+          ref={container}
+        >
+          {layerKeys.map(layer => (
+            <div>
+              <RenderSelectedCategory
+                layerKey={layer.keybind}
+                color={layer.color}
+              />
+            </div>
+          ))}
+        </Button>
+      </ButtonGroup>
+      <Menu
+        // className={classes.popper}
+        getContentAnchorEl={null}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        {...bindMenu(popupState)}
+      >
+        {keyMapMode ? (
+          <List dense>
+            <MenuItem button onClick={handleMultiLayerOption}>
+              <ListItemIcon>
+                <Checkbox
+                  edge="start"
+                  checked={showMultipleLayers.value}
+                  // tabIndex={-1}
 
-                      inputProps={{
-                        'aria-label': 'show multiple layers'
-                      }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText primary="Show multiple layers" />
-                </ListItem>
-                <Divider />
+                  inputProps={{
+                    'aria-label': 'show multiple layers'
+                  }}
+                />
+              </ListItemIcon>
+              <ListItemText primary="Show multiple layers" />
+            </MenuItem>
+            {/* <Divider /> */}
 
-                {initialLayerIndices && layerKeys.map((layer, index) => {
-                  return (
-                    <ListItem
-                      button
-                      disableRipple
-                      key={layer.keybind}
-                    >
-                      <ListItemIcon>
-                        <ThemeProvider
-                          theme={createMuiTheme({
-                            palette: {
-                              primary: {
-                                main: `${layer.color}`
-                              }
+            {initialLayerIndices &&
+              layerKeys.map((layer, index) => {
+                return (
+                  <MenuItem button disableRipple key={layer.keybind}>
+                    <ListItemIcon>
+                      <ThemeProvider
+                        theme={createMuiTheme({
+                          palette: {
+                            primary: {
+                              main: `${layer.color}`
                             }
-                          })}
-                        >
-                          {true ? (
-                            <Switch
+                          }
+                        })}
+                      >
+                        {true ? (
+                          <Switch
                             edge="start"
                             layerColor={layer.color}
                             color="primary"
-                            onClick={() => handleSwitchClick(layer.keybind, index)}
+                            onClick={() =>
+                              handleSwitchClick(layer.keybind, index)
+                            }
                             // checked={(layer.id === state.index )}
-                            checked={(layer.id === state.index )|| layerIndices.has(layer.id)}
-                            />
-
-                          ) : (
-                              <Checkbox
-                                color="primary"
-                                disableRipple
-                              onClick={() => handleCheckBoxClick(layer.keybind, index)}
-                              edge="start"
-                              checked={index === checkedIndex}
-                              inputProps={{
-                                'aria-label': `${layer.keybind} layer`
-                              }}
-                            />
-                          )}
-                        </ThemeProvider>
-                      </ListItemIcon>
-                      {renderCategoryItem(layer.keybind, layer.color)}
-                    </ListItem>
-                  );
-                })}
-              </List>
-            ) : (
-              <List>
-                <ListItem
-                  button
-                  onClick={e => handleListCategoryClick(e, -1, 'All')}
-                  selected={selectedIndex === -1}
-                  key={'All'}
-                >
-                  <ListItemIcon>
-                    <FolderIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={'All'} />
-                </ListItem>
-                <Divider />
-
-                {(curKeyTable.data().categories || []).map((category, index) => (
-                  <ListItem
-                    button
-                    onClick={e => handleListCategoryClick(e, index, category)}
-                    selected={selectedIndex === index}
-                    key={category}
-                  >
-                    <Badge>
-                      <ListItemText primary={startCase(toLower(category))} />
-                    </Badge>
-                  </ListItem>
-                ))}
-              </List>
-            )}
+                            checked={
+                              layer.id === state.index ||
+                              layerIndices.has(layer.id)
+                            }
+                          />
+                        ) : (
+                          <Checkbox
+                            color="primary"
+                            disableRipple
+                            onClick={() =>
+                              handleCheckBoxClick(layer.keybind, index)
+                            }
+                            edge="start"
+                            checked={index === checkedIndex}
+                            inputProps={{
+                              'aria-label': `${layer.keybind} layer`
+                            }}
+                          />
+                        )}
+                      </ThemeProvider>
+                    </ListItemIcon>
+                    {renderCategoryItem(layer.keybind, layer.color)}
+                    {/* <Portal container={container.current}>
+                      
+                    </Portal> */}
+                  </MenuItem>
+                );
+              })}
+          </List>
+        ) : (
+          <List>
+            <ListItem
+              button
+              onClick={e => handleListCategoryClick(e, -1, 'All')}
+              selected={selectedIndex === -1}
+              key={'All'}
+            >
+              <ListItemIcon>
+                <FolderIcon />
+              </ListItemIcon>
+              <ListItemText primary={'All'} />
+            </ListItem>
             <Divider />
-          </CategoryPaper>
-        </Fade>
-      </Popper>
-    </>
-  );
+
+            {(curKeyTable.data().categories || []).map((category, index) => (
+              <ListItem
+                button
+                onClick={e => handleListCategoryClick(e, index, category)}
+                selected={selectedIndex === index}
+                key={category}
+              >
+                <Badge>
+                  <ListItemText primary={startCase(toLower(category))} />
+                </Badge>
+              </ListItem>
+            ))}
+          </List>
+        )}
+        <Divider />
+      </Menu>
+    </div>
+  ];
 };
