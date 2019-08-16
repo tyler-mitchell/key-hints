@@ -48,6 +48,8 @@ import { Portal } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import _ from 'lodash';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Container } from '@material-ui/core';
+import { CardMedia } from '@material-ui/core';
 import { IconButton } from '@material-ui/core';
 import { SnackbarContent } from '@material-ui/core';
 import { Snackbar } from '@material-ui/core';
@@ -72,7 +74,7 @@ const useStyles = makeStyles({
   },
   root: {
     display: 'flex',
-    position: 'absolute',
+    position: 'relative',
     // padding: '1rem',
     // left: 10,
     backgroundImage:
@@ -111,11 +113,22 @@ const useStyles = makeStyles({
   },
   chip: { button: { marginRight: '15px' } }
 });
-const CardHead = styled(AppBar)`
-  &&& {
-    position: relative;
-    background: white;
-  }
+
+const KeySequenceContainer = styled(Grid)`
+  border-radius: 8px;
+
+  background-image: radial-gradient(
+    circle farthest-corner at 0% 0.5%,
+    rgb(247, 247, 248) 0.1%,
+    rgb(244, 245, 245) 100.2%
+  );
+  width: 100%;
+  height: 75px;
+`;
+const CardHead = styled(Grid)`
+  /* padding: 30px 0px 5px 20px; */
+
+  /* padding: 300px; */
 `;
 const KeyMenu = motion.custom(Grid);
 export const NewKeyPanel = ({ saveClicked, ...props }) => {
@@ -242,224 +255,191 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
     <>
       <AnimatedPanel>
         {/* <Grid container alignItems="flex-start">  */}
+        <Paper
+          elevation={3}
+          raised
+          component={Grid}
+          style={{
+            height: '440px',
+            borderRadius: 15,
 
-        <Card raised style={{ height: '300px', borderRadius: 15 }}>
-          <CardContent style={{ borderRadius: 15, background: 'white' }}>
+            padding: '15px'
+          }}
+        >
+          <div
+            style={{
+              width: 50,
+              height: 4,
+
+              // transform: 'translateY(-10px)',
+              backgroundColor: 'rgba(220,220,220,0.2)',
+
+              top: 7,
+              borderRadius: 4,
+              position: 'absolute',
+              margin: '0 auto',
+              // marginBottom: 46,
+              left: 0,
+              zIndex: 300,
+              right: 0
+            }}
+          />
+
+          <CardHead
+            item
+            container
+            xs={3}
+            justify="flex-start"
+            direction="column"
+          >
+            <InputBase
+              // value={newKeys.description}
+
+              variant="outlined"
+              style={{
+                fontSize: '36px',
+                // margin: 0,
+                'label + &': {
+                  marginTop: 0
+                },
+
+                background: 'white'
+              }}
+              fullWidth
+              value={keyInfo.description}
+              placeholder="shortcut title"
+              onChange={event => handleDescriptionChange(event)}
+              rowsMax={3}
+            />
+          </CardHead>
+
+          <KeySequenceContainer
+            item
+            container
+            justify
+            // wrap="nowrap"
+          >
+            <Grid
+              container
+              item
+              style={{
+                display: 'flex',
+                position: 'relative',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+              // justify="center"
+              // style={{ marginLeft: '25px' }}
+              // alignItems="center"
+            >
+              {renderAddedKeys(newKeys.keys)}
+            </Grid>
             <div
               style={{
-                width: 50,
-                height: 4,
-                transform: 'translateY(-10px)',
-                backgroundColor: 'rgba(220,220,220,0.2)',
-                bottom: -5,
-                top: 3,
-                borderRadius: 4,
-                position: 'relative',
-                margin: '0 auto',
-                marginBottom: 46,
-                left: 0,
-                right: 0
+                display: 'flex',
+                width: 0,
+                height: 0,
+                position: 'relative'
               }}
-            />
-
-            <Paper className={classes.root} elevation={0} style={{}}>
+            >
               <motion.div
                 animate={
                   Object.keys(newKeys.keys.key1).length === 0
                     ? { opacity: 0 }
                     : { opacity: 1 }
                 }
-                style={{
-                  position: 'absolute',
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                  // backgroundImage: 'radial-gradient( circle farthest-corner at 12.3% 19.3%,  rgba(32, 156, 238, 1) 0%, rgba(95,209,249,1) 100.2% )',
-                  // backgroundImage: 'linear-gradient( 111.5deg, rgba(20,100,196,1) 0.4%, rgba(32, 156, 238, 1) 100.2% )',
-                  backgroundImage:
-                    'radial-gradient( circle farthest-corner at -20% 20%,  rgba(149,219,254,1) 0%, rgba(32, 156, 238, 1) 100.1% )',
-                  // backgroundColor: '#209CEE',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: '11%'
-                }}
               >
-                <KeyMenu direction="column">
-                  <Grid item xs={12}>
-                    <div variant="h6">Key Label</div>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <div variant="h6">Key Label</div>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <InputBase
-                      style={{ position: 'relative' }}
-                      value={keyTopText}
-                      variant="subtitle1"
-                      color="textSecondary"
-                      placeHolder="enter key top label"
-                      onChange={event => handleKeyDescription(event)}
-                    />
-                  </Grid>
+                <AnimatePresence>
+                  {isKeyAvailable ? (
+                    <motion.div
+                      key="success"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.3 }}
+                      style={{
+                        position: 'absolute',
+                        top: '23px',
 
-                  <AnimatePresence>
-                    {isKeyAvailable ? (
-                      <motion.div
-                        key="success"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ delay: 0.3 }}
+                        right: '23px',
+
+                        fontSmooth: 'always',
+
+                        background: 'white',
+                        border: '3px solid white',
+                        // boxShadow: 'inset 0px 0px 2px 5px #209CEE',
+                        borderRadius: '100%',
+                        display: 'flex'
+                      }}
+                      exit={{ scale: 0 }}
+                    >
+                      <CheckIcon
+                        fontSize="medium"
                         style={{
-                          position: 'absolute',
-                          top: '-10%',
+                          display: 'inline-block',
 
-                          right: '-10%',
-
-                          fontSmooth: 'always',
-
-                          background: 'white',
-                          border: '3px solid white',
-                          boxShadow: 'inset 0px 0px 2px 5px #209CEE',
-                          borderRadius: '100%',
-                          display: 'flex'
+                          color: '#4be8bc'
                         }}
-                        exit={{ scale: 0 }}
-                      >
-                        <CheckIcon
-                          fontSize="medium"
-                          style={{
-                            display: 'inline-block',
+                      />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="error"
+                      initial={{ scale: 0 }}
+                      transition={{ delay: 0.3 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      style={{
+                        position: 'absolute',
+                        top: '23px',
 
-                            color: '#4be8bc'
-                          }}
-                        />
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="error"
-                        initial={{ scale: 0 }}
-                        transition={{ delay: 0.3 }}
-                        animate={{ scale: 1 }}
-                        exit={{ scale: 0 }}
-                        style={{
-                          position: 'absolute',
-                          top: '-10%',
+                        right: '23px',
 
-                          right: '-10%',
+                        fontSmooth: 'always',
 
-                          fontSmooth: 'always',
-
-                          background: 'white',
-                          border: '3px solid white',
-                          boxShadow: 'inset 0px 0px 2px 5px #209CEE',
-                          borderRadius: '100%',
-                          display: 'flex'
-                        }}
-                      >
-                        <ErrorIcon
-                          fontSize="medium"
-                          style={{ color: '#FC7575' }}
-                        />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </KeyMenu>
+                        background: 'white',
+                        border: '3px solid white',
+                        // boxShadow: 'inset 0px 0px 2px 5px #209CEE',
+                        borderRadius: '100%',
+                        display: 'flex'
+                      }}
+                    >
+                      <ErrorIcon
+                        fontSize="medium"
+                        style={{ color: '#FC7575' }}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
-              {/* <div style={{ width: "95%" }}> */}
-              <Grid
-                className={classes.gridContainer}
-                container
-                direction="row"
-                alignItems="center"
-                justify="flex-start"
-                spacing={1}
-                xs={12}
-              >
-                <Grid item xs={3}>
-                  <TextField
-                    // value={newKeys.description}
-                    multiline={true}
-                    variant="outlined"
-                    style={{
-                      margin: 0,
-                      'label + &': {
-                        marginTop: 0
-                      },
-
-                      background: 'white'
-                    }}
-                    fullWidth
-                    value={keyInfo.description}
-                    placeholder="shortcut description"
-                    onChange={event => handleDescriptionChange(event)}
-                    rowsMax={3}
-                  />
-                  {/* <TextField
-                    // value={newKeys.description}
-                    multiline
-                    variant="filled"
-                    rowsMax={2}
-                    placeholder="description"
-                    onChange={event => handleDescriptionChange(event)}
-                  /> */}
-                </Grid>
-
-                <Grid container item xs={7} justify="flex-end">
-                  {renderAddedKeys(newKeys.keys)}
-                </Grid>
-
-                {/* <KeyMenu
-                  container
-                  direction="column"
-                  justify="center"
-                  alignItems="center"
-                  style={{
-                    position: "absolute",
-
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                    // backgroundImage: 'radial-gradient( circle farthest-corner at 12.3% 19.3%,  rgba(32, 156, 238, 1) 0%, rgba(95,209,249,1) 100.2% )',
-                    // backgroundImage: 'linear-gradient( 111.5deg, rgba(20,100,196,1) 0.4%, rgba(32, 156, 238, 1) 100.2% )',
-                    backgroundImage:
-                      "radial-gradient( circle farthest-corner at -20% 20%,  rgba(149,219,254,1) 0%, rgba(32, 156, 238, 1) 100.1% )",
-                    // backgroundColor: '#209CEE',
-
-                    width: "10%"
-                  }}
-                >
-                  <Grid item xs={12}>
-                    <div variant="h6">Key Label</div>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <div variant="h6">Key Label</div>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <InputBase
-                      style={{ position: "relative" }}
-                      value={keyTopText}
-                      variant="subtitle1"
-                      color="textSecondary"
-                      placeHolder="enter key top label"
-                      onChange={event => handleKeyDescription(event)}
-                    />
-                  </Grid>
-                </KeyMenu> */}
-                {keyTopRefs[keyTopRefKey] && (
-                  <Portal
-                    container={keyTopRefs[keyTopRefKey].current}
-                    style={{ height: 'inherit', width: 'inherit' }}
-                  >
-                    <KeyText keyTopText={keyTopText} />
-                  </Portal>
-                )}
-              </Grid>
-              {/* </div> */}
-            </Paper>
-          </CardContent>
-        </Card>
+            </div>
+          </KeySequenceContainer>
+          <Grid item style={{ paddingTop: '15px' }}>
+            <InputBase
+              style={{
+                position: 'relative',
+                borderRadius: '10px',
+                border: 'solid 2px rgba(220,220,220,0.2)'
+              }}
+              fullWidth
+              value={keyTopText}
+              variant="subtitle1"
+              color="textSecondary"
+              multiline
+              rows={10}
+              placeHolder="enter key top label"
+              onChange={event => handleKeyDescription(event)}
+            />
+          </Grid>
+        </Paper>
       </AnimatedPanel>
+      {keyTopRefs[keyTopRefKey] && (
+        <Portal
+          container={keyTopRefs[keyTopRefKey].current}
+          style={{ height: 'inherit', width: 'inherit' }}
+        >
+          <KeyText keyTopText={keyTopText} />
+        </Portal>
+      )}
       <Portal container={snackbarRef}>
         <Toast
           snackbarVariant={snackbarVariant}

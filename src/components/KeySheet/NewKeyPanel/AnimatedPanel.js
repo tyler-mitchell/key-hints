@@ -1,17 +1,18 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-import { useSpring, config } from "react-spring";
-import { useGesture } from "react-use-gesture";
-import { a, animated } from "react-spring";
-import { Modal } from "@material-ui/core";
+import { useSpring, config } from 'react-spring';
+import { useGesture } from 'react-use-gesture';
+import { a, animated } from 'react-spring';
+import { Modal } from '@material-ui/core';
 
-import { useGlobalState } from "../../../state";
-import styled from "styled-components";
-import { useMeasure } from "../../hooks/helpers";
-import { Card } from "@material-ui/core";
+import { useGlobalState } from '../../../state';
+import styled from 'styled-components';
+import { useMeasure } from '../../hooks/helpers';
+import { Card } from '@material-ui/core';
 
-const OFFSET = 420;
+// const OFFSET = 420;
+const OFFSET = 100;
 const INITIAL = 780;
 // const SLOW = config.gentle
 const SLOW = { mass: 1, tension: 200, friction: 14 };
@@ -21,8 +22,8 @@ export const AnimatedPanel = ({ children }) => {
   const [{ y }, set] = useSpring(() => ({ y: INITIAL }));
 
   // const bind = useGesture(({ delta: [, y], down }) => set({ y: y > 400 ? 780 : !down ? OFFSET : y + OFFSET, config: !down || y > 400 ? SLOW : FAST }))
-  const opacity = y.interpolate([180, 400], [0.2, 1], "clamp");
-  const [addMode] = useGlobalState("addMode");
+  const opacity = y.interpolate([180, 400], [0.2, 1], 'clamp');
+  const [addMode] = useGlobalState('addMode');
 
   // const [boxShadow, setBoxShadow] = React.useState({boxShadow:  "0 0px 0px rgba(0,0,0,0.25), 0 0px 0px rgba(0,0,0,0.22)"})
   // const boxShadowProp = useSpring({
@@ -32,7 +33,7 @@ export const AnimatedPanel = ({ children }) => {
   // })
 
   const transform = y
-    .interpolate([OFFSET, 250], [40, 0], "clamp")
+    .interpolate([OFFSET, 250], [40, 0], 'clamp')
     .interpolate(val => `translate3d(0,${val}px,0)`);
 
   React.useEffect(() => {
@@ -40,9 +41,9 @@ export const AnimatedPanel = ({ children }) => {
       set({ y: OFFSET, config: SLOW });
       // setBoxShadow({boxShadow: "0 0px 0px rgba(0,0,0,0.25), 0 0px 0px rgba(0,0,0,0.22)"})
     } else {
-      set({ y: 535, config: FAST });
+      set({ y: 545, config: FAST });
     }
-  }, [addMode]);
+  }, [addMode, set]);
   return (
     <>
       <View
@@ -61,28 +62,28 @@ export const View = props => {
     <a.div
       {...props}
       style={{
-        position: "absolute",
-        pointerEvents: "auto",
+        position: 'absolute',
+        pointerEvents: 'auto',
         left: 0,
         right: 0,
         bottom: 0,
         top: 0,
-        margin: "0 21px",
+        margin: '0 21px',
         flex: 1,
-        fontSize: "0.8em",
+        fontSize: '0.8em',
         zIndex: 5000,
-        height: "600px",
-        background: "transparent",
+        height: '600px',
+        background: 'transparent',
         borderTopRightRadius: 15,
         borderTopLeftRadius: 15,
         borderBottomRightRadius: 15,
         borderBottomLeftRadius: 15,
         // padding: 24,
-        userSelect: "none",
-        color: "#ffffffc0",
+        userSelect: 'none',
+        color: '#ffffffc0',
 
         // clipPath: "inset(10px 20px 30px 40px)",
-        alignItems: "center",
+        alignItems: 'center',
 
         ...props.style
       }}

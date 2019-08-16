@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
-import { FlashingContext } from "../../Key/FlashingContext";
+import { FlashingContext } from '../../Key/FlashingContext';
 import {
   IconButton,
   ListItem,
@@ -14,26 +14,26 @@ import {
   Grid,
   TextField,
   makeStyles
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import { useGlobalState, setGlobalState } from "../../../state";
-import { KeyTable } from "../SheetData";
+import { useGlobalState, setGlobalState } from '../../../state';
+import { KeyTable } from '../SheetData';
 import {
   ArrowBack as LeftArrowIcon,
   ArrowForward as RightArrowIcon,
   ArrowUpward as UpArrowIcon,
   ArrowDownward as DownArrowIcon,
   Add as AddIcon
-} from "@material-ui/icons";
+} from '@material-ui/icons';
 
-import _ from "lodash";
-import { useTransition, animated, config, useSpring } from "react-spring";
-import { motion, AnimatePresence } from "framer-motion";
-import { usePrevious } from "../../hooks/helpers";
-import { renderIcon } from "../KeyList/KeyListItem";
-import { Button } from "@material-ui/core";
-import { Fab } from "@material-ui/core";
-import { Paper } from "@material-ui/core";
+import _ from 'lodash';
+import { useTransition, animated, config, useSpring } from 'react-spring';
+import { motion, AnimatePresence } from 'framer-motion';
+import { usePrevious } from '../../hooks/helpers';
+import { RenderIcon } from '../KeyList/KeyListItem';
+import { Button } from '@material-ui/core';
+import { Fab } from '@material-ui/core';
+import { Paper } from '@material-ui/core';
 
 const AddKeyLabelButton = motion.custom(Fab);
 const ConditionalWrap = ({ condition, wrap, children }) => {
@@ -41,7 +41,7 @@ const ConditionalWrap = ({ condition, wrap, children }) => {
 };
 export const KeySequence = ({ newKeys, category, children }) => {
   return (
-    <ListItem style={{ display: "flex", justifyContent: "flex-start" }} divider>
+    <ListItem style={{ display: 'flex', justifyContent: 'flex-start' }} divider>
       {children}
 
       <List>{renderAddedKeys(newKeys)}</List>
@@ -80,13 +80,13 @@ const variantContainer = {
     opacity: 1,
     scale: 1,
     transition: {
-      when: "afterChildren",
+      when: 'afterChildren',
       staggeredChildren: 0.5
     }
   },
   hide: {
     transition: {
-      when: "afterChildren",
+      when: 'afterChildren',
       // delayChildren: 0.5,
       staggeredChildren: 0.5
 
@@ -96,30 +96,30 @@ const variantContainer = {
 };
 const useStyles = makeStyles({
   root: {
-    display: "flex",
-    position: "absolute",
+    display: 'flex',
+    position: 'absolute',
     // padding: '1rem',
     // left: 10,
 
     top: 10,
     left: 0,
     right: 0,
-    width: "90%",
-    height: "80px",
-    marginLeft: "auto",
-    marginRight: "auto",
-    overflow: "hidden",
-    justifyContent: "flex-end",
+    width: '90%',
+    height: '80px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    overflow: 'hidden',
+    justifyContent: 'flex-end',
 
-    padding: "10px 10px",
+    padding: '10px 10px',
 
-    borderRadius: "5px",
+    borderRadius: '5px',
 
-    alignItems: "center"
+    alignItems: 'center'
     // borderRadius: 0
   },
   buttonGroup: {
-    borderRadius: "13px"
+    borderRadius: '13px'
   },
   input: {
     marginLeft: 8,
@@ -133,24 +133,24 @@ const useStyles = makeStyles({
     height: 38,
     margin: 6
   },
-  chip: { button: { marginRight: "15px" } },
+  chip: { button: { marginRight: '15px' } },
   KeyLabelButton: {
-    position: "absolute",
-    right: "-3px",
-    top: "-5px",
-    maxWidth: "15px",
-    maxHeight: "15px",
-    minWidth: "15px",
-    minHeight: "15px"
+    position: 'absolute',
+    right: '-3px',
+    top: '-5px',
+    maxWidth: '15px',
+    maxHeight: '15px',
+    minWidth: '15px',
+    minHeight: '15px'
     // top: 0,
     // right: 0
   },
   KeyLabelButtonIcon: {
-    fontSize: "12px",
-    maxWidth: "15px",
-    maxHeight: "15px",
-    minWidth: "15px",
-    minHeight: "15px"
+    fontSize: '12px',
+    maxWidth: '15px',
+    maxHeight: '15px',
+    minWidth: '15px',
+    minHeight: '15px'
 
     // top: 0,
     // right: 0
@@ -162,8 +162,8 @@ const KeyItems = keyItem => {
   const classes = useStyles();
   const [items, setItems] = React.useState([]);
 
-  const [newKeys, setNewKeys] = useGlobalState("newKeys");
-  const [keyLabelAdded, setKeyLabelAdded] = useGlobalState("keyLabelAdded");
+  const [newKeys, setNewKeys] = useGlobalState('newKeys');
+  const [keyLabelAdded, setKeyLabelAdded] = useGlobalState('keyLabelAdded');
 
   const [sequence, setSequence] = React.useState([]);
   const [count, setCount] = React.useState(0);
@@ -186,13 +186,13 @@ const KeyItems = keyItem => {
           exit="hide"
           positionTransition
           variants={variantContainer}
-          key={shortcut.kb + "container"}
+          key={shortcut.kb + 'container'}
           style={{
-            display: "flex",
-            position: "relative",
+            display: 'flex',
+            position: 'relative',
 
             // overflow: 'hidden',
-            justifyContent: "center"
+            justifyContent: 'center'
           }}
         >
           <motion.div
@@ -200,10 +200,10 @@ const KeyItems = keyItem => {
             variants={variants}
             positionTransition
             style={{
-              display: "flex",
-
+              display: 'flex',
+              alignItems: 'center',
               // flexOverflow: 'wrap',
-              position: "relative"
+              position: 'relative'
             }}
           >
             {/* {index === sequence.length - 1 && (
@@ -220,19 +220,19 @@ const KeyItems = keyItem => {
               </AddKeyLabelButton>
             )} */}
 
-            {renderIcon(shortcut.kb)}
+            {<RenderIcon keyLabel={shortcut.kb} height="46px" />}
           </motion.div>
 
           <motion.div
             positionTransition
             key={shortcut.index}
             initial={false}
-            animate={shortcut.index !== sequence.length - 1 ? "show" : "hide"}
+            animate={shortcut.index !== sequence.length - 1 ? 'show' : 'hide'}
             variants={pluses}
             style={{
-              display: "flex",
+              display: 'flex',
               // flexOverflow: 'wrap',
-              position: "relative"
+              position: 'relative'
             }}
           >
             <IconButton size="small" color="textSecondary">
@@ -289,19 +289,19 @@ const ORLabel = styled.span`
 `;
 
 const useKBDStyle = {
-  display: "inline-block",
-  minWidth: "auto",
-  minHeight: "auto",
-  padding: "12px 12px",
-  border: "1px solid #8a8a8a",
-  borderRadius: "4px",
+  display: 'inline-block',
+  minWidth: 'auto',
+  minHeight: 'auto',
+  padding: '12px 12px',
+  border: '1px solid #8a8a8a',
+  borderRadius: '4px',
   boxShadow:
-    "inset 0px 0px 0px 4px rgba(255, 255, 255, 1), 0px 2px 0px 0px rgba(159, 159, 159, 1)",
-  fontFamily: "Nunito, sans-serif",
-  margin: "0px 4px",
-  background: "#fff",
-  textTransform: "uppercase",
-  color: "#666"
+    'inset 0px 0px 0px 4px rgba(255, 255, 255, 1), 0px 2px 0px 0px rgba(159, 159, 159, 1)',
+  fontFamily: 'Nunito, sans-serif',
+  margin: '0px 4px',
+  background: '#fff',
+  textTransform: 'uppercase',
+  color: '#666'
   // /* boxShadow: '0px 1px 3px 1px rgba(0, 0, 0, 0.5) */',
   // /*Text Properties*/
   // /* font: '10px Helvetica, serif  */',
@@ -318,7 +318,7 @@ const KBD = styled.kbd`
   box-shadow: inset 0px 0px 0px 4px rgba(255, 255, 255, 1),
     0px 2px 0px 0px rgba(159, 159, 159, 1);
   display: inline-block;
-  font-family: "Nunito", sans-serif;
+  font-family: 'Nunito', sans-serif;
   margin: 0px 4px;
   background: #fff;
   border-radius: 4px;

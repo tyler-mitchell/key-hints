@@ -200,7 +200,8 @@ export const renderCategoryIcon = (keyLabel, width = 'auto', styleProps) => {
     return keyLabel;
   }
 };
-export const renderIcon = (keyLabel, width = 'auto', styleProps) => {
+export const RenderIcon = ({ keyLabel, width, height, styleProps }) => {
+  console.log(`⭐: RenderIcon -> keyLabel`, keyLabel);
   const color = modifierKeys.has(keyLabel) ? '#15191c ' : '#209CEE';
 
   const iconLabels = {
@@ -240,13 +241,13 @@ export const renderIcon = (keyLabel, width = 'auto', styleProps) => {
 
   if (keyLabel in iconLabels) {
     return (
-      <KBD color={color} style={{ width }}>
+      <KBD color={color} height={height} style={{ width }}>
         {iconLabels[keyLabel]}
       </KBD>
     );
   } else {
     return (
-      <KBD color={color} style={{ width, ...styleProps }}>
+      <KBD color={color} height={height} style={{ width, ...styleProps }}>
         {keyLabel}
       </KBD>
     );
@@ -267,18 +268,20 @@ export const renderKeys = keybind => {
             {/* <Badge badgeContent={keyIndex+1} color="primary" variant="dot" > */}
             {Object.keys(keyItem).map((kb, index, array) => (
               <KbdKey key={index}>
-                {Array.isArray(keyItem[kb])
-                  ? keyItem[kb].map((x, i, arr) =>
-                      arr.length - 1 !== i ? (
-                        <span key={i}>
-                          {renderIcon(x)}
-                          <ORLabel> or </ORLabel>
-                        </span>
-                      ) : (
-                        renderIcon(x)
-                      )
+                {Array.isArray(keyItem[kb]) ? (
+                  keyItem[kb].map((x, i, arr) =>
+                    arr.length - 1 !== i ? (
+                      <span key={i}>
+                        {<RenderIcon keyLabel={x} />}
+                        <ORLabel> or </ORLabel>
+                      </span>
+                    ) : (
+                      <RenderIcon keyLabel={x} />
                     )
-                  : renderIcon(keyItem[kb])}
+                  )
+                ) : (
+                  <RenderIcon keyLabel={keyItem[kb]} />
+                )}
 
                 {index !== Object.keys(keyItem).length - 1 && '+'}
               </KbdKey>
@@ -305,20 +308,22 @@ const renderAddedKeys = keybind => {
             {/* <Badge badgeContent={keyIndex+1} color="primary" variant="dot" > */}
             {Object.keys(keyItem).map((kb, index, array) => (
               <KbdAddedKey key={index}>
-                <KBD>
-                  {Array.isArray(keyItem[kb])
-                    ? keyItem[kb].map((x, i, arr) =>
-                        arr.length - 1 !== i ? (
-                          <span key={i}>
-                            {renderIcon(x)}
-                            <ORLabel> or </ORLabel>
-                          </span>
-                        ) : (
-                          renderIcon(x)
-                        )
-                      )
-                    : renderIcon(keyItem[kb])}
-                </KBD>
+                {/* <KBD> */}
+                {Array.isArray(keyItem[kb]) ? (
+                  keyItem[kb].map((x, i, arr) =>
+                    arr.length - 1 !== i ? (
+                      <span key={i}>
+                        {<RenderIcon keyLabel={x} />}
+                        <ORLabel> or </ORLabel>
+                      </span>
+                    ) : (
+                      <RenderIcon keyLabel={x} />
+                    )
+                  )
+                ) : (
+                  <RenderIcon keyLabel={keyItem[kb]} height="46px" />
+                )}
+                {/* </KBD> */}
                 {index !== Object.keys(keyItem).length - 1 && '+'}
               </KbdAddedKey>
             ))}
@@ -345,7 +350,7 @@ export const renderCategoryItem = (layerKey, color) => {
           <Grid item key={index}>
             <KbdKey key={index}>
               {/* <KBD style={{ filter: `drop-shadow(-4px 0px 0px ${color})` }}> */}
-              {renderIcon(kb, '75px')}
+              {<RenderIcon keyLabel={kb} width="75px" />}
               {/* </KBD> */}
               {index !== layerKey.length - 1 && '+'}
             </KbdKey>
