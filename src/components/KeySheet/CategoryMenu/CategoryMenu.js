@@ -29,7 +29,7 @@ import {
   updateActiveLayers,
   updateActiveSingleLayer
 } from '../../Keyboard/KeyMapData';
-import { Switch } from '@material-ui/core';
+import { Switch, Typography } from '@material-ui/core';
 import { Grid } from '@material-ui/core';
 import { GridListTile } from '@material-ui/core';
 import { GridList } from '@material-ui/core';
@@ -39,6 +39,7 @@ import { Checkbox } from '@material-ui/core';
 import { createMuiTheme } from '@material-ui/core';
 import useBoolean from 'react-hanger/useBoolean';
 import { motion } from 'framer-motion';
+import { Snackbar } from '@material-ui/core';
 import { Portal } from '@material-ui/core';
 import { Menu, MenuItem } from '@material-ui/core';
 
@@ -102,12 +103,13 @@ export const CategoryMenu = () => {
   const showMultipleLayers = useBoolean(true);
   const [layerIndices, setLayerIndices] = React.useState(initialLayerIndices);
   const [state, setState] = React.useState({ index: null, layer: null });
-  const [initialRender, setInitialRender] = React.useState(true);
 
   // Portal ref
   const container = React.useRef(null);
   console.log(`⭐: CategoryMenu -> layerIndices`, initialLayerIndices);
   const didMount = useDidMount();
+  const testHELLO = 'HELLO';
+  const hello = startCase(toLower(testHELLO));
   React.useEffect(() => {
     console.log(`⭐: CategoryMenu -> didMount`, didMount);
 
@@ -151,8 +153,9 @@ export const CategoryMenu = () => {
     setSelectedIndex(index);
     setCurCategory(category);
     setGlobalState('addMode', false);
+    popupState.setOpen(false);
 
-    listRef.current.resetAfterIndex(0, false);
+    listRef.current && listRef.current.resetAfterIndex(0, false);
   }
 
   function handleMultiLayerOption() {
@@ -178,29 +181,41 @@ export const CategoryMenu = () => {
         >
           <MenuIcon />
         </Button>
-        <Button
-          disable
-          style={{
-            textTransform: 'none',
-            padding: '5px',
-            backgroundColor: 'transparent'
-          }}
-          ref={container}
-        >
-          {layerKeys.map(layer => (
-            <div>
-              <RenderSelectedCategory
-                layerKey={layer.keybind}
-                color={layer.color}
-              />
-            </div>
-          ))}
-        </Button>
+        {!keyMapMode ? (
+          <Button
+            style={{
+              textTransform: 'none',
+              padding: '5px',
+              width: '100px'
+            }}
+          >
+            {startCase(toLower(curCategory))}
+          </Button>
+        ) : (
+          <Button
+            disable
+            style={{
+              textTransform: 'none',
+              padding: '5px',
+              backgroundColor: 'transparent'
+            }}
+            ref={container}
+          >
+            {layerKeys.map(layer => (
+              <div>
+                <RenderSelectedCategory
+                  layerKey={layer.keybind}
+                  color={layer.color}
+                />
+              </div>
+            ))}
+          </Button>
+        )}
       </ButtonGroup>
       <Menu
         // className={classes.popper}
         getContentAnchorEl={null}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         {...bindMenu(popupState)}
       >
@@ -275,22 +290,24 @@ export const CategoryMenu = () => {
               })}
           </List>
         ) : (
-          <List>
-            <ListItem
+          <>
+            <MenuItem
               button
               onClick={e => handleListCategoryClick(e, -1, 'All')}
               selected={selectedIndex === -1}
               key={'All'}
             >
-              <ListItemIcon>
+              {/* <ListItemIcon>
                 <FolderIcon />
-              </ListItemIcon>
-              <ListItemText primary={'All'} />
-            </ListItem>
+              </ListItemIcon> */}
+              <Badge>
+                <ListItemText primary="All" />
+              </Badge>
+            </MenuItem>
             <Divider />
 
             {(curKeyTable.data().categories || []).map((category, index) => (
-              <ListItem
+              <MenuItem
                 button
                 onClick={e => handleListCategoryClick(e, index, category)}
                 selected={selectedIndex === index}
@@ -299,9 +316,9 @@ export const CategoryMenu = () => {
                 <Badge>
                   <ListItemText primary={startCase(toLower(category))} />
                 </Badge>
-              </ListItem>
+              </MenuItem>
             ))}
-          </List>
+          </>
         )}
         <Divider />
       </Menu>

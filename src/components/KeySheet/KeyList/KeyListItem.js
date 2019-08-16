@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import styled from 'styled-components';
 
@@ -487,7 +488,8 @@ export const KeyListItem = props => {
     text,
     keybind,
     category,
-    shortcutObjectKey
+    shortcutObjectKey,
+    arrowPressed
   } = props;
 
   // const [, , activeKeys, setActiveKeys] = React.useContext(FlashingContext);
@@ -495,37 +497,57 @@ export const KeyListItem = props => {
   const [, setActiveKeys] = useGlobalState('activeKeys');
   const [, setEditMode] = useGlobalState('editMode');
   const [selectedItem, setSelectedItem] = useGlobalState('selectedItem');
-  const [alreadySelected, setAlreadySelected] = React.useState(false);
   const [curShortcutObjectKey] = useGlobalState('curShortcutObjectKey');
-  const [selected, setSelected] = React.useState(
-    curShortcutObjectKey === shortcutObjectKey
-  );
-  const popupState = usePopupState({ variant: 'popover', popupId: 'demoMenu' });
-  React.useEffect(() => {
-    if (selectedItem !== shortcutObjectKey) {
-      setAlreadySelected(false);
-    }
-  }, [selectedItem, shortcutObjectKey]);
-  const itemClicked = shortcutObjectKey => {
-    // if (!alreadySelected) {
-    setSelectedItem(shortcutObjectKey);
 
+  const [selectedIndex, setSelectedIndex] = useGlobalState('selectedIndex');
+  // React.useEffect(() => {
+  //   if (selectedItem !== shortcutObjectKey) {
+  //     setAlreadySelected(false);
+  //   }
+  //   console.log('test');
+  // }, [selectedItem, shortcutObjectKey]);
+  // React.useEffect(() => {
+  //   const list = listRef.current;
+
+  //   if (!list) {
+  //     return;
+  //   }
+  //   if (!selectedItem) {
+  //     return;
+  //   }
+  //   list.scrollToItem(index);
+  // }, []);
+
+  const itemClicked = shortcutObjectKey => {
+    setSelectedIndex(index);
+    handleSelection(shortcutObjectKey);
+  };
+  const arrowClicked = shortcutObjectKey => {
+    handleSelection(shortcutObjectKey);
+  };
+
+  const handleSelection = shortcutObjectKey => {
+    setSelectedItem(shortcutObjectKey);
     setActiveKeys(keybind['key1']);
     setGlobalState('curShortcutObjectKey', shortcutObjectKey);
     setGlobalState('activeKeysIndex', shortcutObjectKey);
-    setAlreadySelected(true);
-    // }
+
     if (selectedItem !== shortcutObjectKey) {
       setEditMode(false);
     }
-    console.log(`⭐: selection`, selectedItem);
-    console.log(`⭐: shortcutobjectKey`, shortcutObjectKey);
-    console.log(
-      `⭐: selection === shortcutObjectKey`,
-      selectedItem === shortcutObjectKey
-    );
+    // console.log(`⭐: selection`, selectedItem);
+    // console.log(`⭐: shortcutobjectKey`, shortcutObjectKey);
+    // console.log(
+    //   `⭐: selection === shortcutObjectKey`,
+    //   selectedItem === shortcutObjectKey
+    // );
   };
 
+  // React.useEffect(() => {
+  //   if(selectedIndex === index){
+  //     handleSelection(shortcutObjectKey);
+  //   }
+  // }, [arrowPressed])
   return (
     <ListItem
       button
@@ -539,7 +561,7 @@ export const KeyListItem = props => {
       focusRipple
       key={index}
       onClick={() => itemClicked(shortcutObjectKey)}
-      selected={selectedItem === shortcutObjectKey}
+      selected={selectedIndex === index}
     >
       {/* <Grid  item direction="row" xs={12} alignItems="center" justify="flex-end" wrap="nowrap"> */}
       <Grid item xs={4} justify="flext-start">

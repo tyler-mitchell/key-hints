@@ -1,12 +1,14 @@
-import React from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React from 'react';
 import {
   useGlobalState,
   setGlobalState,
   clearKeySelection
-} from "../../../state";
-import { KeyTableContext } from "../../../context/KeyTableContext";
-import { KeySequence, renderAddedKeys } from "./KeySequence";
-import styled from "styled-components";
+} from '../../../state';
+import { KeyTableContext } from '../../../context/KeyTableContext';
+import { KeySequence, renderAddedKeys } from './KeySequence';
+import styled from 'styled-components';
+import Toast from './Toast';
 
 import {
   makeStyles,
@@ -26,70 +28,74 @@ import {
   Grow,
   Slide,
   Zoom
-} from "@material-ui/core";
+} from '@material-ui/core';
 
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
-import { a } from "react-spring";
-import { ToolBarAddView } from "./ToolBarAddView";
-import { useTheme } from "@material-ui/styles";
-import { AnimatedPanel } from "./AnimatedPanel";
+import { a } from 'react-spring';
+import { ToolBarAddView } from './ToolBarAddView';
+import { useTheme } from '@material-ui/styles';
+import { AnimatedPanel } from './AnimatedPanel';
 
 import {
   usePopupState,
   bindTrigger,
   bindPopover,
   bindHover
-} from "material-ui-popup-state/hooks";
-import KeyText from "../../Key/KeyText/KeyText";
-import { Portal } from "@material-ui/core";
-import { Button } from "@material-ui/core";
-import _ from "lodash";
-import { motion, AnimatePresence } from "framer-motion";
-import { Card } from "@material-ui/core";
-import { Backdrop } from "@material-ui/core";
-import { InputBase } from "@material-ui/core";
+} from 'material-ui-popup-state/hooks';
+import KeyText from '../../Key/KeyText/KeyText';
+import { Portal } from '@material-ui/core';
+import { Button } from '@material-ui/core';
+import _ from 'lodash';
+import { motion, AnimatePresence } from 'framer-motion';
+import { IconButton } from '@material-ui/core';
+import { SnackbarContent } from '@material-ui/core';
+import { Snackbar } from '@material-ui/core';
+import { Card } from '@material-ui/core';
+import { Backdrop } from '@material-ui/core';
+import { InputBase } from '@material-ui/core';
 import {
   CheckCircleRounded as CheckIcon,
-  ErrorRounded as ErrorIcon
-} from "@material-ui/icons";
-import { CardHeader, AppBar } from "@material-ui/core";
-import { Typography } from "@material-ui/core";
+  ErrorRounded as ErrorIcon,
+  Close as CloseIcon
+} from '@material-ui/icons';
+import { CardHeader, AppBar } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles({
   descriptionField: {
     padding: 0,
-    background: "white"
+    background: 'white'
   },
   gridContainer: {
-    width: "95%"
+    width: '95%'
   },
   root: {
-    display: "flex",
-    position: "absolute",
+    display: 'flex',
+    position: 'absolute',
     // padding: '1rem',
     // left: 10,
     backgroundImage:
-      "radial-gradient( circle farthest-corner at 0% 0.5%,  rgb(247, 247, 248) 0.1%, rgb(244, 245, 245) 100.2% )",
+      'radial-gradient( circle farthest-corner at 0% 0.5%,  rgb(247, 247, 248) 0.1%, rgb(244, 245, 245) 100.2% )',
     top: 30,
     left: 0,
     right: 0,
-    width: "95%",
-    height: "80px",
-    marginLeft: "auto",
-    marginRight: "auto",
+    width: '95%',
+    height: '80px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
     // overflow: "hidden",
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
 
-    padding: "10px 10px",
+    padding: '10px 10px',
 
-    borderRadius: "5px",
+    borderRadius: '5px',
 
-    alignItems: "center"
+    alignItems: 'center'
     // borderRadius: 0
   },
   buttonGroup: {
-    borderRadius: "13px"
+    borderRadius: '13px'
   },
   input: {
     marginLeft: 8,
@@ -103,7 +109,7 @@ const useStyles = makeStyles({
     height: 38,
     margin: 6
   },
-  chip: { button: { marginRight: "15px" } }
+  chip: { button: { marginRight: '15px' } }
 });
 const CardHead = styled(AppBar)`
   &&& {
@@ -113,18 +119,20 @@ const CardHead = styled(AppBar)`
 `;
 const KeyMenu = motion.custom(Grid);
 export const NewKeyPanel = ({ saveClicked, ...props }) => {
-  const [newKeys, setNewKeys] = useGlobalState("newKeys");
+  const [newKeys, setNewKeys] = useGlobalState('newKeys');
+  const [addMode, setAddMode] = useGlobalState('addMode');
+
   const theme = useTheme();
   const classes = useStyles();
 
   const [keyInfo, setKeyInfo] = React.useState({
-    category: null,
+    category: 'uncategorized',
     description: null,
     keyDescription: null
   });
   const handleDescriptionChange = event => {
     const description = event.target.value;
-    console.log("⭐: value", keyInfo);
+    console.log('⭐: value', keyInfo);
     setKeyInfo(v => ({ ...v, description }));
 
     // setNewKeys(p => ({ ...p, category }))
@@ -137,32 +145,32 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
     // setNewKeys(p => ({ ...p, category }))
   };
   const popupState = usePopupState({
-    variant: "popover",
-    popupId: "demoPopover"
+    variant: 'popover',
+    popupId: 'demoPopover'
   });
 
-  const chipColors = ["#f47c7c", "#6bd5e1", "#a1de93", "#ffd98e", "#ff8364"];
+  const chipColors = ['#f47c7c', '#6bd5e1', '#a1de93', '#ffd98e', '#ff8364'];
 
   const [chipData, setChipData] = React.useState([
-    { key: 0, label: "Angular" },
-    { key: 1, label: "jQuery" },
-    { key: 2, label: "Polymer" },
-    { key: 3, label: "React" },
-    { key: 4, label: "Vue.js" }
+    { key: 0, label: 'Angular' },
+    { key: 1, label: 'jQuery' },
+    { key: 2, label: 'Polymer' },
+    { key: 3, label: 'React' },
+    { key: 4, label: 'Vue.js' }
   ]);
   const [isKeyAvailable, setIsKeyAvailable] = React.useState(false);
 
-  const [keyTopText, setKeyTopText] = React.useState("");
-  const [keyTopRefs] = useGlobalState("keyTopTextRefs");
-  const [keyTopRefKey] = useGlobalState("lastKeyRef");
-  const [allKeys] = useGlobalState("allKeys");
+  const [keyTopText, setKeyTopText] = React.useState('');
+  const [keyTopRefs] = useGlobalState('keyTopTextRefs');
+  const [keyTopRefKey] = useGlobalState('lastKeyRef');
+  const [allKeys] = useGlobalState('allKeys');
   // Key Table Context
   const {
     curKeyTable,
     addNewKeyToFirebase,
     updateKeyToFirebase
   } = React.useContext(KeyTableContext);
-  function checkAvailability() {}
+
   React.useEffect(() => {
     const keys = _.values(newKeys.keys.key1);
     if (keys in allKeys) {
@@ -172,48 +180,82 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
     }
 
     console.log(`⭐: NewKeyPanel -> isKeyAvailable`, isKeyAvailable);
+  }, [allKeys, isKeyAvailable, keyInfo, newKeys]);
 
-    checkAvailability();
+  // const resetKeyInfo = params => {
+  //   setKeyInfo({
+  //     category: 'uncategorized',
+  //     description: null,
+  //     keyDescription: null
+  //   });
+  // };
+
+  React.useEffect(() => {
     if (saveClicked !== 0) {
-      const newKey = { ...newKeys, ...keyInfo };
-      console.log(`⭐: handleSaveKeyClick -> newKey`, newKey);
-      addNewKeyToFirebase(newKey);
-      setGlobalState("addMode", false);
+      if (Object.keys(newKeys.keys.key1).length === 0) {
+        setSnackbarMessage('Empty shortcut');
+        setSnackbarVariant('error');
+      } else if (!keyInfo.description) {
+        setSnackbarMessage('Shortcut description required');
+        setSnackbarVariant('error');
+      } else if (!isKeyAvailable) {
+        setSnackbarMessage('Shortcut already exists');
+        setSnackbarVariant('error');
+      } else {
+        setSnackbarVariant('success');
+        handleSaveKeyClick();
+        setSnackbarMessage('New shortcut added!');
+      }
+      setSnackbarOpen(true);
     }
-  }, [
-    addNewKeyToFirebase,
-    allKeys,
-    isKeyAvailable,
-    keyInfo,
-    newKeys,
-    saveClicked
-  ]);
-
+    return () => {};
+  }, [saveClicked]);
+  React.useEffect(() => {
+    if (!addMode) {
+      setKeyInfo({
+        category: 'uncategorized',
+        description: '',
+        keyDescription: ''
+      });
+    }
+  }, [addMode]);
   const handleSaveKeyClick = () => {
     const newKey = { ...newKeys, ...keyInfo };
     console.log(`⭐: handleSaveKeyClick -> newKey`, newKey);
     addNewKeyToFirebase(newKey);
-    setGlobalState("addMode", false);
+    setAddMode(false);
   };
+  // Snack Bar
 
+  const [snackbarVariant, setSnackbarVariant] = React.useState('info');
+  const [snackbarRef] = useGlobalState('snackbarRef');
+  const [snackbarMessage, setSnackbarMessage] = React.useState('');
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+
+  const onSnackbarClose = (e, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
   return (
     <>
       <AnimatedPanel>
         {/* <Grid container alignItems="flex-start">  */}
 
-        <Card raised style={{ height: "300px", borderRadius: 15 }}>
-          <CardContent style={{ borderRadius: 15, background: "white" }}>
+        <Card raised style={{ height: '300px', borderRadius: 15 }}>
+          <CardContent style={{ borderRadius: 15, background: 'white' }}>
             <div
               style={{
                 width: 50,
                 height: 4,
-                transform: "translateY(-10px)",
-                backgroundColor: "rgba(220,220,220,0.2)",
+                transform: 'translateY(-10px)',
+                backgroundColor: 'rgba(220,220,220,0.2)',
                 bottom: -5,
                 top: 3,
                 borderRadius: 4,
-                position: "relative",
-                margin: "0 auto",
+                position: 'relative',
+                margin: '0 auto',
                 marginBottom: 46,
                 left: 0,
                 right: 0
@@ -228,19 +270,19 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
                     : { opacity: 1 }
                 }
                 style={{
-                  position: "absolute",
+                  position: 'absolute',
                   right: 0,
                   top: 0,
                   bottom: 0,
                   // backgroundImage: 'radial-gradient( circle farthest-corner at 12.3% 19.3%,  rgba(32, 156, 238, 1) 0%, rgba(95,209,249,1) 100.2% )',
                   // backgroundImage: 'linear-gradient( 111.5deg, rgba(20,100,196,1) 0.4%, rgba(32, 156, 238, 1) 100.2% )',
                   backgroundImage:
-                    "radial-gradient( circle farthest-corner at -20% 20%,  rgba(149,219,254,1) 0%, rgba(32, 156, 238, 1) 100.1% )",
+                    'radial-gradient( circle farthest-corner at -20% 20%,  rgba(149,219,254,1) 0%, rgba(32, 156, 238, 1) 100.1% )',
                   // backgroundColor: '#209CEE',
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "11%"
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '11%'
                 }}
               >
                 <KeyMenu direction="column">
@@ -252,7 +294,7 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
                   </Grid>
                   <Grid item xs={12}>
                     <InputBase
-                      style={{ position: "relative" }}
+                      style={{ position: 'relative' }}
                       value={keyTopText}
                       variant="subtitle1"
                       color="textSecondary"
@@ -269,27 +311,27 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
                         animate={{ scale: 1 }}
                         transition={{ delay: 0.3 }}
                         style={{
-                          position: "absolute",
-                          top: "-10%",
+                          position: 'absolute',
+                          top: '-10%',
 
-                          right: "-10%",
+                          right: '-10%',
 
-                          fontSmooth: "always",
+                          fontSmooth: 'always',
 
-                          background: "white",
-                          border: "3px solid white",
-                          boxShadow: "inset 0px 0px 2px 5px #209CEE",
-                          borderRadius: "100%",
-                          display: "flex"
+                          background: 'white',
+                          border: '3px solid white',
+                          boxShadow: 'inset 0px 0px 2px 5px #209CEE',
+                          borderRadius: '100%',
+                          display: 'flex'
                         }}
                         exit={{ scale: 0 }}
                       >
                         <CheckIcon
                           fontSize="medium"
                           style={{
-                            display: "inline-block",
+                            display: 'inline-block',
 
-                            color: "#4be8bc"
+                            color: '#4be8bc'
                           }}
                         />
                       </motion.div>
@@ -301,23 +343,23 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
                         animate={{ scale: 1 }}
                         exit={{ scale: 0 }}
                         style={{
-                          position: "absolute",
-                          top: "-10%",
+                          position: 'absolute',
+                          top: '-10%',
 
-                          right: "-10%",
+                          right: '-10%',
 
-                          fontSmooth: "always",
+                          fontSmooth: 'always',
 
-                          background: "white",
-                          border: "3px solid white",
-                          boxShadow: "inset 0px 0px 2px 5px #209CEE",
-                          borderRadius: "100%",
-                          display: "flex"
+                          background: 'white',
+                          border: '3px solid white',
+                          boxShadow: 'inset 0px 0px 2px 5px #209CEE',
+                          borderRadius: '100%',
+                          display: 'flex'
                         }}
                       >
                         <ErrorIcon
                           fontSize="medium"
-                          style={{ color: "#FC7575" }}
+                          style={{ color: '#FC7575' }}
                         />
                       </motion.div>
                     )}
@@ -341,13 +383,14 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
                     variant="outlined"
                     style={{
                       margin: 0,
-                      "label + &": {
+                      'label + &': {
                         marginTop: 0
                       },
 
-                      background: "white"
+                      background: 'white'
                     }}
                     fullWidth
+                    value={keyInfo.description}
                     placeholder="shortcut description"
                     onChange={event => handleDescriptionChange(event)}
                     rowsMax={3}
@@ -406,7 +449,7 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
                 {keyTopRefs[keyTopRefKey] && (
                   <Portal
                     container={keyTopRefs[keyTopRefKey].current}
-                    style={{ height: "inherit", width: "inherit" }}
+                    style={{ height: 'inherit', width: 'inherit' }}
                   >
                     <KeyText keyTopText={keyTopText} />
                   </Portal>
@@ -417,6 +460,14 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
           </CardContent>
         </Card>
       </AnimatedPanel>
+      <Portal container={snackbarRef}>
+        <Toast
+          snackbarVariant={snackbarVariant}
+          snackbarMessage={snackbarMessage}
+          onSnackbarClose={onSnackbarClose}
+          snackbarOpen={snackbarOpen}
+        />
+      </Portal>
     </>
   );
 };
@@ -428,6 +479,7 @@ export const CategoryPaper = styled(Paper)`
   overflow-x: hidden;
   width: 200px;
 `;
+
 /* <Grid item>
                   <ButtonGroup
                     className={classes.buttonGroup}
