@@ -1,6 +1,12 @@
 import { white, black } from './common';
 
 export default {
+  keyColors: {
+    active: '#1fe3ac',
+    default: '#FFFFFF',
+    basic: '#209CEE',
+    modifier: '#209CEE'
+  },
   common: {
     black,
     white,

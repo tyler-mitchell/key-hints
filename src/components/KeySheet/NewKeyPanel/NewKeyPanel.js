@@ -188,6 +188,7 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
     updateKeyToFirebase
   } = React.useContext(KeyTableContext);
 
+  // Check for key availability
   React.useEffect(() => {
     const keys = _.values(newKeys.keys.key1);
     if (keys in allKeys) {
@@ -198,14 +199,6 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
 
     console.log(`⭐: NewKeyPanel -> isKeyAvailable`, isKeyAvailable);
   }, [allKeys, isKeyAvailable, keyInfo, newKeys]);
-
-  // const resetKeyInfo = params => {
-  //   setKeyInfo({
-  //     category: 'uncategorized',
-  //     description: null,
-  //     keyDescription: null
-  //   });
-  // };
 
   React.useEffect(() => {
     if (saveClicked !== 0) {
@@ -227,8 +220,13 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
     }
     return () => {};
   }, [saveClicked]);
+
   React.useEffect(() => {
-    if (!addMode) {
+    if (addMode) {
+      // deselect any selected item
+      setGlobalState('selectedIndex', null);
+    } else {
+      // clear input
       setKeyInfo({
         category: 'uncategorized',
         description: '',
@@ -236,6 +234,7 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
       });
     }
   }, [addMode]);
+
   const handleSaveKeyClick = () => {
     const newKey = { ...newKeys, ...keyInfo };
     console.log(`⭐: handleSaveKeyClick -> newKey`, newKey);
