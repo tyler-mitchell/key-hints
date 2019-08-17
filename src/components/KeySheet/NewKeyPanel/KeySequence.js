@@ -34,20 +34,25 @@ import { RenderIcon } from '../KeyList/KeyListItem';
 import { Button } from '@material-ui/core';
 import { Fab } from '@material-ui/core';
 import { Paper } from '@material-ui/core';
+import {
+  CheckCircleRounded as CheckIcon,
+  ErrorRounded as ErrorIcon,
+  Close as CloseIcon
+} from '@material-ui/icons';
 
 const AddKeyLabelButton = motion.custom(Fab);
 const ConditionalWrap = ({ condition, wrap, children }) => {
   return condition ? wrap(children) : <>{children}</>;
 };
-export const KeySequence = ({ newKeys, category, children }) => {
-  return (
-    <ListItem style={{ display: 'flex', justifyContent: 'flex-start' }} divider>
-      {children}
+// export const KeySequence = ({ newKeys, category, children }) => {
+//   return (
+//     <ListItem style={{ display: 'flex', justifyContent: 'flex-start' }} divider>
+//       {children}
 
-      <List>{renderAddedKeys(newKeys)}</List>
-    </ListItem>
-  );
-};
+//       <List>{renderAddedKeys(newKeys)}</List>
+//     </ListItem>
+//   );
+// };
 
 const variants = {
   show: {
@@ -244,14 +249,119 @@ const KeyItems = keyItem => {
     </AnimatePresence>
   );
 };
-
-export const renderAddedKeys = keybind => {
+const KeySequenceStatus = ({ isKeyAvailable, isEmpty }) => {
   return (
-    <>
-      {Object.values(keybind).map((keyItem, keyIndex) => {
-        return <KeyItems key={keyIndex} keyItem={keyItem} />;
-      })}
-    </>
+    <motion.div animate={isEmpty ? { opacity: 0 } : { opacity: 1 }}>
+      <AnimatePresence>
+        {isKeyAvailable ? (
+          <motion.div
+            key="success"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.3 }}
+            style={{
+              position: 'absolute',
+              top: '23px',
+
+              right: '23px',
+
+              fontSmooth: 'always',
+
+              background: 'white',
+              border: '3px solid white',
+              // boxShadow: 'inset 0px 0px 2px 5px #209CEE',
+              borderRadius: '100%',
+              display: 'flex'
+            }}
+            exit={{ scale: 0 }}
+          >
+            <CheckIcon
+              fontSize="medium"
+              style={{
+                display: 'inline-block',
+
+                color: '#4be8bc'
+              }}
+            />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="error"
+            initial={{ scale: 0 }}
+            transition={{ delay: 0.3 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0 }}
+            style={{
+              position: 'absolute',
+              top: '23px',
+
+              right: '23px',
+
+              fontSmooth: 'always',
+
+              background: 'white',
+              border: '3px solid white',
+              // boxShadow: 'inset 0px 0px 2px 5px #209CEE',
+              borderRadius: '100%',
+              display: 'flex'
+            }}
+          >
+            <ErrorIcon fontSize="medium" style={{ color: '#FC7575' }} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+};
+const KeySequenceContainer = motion.custom(Grid);
+export const KeySequence = ({
+  newKeys,
+  isEmpty,
+  initial,
+  animate,
+  exit,
+  isKeyAvailable
+}) => {
+  return (
+    <KeySequenceContainer container justify="center" alignItems="center">
+      <AnimatePresence>
+        {isEmpty && (
+          <motion.div
+            key="info"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{ position: 'absolute' }}
+          >
+            <Typography color="textSecondary">
+              Click the keyboard to add a shortcut
+            </Typography>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {!isEmpty && (
+          <KeySequenceContainer
+            key="keysequence"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            // transition={{ delay: 1 }}
+            container
+            justify="center"
+            alignItems="center"
+          >
+            {Object.values(newKeys).map((keyItem, keyIndex) => {
+              return <KeyItems key={keyIndex} keyItem={keyItem} />;
+            })}
+            <KeySequenceStatus
+              isEmpty={isEmpty}
+              isKeyAvailable={isKeyAvailable}
+            />
+          </KeySequenceContainer>
+        )}
+      </AnimatePresence>
+    </KeySequenceContainer>
   );
 };
 

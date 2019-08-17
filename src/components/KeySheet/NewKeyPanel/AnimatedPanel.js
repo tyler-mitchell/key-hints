@@ -12,7 +12,7 @@ import { useMeasure } from '../../hooks/helpers';
 import { Card } from '@material-ui/core';
 
 // const OFFSET = 420;
-const OFFSET = 100;
+const OFFSET = 103;
 const INITIAL = 780;
 // const SLOW = config.gentle
 const SLOW = { mass: 1, tension: 200, friction: 14 };

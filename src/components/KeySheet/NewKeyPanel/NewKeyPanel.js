@@ -6,7 +6,7 @@ import {
   clearKeySelection
 } from '../../../state';
 import { KeyTableContext } from '../../../context/KeyTableContext';
-import { KeySequence, renderAddedKeys } from './KeySequence';
+import { KeySequence } from './KeySequence';
 import styled from 'styled-components';
 import Toast from './Toast';
 
@@ -48,6 +48,7 @@ import { Portal } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import _ from 'lodash';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Avatar } from '@material-ui/core';
 import { Container } from '@material-ui/core';
 import { CardMedia } from '@material-ui/core';
 import { IconButton } from '@material-ui/core';
@@ -111,7 +112,10 @@ const useStyles = makeStyles({
     height: 38,
     margin: 6
   },
-  chip: { button: { marginRight: '15px' } }
+  chip: { button: { marginRight: '15px' } },
+  keyDescription: {
+    textAlign: 'center'
+  }
 });
 
 const KeySequenceContainer = styled(Grid)`
@@ -263,7 +267,7 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
             height: '440px',
             borderRadius: 15,
 
-            padding: '15px'
+            padding: '25px'
           }}
         >
           <div
@@ -290,50 +294,51 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
             container
             xs={3}
             justify="flex-start"
-            direction="column"
+            direction="row"
+            alignItems="center"
           >
-            <InputBase
-              // value={newKeys.description}
+            <Grid item xs={2}>
+              <Avatar />
+            </Grid>
+            <Grid item xs={10}>
+              <InputBase
+                // value={newKeys.description}
 
-              variant="outlined"
-              style={{
-                fontSize: '36px',
-                // margin: 0,
-                'label + &': {
-                  marginTop: 0
-                },
+                variant="outlined"
+                style={{
+                  fontSize: '36px',
+                  // margin: 0,
+                  'label + &': {
+                    marginTop: 0
+                  },
 
-                background: 'white'
-              }}
-              fullWidth
-              value={keyInfo.description}
-              placeholder="shortcut title"
-              onChange={event => handleDescriptionChange(event)}
-              rowsMax={3}
-            />
+                  background: 'white'
+                }}
+                fullWidth
+                value={keyInfo.description}
+                placeholder="untitled"
+                onChange={event => handleDescriptionChange(event)}
+                rowsMax={3}
+              />
+            </Grid>
           </CardHead>
 
           <KeySequenceContainer
             item
             container
             justify
+
             // wrap="nowrap"
           >
-            <Grid
-              container
-              item
-              style={{
-                display: 'flex',
-                position: 'relative',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-              // justify="center"
-              // style={{ marginLeft: '25px' }}
-              // alignItems="center"
-            >
-              {renderAddedKeys(newKeys.keys)}
+            <Grid container style={{ position: 'relative' }}>
+              <KeySequence
+                isKeyAvailable={isKeyAvailable}
+                isEmpty={Object.keys(newKeys.keys.key1).length === 0}
+                style={{ position: 'absolute' }}
+                newKeys={newKeys.keys}
+              />
             </Grid>
+
             <div
               style={{
                 display: 'flex',
@@ -341,91 +346,30 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
                 height: 0,
                 position: 'relative'
               }}
-            >
-              <motion.div
-                animate={
-                  Object.keys(newKeys.keys.key1).length === 0
-                    ? { opacity: 0 }
-                    : { opacity: 1 }
-                }
-              >
-                <AnimatePresence>
-                  {isKeyAvailable ? (
-                    <motion.div
-                      key="success"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.3 }}
-                      style={{
-                        position: 'absolute',
-                        top: '23px',
-
-                        right: '23px',
-
-                        fontSmooth: 'always',
-
-                        background: 'white',
-                        border: '3px solid white',
-                        // boxShadow: 'inset 0px 0px 2px 5px #209CEE',
-                        borderRadius: '100%',
-                        display: 'flex'
-                      }}
-                      exit={{ scale: 0 }}
-                    >
-                      <CheckIcon
-                        fontSize="medium"
-                        style={{
-                          display: 'inline-block',
-
-                          color: '#4be8bc'
-                        }}
-                      />
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="error"
-                      initial={{ scale: 0 }}
-                      transition={{ delay: 0.3 }}
-                      animate={{ scale: 1 }}
-                      exit={{ scale: 0 }}
-                      style={{
-                        position: 'absolute',
-                        top: '23px',
-
-                        right: '23px',
-
-                        fontSmooth: 'always',
-
-                        background: 'white',
-                        border: '3px solid white',
-                        // boxShadow: 'inset 0px 0px 2px 5px #209CEE',
-                        borderRadius: '100%',
-                        display: 'flex'
-                      }}
-                    >
-                      <ErrorIcon
-                        fontSize="medium"
-                        style={{ color: '#FC7575' }}
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            </div>
+            ></div>
           </KeySequenceContainer>
           <Grid item style={{ paddingTop: '15px' }}>
             <InputBase
+              classes={classes.keyDescription}
               style={{
                 position: 'relative',
                 borderRadius: '10px',
-                border: 'solid 2px rgba(220,220,220,0.2)'
+                border: 'solid 2px rgba(220,220,220,0.2)',
+                fontSize: '24px'
+              }}
+              inputProps={{
+                min: 0,
+                style: {
+                  textAlign: 'center'
+                }
               }}
               fullWidth
               value={keyTopText}
               variant="subtitle1"
               color="textSecondary"
               multiline
-              rows={10}
+              rows={1}
+              rowsMax={10}
               placeHolder="enter key top label"
               onChange={event => handleKeyDescription(event)}
             />
