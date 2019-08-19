@@ -45,71 +45,34 @@ import {
 import ListItemAction from './ListItemAction';
 import { motion } from 'framer-motion';
 import { Fab } from '@material-ui/core';
-export const KBD = styled.kbd`
+export const KBD = styled.div`
   /* display: inline-block; */
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  min-width: 40px;
   transform: translate3d(0, 0, 0);
-  /* max-height: 30px; */
   height: ${({ height }) => height || 'inherit'};
-  /* height: inherit; */
-  padding: 12px 12px;
-  /* border: 1px solid #8a8a8a; */
-  border-radius: 5px;
-  /* background: linear-gradient(to bottom, #15191c 0%, #15191c 100%); */
-  /* background: linear-gradient(to bottom, #209CEE 0%, #209CEE 100%); */
-  background: ${({ color }) => color};
-  /* background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(90,92,106,1) 0%, rgba(32,45,58,1) 81.3% ); */
 
-  /* box-shadow: inset 0px 0px 0px 4px rgba(255, 255, 255, 1), 0px 2px 3px 0px rgba(159, 159, 159, 1); */
-  /* box-shadow: 
-  
-  inset 0 0 0 1px #15191c,
-  -.5px .5px 0px 1px rgba(0, 0, 0, 1); */
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
-  -ms-backface-visibility: hidden;
-  /* font-family: 'Varela Round', sans-serif; */
+  min-width: 40px;
+  padding: 12px 12px;
+  margin: 0 4px;
+
+  border-radius: 5px;
+  border-radius: 4px;
+
+  background: ${({ color }) => color};
+  color: #fffeff;
+
   font-family: Muli, sans-serif;
   font-size: 16px;
   font-weight: 700;
-  margin: 0 4px;
-  /* background: #fff; */
-  border-radius: 4px;
-  /* background: radial-gradient(circle farthest-corner at -50% -50%,  #00c6ff 0%, #0072ff 100%);  */
-  /* background: radial-gradient(circle farthest-corner at -50% -50%,  #15191c 0%, #15191c 100%);  */
-
-  /* background-image: linear-gradient(-225deg, #FFFEFF 0%, #D7FFFE 100%);
-  background-image: linear-gradient(275deg, #1d15e3 34%, #5587D8 96%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent; */
-  /* box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.5); */
-  /*Text Properties*/
-  /* font: 10px Helvetica, serif ; */
-  /* text-transform: uppercase; */
   text-align: center;
 
-  color: #fffeff;
-  /* color: white; */
+  backface-visibility: hidden;
 `;
-
-// const SelectedCategoryKBD = styled(KBD)`
-//   height: 20px;
-//   font-size: 12px;
-// `;
 
 const SelectedCategoryKBD = motion.custom(KBD);
 
-const ListItemContainer = () => styled(ListItem)`
-  font-family: 'Nunito', sans-serif;
-`;
-
-const CategoryChip = styled(Chip)`
-  transform: scale(0.85);
-`;
 const KbdKeyList = styled(ListItem)``;
 
 const KbdKey = styled(motion.div)`
@@ -119,32 +82,6 @@ const KbdKey = styled(motion.div)`
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
   -ms-backface-visibility: hidden;
-`;
-
-const KbdAddedKey = styled.div`
-  margin-left: auto;
-  margin-right: 0;
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(2rem);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  transition: all 0.4s;
-
-  animation: fadeIn 0.4s ease-out;
-`;
-const KbdBadge = styled.div`
-  margin-left: auto;
-  margin-right: 0;
-`;
-
-const ORLabel = styled.span`
-  font-size: 8px;
 `;
 
 const modifierKeys = new Set([
@@ -201,7 +138,6 @@ export const renderCategoryIcon = (keyLabel, width = 'auto', styleProps) => {
   }
 };
 export const RenderIcon = ({ keyLabel, width, height, styleProps }) => {
-  console.log(`⭐: RenderIcon -> keyLabel`, keyLabel);
   const color = modifierKeys.has(keyLabel) ? '#15191c ' : '#209CEE';
 
   const iconLabels = {
@@ -253,7 +189,7 @@ export const RenderIcon = ({ keyLabel, width, height, styleProps }) => {
     );
   }
 };
-export const renderKeys = keybind => {
+export const SheetKeys = ({ keybind, onOrKeyClick }) => {
   return (
     <>
       {Object.values(keybind).map((keyItem, keyIndex) => {
@@ -266,67 +202,37 @@ export const renderKeys = keybind => {
             alignItems="flex-end"
           >
             {/* <Badge badgeContent={keyIndex+1} color="primary" variant="dot" > */}
-            {Object.keys(keyItem).map((kb, index, array) => (
-              <KbdKey key={index}>
-                {Array.isArray(keyItem[kb]) ? (
-                  keyItem[kb].map((x, i, arr) =>
-                    arr.length - 1 !== i ? (
-                      <span key={i}>
-                        {<RenderIcon keyLabel={x} />}
-                        <ORLabel> or </ORLabel>
-                      </span>
+            {Object.keys(keyItem).map((kb, index, array) => {
+              const startOfThen = array[index + 1] === 'THEN';
+              const isEndOfArray = index === Object.keys(keyItem).length - 1;
+              const combination = !(isEndOfArray || startOfThen);
+              return (
+                <>
+                  <KbdKey key={index}>
+                    {!(kb === 'THEN') ? (
+                      <RenderIcon keyLabel={keyItem[kb]} />
                     ) : (
-                      <RenderIcon keyLabel={x} />
-                    )
-                  )
-                ) : (
-                  <RenderIcon keyLabel={keyItem[kb]} />
-                )}
+                      <>
+                        then
+                        {keyItem[kb].map((x, i, arr) =>
+                          arr.length - 1 !== i ? (
+                            <span key={i}>
+                              {<RenderIcon keyLabel={x} />}
+                              {index !== arr.length - 1 && '+'}
+                              {/* <ORLabel> or </ORLabel> */}
+                            </span>
+                          ) : (
+                            <RenderIcon keyLabel={x} />
+                          )
+                        )}
+                      </>
+                    )}
 
-                {index !== Object.keys(keyItem).length - 1 && '+'}
-              </KbdKey>
-            ))}
-            {/* </Badge> */}
-          </KbdKeyList>
-        );
-      })}
-    </>
-  );
-};
-const renderAddedKeys = keybind => {
-  return (
-    <>
-      {Object.values(keybind).map((keyItem, keyIndex) => {
-        return (
-          <KbdKeyList
-            key={keyIndex}
-            dense={true}
-            button={true}
-            disableGutters={true}
-            alignItems="flex-end"
-          >
-            {/* <Badge badgeContent={keyIndex+1} color="primary" variant="dot" > */}
-            {Object.keys(keyItem).map((kb, index, array) => (
-              <KbdAddedKey key={index}>
-                {/* <KBD> */}
-                {Array.isArray(keyItem[kb]) ? (
-                  keyItem[kb].map((x, i, arr) =>
-                    arr.length - 1 !== i ? (
-                      <span key={i}>
-                        {<RenderIcon keyLabel={x} />}
-                        <ORLabel> or </ORLabel>
-                      </span>
-                    ) : (
-                      <RenderIcon keyLabel={x} />
-                    )
-                  )
-                ) : (
-                  <RenderIcon keyLabel={keyItem[kb]} height="46px" />
-                )}
-                {/* </KBD> */}
-                {index !== Object.keys(keyItem).length - 1 && '+'}
-              </KbdAddedKey>
-            ))}
+                    {combination && '+'}
+                  </KbdKey>
+                </>
+              );
+            })}
             {/* </Badge> */}
           </KbdKeyList>
         );
@@ -441,30 +347,7 @@ export const RenderSelectedCategory = ({ layerKey, color }) => {
 };
 const categoryVariants = {
   active: color => ({
-    // y: -10,
-    // borderRadius: ["20%", "20%", "50%", "50%", "20%"],
-    // rotateY: 180,
-    // rotateX: -160,
-
-    // scale: [1.02, 1, 0.95, 1.1, 1],
-
     borderColor: shade(0.01, color),
-
-    // borderWidth: '8px',
-
-    // borderTopColor: shade(0.02, color),
-    // borderBottomColor: `${shade(0.3, color)}`,
-    // borderLeftColor: `${shade(0.09, color)}`,
-    // borderRightColor: `${shade(0.09, color)}`,
-    // boxShadow: `inset 2px 0px 0px 3px ${shade(0.09, color)} ,
-    //   inset -2px 0px 0px 3px ${shade(0.09, color)},
-    //   inset 0px 2px 0px 3px ${shade(0.02, color)},
-    //   inset 0px -2px 0px 3px ${shade(0.3, color)}`,
-
-    // transition: { type: "spring", mass: 0.5 },
-    // boxShadow: " 0px 0px 0px 3px rgba(0,0,0,0.5)",
-    // boxShadow: " 0px 0px 8px 0px black",
-    // filter: `grayscale(${[300, 200, 400]})`,
     backgroundImage: `linear-gradient(-30deg, ${shade(
       0.05,
       color
@@ -472,13 +355,6 @@ const categoryVariants = {
   }),
 
   inactive: color => ({
-    // y: 0,
-    // rotateY: 180,
-    // rotateX: 0,
-
-    // boxShadow: " 0px 0px 0px 0px rgba(0,0,0,0.5)",
-    // boxShadow: " 0px 0px 0px 0px black",
-
     backgroundImage: `linear-gradient(-30deg, ${shade(
       0.05,
       color
@@ -503,7 +379,7 @@ export const KeyListItem = props => {
   const [, setEditMode] = useGlobalState('editMode');
   const [selectedItem, setSelectedItem] = useGlobalState('selectedItem');
   const [curShortcutObjectKey] = useGlobalState('curShortcutObjectKey');
-
+  const [keybindIndex, setKeybindIndex] = React.useState(1);
   const [selectedIndex, setSelectedIndex] = useGlobalState('selectedIndex');
   // React.useEffect(() => {
   //   if (selectedItem !== shortcutObjectKey) {
@@ -530,10 +406,12 @@ export const KeyListItem = props => {
   const arrowClicked = shortcutObjectKey => {
     handleSelection(shortcutObjectKey);
   };
-
+  const onOrKeyClick = index => {
+    setActiveKeys(keybind[`key${index}`]);
+  };
   const handleSelection = shortcutObjectKey => {
     setSelectedItem(shortcutObjectKey);
-    setActiveKeys(keybind['key1']);
+    setActiveKeys(keybind[`key${1}`]);
     setGlobalState('curShortcutObjectKey', shortcutObjectKey);
     setGlobalState('activeKeysIndex', shortcutObjectKey);
 
@@ -576,7 +454,9 @@ export const KeyListItem = props => {
       </Grid>
 
       <Grid xs={8} container item justify="flex-end" direction="row">
-        <List>{renderKeys(keybind)}</List>
+        <List>
+          <SheetKeys onOrKeyClick={onOrKeyClick} keybind={keybind} />
+        </List>
       </Grid>
 
       <ListItemAction />
@@ -586,13 +466,4 @@ export const KeyListItem = props => {
   );
 };
 
-export const NewKeyForm = ({ newKeys, category, children }) => {
-  return (
-    <ListItem style={{ display: 'flex', justifyContent: 'flex-start' }} divider>
-      {children}
-
-      <List>{renderAddedKeys(newKeys)}</List>
-    </ListItem>
-  );
-};
 export default KeyListItem;

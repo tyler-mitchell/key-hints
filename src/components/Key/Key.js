@@ -1,26 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from "react";
+import React from 'react';
 import {
   AnimatedKeyContainer,
   BottomKeyChar,
   KeyTop,
   KeyCharCenter
-} from "./Key.styles";
-import styled, { keyframes, css } from "styled-components";
-import { findAll } from "styled-components/test-utils";
-import { Box } from "@rebass/grid";
+} from './Key.styles';
+import styled, { keyframes, css } from 'styled-components';
+import { findAll } from 'styled-components/test-utils';
+import { Box } from '@rebass/grid';
 import {
   shade,
   linearGradient,
   lighten,
   transparentize,
   grayscale
-} from "polished";
-import Layer from "@material-ui/core/Box";
-import { FlashingContext } from "./FlashingContext";
-import { Card, Grid, Paper } from "@material-ui/core";
-import { Textfit } from "react-textfit";
-import { MouseIcon } from "./Icons";
+} from 'polished';
+import Layer from '@material-ui/core/Box';
+import { FlashingContext } from './FlashingContext';
+import { Card, Grid, Paper } from '@material-ui/core';
+import { Textfit } from 'react-textfit';
+import { MouseIcon } from './Icons';
 import {
   useSpring,
   animated,
@@ -29,34 +29,35 @@ import {
   interpolate,
   extrapolate,
   Easing
-} from "react-spring";
-import fitty from "fitty";
-import Typography from "@material-ui/core/Typography";
+} from 'react-spring';
+import fitty from 'fitty';
+import Typography from '@material-ui/core/Typography';
 import {
   ArrowBack as LeftArrowIcon,
   ArrowForward as RightArrowIcon,
   ArrowUpward as UpArrowIcon,
   ArrowDownward as DownArrowIcon
-} from "@material-ui/icons";
-import "./key.css";
-import useMethods from "use-methods";
+} from '@material-ui/icons';
+import './key.css';
+import useMethods from 'use-methods';
 
-import { FlashingKey } from "./FlashingKey";
+import { FlashingKey } from './FlashingKey';
 
-import { useGlobalState, setGlobalState } from "../../state";
-import _ from "lodash";
+import { useGlobalState, setGlobalState } from '../../state';
+import _ from 'lodash';
 
-import flatMap from "lodash/flatMap";
-import KeyText from "./KeyText/KeyText";
+import flatMap from 'lodash/flatMap';
+import KeyText from './KeyText/KeyText';
 import {
   motion,
   useAnimation,
   useMotionValue,
   useTransform,
   transform
-} from "framer-motion";
-import { TextField } from "@material-ui/core";
-import { useBoolean } from "react-hanger";
+} from 'framer-motion';
+import { TextField } from '@material-ui/core';
+import { useBoolean } from 'react-hanger';
+import theme from '../design-system/theme';
 
 const ConditionalWrap = ({ condition, wrap, children }) => {
   const [flashing] = React.useContext(FlashingContext);
@@ -65,14 +66,14 @@ const ConditionalWrap = ({ condition, wrap, children }) => {
 
 const initialState = {
   active: false,
-  activeColor: "#1fe3ac",
-  defaultColor: "#FFFFFF",
-  keyTopText: ""
+  activeColor: theme.palette.keyColors.active,
+  defaultColor: theme.palette.keyColors.default,
+  keyTopText: ''
 };
 
 const methods = state => {
-  const defaultActiveColor = "#1fe3ac";
-  const defaultColor = "#FFFFFF";
+  const defaultActiveColor = theme.palette.keyColors.active;
+  const defaultColor = theme.palette.keyColors.default;
   return {
     setActive() {
       state.keyColor = defaultActiveColor;
@@ -80,8 +81,8 @@ const methods = state => {
     },
     setInactiveMapKey() {
       state.keyColor = defaultColor;
-      state.keyTopText = "";
-      state.activeColor = "#1fe3ac";
+      state.keyTopText = '';
+      state.activeColor = defaultActiveColor;
       // state.active = false;
     },
     setActiveMapKey(keyColor, keyTopText) {
@@ -111,17 +112,20 @@ export const Key = ({
   KeyChar
 }) => {
   // global mode state
-  const [keyMapMode] = useGlobalState("keyMapMode");
-  const [editMode] = useGlobalState("editMode");
-  const [addMode] = useGlobalState("addMode");
-  const [keyLabelAdded] = useGlobalState("keyLabelAdded");
+  const [keyMapMode] = useGlobalState('keyMapMode');
+  const [editMode] = useGlobalState('editMode');
+  const [addMode] = useGlobalState('addMode');
+  const [keyLabelAdded] = useGlobalState('keyLabelAdded');
 
   // global key state
-  const [activeLayers] = useGlobalState("activeLayers");
+  const [activeLayers] = useGlobalState('activeLayers');
 
-  const [newKeys, setNewKeys] = useGlobalState("newKeys");
-  const [activeKeys] = useGlobalState("activeKeys");
-
+  const [newKeys, setNewKeys] = useGlobalState('newKeys');
+  const [activeKeys] = useGlobalState('activeKeys');
+  const [isThenSequence, setIsThenSequence] = React.useState({
+    hasSequence: false,
+    isSequenceKey: false
+  });
   // use methods hook
   const [
     { activeColor, defaultColor, keyTopText }, // <- latest state
@@ -146,15 +150,19 @@ export const Key = ({
   React.useEffect(() => {
     if (flatMap(activeKeys).includes(uniqueKeyName)) {
       if (editMode) {
-        console.log(
-          `⭐:-------------- Key -> EDIT MODE ---------------`,
-          editMode
-        );
-
         setNewKeys(p => ({ ...p, keys: { key1: activeKeys } }));
         active.setTrue();
       } else if (!keyMapMode) {
         active.setTrue();
+      }
+      // Check for 'THEN' key sequence
+      if (activeKeys['THEN']) {
+        setIsThenSequence(v => ({ ...v, hasSequence: true }));
+        if (activeKeys['THEN'].includes(uniqueKeyName)) {
+          setIsThenSequence(v => ({ ...v, isSequenceKey: true }));
+        } else {
+          setIsThenSequence(v => ({ ...v, isSequenceKey: false }));
+        }
       }
     }
 
@@ -184,14 +192,14 @@ export const Key = ({
   // UseLayoutEffect Hook
   React.useLayoutEffect(() => {
     if (active.value && addMode) {
-      setGlobalState("lastKeyRef", label);
+      setGlobalState('lastKeyRef', label);
     }
   }, [active.value]);
 
   // Functions
   const addItem = key => {
     const index = _.size(newKeys.keys.key1);
-    const individualKeys = { ...newKeys.keys["key1"], [index]: key };
+    const individualKeys = { ...newKeys.keys['key1'], [index]: key };
     const keys = { key1: individualKeys };
     setNewKeys(p => ({ ...p, keys }));
   };
@@ -222,68 +230,26 @@ export const Key = ({
     }
   };
 
-  // const {
-  //   borderTopColor,
-  //   borderBottomColor,
-  //   borderLeftColor,
-  //   borderRightColor,
-  //   background
-
-  //   // transform
-  // } = useSpring({
-  //   reverse: !setActive.value,
-  //   reset: setActive.value,
-  //   to: {
-  //     borderTopColor: `${shade(0.02, activeColor)}`,
-  //     borderBottomColor: `${shade(0.3, activeColor)}`,
-  //     borderLeftColor: `${shade(0.09, activeColor)}`,
-  //     borderRightColor: `${shade(0.09, activeColor)}`,
-  //     boxShadow: "inset 0px 0px 10px rgba(0,0,0,0.5)",
-  //     background: `linear-gradient(-30deg, ${shade(
-  //       0.05,
-  //       activeColor
-  //     )} 0%, ${lighten(0.2, activeColor)} 50%)`
-  //   },
-  //   from: {
-  //     borderTopColor: `${shade(0.02, defaultColor)}`,
-  //     borderBottomColor: `${shade(0.3, defaultColor)}`,
-  //     borderLeftColor: `${shade(0.09, defaultColor)}`,
-  //     borderRightColor: `${shade(0.09, defaultColor)}`,
-  //     boxShadow: "inset 0px 0px 10px rgba(0,0,0,0.5)",
-  //     background: `linear-gradient(-30deg, ${shade(
-  //       0.05,
-  //       defaultColor
-  //     )} 0%, ${lighten(0.2, defaultColor)} 50%)`
-  //   },
-  //   config: { mass: 1, tension: 180, friction: 12, duration: 2300 }
-  // });
-  // const { transform } = useSpring({
-  //   reverse: setActive.value,
-  //   reset: setActive.value,
-  //   from: {
-  //     transform: "scale(1)"
-  //   },
-  //   to: {
-  //     transform: "scale(0)"
-  //   },
-  //   delay: 600,
-  //   config: { mass: 1, tension: 180, friction: 12, duration: 300 }
-  // });
-
   const keyTopTextRef = React.useRef(null);
-  setGlobalState("keyTopTextRefs", v => ({ ...v, [label]: keyTopTextRef }));
+  setGlobalState('keyTopTextRefs', v => ({ ...v, [label]: keyTopTextRef }));
   const [isModifier, setIsModifier] = React.useState(false);
 
   const controls = useAnimation();
 
   React.useEffect(() => {
-    controls.start(active.value ? "active" : "inactive");
+    let activeVariant = 'active';
+    if (isThenSequence.isSequenceKey) {
+      activeVariant = ['active', 'sequence2'];
+    } else if (isThenSequence.hasSequence) {
+      activeVariant = ['active', 'sequence1'];
+    }
+    controls.start(active.value ? activeVariant : 'inactive');
   }, [activeColor, activeLayers, active]);
 
   return (
     <ConditionalWrap
       condition={editMode && active.value}
-      style={{ backfaceVisibility: "hidden", filter: "blur(0)" }}
+      style={{ backfaceVisibility: 'hidden', filter: 'blur(0)' }}
       wrap={(children, flashing) => (
         <animated.div key={key} style={flashing}>
           {children}
@@ -304,10 +270,10 @@ export const Key = ({
         // active={active}
         // style={{ filter: `opacity(${grayscale})` }}
         margin={margin}
-        custom={{ activeColor, defaultColor }}
+        custom={{ activeColor, defaultColor, i: 5 }}
         animate={controls}
         variants={variants}
-        transition={{ duration: 0.3 }}
+        // transition={{ duration: 0.3 }}
         label={label}
         wt={wt}
         ht={ht}
@@ -366,31 +332,51 @@ export const Key = ({
 
 const variants = {
   active: ({ activeColor }) => ({
-    // y: -10,
     // borderRadius: ["20%", "20%", "50%", "50%", "20%"],
     // rotateY: 180,
     // rotateX: -160,
     borderTopColor: `${shade(0.02, activeColor)}`,
     // scale: [1.02, 1, 0.95, 1.1, 1],
-    opacity: [0.8, 0.9, 1],
+    // opacity: [0.8, 0.9, 1],
     borderBottomColor: `${shade(0.3, activeColor)}`,
     borderLeftColor: `${shade(0.09, activeColor)}`,
     borderRightColor: `${shade(0.09, activeColor)}`,
     // transition: { type: "spring", mass: 0.5 },
     // boxShadow: " 0px 0px 0px 3px rgba(0,0,0,0.5)",
     // boxShadow: " 0px 0px 8px 0px black",
+    transition: { duration: 0.3 },
+    y: 0,
     filter: `grayscale(${[300, 200, 400]})`,
     backgroundImage: `linear-gradient(-30deg, ${shade(
       0.05,
       activeColor
     )} 0%, ${lighten(0.1, activeColor)} 50%)`
   }),
+  sequence1: ({ activeColor, i }) => ({
+    y: 5,
+
+    transition: { yoyo: Infinity, duration: 1 }
+  }),
+  sequence2: ({ activeColor, i }) => ({
+    y: 5,
+    transition: {
+      // elapsed: 1,
+      type: 'spring',
+      // restSpeed: 0.5,
+      velocity: 5,
+      // flip: Infinity,
+      from: 30,
+      to: 0
+
+      // duration: 1
+    }
+  }),
 
   inactive: ({ defaultColor }) => ({
     // y: 0,
     // rotateY: 180,
     // rotateX: 0,
-
+    y: 0,
     borderTopColor: `${shade(0.02, defaultColor)}`,
     borderBottomColor: `${shade(0.3, defaultColor)}`,
     borderLeftColor: `${shade(0.09, defaultColor)}`,
@@ -410,7 +396,8 @@ const keyTopVariants = {
   }),
 
   inactive: ({ defaultColor }) => ({
-    backgroundImage: transparentize(0.3, defaultColor)
+    backgroundImage: transparentize(0.3, defaultColor),
+    y: 0
   })
 };
 

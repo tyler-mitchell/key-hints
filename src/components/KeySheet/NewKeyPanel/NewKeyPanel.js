@@ -6,7 +6,7 @@ import {
   clearKeySelection
 } from '../../../state';
 import { KeyTableContext } from '../../../context/KeyTableContext';
-import { KeySequence } from './KeySequence';
+import { KeySequence } from './KeySequence/KeySequence';
 import styled from 'styled-components';
 import Toast from './Toast';
 
@@ -322,31 +322,14 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
             </Grid>
           </CardHead>
 
-          <KeySequenceContainer
-            item
-            container
-            justify
-
-            // wrap="nowrap"
-          >
-            <Grid container style={{ position: 'relative' }}>
-              <KeySequence
-                isKeyAvailable={isKeyAvailable}
-                isEmpty={Object.keys(newKeys.keys.key1).length === 0}
-                style={{ position: 'absolute' }}
-                newKeys={newKeys.keys}
-              />
-            </Grid>
-
-            <div
-              style={{
-                display: 'flex',
-                width: 0,
-                height: 0,
-                position: 'relative'
-              }}
-            ></div>
-          </KeySequenceContainer>
+          <Grid xs={12} style={{ display: 'flex' }} item>
+            <KeySequence
+              isKeyAvailable={isKeyAvailable}
+              isEmpty={Object.keys(newKeys.keys.key1).length === 0}
+              style={{ position: 'absolute' }}
+              newKeys={newKeys.keys}
+            />
+          </Grid>
           <Grid item style={{ paddingTop: '15px' }}>
             <InputBase
               classes={classes.keyDescription}
