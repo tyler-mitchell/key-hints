@@ -87,15 +87,16 @@ const variantContainer = {
     // opacity: 1,
     // scale: 1,
     transition: {
-      // when: 'afterChildren',
-      // staggeredChildren: 0.5
+      when: 'afterChildren',
+      staggeredChildren: 1,
+      duration: 1
     }
   },
   hide: {
     transition: {
-      // when: 'afterChildren',
-      // // delayChildren: 0.5,
-      // staggeredChildren: 0.5
+      when: 'afterChildren',
+      // delayChildren: 0.5,
+      duration: 1
       // staggerChildren: 0.5, delayChildren: 0.5
     }
   }
@@ -110,26 +111,33 @@ const Sequence = keyItem => {
   const [keyLabelAdded, setKeyLabelAdded] = useGlobalState('keyLabelAdded');
   // const [isActionHovered, setIsActionHovered] = useGlobalState('isActionHovered');
   const [sequence, setSequence] = React.useState([]);
+  const [renderSequence, setRenderSequence] = React.useState([]);
   const [len, setLen] = React.useState(null);
   const prevSequence = usePrevious(sequence);
   const [curVariant, setCurVariant] = React.useState(actionVariants);
 
   React.useEffect(() => {
-    setSequence(
-      _.chain(newKeys.keys.key1)
-        .toArray()
-        .value()
-        .map((v, index, arr) => {
-          const isAction = index !== sequence.length - 1;
+    const result = _.chain(newKeys.keys.key1)
+      .toArray()
+      .value()
+      .reduce((result, keybind, index, arr) => {
+        const isAction = index !== arr.length - 1;
+        const key = keybind;
 
-          setLen(sequence.length - 1);
-          return { kb: v, index: index };
-        })
-    );
-  }, [newKeys, sequence.length]);
+        result.push({ kb: keybind, index: index, key });
+        if (index !== arr.length - 1) {
+          result.push({ isAction, key: keybind + 'index' });
+        }
+        return result;
+        // return { kb: v, index: index, isAction };
+        // return { kb: v, index: index, isAction };
+      }, []);
+    setSequence(result);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newKeys]);
 
   return (
-    <AnimatePresence exitBeforeEnter={true}>
+    <AnimatePresence>
       {sequence.map((shortcut, index) => {
         const containerKey = shortcut.kb + 'container' + index;
         const shortcutKey = shortcut.kb + index;
@@ -141,10 +149,10 @@ const Sequence = keyItem => {
             initial="hide"
             animate="show"
             exit="hide"
-            // positionTransition
-            variants={variantContainer}
-            key={'container' + shortcut.kb}
-            layoutTransition={true}
+            positionTransition
+            variants={variants}
+            key={shortcut.key}
+            // layoutTransition={true}
             style={{
               // display: 'inline-flex'
               position: 'relative',
@@ -160,52 +168,39 @@ const Sequence = keyItem => {
             //   justifyContent: 'center'
             // }}
           >
-            <motion.div
-              // positionTransition
-              layoutTransition={true}
-              variants={variants}
-              // key={'shortcut' + shortcut.kb}
-            >
+            {shortcut.kb && (
+              // <motion.div
+              //   positionTransition
+              //   // layoutTransition={true}
+              //   variants={variants}
+              //   key={'shortcut' + shortcut.kb}
+              // >
               <RenderIcon keyLabel={shortcut.kb} height="46px" />
-            </motion.div>
+              // </motion.div>
+            )}
 
-            <motion.div
-              layoutTransition
-              // positionTransition
-              // key={shortcut.kb + index}
-              // key={'action' + index}
-              // initial="hide"
-              // animate="show"
-              // exit="hide"
-              // animate={shortcut.index !== sequence.length - 1 ? 'show' : 'hide'}
+            {/* <motion.div
+              positionTransition
+              // key={'action' + shortcut.kb}
+
+              // animate={
+              //   shortcut.index !== sequence.length - 1 ? 'show' : 'hide'
+              // }
 
               variants={actionVariants}
-            >
-              {/* <AnimatePresence> */}
-              {index !== sequence.length - 1 && (
-                <motion.div
-                  layoutTransition={true}
-                  key="check"
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0 }}
-                  // style={{
-                  //   position: 'absolute',
-                  //   top: 0,
-                  //   left: 0,
-                  //   right: 0,
-                  //   marginLeft: 'auto',
-                  //   marginRight: 'auto'
-                  // }}
-                >
-                  <KeySequenceAction
-                    variants={actionVariants}
-                    actionPresent={shortcut.index !== sequence.length - 1}
-                  />
-                </motion.div>
-              )}
-              {/* </AnimatePresence> */}
-            </motion.div>
+            > */}
+            {/* <AnimatePresence> */}
+
+            {shortcut.isAction && (
+              // <motion.div
+              //   // animate={index !== sequence.length - 1 ? 'show' : 'hide'}
+              //   variants={actionVariants}
+              // >
+              <KeySequenceAction
+              // actionPresent={shortcut.index !== sequence.length - 1}
+              />
+              // </motion.div>
+            )}
           </motion.div>
         );
       })}
