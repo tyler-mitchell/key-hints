@@ -24,7 +24,8 @@ export const CombineAction = ({ onClick }) => {
   return (
     <ActionButton key="COMBINE">
       <AddIcon
-        style={{ width: '100%', selfAlign: 'center' }}
+        color="textSecondary"
+        style={{ width: '100%', selfAlign: 'center', color: 'gray' }}
         fontSize="small"
       />
     </ActionButton>

@@ -51,6 +51,8 @@ const variants = {
     opacity: 1,
     scale: 1,
     transition: {
+      // duration: 1,
+
       delay: 0.15
     }
   },
@@ -58,6 +60,9 @@ const variants = {
     opacity: 0,
     scale: 0,
     transition: {
+      // when: "beforeCh"
+      // duration: 0.3// default
+      ease: 'anticipate',
       delay: 0.15
     }
   }
@@ -65,11 +70,34 @@ const variants = {
 const actionVariants = {
   show: {
     opacity: 1,
-    scale: 1
+    scale: 1,
+    transition: {
+      type: 'spring',
+      // ease: 'backInOut',
+      // duration: 0.3,
+      // damping: 10,
+      // mass: 0.5,
+      stiffness: 200,
+      velocity: 8,
+      // duration: 0.3
+      restSpeed: 11
+    }
   },
   hide: {
     opacity: 0,
-    scale: 0
+    scale: 0,
+    transition: {
+      type: 'tween',
+      ease: 'backInOut',
+      velocity: 5,
+      // duration: 0.2,
+      damping: 400
+      // ease: 'anticipate',
+
+      // stiffness: 20,
+      // restDelta: 2
+      // velocity: 10
+    }
   }
 };
 const hideVariant = {
@@ -124,13 +152,11 @@ const Sequence = keyItem => {
         const isAction = index !== arr.length - 1;
         const key = keybind;
 
-        result.push({ kb: keybind, index: index, key });
+        result.push({ kb: keybind, isAction: false, index: index, key });
         if (index !== arr.length - 1) {
           result.push({ isAction, key: keybind + 'index' });
         }
         return result;
-        // return { kb: v, index: index, isAction };
-        // return { kb: v, index: index, isAction };
       }, []);
     setSequence(result);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -139,68 +165,24 @@ const Sequence = keyItem => {
   return (
     <AnimatePresence>
       {sequence.map((shortcut, index) => {
-        const containerKey = shortcut.kb + 'container' + index;
-        const shortcutKey = shortcut.kb + index;
-        const actionKey = shortcut.kb + index + 'action';
-        const actionPresent = shortcut.index !== sequence.length - 1;
-
         return (
           <motion.div
             initial="hide"
             animate="show"
             exit="hide"
             positionTransition
-            variants={variants}
+            variants={shortcut.isAction ? actionVariants : variants}
             key={shortcut.key}
-            // layoutTransition={true}
             style={{
-              // display: 'inline-flex'
               position: 'relative',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
             }}
-            // style={{
-            //   // display: 'inline-flex'
-            //   display: 'flex',
-            //   position: 'relative',
-            //   alignItems: 'center',
-            //   justifyContent: 'center'
-            // }}
           >
-            {shortcut.kb && (
-              // <motion.div
-              //   positionTransition
-              //   // layoutTransition={true}
-              //   variants={variants}
-              //   key={'shortcut' + shortcut.kb}
-              // >
-              <RenderIcon keyLabel={shortcut.kb} height="46px" />
-              // </motion.div>
-            )}
+            {shortcut.kb && <RenderIcon keyLabel={shortcut.kb} height="46px" />}
 
-            {/* <motion.div
-              positionTransition
-              // key={'action' + shortcut.kb}
-
-              // animate={
-              //   shortcut.index !== sequence.length - 1 ? 'show' : 'hide'
-              // }
-
-              variants={actionVariants}
-            > */}
-            {/* <AnimatePresence> */}
-
-            {shortcut.isAction && (
-              // <motion.div
-              //   // animate={index !== sequence.length - 1 ? 'show' : 'hide'}
-              //   variants={actionVariants}
-              // >
-              <KeySequenceAction
-              // actionPresent={shortcut.index !== sequence.length - 1}
-              />
-              // </motion.div>
-            )}
+            {shortcut.isAction && <KeySequenceAction />}
           </motion.div>
         );
       })}

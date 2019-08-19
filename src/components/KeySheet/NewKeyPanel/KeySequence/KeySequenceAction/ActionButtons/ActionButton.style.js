@@ -32,8 +32,15 @@ import { makeStyles } from '@material-ui/styles';
 // })(Button);
 
 export const StyledActionButton = styled(motion.div)`
-  background: linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%);
+  /* background: linear-gradient(45deg, #fe6b8b 30%, #ff8e53 90%); */
+  /* background: linear-gradient(
+    45deg,
+    rgb(234, 235, 236) 30%,
+    rgba(250, 250, 250, 1) 90%
+  ); */
+  background: white;
   width: 25px;
+  margin: 3px;
   height: 25px;
   position: relative;
   border-radius: 50%;
@@ -41,5 +48,9 @@ export const StyledActionButton = styled(motion.div)`
   text-align: center;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 3px 5px 2px rgba(255, 105, 135, 0.3);
+  /* border-width: 2px;
+  border-color: black;
+  border-style: solid; */
+  /* box-shadow: inset 0 0px 10px 1px rgba(242, 242, 243, 0.72),
+    0 3px 5px 2px rgba(156, 156, 156, 0.3), 0 1px 2px 1px rgba(43, 43, 43, 0.59); */
 `;
