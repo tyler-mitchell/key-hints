@@ -16,12 +16,36 @@ import ActionMenu from './ActionMenu/ActionMenu';
 import { bindTrigger } from 'material-ui-popup-state';
 import { bindHover } from 'material-ui-popup-state/core';
 import { hideText } from 'polished';
+import { StyledActionButton } from './ActionButtons/ActionButton.style';
+import {
+  AddRounded as CombineIcon,
+  KeyboardArrowRight as ThenIcon
+} from '@material-ui/icons';
+
+const actionButtonVariants = {
+  initial: {
+    scale: 0,
+    opacity: 0
+  },
+  showCombine: {
+    width: '20px',
+    scale: 1,
+    opacity: 1
+  },
+  showThen: {
+    scale: 1,
+    opacity: 1,
+
+    width: '50px'
+  }
+};
 const KeySequenceAction = ({
   key,
   endOfArray,
   initial,
   animate,
   actionPresent,
+  actionHasOptions,
   variants,
   exit
 }) => {
@@ -51,33 +75,33 @@ const KeySequenceAction = ({
 
   return (
     <>
-      <div
-        // positionTransition
-        // positionTransition
-        // key={key}
-        // initial={{ opacity: 0, scale: 0 }}
-        // animate={{ opacity: 1, scale: 1 }}
-        // exit={{ opacity: 0, scale: 0 }}
-        // transition={{ delay: 1 }}
-        // variants={variants}
+      <motion.div
+        style={{ width: '30px', display: 'flex', position: 'relative' }}
         {...bindHover(popupState)}
-        style={{
-          display: 'flex',
-          position: 'relative'
-        }}
+        animate={{}}
       >
-        {actionType === 'COMBINE' && (
-          <CombineAction onClick={handleActionClick} />
-        )}
-        {actionType === 'THEN' && <ThenAction onClick={handleActionClick} />}
-      </div>
+        <AnimatePresence exitBeforeEnter>
+          {actionType === 'COMBINE' && (
+            <CombineAction key={'COMBINE'} onClick={handleActionClick} />
+          )}
+          {actionType === 'THEN' && (
+            <ThenAction
+              key={'THEN'}
+              onClick={handleActionClick}
+              // {...bindHover(popupState)}
+            />
+          )}
+        </AnimatePresence>
+      </motion.div>
 
-      <ActionMenu
-        classes={classes}
-        popupState={popupState}
-        actionType={actionType}
-        setActionType={setActionType}
-      />
+      {actionHasOptions && (
+        <ActionMenu
+          classes={classes}
+          popupState={popupState}
+          actionType={actionType}
+          setActionType={setActionType}
+        />
+      )}
     </>
   );
 };

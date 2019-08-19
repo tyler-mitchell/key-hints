@@ -39,18 +39,27 @@ export const StyledActionButton = styled(motion.div)`
     rgba(250, 250, 250, 1) 90%
   ); */
   background: white;
-  width: 25px;
+  width: 20px;
+  height: 20px;
   margin: 3px;
-  height: 25px;
   position: relative;
+  /* border-radius: ${({ borderRadius }) => borderRadius}; */
   border-radius: 50%;
+  /* padding: 0px ${({ paddingX }) => paddingX}px; */
+
   display: flex;
   text-align: center;
   align-items: center;
   justify-content: center;
+  backface-visibility: hidden;
+  filter: drop-shadow(0px 1px 1px black);
   /* border-width: 2px;
   border-color: black;
   border-style: solid; */
   /* box-shadow: inset 0 0px 10px 1px rgba(242, 242, 243, 0.72),
     0 3px 5px 2px rgba(156, 156, 156, 0.3), 0 1px 2px 1px rgba(43, 43, 43, 0.59); */
 `;
+
+StyledActionButton.defaultProps = {
+  // paddingX: 0
+};

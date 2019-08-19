@@ -4,9 +4,13 @@ import { ErrorRounded as ErrorIcon } from '@material-ui/icons';
 import { CheckCircleRounded as CheckIcon } from '@material-ui/icons';
 export const KeySequenceStatus = ({ isKeyAvailable, isEmpty }) => {
   return (
-    <motion.div animate={isEmpty ? { opacity: 0 } : { opacity: 1 }}>
+    <motion.div
+      // initial={{ opacity: 0 }}
+      // animate={isEmpty ? { opacity: 0 } : { opacity: 1 }}
+      animte={{}}
+    >
       <AnimatePresence>
-        {isKeyAvailable ? (
+        {isKeyAvailable && !isEmpty ? (
           <motion.div
             key="success"
             initial={{ scale: 0 }}

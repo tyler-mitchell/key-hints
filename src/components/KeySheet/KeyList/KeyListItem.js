@@ -92,44 +92,34 @@ const modifierKeys = new Set([
   'Tab',
   'Win'
 ]);
-
+const iconLabels = {
+  '←': (
+    <LeftArrowIcon
+      fontSize="small"
+      style={{ display: 'inline-block', verticalAlign: 'middle' }}
+    />
+  ),
+  '→': (
+    <RightArrowIcon
+      fontSize="small"
+      style={{ display: 'inline-block', verticalAlign: 'middle' }}
+    />
+  ),
+  '↑': (
+    <UpArrowIcon
+      fontSize="small"
+      style={{ display: 'inline-block', verticalAlign: 'middle' }}
+    />
+  ),
+  '↓': (
+    <DownArrowIcon
+      fontSize="small"
+      style={{ display: 'inline-block', verticalAlign: 'middle' }}
+    />
+  )
+};
 export const renderCategoryIcon = (keyLabel, width = 'auto', styleProps) => {
   const color = modifierKeys.has(keyLabel) ? '#15191c ' : '#209CEE';
-
-  const iconLabels = {
-    '←': (
-      <LeftArrowIcon
-        fontSize="small"
-        style={{ display: 'inline-block', verticalAlign: 'middle' }}
-      >
-        {keyLabel}
-      </LeftArrowIcon>
-    ),
-    '→': (
-      <RightArrowIcon
-        fontSize="small"
-        style={{ display: 'inline-block', verticalAlign: 'middle' }}
-      >
-        {keyLabel}
-      </RightArrowIcon>
-    ),
-    '↑': (
-      <UpArrowIcon
-        fontSize="small"
-        style={{ display: 'inline-block', verticalAlign: 'middle' }}
-      >
-        {keyLabel}
-      </UpArrowIcon>
-    ),
-    '↓': (
-      <DownArrowIcon
-        fontSize="small"
-        style={{ display: 'inline-block', verticalAlign: 'middle' }}
-      >
-        {keyLabel}
-      </DownArrowIcon>
-    )
-  };
 
   if (keyLabel in iconLabels) {
     return iconLabels[keyLabel];

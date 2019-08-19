@@ -149,12 +149,14 @@ const Sequence = keyItem => {
       .toArray()
       .value()
       .reduce((result, keybind, index, arr) => {
-        const isAction = index !== arr.length - 1;
+        const lastIndex = arr.length - 1;
+        const isAction = index !== lastIndex;
+        const actionHasOptions = index === lastIndex - 1;
         const key = keybind;
 
         result.push({ kb: keybind, isAction: false, index: index, key });
         if (index !== arr.length - 1) {
-          result.push({ isAction, key: keybind + 'index' });
+          result.push({ isAction, key: keybind + 'index', actionHasOptions });
         }
         return result;
       }, []);
@@ -182,7 +184,9 @@ const Sequence = keyItem => {
           >
             {shortcut.kb && <RenderIcon keyLabel={shortcut.kb} height="46px" />}
 
-            {shortcut.isAction && <KeySequenceAction />}
+            {shortcut.isAction && (
+              <KeySequenceAction actionHasOptions={shortcut.actionHasOptions} />
+            )}
           </motion.div>
         );
       })}
@@ -193,25 +197,34 @@ const Sequence = keyItem => {
 export const KeySequence = props => {
   const { isEmpty, ...others } = props;
   return (
-    <div
-      style={{
-        display: 'flex',
-        position: 'relative',
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-      container
-      justify="center"
-      alignItems="center"
-    >
-      <Instruction isEmpty={isEmpty} />
-      <KeySequenceContainer {...others} />
-    </div>
+    // <div
+    //   style={{
+    //     display: 'flex',
+    //     position: 'relative',
+    //     width: '100%',
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //     backgroundImage: `radial-gradient(
+    //       circle farthest-corner at 0% 0.5%,
+    //       rgb(247, 247, 248) 0.1%,
+    //       rgb(244, 245, 245) 100.2%
+    //     );`
+    //   }}
+    //   container
+    //   justify="center"
+    //   alignItems="center"
+    // >
+    <StyledOuterKeySequenceContainer>
+      <AnimatePresence>
+        {isEmpty && <Instruction key="info" isEmpty={isEmpty} />}
+        {!isEmpty && <KeySequenceContainer key="sequence" {...others} />}
+      </AnimatePresence>
+    </StyledOuterKeySequenceContainer>
+    // </div>
   );
 };
 
-const StyledKeySequenceContainer = styled(motion.div)`
+const StyledInnerKeySequenceContainer = styled(motion.div)`
   display: flex;
   width: 100%;
   height: 76px;
@@ -219,55 +232,51 @@ const StyledKeySequenceContainer = styled(motion.div)`
   align-self: center;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-
+`;
+const StyledOuterKeySequenceContainer = styled.div`
+  display: flex;
+  width: 100%;
+  height: 76px;
+  position: relative;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
   background-image: radial-gradient(
     circle farthest-corner at 0% 0.5%,
     rgb(247, 247, 248) 0.1%,
     rgb(244, 245, 245) 100.2%
   );
+  border-radius: 8px;
 `;
-const KeySequenceContainer = ({ isEmpty, newKeys, isKeyAvailable }) => {
+const KeySequenceContainer = ({ key, isEmpty, newKeys, isKeyAvailable }) => {
   return (
-    <AnimatePresence>
-      {!isEmpty && (
-        <StyledKeySequenceContainer
-          key="keysequence"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          {Object.values(newKeys).map((keyItem, keyIndex) => {
-            return <Sequence key={keyIndex} keyItem={keyItem} />;
-          })}
-          <KeySequenceStatus
-            isEmpty={isEmpty}
-            isKeyAvailable={isKeyAvailable}
-          />
-        </StyledKeySequenceContainer>
-      )}
-    </AnimatePresence>
+    <StyledInnerKeySequenceContainer
+      key={key}
+      positionTransition
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      {Object.values(newKeys).map((keyItem, keyIndex) => {
+        return <Sequence key={keyIndex} keyItem={keyItem} />;
+      })}
+      <KeySequenceStatus isEmpty={isEmpty} isKeyAvailable={isKeyAvailable} />
+    </StyledInnerKeySequenceContainer>
   );
 };
 
-const Instruction = ({ isEmpty }) => {
+const Instruction = ({ key, isEmpty }) => {
   return (
-    <>
-      <AnimatePresence>
-        {isEmpty && (
-          <motion.div
-            key="info"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{ position: 'absolute' }}
-          >
-            <Typography color="textSecondary">
-              Click the keyboard to add a shortcut
-            </Typography>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+    <motion.div
+      key={key}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      style={{ position: 'absolute' }}
+    >
+      <Typography color="textSecondary">
+        Click the keyboard to add a shortcut
+      </Typography>
+    </motion.div>
   );
 };

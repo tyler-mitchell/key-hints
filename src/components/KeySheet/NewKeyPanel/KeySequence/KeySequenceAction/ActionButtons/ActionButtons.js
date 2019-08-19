@@ -4,26 +4,66 @@ import { StyledActionButton } from './ActionButton.style';
 import { Fab } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { Typography, ButtonBase } from '@material-ui/core';
-import { Add as AddIcon } from '@material-ui/icons';
+import {
+  AddRounded as CombineIcon,
+  KeyboardArrowRightRounded as ThenIcon
+} from '@material-ui/icons';
 import TouchRipple from '@material-ui/core/ButtonBase/TouchRipple';
+import { transparentize } from 'polished';
+import { bindHover } from 'material-ui-popup-state/core';
 
-const ActionButton = ({ key, children, borderRadius }) => {
+const actionButtonVariants = {
+  initial: {
+    scale: 0,
+    opacity: 0
+  },
+  showCombine: {
+    width: '20px',
+    scale: 1,
+    opacity: 1
+  },
+  showThen: {
+    scale: 1,
+    opacity: 1,
+
+    // width: '50px'
+    width: '20px'
+  }
+};
+const actionContentVariants = {
+  initial: {
+    opacity: 0
+  },
+  showCombine: {
+    opacity: 1,
+    transition: { delay: 0.3 }
+  },
+  showThen: {
+    opacity: 1,
+    transition: { delay: 0.3 }
+  }
+};
+
+const ActionButton = ({ key, variantType, children, borderRadius }) => {
   return (
-    <motion.div
-    // key={key}
-    // animate={{ opacity: 1 }}
-    // initial={{ opacity: 0 }}
-    // exit={{ opacity: 0 }}
-    // positionTransition
+    <StyledActionButton
+      // positionTransition
+      key={key}
+      // borderRadius={borderRadius}
+      positionTransition
+      initial="initial"
+      exit="initial"
+      animate={variantType}
+      variants={actionButtonVariants}
     >
-      <StyledActionButton>{children}</StyledActionButton>
-    </motion.div>
+      {children}
+    </StyledActionButton>
   );
 };
-export const CombineAction = ({ onClick }) => {
+export const CombineAction = ({ key, onClick }) => {
   return (
-    <ActionButton key="COMBINE">
-      <AddIcon
+    <ActionButton key={key} variantType="showCombine" borderRadius={'50%'}>
+      <CombineIcon
         color="textSecondary"
         style={{ width: '100%', selfAlign: 'center', color: 'gray' }}
         fontSize="small"
@@ -31,12 +71,19 @@ export const CombineAction = ({ onClick }) => {
     </ActionButton>
   );
 };
-export const ThenAction = ({ onClick }) => {
+export const ThenAction = ({ key, onClick }) => {
   return (
-    <ActionButton key="THEN" borderRadius="10px">
-      <Typography fontSize="small" color="textSecondary">
-        then
-      </Typography>
+    <ActionButton
+      key={key}
+      variantType="showThen"
+      borderRadius={'50%'}
+      // padding="0px 10px"
+    >
+      <ThenIcon
+        color="textSecondary"
+        style={{ width: '100%', selfAlign: 'center', color: 'gray' }}
+        fontSize="small"
+      />
     </ActionButton>
   );
 };
