@@ -51,8 +51,8 @@ const KeySequenceAction = ({
 
   return (
     <>
-      <motion.div
-        positionTransition
+      <div
+        // positionTransition
         // positionTransition
         // key={key}
         // initial={{ opacity: 0, scale: 0 }}
@@ -70,7 +70,7 @@ const KeySequenceAction = ({
           <CombineAction onClick={handleActionClick} />
         )}
         {actionType === 'THEN' && <ThenAction onClick={handleActionClick} />}
-      </motion.div>
+      </div>
 
       <ActionMenu
         classes={classes}
