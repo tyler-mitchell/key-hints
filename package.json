@@ -19,6 +19,7 @@
     "fitty": "^2.2.6",
     "framer-motion": "1.6.2",
     "history": "^4.9.0",
+    "immer": "^3.2.0",
     "lodash-es": "^4.17.11",
     "lodash-move": "^1.1.1",
     "material-ui-popup-state": "^1.4.0",
