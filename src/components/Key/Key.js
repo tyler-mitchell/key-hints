@@ -287,6 +287,7 @@ export const Key = ({
         // active={active}
         // style={{ filter: `opacity(${grayscale})` }}
         margin={margin}
+        initial={false}
         custom={{ activeColor, defaultColor, i: 5 }}
         animate={controls}
         variants={variants}

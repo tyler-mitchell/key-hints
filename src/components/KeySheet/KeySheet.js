@@ -14,6 +14,7 @@ import { SearchInput } from './SearchInput';
 import KeyList from './KeyList/KeyList';
 
 import Paper from '@material-ui/core/Paper';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 import { KeyTableContext } from '../../context/KeyTableContext';
 import { usePopupState, anchorRef } from 'material-ui-popup-state/hooks';
@@ -148,7 +149,7 @@ const CardStyle = styled(Card)`
   filter: 'drop-shadow(16px 16px 20px red)';
 `;
 
-const AnimatedCard = animated(CardStyle);
+const AnimatedCard = motion.custom(CardStyle);
 
 export const KeySheet = props => {
   const classes = useStyles();
@@ -274,11 +275,14 @@ export const KeySheet = props => {
   const [zIndex, setZIndex] = React.useState(0);
   return (
     <React.Fragment>
-      {loadingUKTC && <CircularProgress className={classes.progress} />}
+      {/* {loadingUKTC && <CircularProgress className={classes.progress} />} */}
+      {loadingUKTC && <Skeleton height={470}/>}
 
       {curKeyTable && (
         <div style={{ position: 'relative' }} {...bind}>
           <AnimatedCard
+            initial={{opacity: 0}}
+            animate={{opacity: 1}}
             ref={anchorRef(popupState)}
             style={{
               // pointerEvents: addMode ? 'none' : 'auto',
@@ -295,7 +299,7 @@ export const KeySheet = props => {
             // }}
           >
             <motion.div
-              initial={{ background: '#030303', zIndex: 0 }}
+              // initial={{ background: '#030303', zIndex: 0 }}
               animate={addMode ? 'openBackDrop' : 'closeBackDrop'}
               variants={variants}
               style={{

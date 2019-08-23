@@ -1,15 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
-import { useSpring, config } from 'react-spring';
-import { useGesture } from 'react-use-gesture';
-import { a, animated } from 'react-spring';
-import { Modal } from '@material-ui/core';
+import { useSpring } from 'react-spring';
+import { a } from 'react-spring';
 
 import { useGlobalState } from '../../../state';
-import styled from 'styled-components';
-import { useMeasure } from '../../hooks/helpers';
-import { Card } from '@material-ui/core';
 
 // const OFFSET = 420;
 const OFFSET = 103;
@@ -20,21 +14,7 @@ const FAST = { tension: 1000, friction: 100 };
 
 export const AnimatedPanel = ({ children }) => {
   const [{ y }, set] = useSpring(() => ({ y: INITIAL }));
-
-  // const bind = useGesture(({ delta: [, y], down }) => set({ y: y > 400 ? 780 : !down ? OFFSET : y + OFFSET, config: !down || y > 400 ? SLOW : FAST }))
-  const opacity = y.interpolate([180, 400], [0.2, 1], 'clamp');
   const [addMode] = useGlobalState('addMode');
-
-  // const [boxShadow, setBoxShadow] = React.useState({boxShadow:  "0 0px 0px rgba(0,0,0,0.25), 0 0px 0px rgba(0,0,0,0.22)"})
-  // const boxShadowProp = useSpring({
-  //   revese: addMode,
-  //   from: { boxShadow: boxShadow  },
-  //   to:{ boxShadow: boxShadow}
-  // })
-
-  const transform = y
-    .interpolate([OFFSET, 250], [40, 0], 'clamp')
-    .interpolate(val => `translate3d(0,${val}px,0)`);
 
   React.useEffect(() => {
     if (addMode) {
@@ -55,8 +35,7 @@ export const AnimatedPanel = ({ children }) => {
   );
 };
 
-export const View = props => {
-  return (
+export const View = props => (
     // <div style={{ position: 'relative', clipPath: 'polygon(-50% -50%, 150% -50%, 100% 10%, 0% 10%)'}}>
 
     <a.div
@@ -105,4 +84,3 @@ export const View = props => {
       {props.children}
     </a.div>
   );
-};

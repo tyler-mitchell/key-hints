@@ -1,9 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { NewSheetDialog } from './NewSheetDialog';
-import { Fab } from '@material-ui/core';
-
-import { Add as AddIcon } from '@material-ui/icons';
+import { Fab, Button, IconButton } from '@material-ui/core';
+import { AddCircleRounded as AddIcon } from '@material-ui/icons';
 import { KeyTableContext } from '../../context/KeyTableContext';
 import { useGlobalState } from '../../state';
 const useStyles = makeStyles(theme => ({
@@ -17,10 +16,17 @@ const useStyles = makeStyles(theme => ({
     maxHeight: 435
   },
 
-  fabButton: {
-    backgroundImage: 'linear-gradient(to right, #1FA2FF 0%, #12D8FA 51%, #1FA2FF 100%)',
+  button: {
+    textTransform: 'none',
+   borderRadius: '15px',
+   textTransfom: 'none',
+   
 
-    '&:hover': { backgroundColor: 'red' }
+
+  },
+  icon: {
+    marginRight: theme.spacing(1),
+
   }
 }));
 
@@ -45,18 +51,18 @@ export const NewSheetButton = () => {
 
   return (
     <>
-      <Fab
+      <Button
         color="primary"
-        variant="extended"
+        variant="contained"
         size="small"
-        className={classes.fabButton}
+        className={classes.button}
         style={{ bottom: '17px', position: 'absolute' }}
-        button
         onClick={handleButtonClick}
       >
-        <AddIcon />
+        {/* <div className={classes.icon}><AddIcon /></div> */}
+        <AddIcon className={classes.icon} />
         Add New Collection
-      </Fab>
+      </Button>
 
       <NewSheetDialog
         classes={{

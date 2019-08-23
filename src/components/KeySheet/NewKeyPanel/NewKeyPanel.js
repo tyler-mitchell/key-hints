@@ -48,6 +48,7 @@ import { Portal } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import _ from 'lodash';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AutocompleteHashtags } from './CategoryAutoComplete/CategoryInput';
 import { Avatar } from '@material-ui/core';
 import { Container } from '@material-ui/core';
 import { CardMedia } from '@material-ui/core';
@@ -299,26 +300,36 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
             <Grid item xs={2}>
               <Avatar />
             </Grid>
-            <Grid item xs={10}>
-              <InputBase
-                // value={newKeys.description}
-
-                variant="outlined"
-                style={{
-                  fontSize: '36px',
-                  // margin: 0,
-                  'label + &': {
-                    marginTop: 0
-                  },
-
-                  background: 'white'
-                }}
-                fullWidth
-                value={keyInfo.description}
-                placeholder="untitled"
-                onChange={event => handleDescriptionChange(event)}
-                rowsMax={3}
-              />
+            <Grid container direction="column" item xs={12}>
+              <Grid item >
+                <InputBase
+                  // value={newKeys.description}
+  
+                  variant="outlined"
+                  style={{
+                    fontSize: '36px',
+                    // margin: 0,
+                    'label + &': {
+                      marginTop: 0
+                    },
+  
+                    background: 'white'
+                  }}
+                  fullWidth
+                  value={keyInfo.description}
+                  placeholder="untitled"
+                  onChange={event => handleDescriptionChange(event)}
+                  rowsMax={3}
+                />
+              </Grid>
+              <Grid container justify="center" direction="row" alignItems="flex-start" xs={12}>
+                <Grid item xs={2}><Typography variant="subtitle2" color="text">Category</Typography></Grid>
+                <Grid xs={6} item>
+        <AutocompleteHashtags/>         
+          
+          
+              </Grid>
+              </Grid>
             </Grid>
           </CardHead>
 

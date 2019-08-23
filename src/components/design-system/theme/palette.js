@@ -1,4 +1,4 @@
-import { white, black } from './common';
+import { white, black, grey } from './common';
 
 export default {
   keyColors: {
@@ -10,6 +10,7 @@ export default {
   common: {
     black,
     white,
+    grey,
     neutral: '#E4E7EB',
     muted: '#9EA0A4'
   },

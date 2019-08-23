@@ -29,31 +29,20 @@ function Dashboard() {
           <Grid
             container
             direction="column"
-            justify="center"
+            // justify="center"
             spacing={2}
-            alignItems="flex-start"
+            // alignItems="center"
           >
             {/* Keyboard */}
 
             {/* <Grid item container justify="flex-end" xs={12} style={{ position: 'relative', zIndex: 6 }}> */}
-            <Keyboard />
+            <Grid item>
+              <Keyboard />
+            </Grid>
             {/* </Grid> */}
-            <Grid
-              container
-              item
-              direction="row"
-              xs={12}
-              spacing={3}
-              justify="center"
-              alignItems="center"
-              style={{
-                position: 'relative',
-                zIndex: 5
-              }}
-            >
-              <Grid item xs={12}>
-                <KeySheet category="All Keys" />
-              </Grid>
+
+            <Grid item>
+              <KeySheet category="All Keys" />
             </Grid>
           </Grid>
         </Container>

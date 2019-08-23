@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 // Views
-import Dashboard from './Dashboard';
-import Login from './components/SignIn/Login';
-import Register from './components/SignIn/Register';
 import {
   Typography,
   AppBar,
@@ -21,6 +18,9 @@ import {
   Fab,
   ButtonIcon
 } from '@material-ui/core';
+import Dashboard from './Dashboard';
+import Login from './components/SignIn/Login';
+import Register from './components/SignIn/Register';
 import SignInDialog from './components/SignIn/SignInDialog';
 import clsx from 'clsx';
 import styled from 'styled-components';
@@ -38,18 +38,18 @@ import {
   Mail as MailIcon,
   Close as CloseIcon,
   Add as AddIcon,
-  Folder as FolderIcon
+  Folder as FolderIcon,
 } from '@material-ui/icons';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useGlobalState, clearKeySelection, setGlobalState } from './state';
 
+import { SheetDrawer } from './components/Menu/SheetDrawer';
 
-import {SheetDrawer} from './components/Menu/SheetDrawer'
 const drawerWidth = 240;
 const DrawerTab = styled(Drawer)``;
 const useRouteStyles = makeStyles(theme => ({
   root: {
-    display: 'flex'
+    display: 'flex',
   },
   appBar: {
     fontSize: '90px',
@@ -57,16 +57,16 @@ const useRouteStyles = makeStyles(theme => ({
     zIndex: theme.zIndex.drawer + 1,
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   appBarShift: {
-    marginLeft: drawerWidth
+    marginLeft: drawerWidth,
   },
   menuButton: {
-    marginRight: 36
+    marginRight: 36,
   },
   hide: {
-    display: 'none'
+    display: 'none',
   },
   drawer: {
     // width: drawerWidth,
@@ -74,7 +74,7 @@ const useRouteStyles = makeStyles(theme => ({
     top: '100px',
 
     flexShrink: 0,
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   },
   paper: {
     height: '870px',
@@ -85,7 +85,7 @@ const useRouteStyles = makeStyles(theme => ({
     borderRadius: '0px 12px 12px 0px',
     top: 73,
 
-    whiteSpace: 'nowrap'
+    whiteSpace: 'nowrap',
   },
   drawerTab: {
     height: '60px',
@@ -96,7 +96,7 @@ const useRouteStyles = makeStyles(theme => ({
 
     elevation: 9,
     borderRadius: '0px 35px 35px 0px',
-    top: 75
+    top: 75,
   },
   // drawerOpen: {
   //   height: '300px',
@@ -122,12 +122,12 @@ const useRouteStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: '0 8px',
-    ...theme.mixins.toolbar
+    ...theme.mixins.toolbar,
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3)
-  }
+    padding: theme.spacing(3),
+  },
 }));
 
 export default function Routes() {
@@ -136,12 +136,7 @@ export default function Routes() {
 
   const [open, setOpen] = React.useState(false);
 
-
   const { firebase, userAuthState } = React.useContext(FirebaseContext);
-
-
-
-
 
   return (
     <>
@@ -159,13 +154,19 @@ export default function Routes() {
             edge="start"
             className={routeClasses.menuButton}
           />
-          <Typography component="h1" variant="h5" color="inherit" noWrap className={style.title}>
+          <Typography
+            component="h1"
+            variant="h5"
+            color="inherit"
+            noWrap
+            className={style.title}
+          >
             Key Hints
           </Typography>
           <SignInDialog />
         </Toolbar>
       </AppBar>
-      <SheetDrawer/>
+      <SheetDrawer />
 
       <Switch>
         <Redirect exact from="/" to="/dashboard" />

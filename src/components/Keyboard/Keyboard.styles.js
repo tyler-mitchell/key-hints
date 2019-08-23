@@ -7,12 +7,12 @@ import Container from '@material-ui/core/Container';
 import { Grid } from '@material-ui/core/';
 import Box from '@material-ui/core/Box';
 import React from 'react';
+import {motion} from 'framer-motion';
 import { useSpring, animated, Keyframes } from 'react-spring';
 
 export const Row = styled(Grid)`
 
-  z-index: ${({ zIndex }) => zIndex}
-  /* z-index: ${({ zIndex }) => zIndex} */
+  z-index: ${({ zIndex }) => zIndex};
 
 `;
 
@@ -102,7 +102,8 @@ export const NumpadInnerFrame = styled(Grid)`
   border-radius: 10px;
 `;
 
-export const Cover = styled.div`
+
+export const Cover = styled(motion.div)`
   display: flex;
   align-items: center;
 
