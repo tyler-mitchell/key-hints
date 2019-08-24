@@ -1,19 +1,46 @@
-import React, { useState } from 'react';
-import { Grid, Chip, InputBase, makeStyles } from '@material-ui/core';
-import { Search as SearchIcon } from '@material-ui/icons';
-import { withStyles } from '@material-ui/styles';
-import { fade } from '@material-ui/core/styles'
-import { lighten, transparentize } from 'polished';
-import AutoCompleteList from './AutoCompleteList';
+import React, { useState } from "react";
+import { Grid, Chip, InputBase, makeStyles } from "@material-ui/core";
+import { Search as SearchIcon } from "@material-ui/icons";
+import { withStyles } from "@material-ui/styles";
+import { fade } from "@material-ui/core/styles";
+import { lighten, transparentize } from "polished";
+import AutoCompleteList from "./AutoCompleteList";
+import { keyMapColors } from "../../../Keyboard/KeyMapData";
 export const AutocompleteHashtags = () => {
   const [tags, setTags] = useState([]);
+  //  const chipColor = keyMapColors[i % keyMapColors.length]
+
   const [suggestions, setSuggestions] = useState([
-    { label: 'cinema', value: 'cinema' },
-    { label: 'sport', value: 'sport' },
-    { label: 'nightlife', value: 'nightlife' },
-    { label: 'theater', value: 'theater' },
-    { label: 'culture', value: 'culture' },
-    { label: 'holy', value: 'holy' },
+    {
+      label: "cinema",
+      value: "cinema",
+      color: keyMapColors[0 % keyMapColors.length]
+    },
+    {
+      label: "sport",
+      value: "sport",
+      color: keyMapColors[1 % keyMapColors.length]
+    },
+    {
+      label: "nightlife",
+      value: "nightlife",
+      color: keyMapColors[2 % keyMapColors.length]
+    },
+    {
+      label: "theater",
+      value: "theater",
+      color: keyMapColors[3 % keyMapColors.length]
+    },
+    {
+      label: "culture",
+      value: "culture",
+      color: keyMapColors[4 % keyMapColors.length]
+    },
+    {
+      label: "holy",
+      value: "holy",
+      color: keyMapColors[5 % keyMapColors.length]
+    }
   ]);
 
   function handleListChange(value) {
@@ -38,25 +65,12 @@ export const AutocompleteHashtags = () => {
   }
 
   return (
-    <>
-      <Grid container direction="row" wrap="nowrap" spacing={1}>
-        {tags.map(item => (
-          <Grid item key={item.label}>
-            <Chip
-              color="secondary"
-              label={`#${item.label}`}
-              onDelete={() => handleTagDelete(item)}
-            />
-          </Grid>
-        ))}
-        <AutoCompleteList
-          placeholder="Add new tag."
-          suggestions={suggestions}
-          InputControl={SearchInputControl}
-          onChange={handleListChange}
-        />
-      </Grid>
-    </>
+    <AutoCompleteList
+      placeholder="Add new tag."
+      suggestions={suggestions}
+      InputControl={SearchInputControl}
+      onChange={handleListChange}
+    />
   );
 };
 
@@ -64,7 +78,7 @@ function SearchInputControl({
   children,
   innerProps,
   innerRef,
-  selectProps: { classes, TextFieldProps },
+  selectProps: { classes, TextFieldProps }
 }) {
   return (
     <SearchInputBaseContainer
@@ -74,7 +88,7 @@ function SearchInputControl({
         className: classes.input,
         ref: innerRef,
         children,
-        ...innerProps,
+        ...innerProps
       }}
       {...TextFieldProps}
     />
@@ -99,18 +113,18 @@ const SearchInputBaseContainer = ({ className, ...props }) => {
 
 const useInputStyle = makeStyles(theme => ({
   root: {
-    transition: '0.2s',
+    transition: "0.2s",
     backgroundColor: theme.palette.common.grey,
-    borderRadius: '20px',
-    border: '1px solid',
+    borderRadius: "20px",
+    border: "1px solid",
     // initial as transparent, prevent lagging when focused
-    borderColor: 'rgba(0,0,0,0)',
+    borderColor: "rgba(0,0,0,0)",
     padding: `1px 5px`,
 
-    '&$focused': {
+    "&$focused": {
       borderColor: theme.palette.primary.main,
       backgroundColor: theme.palette.common.white,
-      boxShadow: `0 1px 8px 0 ${fade(theme.palette.primary.main, 0.8)}`,
-    },
-  },
+      boxShadow: `0 1px 8px 0 ${fade(theme.palette.primary.main, 0.8)}`
+    }
+  }
 }));
