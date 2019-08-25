@@ -260,15 +260,11 @@ export function initializeKeyMap(keyTable) {
   const allLayers = filteredData(modifierCombinations, keyTable, keyMapColors);
 
   const { activeLayers, layerKeys, layerIndices } = getActiveLayers(allLayers);
-  console.log(`⭐: initializeKeyMap -> layerIndices`, layerIndices);
 
   setGlobalState("allLayers", allLayers);
-  console.log(`⭐: initializeKeyMap -> allLayers`, allLayers);
   setGlobalState("activeLayers", activeLayers);
-  console.log(`⭐: initializeKeyMap -> activeLayers`, activeLayers);
   setGlobalState("layerKeys", layerKeys);
   setGlobalState("initialLayerIndices", layerIndices);
-  console.log(`⭐: initializeKeyMap -> layerKeys`, layerKeys);
 }
 
 function swap(keyMap, newActiveLayer) {
@@ -287,8 +283,6 @@ export function getActiveLayers(
   oldLayer = null,
   newLayer = null
 ) {
-  console.log(`⭐: filteredKeyMap`, filteredKeyMap);
-
   // const singleKeys = [['0'],['1'],['2'],['3'],['4'],['5'],['6'],['7'],['8'],['9'],['A'],['B'],['C'],['D'],['E'],['F'],['G'],['H'],['I'],['J'],['K'],['L'],['M'],['N'],['O'],['P'],['Q'],['R'],['S'],['T'],['U'],['V'],['W'],['X'],['Y'],['Z']];
 
   const reducedMap = _.reduce(
@@ -322,7 +316,6 @@ export function getActiveLayers(
   );
 
   const { activeLayers, layerIndices, layerKeys } = reducedMap;
-  console.log(`⭐: layerIndicies`, layerIndices);
 
   return { activeLayers, layerKeys, layerIndices };
 }
@@ -358,8 +351,6 @@ export function updateActiveSingleLayer(
   layerKeys,
   index = null
 ) {
-  console.log(`⭐:BEFORE filteredKeyMap`, filteredKeyMap);
-  console.log(`⭐BEFORE: updateActiveLayers -> layerKeys`, layerKeys);
   const activeLayer = [_.find(filteredKeyMap, o => o.index === index)];
   setGlobalState("activeLayers", activeLayer);
 }

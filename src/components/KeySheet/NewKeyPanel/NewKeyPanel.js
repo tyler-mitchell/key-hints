@@ -144,13 +144,12 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
   const classes = useStyles();
 
   const [keyInfo, setKeyInfo] = React.useState({
-    category: "uncategorized",
+    category: [],
     description: null,
     keyDescription: null
   });
   const handleDescriptionChange = event => {
     const description = event.target.value;
-    console.log("⭐: value", keyInfo);
     setKeyInfo(v => ({ ...v, description }));
 
     // setNewKeys(p => ({ ...p, category }))
@@ -159,6 +158,14 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
     const keyDescription = event.target.value;
     setKeyTopText(keyDescription);
     setKeyInfo(v => ({ ...v, keyDescription }));
+
+    // setNewKeys(p => ({ ...p, category }))
+  };
+  const handleCategories = values => {
+    const category = values.map(o => o.value);
+    console.log(`⭐: NewKeyPanel -> category`, category);
+
+    setKeyInfo(v => ({ ...v, category }));
 
     // setNewKeys(p => ({ ...p, category }))
   };
@@ -188,7 +195,7 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
     addNewKeyToFirebase,
     updateKeyToFirebase
   } = React.useContext(KeyTableContext);
-
+  const [suggestions] = useGlobalState("tableCategories");
   // Check for key availability
   React.useEffect(() => {
     const keys = _.values(newKeys.keys.key1);
@@ -197,8 +204,6 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
     } else {
       setIsKeyAvailable(true);
     }
-
-    console.log(`⭐: NewKeyPanel -> isKeyAvailable`, isKeyAvailable);
   }, [allKeys, isKeyAvailable, keyInfo, newKeys]);
 
   React.useEffect(() => {
@@ -229,7 +234,7 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
     } else {
       // clear input
       setKeyInfo({
-        category: "uncategorized",
+        category: [],
         description: "",
         keyDescription: ""
       });
@@ -237,8 +242,8 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
   }, [addMode]);
 
   const handleSaveKeyClick = () => {
+    console.log(`⭐: handleSaveKeyClick -> keyInfo`, keyInfo);
     const newKey = { ...newKeys, ...keyInfo };
-    console.log(`⭐: handleSaveKeyClick -> newKey`, newKey);
     addNewKeyToFirebase(newKey);
     setAddMode(false);
   };
@@ -289,93 +294,106 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
             }}
           />
 
-          <CardHead
-            container
-            // justify="flex-start"
-            direction="column"
-            item
-            xs={12}
-            // alignItems="center"
-            // alignItems="center"
-          >
-            <Grid container item alignItems="center" justify="flex-start">
-              <Grid item>
-                <Avatar />
-              </Grid>
-              <Grid item xs={10}>
-                <InputBase
-                  // value={newKeys.description}
+          <AnimatePresence>
+            {addMode && (
+              <motion.div
+                animate={{ opacity: 1 }}
+                initial={{ opacity: 0 }}
+                exit={{ opacity: 0 }}
+              >
+                <CardHead
+                  container
+                  // justify="flex-start"
+                  direction="column"
+                  item
+                  xs={12}
+                  // alignItems="center"
+                  // alignItems="center"
+                >
+                  <Grid container item alignItems="center" justify="flex-start">
+                    <Grid item>
+                      <Avatar />
+                    </Grid>
+                    <Grid item xs={10}>
+                      <InputBase
+                        // value={newKeys.description}
 
-                  variant="outlined"
-                  style={{
-                    fontSize: "36px",
-                    // margin: 0,
-                    "label + &": {
-                      marginTop: 0
-                    },
+                        variant="outlined"
+                        style={{
+                          fontSize: "36px",
+                          // margin: 0,
+                          "label + &": {
+                            marginTop: 0
+                          },
 
-                    background: "white"
-                  }}
-                  fullWidth
-                  value={keyInfo.description}
-                  placeholder="untitled"
-                  onChange={event => handleDescriptionChange(event)}
-                  rowsMax={3}
-                />
-              </Grid>
-            </Grid>
-            <Grid
-              container
-              justify="flex-start"
-              direction="row"
-              alignItems="center"
-              item
-            >
-              <Grid item>
-                <Typography variant="subtitle2" color="text">
-                  Category
-                </Typography>
-              </Grid>
-              <Grid item>
-                <AutocompleteHashtags />
-              </Grid>
-            </Grid>
-          </CardHead>
+                          background: "white"
+                        }}
+                        fullWidth
+                        value={keyInfo.description}
+                        placeholder="untitled"
+                        onChange={event => handleDescriptionChange(event)}
+                        rowsMax={3}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid
+                    container
+                    justify="flex-start"
+                    direction="row"
+                    alignItems="center"
+                    item
+                  >
+                    {/* <Grid item>
+                    <Typography variant="subtitle2" color="text">
+                      Category
+                    </Typography>
+                  </Grid> */}
+                    <Grid item>
+                      <AutocompleteHashtags
+                        suggestions={suggestions}
+                        onCategorySave={handleCategories}
+                      />
+                    </Grid>
+                  </Grid>
+                </CardHead>
 
-          <Grid xs={12} style={{ display: "flex" }} item>
-            <KeySequence
-              isKeyAvailable={isKeyAvailable}
-              isEmpty={Object.keys(newKeys.keys.key1).length === 0}
-              style={{ position: "absolute" }}
-              newKeys={newKeys.keys}
-            />
-          </Grid>
-          <Grid item style={{ paddingTop: "15px" }}>
-            <InputBase
-              classes={classes.keyDescription}
-              style={{
-                position: "relative",
-                borderRadius: "10px",
-                border: "solid 2px rgba(220,220,220,0.2)",
-                fontSize: "24px"
-              }}
-              inputProps={{
-                min: 0,
-                style: {
-                  textAlign: "center"
-                }
-              }}
-              fullWidth
-              value={keyTopText}
-              variant="subtitle1"
-              color="textSecondary"
-              multiline
-              rows={1}
-              rowsMax={10}
-              placeHolder="enter key top label"
-              onChange={event => handleKeyDescription(event)}
-            />
-          </Grid>
+                <Grid xs={12} style={{ display: "flex" }} item>
+                  <KeySequence
+                    isKeyAvailable={isKeyAvailable}
+                    isEmpty={Object.keys(newKeys.keys.key1).length === 0}
+                    style={{ position: "absolute" }}
+                    newKeys={newKeys.keys}
+                  />
+                </Grid>
+                <Grid item style={{ paddingTop: "15px" }}>
+                  <InputBase
+                    classes={classes.keyDescription}
+                    style={{
+                      position: "relative",
+                      borderRadius: "10px",
+                      border: "solid 2px rgba(220,220,220,0.2)",
+                      fontSize: "24px"
+                    }}
+                    inputProps={{
+                      min: 0,
+                      style: {
+                        textAlign: "center"
+                      }
+                    }}
+                    fullWidth
+                    value={keyTopText}
+                    variant="subtitle1"
+                    color="textSecondary"
+                    multiline
+                    rows={1}
+                    rowsMax={10}
+                    placeHolder="enter key top label"
+                    onChange={event => handleKeyDescription(event)}
+                  />
+                </Grid>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </Paper>
       </AnimatedPanel>
       {keyTopRefs[keyTopRefKey] && (
@@ -470,7 +488,6 @@ export const CategoryPaper = styled(Paper)`
                             onClick={() => {
                               const selectedChip = data.label;
                               setKeyInfo(v => ({ ...v, category: selectedChip }));
-                              console.log('⭐: VALUE ON CHIP CLICK', keyInfo);
                             }}
                             style={{ margin: '3px', backgroundColor: chipColor }}
                             className={classes.chip}

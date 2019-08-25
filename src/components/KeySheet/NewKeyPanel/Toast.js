@@ -1,17 +1,17 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Close as CloseIcon,
   CheckCircle as CheckIcon,
   Error as ErrorIcon,
   Warning as WarningIcon,
   Info as InfoIcon
-} from '@material-ui/icons';
-import { IconButton } from '@material-ui/core';
-import { SnackbarContent, Button } from '@material-ui/core';
-import { Snackbar } from '@material-ui/core';
+} from "@material-ui/icons";
+import { IconButton } from "@material-ui/core";
+import { SnackbarContent, Button } from "@material-ui/core";
+import { Snackbar } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   success: {
@@ -35,11 +35,11 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1)
   },
   test: {
-    backgroundColor: 'red'
+    backgroundColor: "red"
   },
   message: {
-    display: 'flex',
-    alignItems: 'center'
+    display: "flex",
+    alignItems: "center"
   },
   margin: {
     margin: theme.spacing(1)
@@ -67,16 +67,14 @@ const Toast = props => {
   } = props;
 
   const SnackbarIcon = variantIcon[snackbarVariant];
-  console.log(`⭐: snackbarVariant`, snackbarVariant);
-  console.log(`⭐: variant`, 'error' === snackbarVariant);
 
   const classes = useStyles();
   return (
     <Snackbar
       // style={{ position: 'absolute', top: 0, left: 0 }}
       anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'right'
+        vertical: "bottom",
+        horizontal: "right"
       }}
       open={snackbarOpen}
       autoHideDuration={2000}

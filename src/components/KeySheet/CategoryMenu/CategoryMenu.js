@@ -1,50 +1,50 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
-import { startCase, toLower } from 'lodash';
+import React from "react";
+import { startCase, toLower } from "lodash";
 
 import {
   usePopupState,
   bindTrigger,
   bindMenu
-} from 'material-ui-popup-state/hooks';
+} from "material-ui-popup-state/hooks";
 
 import {
   useGlobalState,
   setGlobalState,
   clearKeySelection
-} from '../../../state';
+} from "../../../state";
 
-import styled from 'styled-components';
+import styled from "styled-components";
 
-import { Folder as FolderIcon } from '@material-ui/icons';
+import { Folder as FolderIcon } from "@material-ui/icons";
 
-import { useStyles, CategoryPaper } from './CategoryMenu.styles';
-import { KeyTableContext } from '../../../context/KeyTableContext';
+import { useStyles, CategoryPaper } from "./CategoryMenu.styles";
+import { KeyTableContext } from "../../../context/KeyTableContext";
 import {
   renderCategoryItem,
   RenderSelectedCategory
-} from '../KeyList/KeyListItem';
+} from "../KeyList/KeyListItem";
 import {
   getActiveLayers,
   updateActiveLayers,
   updateActiveSingleLayer
-} from '../../Keyboard/KeyMapData';
-import { Switch, Typography } from '@material-ui/core';
-import { Grid } from '@material-ui/core';
-import { GridListTile } from '@material-ui/core';
-import { GridList } from '@material-ui/core';
-import _ from 'lodash';
-import { useSwitchStyle } from './KeySwitch';
-import { Checkbox } from '@material-ui/core';
-import { createMuiTheme } from '@material-ui/core';
-import useBoolean from 'react-hanger/useBoolean';
-import { motion } from 'framer-motion';
-import { Snackbar } from '@material-ui/core';
-import { Portal } from '@material-ui/core';
-import { Menu, MenuItem } from '@material-ui/core';
+} from "../../Keyboard/KeyMapData";
+import { Switch, Typography } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
+import { GridListTile } from "@material-ui/core";
+import { GridList } from "@material-ui/core";
+import _ from "lodash";
+import { useSwitchStyle } from "./KeySwitch";
+import { Checkbox } from "@material-ui/core";
+import { createMuiTheme } from "@material-ui/core";
+import useBoolean from "react-hanger/useBoolean";
+import { motion } from "framer-motion";
+import { Snackbar } from "@material-ui/core";
+import { Portal } from "@material-ui/core";
+import { Menu, MenuItem } from "@material-ui/core";
 
-import { Button } from '@material-ui/core';
-import { ButtonGroup } from '@material-ui/core';
+import { Button } from "@material-ui/core";
+import { ButtonGroup } from "@material-ui/core";
 import {
   makeStyles,
   Divider,
@@ -56,10 +56,10 @@ import {
   Popper,
   Fade,
   Paper
-} from '@material-ui/core';
-import { Menu as MenuIcon } from '@material-ui/icons';
+} from "@material-ui/core";
+import { Menu as MenuIcon } from "@material-ui/icons";
 
-import { ThemeProvider } from '@material-ui/styles';
+import { ThemeProvider } from "@material-ui/styles";
 
 const CategoryButton = motion.custom(Grid);
 const useSwitchStyles = makeStyles({
@@ -83,21 +83,22 @@ function useDidMount() {
 export const CategoryMenu = () => {
   const classes = useStyles();
 
-  const [drawerState] = useGlobalState('drawerState');
+  const [drawerState] = useGlobalState("drawerState");
 
-  const popupState = usePopupState({ variant: 'popover', popupId: 'demoMenu' });
+  const popupState = usePopupState({ variant: "popover", popupId: "demoMenu" });
 
   const [selectedIndex, setSelectedIndex] = useGlobalState(
-    'selectedCategoryIndex'
+    "selectedCategoryIndex"
   );
-  const [curCategory, setCurCategory] = useGlobalState('sheetCategory');
-  const [listRef] = useGlobalState('listRef');
+  const [curCategory, setCurCategory] = useGlobalState("sheetCategory");
+  const [listRef] = useGlobalState("listRef");
   const { curKeyTable, loadingUKTC } = React.useContext(KeyTableContext);
 
-  const [keyMapMode] = useGlobalState('keyMapMode');
-  const [allLayers] = useGlobalState('allLayers');
-  const [layerKeys] = useGlobalState('layerKeys');
-  const [initialLayerIndices] = useGlobalState('initialLayerIndices');
+  const [keyMapMode] = useGlobalState("keyMapMode");
+  const [allLayers] = useGlobalState("allLayers");
+  const [layerKeys] = useGlobalState("layerKeys");
+  const [initialLayerIndices] = useGlobalState("initialLayerIndices");
+  const [tableCategories] = useGlobalState("tableCategories");
 
   const [checkedIndex, setCheckedIndex] = React.useState(0);
   const showMultipleLayers = useBoolean(true);
@@ -106,24 +107,19 @@ export const CategoryMenu = () => {
 
   // Portal ref
   const container = React.useRef(null);
-  console.log(`⭐: CategoryMenu -> layerIndices`, initialLayerIndices);
   const didMount = useDidMount();
-  const testHELLO = 'HELLO';
+  const testHELLO = "HELLO";
   const hello = startCase(toLower(testHELLO));
   React.useEffect(() => {
-    console.log(`⭐: CategoryMenu -> didMount`, didMount);
-
     const delayCalculation =
       didMount &&
       setTimeout(() => {
-        console.log(`⭐: TRIGGERED -> useEffect `);
-
         if (showMultipleLayers.value) {
           const {
             layerIndices: newIndices,
             activeLayers: newActiveLayers
           } = updateActiveLayers(allLayers, state.layer);
-          setGlobalState('activeLayers', newActiveLayers);
+          setGlobalState("activeLayers", newActiveLayers);
           setLayerIndices(newIndices);
         } else {
           updateActiveSingleLayer(allLayers, layerKeys, state.index);
@@ -152,7 +148,7 @@ export const CategoryMenu = () => {
 
     setSelectedIndex(index);
     setCurCategory(category);
-    setGlobalState('addMode', false);
+    setGlobalState("addMode", false);
     popupState.setOpen(false);
 
     listRef.current && listRef.current.resetAfterIndex(0, false);
@@ -160,16 +156,12 @@ export const CategoryMenu = () => {
 
   function handleMultiLayerOption() {
     showMultipleLayers.toggle();
-    console.log(
-      `⭐: handleMultiLayerOption -> showMultipleLayers`,
-      showMultipleLayers
-    );
   }
   return [
     <div>
       <ButtonGroup
         disableRipple={true}
-        style={{ height: '50px' }}
+        style={{ height: "50px" }}
         disableFocusRipple
       >
         <Button
@@ -184,9 +176,9 @@ export const CategoryMenu = () => {
         {!keyMapMode ? (
           <Button
             style={{
-              textTransform: 'none',
-              padding: '5px',
-              width: '100px'
+              textTransform: "none",
+              padding: "5px",
+              width: "100px"
             }}
           >
             {startCase(toLower(curCategory))}
@@ -195,9 +187,9 @@ export const CategoryMenu = () => {
           <Button
             disable
             style={{
-              textTransform: 'none',
-              padding: '5px',
-              backgroundColor: 'transparent'
+              textTransform: "none",
+              padding: "5px",
+              backgroundColor: "transparent"
             }}
             ref={container}
           >
@@ -215,8 +207,8 @@ export const CategoryMenu = () => {
       <Menu
         // className={classes.popper}
         getContentAnchorEl={null}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
         {...bindMenu(popupState)}
       >
         {keyMapMode ? (
@@ -229,7 +221,7 @@ export const CategoryMenu = () => {
                   // tabIndex={-1}
 
                   inputProps={{
-                    'aria-label': 'show multiple layers'
+                    "aria-label": "show multiple layers"
                   }}
                 />
               </ListItemIcon>
@@ -275,7 +267,7 @@ export const CategoryMenu = () => {
                             edge="start"
                             checked={index === checkedIndex}
                             inputProps={{
-                              'aria-label': `${layer.keybind} layer`
+                              "aria-label": `${layer.keybind} layer`
                             }}
                           />
                         )}
@@ -293,9 +285,9 @@ export const CategoryMenu = () => {
           <>
             <MenuItem
               button
-              onClick={e => handleListCategoryClick(e, -1, 'All')}
+              onClick={e => handleListCategoryClick(e, -1, "All")}
               selected={selectedIndex === -1}
-              key={'All'}
+              key={"All"}
             >
               {/* <ListItemIcon>
                 <FolderIcon />
@@ -306,15 +298,15 @@ export const CategoryMenu = () => {
             </MenuItem>
             <Divider />
 
-            {(curKeyTable.data().categories || []).map((category, index) => (
+            {tableCategories.map((category, index) => (
               <MenuItem
                 button
-                onClick={e => handleListCategoryClick(e, index, category)}
+                onClick={e => handleListCategoryClick(e, index, category.value)}
                 selected={selectedIndex === index}
-                key={category}
+                key={category.value}
               >
                 <Badge>
-                  <ListItemText primary={startCase(toLower(category))} />
+                  <ListItemText primary={startCase(toLower(category.value))} />
                 </Badge>
               </MenuItem>
             ))}

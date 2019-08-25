@@ -14,10 +14,10 @@ import { IconButton } from "@material-ui/core";
 import { TextField } from "@material-ui/core";
 import makeAnimated from "react-select/animated";
 import { motion, AnimatePresence } from "framer-motion";
-import { opacify } from "polished";
+import { opacify, lighten, shade } from "polished";
 import { ClearRounded } from "@material-ui/icons";
 import { HighlightOffRounded } from "@material-ui/icons";
-
+import CreatableSelect from "react-select/creatable";
 const useStyles = makeStyles(theme => ({
   root: {
     width: 360,
@@ -113,16 +113,9 @@ function Menu({ selectProps, innerProps, children }) {
   );
 }
 
-const StyledMultiValueContainer = styled(motion.div)`
-  border-radius: 30px;
-`;
 function MultiValueContainer({ children, selectProps, innerProps, data }) {
-  console.log(`⭐: MultiValueContainer -> children`, children);
-  console.log(`⭐: MultiValueContainer -> selectProps`, selectProps);
-  console.log(`⭐: MultiValueContainer -> innerProps`, innerProps);
-
   return (
-    <StyledMultiValueContainer
+    <motion.div
       positionTransition
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -130,12 +123,10 @@ function MultiValueContainer({ children, selectProps, innerProps, data }) {
       {...innerProps}
     >
       {children}
-    </StyledMultiValueContainer>
+    </motion.div>
   );
 }
 function MultiValueLabel({ selectProps, innerProps, children }) {
-  console.log(`⭐: MultiValueLabel -> innerProps`, innerProps);
-  console.log(`⭐: MultiValueLabel -> selectProps`, selectProps);
   return (
     <components.MultiValueLabel {...selectProps}>
       {children}
@@ -146,7 +137,7 @@ function SelectContainer({ children, ...props }) {
   const [removeClick, setRemoveClick] = React.useState(null);
   return (
     <components.SelectContainer TESTPROP="WHATSUP" {...props}>
-      <motion.div positionTransition>{children}</motion.div>
+      {children}
     </components.SelectContainer>
   );
 }
@@ -154,16 +145,19 @@ function SelectContainer({ children, ...props }) {
 const StyledMultiValueRemove = styled(motion.div)`
   border-radius: 50%;
   position: absolute;
+
   right: -9;
   left: 0;
-
   top: 0;
 `;
 
-const MultiValueRemove = props => {
-  console.log(`⭐: props`, props);
-  // console.log(`⭐: MultiValueRemove -> selectProps`, props.selectProps);
-  // console.log(`⭐: MultiValueRemove -> innerProps`, props.innerProps);
+const MultiValueRemove = ({ selectProps, innerProps, data, options }) => {
+  console.log(`⭐: MultiValueRemove -> data`, data);
+
+  const iconColor =
+    data.color ||
+    (options && keyMapColors[options.length % keyMapColors.length]) ||
+    "#4be8bc";
   return (
     <div
       style={{
@@ -174,77 +168,208 @@ const MultiValueRemove = props => {
       }}
     >
       <motion.div
-        initial={{ scale: 0.3, color: "white" }}
-        whileHover={{ scale: 0.7, opacity: 1, color: "red" }}
-        whileTap={{ scale: 0.3 }}
-        onClick={() => props.innerProps.onClick()}
+        initial={{ scale: 0.4, color: "transparent" }}
+        whileHover={{
+          scale: 0.8,
+          opacity: 1,
+          color: shade(0.1, iconColor),
+          backgroundColor: "white"
+        }}
+        onClick={() => innerProps.onClick()}
         style={{
           position: "relative",
-          height: "20px",
-          width: "20px",
-          background: "white",
-          marginRight: "-5px",
+          height: "15px",
+          width: "15px",
+          backgroundColor: lighten(0.2, iconColor),
+          // backgroundColor: variables.colorPrimaryLighter
+
+          // marginRight: "-5px",
           fontWeight: "bold",
           borderRadius: "50%",
           display: "flex",
+          padding: "1px",
           alignItems: "center",
           justifyContent: "center"
         }}
       >
-        <StyledMultiValueRemove
-        // initial={{ scale: 0, opacity: 0, rotate: 0 }}
-        // animate={{ scale: 1, x: -20 }}
-
-        // className="css-8vjmyn-multiValue"
-        >
-          <ClearRounded style={{ display: "inline-block" }} fontSize="small" />
-        </StyledMultiValueRemove>
+        <HighlightOffRounded
+          style={{ display: "inline-block", margin: "2px" }}
+          fontSize="small"
+        />
       </motion.div>
     </div>
   );
 };
 const AutocompleteList = props => {
   // const animatedComponents = makeAnimated();
-  const { placeholder, suggestions, fullWitdh, InputControl, onChange } = props;
+  const {
+    placeholder,
+    suggestions,
+    fullWitdh,
+    InputControl,
+    handleCategoryChange
+  } = props;
   const classes = useStyles();
   const animatedComponents = makeAnimated({
     SelectContainer,
     MultiValueContainer,
     MultiValueRemove,
     DropdownIndicator: null
+    // Control: InputControl
   });
   const theme = useTheme();
   const [removeClicked, setRemoveClicked] = React.useState(false);
   // const chipColor = keyMapColors[i % keyMapColors.length]
   const selectStyles = {
-    multiValue: (styles, { data }) => {
-      // https://react-select.com/styles#styles
-      const color = theme.palette.primary.main;
-
+    control: ({ borderColor, ...base }, { data, isHovered }) => {
+      console.log(`⭐: CONTROL STYLES: `, base);
       return {
-        ...styles,
-        boxSizing: "border-box",
-        backgroundColor: data.color,
-        padding: "0 5px",
+        ...base,
+        boxShadow: null,
 
-        borderRadius: "15px"
+        borderColor: "transparent",
+        minHeight: 30,
+        minWidth: 200,
+
+        transition: "background-color 100ms",
+        backgroundColor: "transparent",
+
+        "&:hover": {
+          borderColor: "transparent",
+          backgroundColor: theme.palette.common.grey[100]
+        }
       };
     },
-
-    control: (styles, { data }) => ({
-      ...styles,
-
-      borderColor: "transparent",
-      ":hover": {
-        borderColor: styles.borderColor
-      }
+    container: base => ({
+      ...base,
+      backgroundColor: "grey"
     }),
-    multiValueLabel: (styles, { data }) => ({
-      ...styles,
+    dropdownIndicator: base => ({
+      ...base,
+      padding: 4
+    }),
+    clearIndicator: base => ({
+      ...base,
+      padding: 4
+    }),
+    multiValue: (base, { data, options }) => {
+      console.log(`⭐: options`, options);
+      return {
+        ...base,
 
-      fontWeight: "bold",
-      fontSize: "16px"
-    })
+        fontWeight: "bold",
+        borderRadius: "30px",
+        padding: "0 2px",
+        backgroundColor: data.color || theme.palette.action.selected
+      };
+    },
+    multiValueLabel: (base, { data, options }) => ({
+      ...base,
+      borderRadius: "30px",
+      color: "#12161B",
+      margin: 0
+
+      // margin: "0 5px",
+      // padding: "3px 2px",
+
+      // backgroundColor:
+      //   data.color || keyMapColors[options.length % keyMapColors.length]
+      // backgroundColor: variables.colorPrimaryLighter
+    }),
+
+    valueContainer: base => ({
+      ...base,
+      padding: "0px 6px"
+    }),
+    input: (base, { data }) => ({
+      ...base,
+
+      margin: 0,
+      padding: 0
+    }),
+    container: base => ({
+      ...base,
+      display: "inline-block"
+    }),
+    // option: (styles, { data }) => ({
+    //   ...styles,
+    //   backgroundColor: data.color,
+    //   borderRadius: "15px",
+
+    //   // margin: "5px 0"
+
+    //   backgroundClip: "text"
+    // }),
+    placeholder: base => {
+      return {
+        ...base,
+        whiteSpace: "nowrap"
+      };
+    }
+    // multiValue: (styles, { data, options }) => {
+    //   // https://react-select.com/styles#styles
+    //   const color = theme.palette.primary.main;
+
+    //   return {
+    //     ...styles,
+    //     // boxSizing: "border-box",
+    //     // height: "15px",
+
+    //     backgroundColor:
+    //       data.color || keyMapColors[options.length % keyMapColors.length],
+
+    //     borderRadius: "15px"
+    //   };
+    // },
+
+    // control: ({ isFocused, ...styles }, { data }) => {
+    //   return {
+    //     ...styles,
+    //     height: "20px",
+    //     minHeight: "20px",
+
+    //     // boxShadow: isFocused ? "0 0 0 1px #4C9AFF" : null,
+    //     // borderColor: isFocused ? "#4C9AFF" : "#4C9AFF",
+    //     // backgroundClip: "padding-box",
+    //     // minWidth: "100px",
+    //     // minHeight: "20px",
+    //     // height: "20px",
+
+    //     ":hover": {
+    //       // borderColor: styles.borderColor
+    //     }
+    //   };
+    // },
+    // container: (styles, { data }) => ({
+    //   ...styles,
+    //   display: "inline-block"
+    //   // padding: 0,
+    //   // margin: 0,
+    //   // borderColor: "transparent",
+
+    //   // ":hover": {
+    //   //   borderColor: styles.borderColor
+    //   // }
+    // }),
+
+    // valueContainer: (styles, { data }) => ({
+    //   ...styles
+    // }),
+    // multiValueLabel: (styles, { data }) => ({
+    //   // ...styles,
+    //   margin: "0 5px"
+    // }),
+    // placeholder: (styles, { data }) => ({
+    //   ...styles
+    // }),
+    // input: (styles, { data }) => ({
+    //   ...styles
+    // }),
+
+    // option: (styles, { data }) => ({
+    //   ...styles
+    // })
+
     // multiValueRemove: (styles, { data }) => ({
     //   ...styles,
     //   color: theme.palette.text.primary,
@@ -259,43 +384,64 @@ const AutocompleteList = props => {
     // })
   };
 
-  function handleChangeSingle(value) {
-    // setSingle(value);
-    // onChange(value);
-  }
-
-  if (!InputControl) {
-    return null;
-  }
+  // if (!InputControl) {
+  //   return null;
+  // }
 
   const components = {
     Menu,
     NoOptionsMessage,
     Option,
-    Placeholder,
+    Placeholder
 
     // ValueContainer,
-    Control: InputControl.prototype.constructor
-  };
-  const onInputChange = (inputValue, { action }) => {
-    console.log(inputValue, action);
-    setTimeout(() => {}, 4000);
+    // Control: InputControl.prototype.constructor
   };
 
   return (
-    <Select
+    <CreatableSelect
       classes={classes}
       styles={selectStyles}
       components={animatedComponents}
       options={suggestions}
-      defaultValue={suggestions[0]}
+      // defaultValue={suggestions[0]}
+      backspaceRemovesValue={false}
       isClearable={false}
-      blurInputOnSelect={true}
+      clearValue={() => true}
       isMulti
+      placeholder={"Select Category..."}
       isSearchable
-      onChange={handleChangeSingle}
-      name="category"
+      onChange={handleCategoryChange}
+      name="categories"
       instanceId="HEllo"
+      formatOptionLabel={({ color, label }) => (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <span
+            style={{
+              backgroundColor: color,
+              borderRadius: "15px",
+              padding: "2px 12px"
+            }}
+          >
+            {label}
+          </span>
+        </div>
+      )}
+      formatCreateLabel={label => (
+        <span>
+          {"Create "}
+          <span
+            style={{
+              whiteSpace: "nowrap",
+              padding: "2px 8px",
+              borderRadius: "15px",
+              backgroundColor: theme.palette.action.selected
+            }}
+          >
+            #{label}
+          </span>
+        </span>
+      )}
     />
   );
 };
