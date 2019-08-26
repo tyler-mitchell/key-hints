@@ -1,28 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
+import React from "react";
 import {
   AnimatedKeyContainer,
   BottomKeyChar,
   KeyTop,
   KeyCharCenter
-} from './Key.styles';
-import styled, { keyframes, css } from 'styled-components';
-import { findAll } from 'styled-components/test-utils';
-import { Box } from '@rebass/grid';
+} from "./Key.styles";
+import styled, { keyframes, css } from "styled-components";
+import { findAll } from "styled-components/test-utils";
+import { Box } from "@rebass/grid";
 import {
   shade,
   linearGradient,
   lighten,
   transparentize,
   grayscale
-} from 'polished';
-import Layer from '@material-ui/core/Box';
-import produce from 'immer';
+} from "polished";
+import Layer from "@material-ui/core/Box";
+import produce from "immer";
 
-import { FlashingContext } from './FlashingContext';
-import { Card, Grid, Paper } from '@material-ui/core';
-import { Textfit } from 'react-textfit';
-import { MouseIcon } from './Icons';
+import { FlashingContext } from "./FlashingContext";
+import { Card, Grid, Paper } from "@material-ui/core";
+import { Textfit } from "react-textfit";
+import { MouseIcon } from "./Icons";
 import {
   useSpring,
   animated,
@@ -31,35 +31,35 @@ import {
   interpolate,
   extrapolate,
   Easing
-} from 'react-spring';
-import fitty from 'fitty';
-import Typography from '@material-ui/core/Typography';
+} from "react-spring";
+import fitty from "fitty";
+import Typography from "@material-ui/core/Typography";
 import {
   ArrowBack as LeftArrowIcon,
   ArrowForward as RightArrowIcon,
   ArrowUpward as UpArrowIcon,
   ArrowDownward as DownArrowIcon
-} from '@material-ui/icons';
-import './key.css';
-import useMethods from 'use-methods';
+} from "@material-ui/icons";
+import "./key.css";
+import useMethods from "use-methods";
 
-import { FlashingKey } from './FlashingKey';
+import { FlashingKey } from "./FlashingKey";
 
-import { useGlobalState, setGlobalState } from '../../state';
-import _ from 'lodash';
+import { useGlobalState, setGlobalState } from "../../state";
+import _ from "lodash";
 
-import flatMap from 'lodash/flatMap';
-import KeyText from './KeyText/KeyText';
+import flatMap from "lodash/flatMap";
+import KeyText from "./KeyText/KeyText";
 import {
   motion,
   useAnimation,
   useMotionValue,
   useTransform,
   transform
-} from 'framer-motion';
-import { TextField } from '@material-ui/core';
-import { useBoolean } from 'react-hanger';
-import theme from '../design-system/theme';
+} from "framer-motion";
+import { TextField } from "@material-ui/core";
+import { useBoolean } from "react-hanger";
+import theme from "../design-system/theme";
 
 const ConditionalWrap = ({ condition, wrap, children }) => {
   const [flashing] = React.useContext(FlashingContext);
@@ -70,7 +70,7 @@ const initialState = {
   active: false,
   activeColor: theme.palette.keyColors.active,
   defaultColor: theme.palette.keyColors.default,
-  keyTopText: ''
+  keyTopText: ""
 };
 
 const methods = state => {
@@ -83,7 +83,7 @@ const methods = state => {
     },
     setInactiveMapKey() {
       state.keyColor = defaultColor;
-      state.keyTopText = '';
+      state.keyTopText = "";
       state.activeColor = defaultActiveColor;
       // state.active = false;
     },
@@ -114,18 +114,18 @@ export const Key = ({
   KeyChar
 }) => {
   // global mode state
-  const [keyMapMode] = useGlobalState('keyMapMode');
-  const [editMode] = useGlobalState('editMode');
-  const [addMode] = useGlobalState('addMode');
-  const [keyLabelAdded] = useGlobalState('keyLabelAdded');
+  const [keyMapMode] = useGlobalState("keyMapMode");
+  const [editMode] = useGlobalState("editMode");
+  const [addMode] = useGlobalState("addMode");
+  const [keyLabelAdded] = useGlobalState("keyLabelAdded");
 
   // global key state
-  const [activeLayers] = useGlobalState('activeLayers');
+  const [activeLayers] = useGlobalState("activeLayers");
 
   const [index, setIndex] = React.useState(null);
 
-  const [newKeys, setNewKeys] = useGlobalState('newKeys');
-  const [activeKeys] = useGlobalState('activeKeys');
+  const [newKeys, setNewKeys] = useGlobalState("newKeys");
+  const [activeKeys] = useGlobalState("activeKeys");
   const [isThenSequence, setIsThenSequence] = React.useState({
     hasSequence: false,
     isSequenceKey: false
@@ -160,9 +160,9 @@ export const Key = ({
         active.setTrue();
       }
       // Check for 'THEN' key sequence
-      if (activeKeys['THEN']) {
+      if (activeKeys["THEN"]) {
         setIsThenSequence(v => ({ ...v, hasSequence: true }));
-        if (activeKeys['THEN'].includes(uniqueKeyName)) {
+        if (activeKeys["THEN"].includes(uniqueKeyName)) {
           setIsThenSequence(v => ({ ...v, isSequenceKey: true }));
         } else {
           setIsThenSequence(v => ({ ...v, isSequenceKey: false }));
@@ -196,7 +196,7 @@ export const Key = ({
   // UseLayoutEffect Hook
   React.useLayoutEffect(() => {
     if (active.value && addMode) {
-      setGlobalState('lastKeyRef', label);
+      setGlobalState("lastKeyRef", label);
     }
   }, [active.value]);
 
@@ -209,7 +209,7 @@ export const Key = ({
     setIndex(endIndex);
     setNewKeys(
       produce(v => {
-        v.keys['key1'][endIndex] = key;
+        v.keys["key1"][endIndex] = key;
       })
     );
   };
@@ -221,7 +221,7 @@ export const Key = ({
 
     setNewKeys(
       produce(v => {
-        delete v.keys['key1'][index];
+        delete v.keys["key1"][index];
         // v.splice(v.findIndex(todo => todo.id === "id1"), 1)
       })
     );
@@ -248,25 +248,25 @@ export const Key = ({
   };
 
   const keyTopTextRef = React.useRef(null);
-  setGlobalState('keyTopTextRefs', v => ({ ...v, [label]: keyTopTextRef }));
+  setGlobalState("keyTopTextRefs", v => ({ ...v, [label]: keyTopTextRef }));
   const [isModifier, setIsModifier] = React.useState(false);
 
   const controls = useAnimation();
 
   React.useEffect(() => {
-    let activeVariant = 'active';
+    let activeVariant = "active";
     if (isThenSequence.isSequenceKey) {
-      activeVariant = ['active', 'sequence2'];
+      activeVariant = ["active", "sequence2"];
     } else if (isThenSequence.hasSequence) {
-      activeVariant = ['active', 'sequence1'];
+      activeVariant = ["active", "sequence1"];
     }
-    controls.start(active.value ? activeVariant : 'inactive');
+    controls.start(active.value ? activeVariant : "inactive");
   }, [activeColor, activeLayers, active]);
 
   return (
     <ConditionalWrap
       condition={editMode && active.value}
-      style={{ backfaceVisibility: 'hidden', filter: 'blur(0)' }}
+      style={{ backfaceVisibility: "hidden", filter: "blur(0)" }}
       wrap={(children, flashing) => (
         <animated.div key={key} style={flashing}>
           {children}
@@ -379,7 +379,7 @@ const variants = {
     y: 5,
     transition: {
       // elapsed: 1,
-      type: 'spring',
+      type: "spring",
       // restSpeed: 0.5,
       velocity: 5,
       // flip: Infinity,

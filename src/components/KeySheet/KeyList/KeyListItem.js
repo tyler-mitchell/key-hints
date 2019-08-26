@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
-import { FlashingContext } from '../../Key/FlashingContext';
+import { FlashingContext } from "../../Key/FlashingContext";
 
 import {
   Button,
@@ -22,10 +22,10 @@ import {
   IconButton,
   ToolTip,
   ClickAwayListener
-} from '@material-ui/core';
-import { shade, lighten } from 'polished';
-import { useGlobalState, setGlobalState } from '../../../state';
-import { KeyTable } from '../SheetData';
+} from "@material-ui/core";
+import { shade, lighten } from "polished";
+import { useGlobalState, setGlobalState } from "../../../state";
+import { KeyTable } from "../SheetData";
 import {
   ArrowBack as LeftArrowIcon,
   ArrowForward as RightArrowIcon,
@@ -33,25 +33,25 @@ import {
   ArrowDownward as DownArrowIcon,
   Delete as DeleteIcon,
   Edit as EditIcon
-} from '@material-ui/icons';
+} from "@material-ui/icons";
 
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 import {
   usePopupState,
   bindHover,
   bindMenu,
   bindTrigger
-} from 'material-ui-popup-state/hooks';
-import ListItemAction from './ListItemAction';
-import { motion } from 'framer-motion';
-import { Fab } from '@material-ui/core';
+} from "material-ui-popup-state/hooks";
+import ListItemAction from "./ListItemAction";
+import { motion } from "framer-motion";
+import { Fab } from "@material-ui/core";
 export const KBD = styled.div`
   /* display: inline-block; */
   display: inline-flex;
   justify-content: center;
   align-items: center;
   transform: translate3d(0, 0, 0);
-  height: ${({ height }) => height || 'inherit'};
+  height: ${({ height }) => height || "inherit"};
 
   min-width: 40px;
   padding: 12px 12px;
@@ -85,41 +85,41 @@ const KbdKey = styled(motion.div)`
 `;
 
 const modifierKeys = new Set([
-  'Ctrl',
-  'Alt',
-  'Shift',
-  'Capslock',
-  'Tab',
-  'Win'
+  "Ctrl",
+  "Alt",
+  "Shift",
+  "Capslock",
+  "Tab",
+  "Win"
 ]);
 const iconLabels = {
-  '←': (
+  "←": (
     <LeftArrowIcon
       fontSize="small"
-      style={{ display: 'inline-block', verticalAlign: 'middle' }}
+      style={{ display: "inline-block", verticalAlign: "middle" }}
     />
   ),
-  '→': (
+  "→": (
     <RightArrowIcon
       fontSize="small"
-      style={{ display: 'inline-block', verticalAlign: 'middle' }}
+      style={{ display: "inline-block", verticalAlign: "middle" }}
     />
   ),
-  '↑': (
+  "↑": (
     <UpArrowIcon
       fontSize="small"
-      style={{ display: 'inline-block', verticalAlign: 'middle' }}
+      style={{ display: "inline-block", verticalAlign: "middle" }}
     />
   ),
-  '↓': (
+  "↓": (
     <DownArrowIcon
       fontSize="small"
-      style={{ display: 'inline-block', verticalAlign: 'middle' }}
+      style={{ display: "inline-block", verticalAlign: "middle" }}
     />
   )
 };
-export const renderCategoryIcon = (keyLabel, width = 'auto', styleProps) => {
-  const color = modifierKeys.has(keyLabel) ? '#15191c ' : '#209CEE';
+export const renderCategoryIcon = (keyLabel, width = "auto", styleProps) => {
+  const color = modifierKeys.has(keyLabel) ? "#15191c " : "#209CEE";
 
   if (keyLabel in iconLabels) {
     return iconLabels[keyLabel];
@@ -128,37 +128,37 @@ export const renderCategoryIcon = (keyLabel, width = 'auto', styleProps) => {
   }
 };
 export const RenderIcon = ({ keyLabel, width, height, styleProps }) => {
-  const color = modifierKeys.has(keyLabel) ? '#15191c ' : '#209CEE';
+  const color = modifierKeys.has(keyLabel) ? "#15191c " : "#209CEE";
 
   const iconLabels = {
-    '←': (
+    "←": (
       <LeftArrowIcon
         fontSize="small"
-        style={{ display: 'inline-block', verticalAlign: 'middle' }}
+        style={{ display: "inline-block", verticalAlign: "middle" }}
       >
         {keyLabel}
       </LeftArrowIcon>
     ),
-    '→': (
+    "→": (
       <RightArrowIcon
         fontSize="small"
-        style={{ display: 'inline-block', verticalAlign: 'middle' }}
+        style={{ display: "inline-block", verticalAlign: "middle" }}
       >
         {keyLabel}
       </RightArrowIcon>
     ),
-    '↑': (
+    "↑": (
       <UpArrowIcon
         fontSize="small"
-        style={{ display: 'inline-block', verticalAlign: 'middle' }}
+        style={{ display: "inline-block", verticalAlign: "middle" }}
       >
         {keyLabel}
       </UpArrowIcon>
     ),
-    '↓': (
+    "↓": (
       <DownArrowIcon
         fontSize="small"
-        style={{ display: 'inline-block', verticalAlign: 'middle' }}
+        style={{ display: "inline-block", verticalAlign: "middle" }}
       >
         {keyLabel}
       </DownArrowIcon>
@@ -193,13 +193,13 @@ export const SheetKeys = ({ keybind, onOrKeyClick }) => {
           >
             {/* <Badge badgeContent={keyIndex+1} color="primary" variant="dot" > */}
             {Object.keys(keyItem).map((kb, index, array) => {
-              const startOfThen = array[index + 1] === 'THEN';
+              const startOfThen = array[index + 1] === "THEN";
               const isEndOfArray = index === Object.keys(keyItem).length - 1;
               const combination = !(isEndOfArray || startOfThen);
               return (
                 <>
                   <KbdKey key={index}>
-                    {!(kb === 'THEN') ? (
+                    {!(kb === "THEN") ? (
                       <RenderIcon keyLabel={keyItem[kb]} />
                     ) : (
                       <>
@@ -208,7 +208,7 @@ export const SheetKeys = ({ keybind, onOrKeyClick }) => {
                           arr.length - 1 !== i ? (
                             <span key={i}>
                               {<RenderIcon keyLabel={x} />}
-                              {index !== arr.length - 1 && '+'}
+                              {index !== arr.length - 1 && "+"}
                               {/* <ORLabel> or </ORLabel> */}
                             </span>
                           ) : (
@@ -218,7 +218,7 @@ export const SheetKeys = ({ keybind, onOrKeyClick }) => {
                       </>
                     )}
 
-                    {combination && '+'}
+                    {combination && "+"}
                   </KbdKey>
                 </>
               );
@@ -248,7 +248,7 @@ export const renderCategoryItem = (layerKey, color) => {
               {/* <KBD style={{ filter: `drop-shadow(-4px 0px 0px ${color})` }}> */}
               {<RenderIcon keyLabel={kb} width="75px" />}
               {/* </KBD> */}
-              {index !== layerKey.length - 1 && '+'}
+              {index !== layerKey.length - 1 && "+"}
             </KbdKey>
           </Grid>
         );
@@ -261,7 +261,7 @@ export const RenderSelectedCategory = ({ layerKey, color }) => {
   const [isHovered, setHovered] = React.useState(false);
 
   React.useEffect(() => {
-    console.log('STate Update! ');
+    console.log("STate Update! ");
   }, [isHovered]);
 
   return (
@@ -277,21 +277,11 @@ export const RenderSelectedCategory = ({ layerKey, color }) => {
       <KbdKey
         custom={color}
         initial={{
-          filter: 'drop-shadow(0 0 0 transparent)'
+          filter: "drop-shadow(0 0 0 transparent)"
         }}
-        whileHover={'active'}
+        whileHover={"active"}
         variants={categoryVariants}
-        onHoverStart={() => {
-          console.log('TEST HOVER ON: ');
-          setHovered(true);
-        }}
-        onHoverEnd={() => {
-          console.log('TEST HOVER OFF: ');
-
-          setHovered(false);
-        }}
       >
-        {console.log(layerKey)}
         <SelectedCategoryKBD
           height="30px"
           // whileHover={'active'}
@@ -318,9 +308,9 @@ export const RenderSelectedCategory = ({ layerKey, color }) => {
               <>
                 {/* <Grid item key={index}> */}
                 {/* <KBD style={{ filter: `drop-shadow(-4px 0px 0px ${color})` }}> */}
-                {renderCategoryIcon(kb, '75px')}
+                {renderCategoryIcon(kb, "75px")}
                 {index !== layerKey.length - 1 && (
-                  <span style={{ margin: '2px' }}>+</span>
+                  <span style={{ margin: "2px" }}>+</span>
                 )}
                 {/* </Grid> */}
 
@@ -365,12 +355,12 @@ export const KeyListItem = props => {
 
   // const [, , activeKeys, setActiveKeys] = React.useContext(FlashingContext);
 
-  const [, setActiveKeys] = useGlobalState('activeKeys');
-  const [, setEditMode] = useGlobalState('editMode');
-  const [selectedItem, setSelectedItem] = useGlobalState('selectedItem');
-  const [curShortcutObjectKey] = useGlobalState('curShortcutObjectKey');
+  const [, setActiveKeys] = useGlobalState("activeKeys");
+  const [, setEditMode] = useGlobalState("editMode");
+  const [selectedItem, setSelectedItem] = useGlobalState("selectedItem");
+  const [curShortcutObjectKey] = useGlobalState("curShortcutObjectKey");
   const [keybindIndex, setKeybindIndex] = React.useState(1);
-  const [selectedIndex, setSelectedIndex] = useGlobalState('selectedIndex');
+  const [selectedIndex, setSelectedIndex] = useGlobalState("selectedIndex");
   // React.useEffect(() => {
   //   if (selectedItem !== shortcutObjectKey) {
   //     setAlreadySelected(false);
@@ -402,8 +392,8 @@ export const KeyListItem = props => {
   const handleSelection = shortcutObjectKey => {
     setSelectedItem(shortcutObjectKey);
     setActiveKeys(keybind[`key${1}`]);
-    setGlobalState('curShortcutObjectKey', shortcutObjectKey);
-    setGlobalState('activeKeysIndex', shortcutObjectKey);
+    setGlobalState("curShortcutObjectKey", shortcutObjectKey);
+    setGlobalState("activeKeysIndex", shortcutObjectKey);
 
     if (selectedItem !== shortcutObjectKey) {
       setEditMode(false);

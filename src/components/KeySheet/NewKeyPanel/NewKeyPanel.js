@@ -6,9 +6,23 @@ import {
   clearKeySelection
 } from "../../../state";
 import { KeyTableContext } from "../../../context/KeyTableContext";
+
+// Editor
+
 import { KeySequence } from "./KeySequence/KeySequence";
 import styled from "styled-components";
 import Toast from "./Toast";
+
+// import Editor from "draft-js-plugins-editor";
+import { ItalicButton, BoldButton, UnderlineButton } from "draft-js-buttons";
+import createInlineToolbarPlugin from "draft-js-inline-toolbar-plugin";
+import Editor, { createEditorStateWithText } from "draft-js-plugins-editor";
+import { EditorState } from "draft-js";
+import "draft-js-inline-toolbar-plugin/lib/plugin.css";
+import "draft-js-inline-toolbar-plugin/lib/plugin.css";
+
+// import "draft-js-inline-toolbar-plugin/lib/plugin.css";
+// import "braft-editor/dist/index.css";
 
 import {
   makeStyles,
@@ -49,6 +63,7 @@ import { Button } from "@material-ui/core";
 import _ from "lodash";
 import { motion, AnimatePresence } from "framer-motion";
 import { AutocompleteHashtags } from "./CategoryAutoComplete/CategoryInput";
+import { AddPhotoAlternateRounded } from "@material-ui/icons";
 import { Avatar } from "@material-ui/core";
 import { Container } from "@material-ui/core";
 import { CardMedia } from "@material-ui/core";
@@ -66,7 +81,12 @@ import {
 import { CardHeader, AppBar } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
+  avatar: {
+    margin: 10,
+    color: "#fff",
+    backgroundColor: theme.palette.primary.main
+  },
   descriptionField: {
     padding: 0,
     background: "white"
@@ -117,7 +137,7 @@ const useStyles = makeStyles({
   keyDescription: {
     textAlign: "center"
   }
-});
+}));
 
 const KeySequenceContainer = styled(Grid)`
   border-radius: 8px;
@@ -135,25 +155,43 @@ const CardHead = styled(Grid)`
 
   /* padding: 300px; */
 `;
+const inlineToolbarPlugin = createInlineToolbarPlugin({
+  structure: [BoldButton, ItalicButton, UnderlineButton]
+});
+const plugins = [inlineToolbarPlugin];
+const { InlineToolbar } = inlineToolbarPlugin;
+
 const KeyMenu = motion.custom(Grid);
 export const NewKeyPanel = ({ saveClicked, ...props }) => {
   const [newKeys, setNewKeys] = useGlobalState("newKeys");
   const [addMode, setAddMode] = useGlobalState("addMode");
 
+  const [editorState, setEditorState] = React.useState(
+    EditorState.createEmpty()
+  );
+
   const theme = useTheme();
   const classes = useStyles();
+  const onEditorStateChange = newEditorState => {
+    setEditorState(newEditorState);
+    // setKeyInfo(v => ({ ...v, description }));
+
+    // setNewKeys(p => ({ ...p, category }))
+  };
 
   const [keyInfo, setKeyInfo] = React.useState({
     category: [],
     description: null,
     keyDescription: null
   });
+
   const handleDescriptionChange = event => {
     const description = event.target.value;
     setKeyInfo(v => ({ ...v, description }));
 
     // setNewKeys(p => ({ ...p, category }))
   };
+
   const handleKeyDescription = event => {
     const keyDescription = event.target.value;
     setKeyTopText(keyDescription);
@@ -312,7 +350,12 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
                 >
                   <Grid container item alignItems="center" justify="flex-start">
                     <Grid item>
-                      <Avatar />
+                      <Avatar
+                        className={classes.avatar}
+                        style={{ marginRight: "10px" }}
+                      >
+                        <AddPhotoAlternateRounded />
+                      </Avatar>
                     </Grid>
                     <Grid item xs={10}>
                       <InputBase
@@ -342,13 +385,9 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
                     direction="row"
                     alignItems="center"
                     item
+                    xs={12}
                   >
-                    {/* <Grid item>
-                    <Typography variant="subtitle2" color="text">
-                      Category
-                    </Typography>
-                  </Grid> */}
-                    <Grid item>
+                    <Grid item style={{ marginBottom: "15px" }}>
                       <AutocompleteHashtags
                         suggestions={suggestions}
                         onCategorySave={handleCategories}
@@ -366,7 +405,7 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
                   />
                 </Grid>
                 <Grid item style={{ paddingTop: "15px" }}>
-                  <InputBase
+                  {/* <InputBase
                     classes={classes.keyDescription}
                     style={{
                       position: "relative",
@@ -389,7 +428,13 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
                     rowsMax={10}
                     placeHolder="enter key top label"
                     onChange={event => handleKeyDescription(event)}
+                  /> */}
+                  <Editor
+                    editorState={editorState}
+                    plugins={plugins}
+                    onChange={onEditorStateChange}
                   />
+                  <InlineToolbar />
                 </Grid>
               </motion.div>
             )}

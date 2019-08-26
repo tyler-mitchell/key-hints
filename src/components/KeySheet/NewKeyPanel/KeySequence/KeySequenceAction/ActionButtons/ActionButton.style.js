@@ -1,10 +1,10 @@
-import { Fab } from '@material-ui/core';
-import { withStyles } from '@material-ui/styles';
-import { Button } from '@material-ui/core';
-import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { Fab } from "@material-ui/core";
+import { withStyles } from "@material-ui/styles";
+import { Button } from "@material-ui/core";
+import styled from "styled-components";
+import { motion } from "framer-motion";
 
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from "@material-ui/styles";
 // export const StyledActionButton = withStyles({
 //   root: {
 //     boxShadow: 'none',
@@ -52,7 +52,7 @@ export const StyledActionButton = styled(motion.div)`
   align-items: center;
   justify-content: center;
   backface-visibility: hidden;
-  filter: drop-shadow(0px 1px 1px black);
+  /* filter: drop-shadow(0px 1px 1px black); */
   /* border-width: 2px;
   border-color: black;
   border-style: solid; */

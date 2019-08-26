@@ -34,7 +34,6 @@ import { Grid } from "@material-ui/core";
 import { GridListTile } from "@material-ui/core";
 import { GridList } from "@material-ui/core";
 import _ from "lodash";
-import { useSwitchStyle } from "./KeySwitch";
 import { Checkbox } from "@material-ui/core";
 import { createMuiTheme } from "@material-ui/core";
 import useBoolean from "react-hanger/useBoolean";
@@ -101,38 +100,42 @@ export const CategoryMenu = () => {
   const [tableCategories] = useGlobalState("tableCategories");
 
   const [checkedIndex, setCheckedIndex] = React.useState(0);
-  const showMultipleLayers = useBoolean(true);
+  const [showMultipleLayers, setShowMultipleLayers] = React.useState(true);
   const [layerIndices, setLayerIndices] = React.useState(initialLayerIndices);
-  const [state, setState] = React.useState({ index: null, layer: null });
+  console.log(`⭐: CategoryMenu -> initialLayerIndices`, initialLayerIndices);
+  const [layerState, setState] = React.useState({ index: 0, layer: null });
 
   // Portal ref
   const container = React.useRef(null);
   const didMount = useDidMount();
-  const testHELLO = "HELLO";
-  const hello = startCase(toLower(testHELLO));
+
+  const [activeLayers, setActiveLayers] = useGlobalState("activeLayers");
   React.useEffect(() => {
     const delayCalculation =
       didMount &&
+      activeLayers &&
       setTimeout(() => {
-        if (showMultipleLayers.value) {
+        if (showMultipleLayers) {
           const {
             layerIndices: newIndices,
             activeLayers: newActiveLayers
-          } = updateActiveLayers(allLayers, state.layer);
-          setGlobalState("activeLayers", newActiveLayers);
+          } = updateActiveLayers(allLayers, layerState.layer);
+          setActiveLayers(newActiveLayers);
           setLayerIndices(newIndices);
         } else {
-          updateActiveSingleLayer(allLayers, layerKeys, state.index);
-          setLayerIndices(new Set([state.index]));
+          console.log(`⭐: CategoryMenu -> layerKeys`, layerKeys);
+          console.log(`⭐: CategoryMenu -> allLayers`, allLayers);
+          updateActiveSingleLayer(allLayers, layerKeys, layerState.index);
+          setLayerIndices(new Set([layerState.index]));
         }
       }, 100);
 
     return () => clearTimeout(delayCalculation);
-  }, [state, showMultipleLayers.value]);
+  }, [layerState, showMultipleLayers]);
 
   const switchClasses = useSwitchStyles();
 
-  async function handleSwitchClick(layer, index) {
+  function handleSwitchClick(layer, index) {
     setState({ index, layer });
 
     //  const data =  await  updateActiveLayers(allLayers, state.layer)
@@ -155,7 +158,7 @@ export const CategoryMenu = () => {
   }
 
   function handleMultiLayerOption() {
-    showMultipleLayers.toggle();
+    setShowMultipleLayers(!showMultipleLayers);
   }
   return [
     <div>
@@ -253,7 +256,7 @@ export const CategoryMenu = () => {
                             }
                             // checked={(layer.id === state.index )}
                             checked={
-                              layer.id === state.index ||
+                              layer.id === layerState.index ||
                               layerIndices.has(layer.id)
                             }
                           />

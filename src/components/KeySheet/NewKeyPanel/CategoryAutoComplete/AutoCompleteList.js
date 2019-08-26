@@ -284,7 +284,7 @@ const AutocompleteList = props => {
     input: (base, { data }) => ({
       ...base,
 
-      margin: 0,
+      marginRight: "20px",
       padding: 0
     }),
     container: base => ({
@@ -303,7 +303,10 @@ const AutocompleteList = props => {
     placeholder: base => {
       return {
         ...base,
-        whiteSpace: "nowrap"
+        whiteSpace: "nowrap",
+        overflow: "visible",
+        fontSize: "12px",
+        marginLeft: "5px"
       };
     }
     // multiValue: (styles, { data, options }) => {

@@ -31,27 +31,6 @@ export const keyMapColors = [
   "#ffd8b1",
   "#808080"
 ];
-// export const keyMapColors = [
-//   "#f76262",
-//   "#21A6FF",
-//   "#ff8a5c",
-//   "#FAC928",
-//   "#911eb4",
-//   "#46f0f0",
-//   "#f032e6",
-//   "#bcf60c",
-//   "#fabebe",
-//   "#008080",
-//   "#e6beff",
-//   "#9a6324",
-//   "#fffac8",
-//   "#800000",
-//   "#aaffc3",
-//   "#808000",
-//   "#ffd8b1",
-//   "#000075",
-//   "#808080"
-// ];
 
 function getModDifference(keyData, mod) {
   return _.chain(keyData)
@@ -234,29 +213,6 @@ export function initializeKeyMap(keyTable) {
   ];
   const modifierCombinations = _.concat(combinations(modifierKeys), singleKeys);
 
-  const colorTestArr = [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "10",
-    "11",
-    "12",
-    "13",
-    "14",
-    "15",
-    "16",
-    "17",
-    "18",
-    "19",
-    "20"
-  ];
-
   const allLayers = filteredData(modifierCombinations, keyTable, keyMapColors);
 
   const { activeLayers, layerKeys, layerIndices } = getActiveLayers(allLayers);
@@ -346,11 +302,12 @@ export function updateActiveLayers(filteredKeyMap, newLayer = null) {
   return { layerIndices, activeLayers };
 }
 
-export function updateActiveSingleLayer(
-  filteredKeyMap,
-  layerKeys,
-  index = null
-) {
+export function updateActiveSingleLayer(filteredKeyMap, layerKeys, index = 0) {
+  console.log(
+    `⭐: _.find(filteredKeyMap, o => o.index === index)`,
+    _.find(filteredKeyMap, o => o.index === index)
+  );
   const activeLayer = [_.find(filteredKeyMap, o => o.index === index)];
+  console.log(`⭐: activeLayer`, activeLayer);
   setGlobalState("activeLayers", activeLayer);
 }
