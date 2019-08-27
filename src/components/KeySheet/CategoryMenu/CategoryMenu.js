@@ -201,21 +201,23 @@ export const CategoryMenu = () => {
                 <RenderSelectedCategory
                   layerKey={layer.keybind}
                   color={layer.color}
+                  active={layerIndices.has(layer.id)}
                 />
               </div>
             ))}
           </Button>
         )}
       </ButtonGroup>
-      <Menu
+      <Popper
         // className={classes.popper}
         getContentAnchorEl={null}
+        placement="bottom-start"
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "left" }}
         {...bindMenu(popupState)}
       >
         {keyMapMode ? (
-          <List dense>
+          <Paper>
             <MenuItem button onClick={handleMultiLayerOption}>
               <ListItemIcon>
                 <Checkbox
@@ -232,58 +234,37 @@ export const CategoryMenu = () => {
             </MenuItem>
             {/* <Divider /> */}
 
-            {initialLayerIndices &&
-              layerKeys.map((layer, index) => {
-                return (
-                  <MenuItem button disableRipple key={layer.keybind}>
-                    <ListItemIcon>
-                      <ThemeProvider
-                        theme={createMuiTheme({
-                          palette: {
-                            primary: {
-                              main: `${layer.color}`
-                            }
-                          }
-                        })}
-                      >
-                        {true ? (
-                          <Switch
-                            edge="start"
-                            layerColor={layer.color}
-                            color="primary"
-                            onClick={() =>
-                              handleSwitchClick(layer.keybind, index)
-                            }
-                            // checked={(layer.id === state.index )}
-                            checked={
-                              layer.id === layerState.index ||
-                              layerIndices.has(layer.id)
-                            }
-                          />
-                        ) : (
-                          <Checkbox
-                            color="primary"
-                            disableRipple
-                            onClick={() =>
-                              handleCheckBoxClick(layer.keybind, index)
-                            }
-                            edge="start"
-                            checked={index === checkedIndex}
-                            inputProps={{
-                              "aria-label": `${layer.keybind} layer`
-                            }}
-                          />
-                        )}
-                      </ThemeProvider>
-                    </ListItemIcon>
-                    {renderCategoryItem(layer.keybind, layer.color)}
-                    {/* <Portal container={container.current}>
-                      
-                    </Portal> */}
-                  </MenuItem>
-                );
-              })}
-          </List>
+            <Grid container style={{ width: "100%" }} direction="row">
+              {initialLayerIndices &&
+                layerKeys.map((layer, index) => {
+                  return (
+                    <Grid item button disableRipple key={layer.keybind}>
+                      {/* <Switch
+                        edge="start"
+                        layerColor={layer.color}
+                        color="primary"
+                        onClick={() => handleSwitchClick(layer.keybind, index)}
+                        // checked={(layer.id === state.index )}
+                        checked={
+                          layer.id === layerState.index ||
+                          layerIndices.has(layer.id)
+                        }
+                      /> */}
+
+                      <RenderSelectedCategory
+                        layerKey={layer.keybind}
+                        color={layer.color}
+                        active={layerIndices.has(layer.id)}
+                      />
+                      {/* {renderCategoryItem(layer.keybind, layer.color)} */}
+                      {/* <Portal container={container.current}>
+                        
+                      </Portal> */}
+                    </Grid>
+                  );
+                })}
+            </Grid>
+          </Paper>
         ) : (
           <>
             <MenuItem
@@ -299,7 +280,7 @@ export const CategoryMenu = () => {
                 <ListItemText primary="All" />
               </Badge>
             </MenuItem>
-            <Divider />
+            {/* <Divider /> */}
 
             {tableCategories.map((category, index) => (
               <MenuItem
@@ -315,8 +296,7 @@ export const CategoryMenu = () => {
             ))}
           </>
         )}
-        <Divider />
-      </Menu>
+      </Popper>
     </div>
   ];
 };

@@ -23,7 +23,7 @@ import {
   ToolTip,
   ClickAwayListener
 } from "@material-ui/core";
-import { shade, lighten } from "polished";
+import { shade, lighten, darken } from "polished";
 import { useGlobalState, setGlobalState } from "../../../state";
 import { KeyTable } from "../SheetData";
 import {
@@ -257,7 +257,7 @@ export const renderCategoryItem = (layerKey, color) => {
     </Grid>
   );
 };
-export const RenderSelectedCategory = ({ layerKey, color }) => {
+export const RenderSelectedCategory = ({ layerKey, color, active }) => {
   const [isHovered, setHovered] = React.useState(false);
 
   React.useEffect(() => {
@@ -265,64 +265,61 @@ export const RenderSelectedCategory = ({ layerKey, color }) => {
   }, [isHovered]);
 
   return (
-    <Grid
-      container
-      item
-      justify="center"
-      alignItems="center"
-      direction="row"
-      wrap="nowrap"
-    >
-      {/* <Badge badgeContent={keyIndex+1} color="primary" variant="dot" > */}
-      <KbdKey
-        custom={color}
-        initial={{
-          filter: "drop-shadow(0 0 0 transparent)"
-        }}
-        whileHover={"active"}
-        variants={categoryVariants}
+    <KbdKey custom={color} variants={categoryVariants}>
+      <SelectedCategoryKBD
+        height="30px"
+        // whileHover={'active'}
+        // animated={isHovered ? 'active' : 'inactive'}
+        // animated={'active'}
+        // whileHover={{ background: shade(0.5, color) }}
+        // positionTransition
+        color={color}
+        animate={
+          active
+            ? {
+                boxShadow: `0px 3px 0px 0px ${darken(
+                  0.1,
+                  color
+                )}, 0px 0px 5px 0px #bbb`
+              }
+            : {
+                boxShadow: `0px 7px 0px 0px ${darken(
+                  0.1,
+                  color
+                )}, 0px 0px 0px 0px #bbb`
+              }
+        }
+        // transition={{
+        //   type: 'spring',
+        //   mass: 3,
+        //   restSpeed: 0.05,
+        //   damping: 2300,
+        //   duration: 5
+        // }}
+        // style={{
+        //   transform: 'translate3D(0,0,0)',
+        //   filter: 'drop-shadow(0 0 0 transparent)',
+        //   margin: '0 10px'
+        // }}
       >
-        <SelectedCategoryKBD
-          height="30px"
-          // whileHover={'active'}
-          // animated={isHovered ? 'active' : 'inactive'}
-          // animated={'active'}
-          // whileHover={{ background: shade(0.5, color) }}
-          // positionTransition
-          color={color}
-          // transition={{
-          //   type: 'spring',
-          //   mass: 3,
-          //   restSpeed: 0.05,
-          //   damping: 2300,
-          //   duration: 5
-          // }}
-          // style={{
-          //   transform: 'translate3D(0,0,0)',
-          //   filter: 'drop-shadow(0 0 0 transparent)',
-          //   margin: '0 10px'
-          // }}
-        >
-          {layerKey.map((kb, index, array) => {
-            return (
-              <>
-                {/* <Grid item key={index}> */}
-                {/* <KBD style={{ filter: `drop-shadow(-4px 0px 0px ${color})` }}> */}
-                {renderCategoryIcon(kb, "75px")}
-                {index !== layerKey.length - 1 && (
-                  <span style={{ margin: "2px" }}>+</span>
-                )}
-                {/* </Grid> */}
+        {layerKey.map((kb, index, array) => {
+          return (
+            <>
+              {/* <Grid item key={index}> */}
+              {/* <KBD style={{ filter: `drop-shadow(-4px 0px 0px ${color})` }}> */}
+              {renderCategoryIcon(kb, "75px")}
+              {index !== layerKey.length - 1 && (
+                <span style={{ margin: "2px" }}>+</span>
+              )}
+              {/* </Grid> */}
 
-                {/* {index !== layerKey.length - 1 && <Grid item>+</Grid>} */}
-              </>
-            );
-          })}
-        </SelectedCategoryKBD>
-        {/* </KBD> */}
-      </KbdKey>
-      {/* </Badge> */}
-    </Grid>
+              {/* {index !== layerKey.length - 1 && <Grid item>+</Grid>} */}
+            </>
+          );
+        })}
+      </SelectedCategoryKBD>
+      {/* </KBD> */}
+    </KbdKey>
   );
 };
 const categoryVariants = {

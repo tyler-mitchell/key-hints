@@ -20,6 +20,7 @@ import Editor, { createEditorStateWithText } from "draft-js-plugins-editor";
 import { EditorState } from "draft-js";
 import "draft-js-inline-toolbar-plugin/lib/plugin.css";
 import "draft-js-inline-toolbar-plugin/lib/plugin.css";
+import "./editorStyle.css";
 
 // import "draft-js-inline-toolbar-plugin/lib/plugin.css";
 // import "braft-editor/dist/index.css";
@@ -429,11 +430,14 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
                     placeHolder="enter key top label"
                     onChange={event => handleKeyDescription(event)}
                   /> */}
-                  <Editor
-                    editorState={editorState}
-                    plugins={plugins}
-                    onChange={onEditorStateChange}
-                  />
+                  <div className="editor">
+                    <Editor
+                      editorState={editorState}
+                      plugins={plugins}
+                      onChange={onEditorStateChange}
+                      textAlignment={"align-center"}
+                    />
+                  </div>
                   <InlineToolbar />
                 </Grid>
               </motion.div>

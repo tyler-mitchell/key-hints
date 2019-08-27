@@ -1,0 +1,13 @@
+.editor {
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  cursor: text;
+  padding: 16px;
+  border-radius: 2px;
+  margin-bottom: 2em;
+  width: 100%;
+  box-shadow: inset 0px 1px 8px -3px #ababab;
+  background: #fefefe;
+  text-align: center;
+
+}

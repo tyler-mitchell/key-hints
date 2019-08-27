@@ -1,6 +1,7 @@
 import palette from "./palette";
 
 export default {
+  fontFamily: "'Roboto', sans-serif",
   h1: {
     color: palette.text.primary,
     fontWeight: "500",
@@ -68,7 +69,6 @@ export default {
     lineHeight: "14px"
   },
   button: {
-    fontFamily: "B612, san-serif",
     color: palette.text.primary,
     fontSize: "14px"
   },
