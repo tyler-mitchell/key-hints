@@ -29,6 +29,7 @@
     "lodash-es": "^4.17.15",
     "lodash-move": "^1.1.1",
     "material-ui-popup-state": "^1.4.0",
+    "mui-layout": "^1.2.9",
     "polished": "^3.4.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",

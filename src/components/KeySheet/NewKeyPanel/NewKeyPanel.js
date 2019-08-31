@@ -163,7 +163,8 @@ const plugins = [inlineToolbarPlugin];
 const { InlineToolbar } = inlineToolbarPlugin;
 
 const KeyMenu = motion.custom(Grid);
-export const NewKeyPanel = ({ saveClicked, ...props }) => {
+export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
+  console.log(`⭐: NewKeyPanel -> parentHeight`, parentHeight);
   const [newKeys, setNewKeys] = useGlobalState("newKeys");
   const [addMode, setAddMode] = useGlobalState("addMode");
 
@@ -301,14 +302,14 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
   };
   return (
     <>
-      <AnimatedPanel>
+      <AnimatedPanel parentHeight={parentHeight}>
         {/* <Grid container alignItems="flex-start">  */}
         <Paper
           elevation={3}
           raised
           component={Grid}
           style={{
-            height: "440px",
+            height: parentHeight * 0.91,
             borderRadius: 15,
 
             padding: "25px"
@@ -336,7 +337,7 @@ export const NewKeyPanel = ({ saveClicked, ...props }) => {
           <AnimatePresence>
             {addMode && (
               <motion.div
-                animate={{ opacity: 1 }}
+                animate={{ opacity: 1, transition: { delay: 0.4 } }}
                 initial={{ opacity: 0 }}
                 exit={{ opacity: 0 }}
               >

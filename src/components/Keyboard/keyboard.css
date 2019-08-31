@@ -4,43 +4,12 @@
   
 }
 .marvel-device .screen {
-  width: 100%;
-  position: relative;
-  height: 100%;
-  z-index: 3;
-  background: white;
-  overflow: hidden;
-  display: block;
-  border-radius: 1px;
-  -webkit-box-shadow: 0 0 0 3px #111;
-  box-shadow: 0 0 0 3px #111;
+ 
 }
 
 
 .marvel-device.iphone-x {
-  width: '100%';
-  height: '100%';
-  padding: 12px 12px 12px 12px;
-  background: #f9f9f9;
-  border: 1px solid white;
-  /* box-shadow:  
-  0 0 0 2px rgb(221, 221, 221),
-  0 10px 0px 1px rgb(187, 187, 187), 
-    0 5px 50px 10px rgb(0, 0, 0); */
-
-    box-shadow: 
-    0 0 0 2px rgb(221, 221, 221),
-    0 3px 0px 3px  rgb(128, 128, 128),
-   
-    0 8px 2px 1px rgb(124, 124, 124),
-    0 9px 2px 1px rgb(190, 190, 190),
-    0 10px  2px 2px  rgba(0, 0, 0, .1),
-    0 12px  6px  rgba(0, 0, 0, .05),
-    0 13px  8px  rgba(0, 0, 0, .1),
-    0 16px 16px rgba(0, 0, 0, .1),
-    8px 10px 10px 0px rgba(0, 0, 0, .15),
-    8px 10px 10px 0px rgba(0, 0, 0, .15);
-  border-radius: 21px;
+ 
   
 }
 

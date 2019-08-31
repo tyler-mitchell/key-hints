@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import React, { Component } from "react";
+import { Switch, Route, Redirect } from "react-router-dom";
 
 // Views
 import {
@@ -17,18 +17,18 @@ import {
   ListItemText,
   Fab,
   ButtonIcon
-} from '@material-ui/core';
-import Dashboard from './Dashboard';
-import Login from './components/SignIn/Login';
-import Register from './components/SignIn/Register';
-import SignInDialog from './components/SignIn/SignInDialog';
-import clsx from 'clsx';
-import styled from 'styled-components';
-import useOutSideClick from './components/utils/useOutsideClick';
-import { FirebaseContext } from './components/utils/firebase';
-import { KeyTableContext } from './context/KeyTableContext';
+} from "@material-ui/core";
+import Dashboard from "./Dashboard";
+import Login from "./components/SignIn/Login";
+import Register from "./components/SignIn/Register";
+import SignInDialog from "./components/SignIn/SignInDialog";
+import clsx from "clsx";
+import styled from "styled-components";
+import useOutSideClick from "./components/utils/useOutsideClick";
+import { FirebaseContext } from "./components/utils/firebase";
+import { KeyTableContext } from "./context/KeyTableContext";
 
-import { useStyles } from './components/design-system/styles';
+import { useStyles } from "./components/design-system/styles";
 // import { useRouteStyles } from './Routes.styles';
 import {
   Menu as MenuIcon,
@@ -38,65 +38,65 @@ import {
   Mail as MailIcon,
   Close as CloseIcon,
   Add as AddIcon,
-  Folder as FolderIcon,
-} from '@material-ui/icons';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import { useGlobalState, clearKeySelection, setGlobalState } from './state';
+  Folder as FolderIcon
+} from "@material-ui/icons";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { useGlobalState, clearKeySelection, setGlobalState } from "./state";
 
-import { SheetDrawer } from './components/Menu/SheetDrawer';
+import { SheetDrawer } from "./components/Menu/SheetDrawer";
 
 const drawerWidth = 240;
 const DrawerTab = styled(Drawer)``;
 const useRouteStyles = makeStyles(theme => ({
   root: {
-    display: 'flex',
+    display: "flex"
   },
   appBar: {
-    fontSize: '90px',
-    height: '50px',
+    fontSize: "90px",
+    height: "50px",
     zIndex: theme.zIndex.drawer + 1,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center"
   },
   appBarShift: {
-    marginLeft: drawerWidth,
+    marginLeft: drawerWidth
   },
   menuButton: {
-    marginRight: 36,
+    marginRight: 36
   },
   hide: {
-    display: 'none',
+    display: "none"
   },
   drawer: {
     // width: drawerWidth,
-    height: '300px',
-    top: '100px',
+    height: "300px",
+    top: "100px",
 
     flexShrink: 0,
-    whiteSpace: 'nowrap',
+    whiteSpace: "nowrap"
   },
   paper: {
-    height: '870px',
-    marginBottom: '30px',
+    height: "870px",
+    marginBottom: "30px",
     width: drawerWidth,
 
     elevation: 9,
-    borderRadius: '0px 12px 12px 0px',
+    borderRadius: "0px 12px 12px 0px",
     top: 73,
 
-    whiteSpace: 'nowrap',
+    whiteSpace: "nowrap"
   },
   drawerTab: {
-    height: '60px',
-    width: '80px',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    height: "60px",
+    width: "80px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
 
     elevation: 9,
-    borderRadius: '0px 35px 35px 0px',
-    top: 75,
+    borderRadius: "0px 35px 35px 0px",
+    top: 75
   },
   // drawerOpen: {
   //   height: '300px',
@@ -118,16 +118,16 @@ const useRouteStyles = makeStyles(theme => ({
   //   }
   // },
   toolbar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 8px',
-    ...theme.mixins.toolbar,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    padding: "0 8px",
+    ...theme.mixins.toolbar
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
-  },
+    padding: theme.spacing(3)
+  }
 }));
 
 export default function Routes() {
@@ -171,7 +171,7 @@ export default function Routes() {
       <Switch>
         <Redirect exact from="/" to="/dashboard" />
 
-        <Route path="/dashboard" render={() => <Dashboard keyTable={{}} />} />
+        <Route path="/dashboard" render={() => <Dashboard />} />
         {/* <Route component={Login} exact path="/login" /> */}
         {/* <Route component={Register} exact path="/register" /> */}
       </Switch>

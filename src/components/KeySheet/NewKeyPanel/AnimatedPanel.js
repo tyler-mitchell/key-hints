@@ -1,9 +1,10 @@
-import React from 'react';
+import React from "react";
 
-import { useSpring } from 'react-spring';
-import { a } from 'react-spring';
+import { useSpring } from "react-spring";
+import { a } from "react-spring";
 
-import { useGlobalState } from '../../../state';
+import { useGlobalState } from "../../../state";
+import { motion } from "framer-motion";
 
 // const OFFSET = 420;
 const OFFSET = 103;
@@ -12,62 +13,128 @@ const INITIAL = 780;
 const SLOW = { mass: 1, tension: 200, friction: 14 };
 const FAST = { tension: 1000, friction: 100 };
 
-export const AnimatedPanel = ({ children }) => {
-  const [{ y }, set] = useSpring(() => ({ y: INITIAL }));
-  const [addMode] = useGlobalState('addMode');
+const variants = {
+  opened: i => ({
+    y: i * 0.22,
+    transition: {
+      type: "spring",
+      // damping: 50,
+      stiffness: 250,
+      // velocity: 800
+      damping: 20,
+      mass: 2
 
-  React.useEffect(() => {
-    if (addMode) {
-      set({ y: OFFSET, config: SLOW });
-      // setBoxShadow({boxShadow: "0 0px 0px rgba(0,0,0,0.25), 0 0px 0px rgba(0,0,0,0.22)"})
-    } else {
-      set({ y: 545, config: FAST });
+      // mass: 0.1
     }
-  }, [addMode, set]);
+  }),
+  closed: i => ({
+    y: i + i * 0.15,
+    transition: {
+      type: "spring",
+
+      stiffness: 200,
+      velocity: 150,
+      damping: 20,
+      mass: 2,
+      delay: 0.1
+      // restSpeed: 0.3
+      // mass: 0.1
+    }
+  })
+};
+export const AnimatedPanel = ({ parentHeight, children }) => {
+  console.log(`⭐: AnimatedPanel -> parentHeight`, parentHeight);
+  const [{ y }, set] = useSpring(() => ({ y: INITIAL }));
+  const [addMode] = useGlobalState("addMode");
+  const yINITIAL = parentHeight + parentHeight * 0.15;
+  const yOFFSET = 103;
+
   return (
     <>
-      <View
-        style={{ transform: y.interpolate(y => `translate3d(0,${y}px,0)`) }}
-      >
-        {children}
-      </View>
+      {parentHeight && (
+        <motion.div
+          // initial={{ y: yINITIAL }}
+          custom={parentHeight}
+          initial={false}
+          animate={addMode ? "opened" : "closed"}
+          variants={variants}
+          // transition={{
+          //   type: "spring",
+          //   // damping: 50,
+          //   stiffness: 200,
+          //   // velocity: 800
+          //   restDelta: 0.5,
+          //   restSpeed: 0.5
+          //   // mass: 0.1
+          // }}
+          style={{
+            position: "absolute",
+            pointerEvents: "auto",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0,
+            margin: "0 21px",
+            flex: 1,
+
+            zIndex: 5000,
+            // height: "600px",
+            background: "transparent",
+            borderTopRightRadius: 15,
+            borderTopLeftRadius: 15,
+            borderBottomRightRadius: 15,
+            borderBottomLeftRadius: 15,
+            // padding: 24,
+            userSelect: "none",
+
+            // clipPath: "inset(10px 20px 30px 40px)",
+            alignItems: "center"
+
+            // ...props.style
+          }}
+
+          // style={{ transform: y.interpolate(y => `translate3d(0,${y}px,0)`) }}
+        >
+          {children}
+        </motion.div>
+      )}
     </>
   );
 };
 
 export const View = props => (
-    // <div style={{ position: 'relative', clipPath: 'polygon(-50% -50%, 150% -50%, 100% 10%, 0% 10%)'}}>
+  // <div style={{ position: 'relative', clipPath: 'polygon(-50% -50%, 150% -50%, 100% 10%, 0% 10%)'}}>
 
-    <a.div
-      {...props}
-      style={{
-        position: 'absolute',
-        pointerEvents: 'auto',
-        left: 0,
-        right: 0,
-        bottom: 0,
-        top: 0,
-        margin: '0 21px',
-        flex: 1,
-        fontSize: '0.8em',
-        zIndex: 5000,
-        height: '600px',
-        background: 'transparent',
-        borderTopRightRadius: 15,
-        borderTopLeftRadius: 15,
-        borderBottomRightRadius: 15,
-        borderBottomLeftRadius: 15,
-        // padding: 24,
-        userSelect: 'none',
-        color: '#ffffffc0',
+  <motion.div
+    // {...props}
+    style={{
+      position: "absolute",
+      pointerEvents: "auto",
+      left: 0,
+      right: 0,
+      bottom: 0,
+      top: 0,
+      margin: "0 21px",
+      flex: 1,
 
-        // clipPath: "inset(10px 20px 30px 40px)",
-        alignItems: 'center',
+      zIndex: 5000,
+      // height: "600px",
+      background: "transparent",
+      borderTopRightRadius: 15,
+      borderTopLeftRadius: 15,
+      borderBottomRightRadius: 15,
+      borderBottomLeftRadius: 15,
+      // padding: 24,
+      userSelect: "none",
+      color: "#ffffffc0",
 
-        ...props.style
-      }}
-    >
-      {/* <div
+      // clipPath: "inset(10px 20px 30px 40px)",
+      alignItems: "center"
+
+      // ...props.style
+    }}
+  >
+    {/* <div
             style={{
               position: 'absolute',
               width: 50,
@@ -81,6 +148,6 @@ export const View = props => (
             }}
           /> */}
 
-      {props.children}
-    </a.div>
-  );
+    {props.children}
+  </motion.div>
+);

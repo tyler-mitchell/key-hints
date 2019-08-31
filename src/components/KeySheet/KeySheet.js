@@ -38,7 +38,7 @@ import { filter, isEmpty } from "lodash";
 import { initializeKeyMap } from "../Keyboard/KeyMapData";
 import { pickBy } from "lodash-es";
 import { bindTrigger, bindPopover } from "material-ui-popup-state";
-import { useMeasure } from "../hooks/helpers";
+import { useMeasure, useDimensions } from "../hooks/helpers";
 import {
   motion,
   AnimatePresence,
@@ -141,12 +141,13 @@ const CategoryPaper = styled(Paper)`
   }
 `;
 const CardStyle = styled(Card)`
-  height: 470px;
+  /* height: 100%; */
   position: relative;
+  width: 100%;
   z-index: 0;
   border-radius: 15;
-  pointer-events: "auto";
-  filter: "drop-shadow(16px 16px 20px red)";
+  /* pointer-events: "auto"; */
+  /* filter: "drop-shadow(16px 16px 20px red)"; */
 `;
 
 const AnimatedCard = motion.custom(CardStyle);
@@ -254,7 +255,8 @@ export const KeySheet = props => {
     setSaveClicked(saveClicked + 1);
   };
 
-  const [bind, { height, width }] = useMeasure();
+  const [ref, { x, y, width, height }] = useDimensions();
+  console.log(`⭐: height`, height);
 
   const { filter } = useSpring({ filter: addMode ? [6, 200] : [0, 100] });
   // const actions = useArray([
@@ -273,7 +275,7 @@ export const KeySheet = props => {
       {loadingUKTC && <Skeleton height={470} />}
 
       {curKeyTable && (
-        <div style={{ position: "relative" }} {...bind}>
+        <div style={{ position: "relative" }} ref={ref}>
           <AnimatedCard
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -330,6 +332,7 @@ export const KeySheet = props => {
             <Divider />
 
             <CardContent style={{ height: 360 }}>
+              Nothing to see
               {!isEmpty(filteredKeyTable) && (
                 // height: 360
                 <KeyList
@@ -353,15 +356,16 @@ export const KeySheet = props => {
 
               paddingBottom: "100px",
               // border: 'solid',
-              borderRadius: "10px 10px 200px 200px",
+              // borderRadius: "10px 10px 200px 200px",
 
               // clipPath: 'polygon(1% 0, 99% 0, 99% 99%, 1% 99% )',
-              clipPath: "polygon(0% 0, 100% 0, 100% 100%, 0% 100% )",
+              // clipPath: "polygon(0% 0, 100% 0, 100% 100%, 0% 100% )",
+              overflow: "hidden",
               left: 0,
               right: 0
             }}
           >
-            <NewKeyPanel saveClicked={saveClicked} />
+            <NewKeyPanel parentHeight={height} saveClicked={saveClicked} />
           </div>
 
           <motion.div

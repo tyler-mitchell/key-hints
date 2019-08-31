@@ -1,34 +1,34 @@
-import React, { useContext } from 'react';
-import app from 'firebase/app';
-import { KeyTable } from '../KeySheet/SheetData';
-import firebase from 'firebase';
-import 'firebase/auth';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useDocument, useCollection } from 'react-firebase-hooks/firestore';
-import { useGlobalState, setGlobalState } from '../../state';
+import React, { useContext } from "react";
+import app from "firebase/app";
+import { KeyTable } from "../KeySheet/SheetData";
+import firebase from "firebase";
+import "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useDocument, useCollection } from "react-firebase-hooks/firestore";
+import { useGlobalState, setGlobalState } from "../../state";
 
 export const FirebaseContext = React.createContext(null);
 
 export const FirebaseProvider = ({ children }) => {
   if (!app.apps.length) {
     app.initializeApp({
-      apiKey: 'AIzaSyCcVhJ72zFfHBG9dIUeo4O_RYg8wH7zHwI',
-      authDomain: 'key-hints.firebaseapp.com',
-      databaseURL: 'https://key-hints.firebaseio.com',
-      projectId: 'key-hints',
-      storageBucket: 'key-hints.appspot.com',
-      messagingSenderId: '879535977309',
-      appId: '1:879535977309:web:5e5035b25f4ca605'
+      apiKey: "AIzaSyCcVhJ72zFfHBG9dIUeo4O_RYg8wH7zHwI",
+      authDomain: "key-hints.firebaseapp.com",
+      databaseURL: "https://key-hints.firebaseio.com",
+      projectId: "key-hints",
+      storageBucket: "key-hints.appspot.com",
+      messagingSenderId: "879535977309",
+      appId: "1:879535977309:web:5e5035b25f4ca605"
     });
   }
   const db = app.firestore();
   const userAuthState = useAuthState(firebase.auth());
-
+  console.log(`⭐: FirebaseProvider -> userAuthState`, userAuthState);
 
   const vsCodeDocument = firebase
     .firestore()
-    .collection('KeyTables')
-    .doc('VS_Code');
+    .collection("KeyTables")
+    .doc("VS_Code");
 
   // const addSheet = (userId, sheetName) =>
   //   db.collection('KeyTables').add({
@@ -38,17 +38,13 @@ export const FirebaseProvider = ({ children }) => {
 
   const mySheet = async userId =>
     db
-      .collection('favs')
-      .where('user', '==', userId)
+      .collection("favs")
+      .where("user", "==", userId)
       .get();
 
   const logout = () => {
     firebase.auth().signOut();
-    
   };
-
-  
- 
 
   // const [keyCollection, loading, error] = useCollection(db.doc(`admins/${ user && user.email }`));
 
@@ -56,22 +52,16 @@ export const FirebaseProvider = ({ children }) => {
     userAuthState.user &&
     firebase
       .firestore()
-      .collection('UserKeyTables')
+      .collection("UserKeyTables")
       .doc(userAuthState.user.uid);
 
   const [keyCollection] = useDocument(collectionRef);
 
   // setGlobalState('keyTable', keyCollection);
 
-  
-  
- 
   // const [globalKeyTable] = useGlobalState('keyTable')
 
   // const [fbKeyTable, loading, error] = useDocument(vsCodeDocument);
-
- 
-
 
   const fbContext = {
     firebase,
@@ -80,9 +70,12 @@ export const FirebaseProvider = ({ children }) => {
     logout
   };
 
-  return <FirebaseContext.Provider value={fbContext}>{children}</FirebaseContext.Provider>;
+  return (
+    <FirebaseContext.Provider value={fbContext}>
+      {children}
+    </FirebaseContext.Provider>
+  );
 };
-
 
 // app.initializeApp(firebaseConfig);
 

@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import './keyboard.css';
-import { MouseIcon } from '../Key/Icons';
-import { Box, Flex } from '@rebass/grid';
-import Space from '@rebass/space';
-import Layer from '@material-ui/core/Box';
-import { Key } from '../Key/Key';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import React, { useState } from "react";
+import "./keyboard.css";
+import { MouseIcon } from "../Key/Icons";
+import { Box, Flex } from "@rebass/grid";
+import Space from "@rebass/space";
+import Layer from "@material-ui/core/Box";
+import { Key } from "../Key/Key";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 import {
   Collapse,
   FormControlLabel,
@@ -17,15 +17,15 @@ import {
   checked,
   Button,
   Grid
-} from '@material-ui/core';
-import Icon from '@material-ui/core/Icon';
-import SaveIcon from '@material-ui/icons/Save';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import styled from 'styled-components';
-import { BackgroundRGB } from './Keyboard.styles';
-import { FlashingProvider } from '../Key/FlashingContext';
+} from "@material-ui/core";
+import Icon from "@material-ui/core/Icon";
+import SaveIcon from "@material-ui/icons/Save";
+import RefreshIcon from "@material-ui/icons/Refresh";
+import styled from "styled-components";
+import { BackgroundRGB, OuterFrame } from "./Keyboard.styles";
+import { FlashingProvider } from "../Key/FlashingContext";
 
-import Mouse from './Mouse';
+import Mouse from "./Mouse";
 
 import {
   firstRow,
@@ -37,7 +37,7 @@ import {
   mw,
   excludedKeys,
   miscKeys
-} from './Layout';
+} from "./Layout";
 
 import {
   Row,
@@ -46,7 +46,7 @@ import {
   Cover,
   NumpadCover,
   NumpadInnerFrame
-} from './Keyboard.styles';
+} from "./Keyboard.styles";
 // import styled from '@xstyled/styled-components'
 
 import {
@@ -55,28 +55,14 @@ import {
   linearGradient,
   lighten,
   timingFunctions
-} from 'polished';
-import Container from '@material-ui/core/Container';
-import { EditRounded } from '@material-ui/icons';
-import { useSpring, animated, useTransition } from 'react-spring';
-import { motion } from 'framer-motion';
-import { AnimatedKeyContainer, KeyTop, BottomKeyChar } from '../Key/Key.styles';
-import { ThemeProvider } from '@material-ui/styles';
-import { createMuiTheme } from '@material-ui/core';
-
-const Highlight = styled(Layer)`
-  flex-wrap: wrap;
-
-  border-radius: inherit;
-  top: 1px;
-  padding: 0;
-  margin: 0;
-  position: absolute;
-  height: 100%;
-  width: inherit;
-`;
-
-Highlight.defaultProps = {};
+} from "polished";
+import Container from "@material-ui/core/Container";
+import { EditRounded } from "@material-ui/icons";
+import { useSpring, animated, useTransition } from "react-spring";
+import { motion } from "framer-motion";
+import { AnimatedKeyContainer, KeyTop, BottomKeyChar } from "../Key/Key.styles";
+import { ThemeProvider } from "@material-ui/styles";
+import { createMuiTheme } from "@material-ui/core";
 
 const GridItem = motion.custom(Grid);
 
@@ -108,14 +94,14 @@ const KeyRow = React.memo(({ row }) => {
   return Object.keys(row).map((keyName, i) => (
     <ThemeProvider theme={getMarginTheme(i)}>
       <GridItem
-        style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}
+        style={{ transform: "translateZ(0)", backfaceVisibility: "hidden" }}
         item
         whileTap={{
           scale: 0.98,
-          y: '2px',
+          y: "2px",
 
           transition: {
-            type: 'spring',
+            type: "spring",
             damping: 100,
             stiffness: 400
           }
@@ -123,16 +109,16 @@ const KeyRow = React.memo(({ row }) => {
       >
         <Key
           item
-          label={row[keyName]['label']}
+          label={row[keyName]["label"]}
           key={i}
           KeyComponent={AnimatedKeyContainer}
           margin={calculateMargin(i, len)}
-          uniqueKeyName={keyName in excludedKeys ? null : row[keyName]['label']}
+          uniqueKeyName={keyName in excludedKeys ? null : row[keyName]["label"]}
           keyName={keyName}
-          wt={`${row[keyName]['size']}`}
+          wt={`${row[keyName]["size"]}`}
           ht={`${keySize}`}
           keySize={keySize}
-          KeyChar={row[keyName]['KeyChar']}
+          KeyChar={row[keyName]["KeyChar"]}
           borderWidth="10px 10px 20px 10px"
         />
       </GridItem>
@@ -148,10 +134,10 @@ const renderMiscKeys = row => {
       style={{}}
       whileTap={{
         scale: 0.98,
-        y: '2px',
+        y: "2px",
 
         transition: {
-          type: 'spring',
+          type: "spring",
           damping: 100,
           stiffness: 400
         }
@@ -169,7 +155,7 @@ const renderMiscKeys = row => {
         ht={`${keySize - 10}`}
         borderWidth="5px 5px 10px 5px"
         keySize={keySize}
-        KeyChar={row[keyName]['KeyChar']}
+        KeyChar={row[keyName]["KeyChar"]}
       />
     </GridItem>
   ));
@@ -182,7 +168,7 @@ const theme = createMuiTheme({
         margin: 0
       },
       item: {
-        margin: '0 1.5px'
+        margin: "0 1.5px"
       }
     }
   }
@@ -194,7 +180,7 @@ const themeStart = createMuiTheme({
         margin: 0
       },
       item: {
-        marginRight: '1.5px'
+        marginRight: "1.5px"
       }
     }
   }
@@ -206,7 +192,7 @@ const themeEnd = createMuiTheme({
         margin: 0
       },
       item: {
-        marginLeft: '1.5px'
+        marginLeft: "1.5px"
       }
     }
   }
@@ -218,7 +204,7 @@ const rowTheme = createMuiTheme({
         margin: 0
       },
       item: {
-        margin: '0 1.5px'
+        margin: "0 1.5px"
       }
     }
   }
@@ -231,14 +217,15 @@ const KeyboardContainer = () => {
   // },[editMode]);
 
   return (
-    <Cover 
-    initial={{opacity: 0}}
-    transition={{delay: 1}}
-    animate={{opacity: 1}}
-    fixed className="marvel-device iphone-x">
-      <div className="inner-shadow" style={{ opacity: 0.5 }} />
+    <Cover
+      initial={{ opacity: 0 }}
+      transition={{ delay: 1 }}
+      animate={{ opacity: 1 }}
+      fixed
+    >
+      {/* <div className="inner-shadow" style={{ opacity: 0.5 }} /> */}
       <FlashingProvider>
-        <div className="screen">
+        <OuterFrame>
           <InnerFrame
             container
             justify="center"
@@ -253,7 +240,7 @@ const KeyboardContainer = () => {
               direction="row"
               wrap="nowrap"
               item
-              xs={11}
+              xs={12}
               zIndex={1}
             >
               <KeyRow row={firstRow} />
@@ -266,7 +253,7 @@ const KeyboardContainer = () => {
               item
               // justify="space-evenly"
               // alignItems="stretch"
-              xs={11}
+              xs={12}
               zIndex={2}
             >
               <KeyRow row={secondRow} />
@@ -277,7 +264,7 @@ const KeyboardContainer = () => {
               direction="row"
               wrap="nowrap"
               item
-              xs={11}
+              xs={12}
               // justify="space-evenly"
 
               zIndex={3}
@@ -292,7 +279,7 @@ const KeyboardContainer = () => {
               item
               // justify="space-evenly"
               // alignItems="stretch"
-              xs={11}
+              xs={12}
               zIndex={4}
             >
               <KeyRow row={fourthRow} />
@@ -305,14 +292,14 @@ const KeyboardContainer = () => {
               item={true}
               // justify="space-evenly"
               // alignItems="stretch"
-              xs={11}
+              xs={12}
               zIndex={5}
             >
               <KeyRow row={fifthRow} />
             </Row>
             {/* </ThemeProvider> */}
           </InnerFrame>
-        </div>
+        </OuterFrame>
       </FlashingProvider>
     </Cover>
   );

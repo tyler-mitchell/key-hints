@@ -38,7 +38,7 @@ export default function KeyTableProvider({ children }) {
   );
 
   React.useEffect(() => {
-    if (docIndex !== null) {
+    if (docIndex !== null && user && userKTC) {
       const curDoc = userKTC.docs[docIndex];
       const docChanges = userKTC.docChanges();
       const len = docChanges.length;
@@ -55,6 +55,8 @@ export default function KeyTableProvider({ children }) {
       })();
 
       setCurKeyTable(newDoc ? newDoc : curDoc);
+    } else if (!user) {
+      setCurKeyTable(null);
     }
   }, [userKTC, docIndex, loadingUKTC]);
 
