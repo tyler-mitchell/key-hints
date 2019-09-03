@@ -33,6 +33,7 @@
     "polished": "^3.4.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
+    "react-firebase-file-uploader": "^2.4.2",
     "react-firebase-hooks": "^2.1.0",
     "react-firebaseui": "^4.0.0",
     "react-hanger": "^2.1.0",

@@ -23,48 +23,15 @@ export const FirebaseProvider = ({ children }) => {
   }
   const db = app.firestore();
   const userAuthState = useAuthState(firebase.auth());
-  console.log(`⭐: FirebaseProvider -> userAuthState`, userAuthState);
-
-  const vsCodeDocument = firebase
-    .firestore()
-    .collection("KeyTables")
-    .doc("VS_Code");
-
-  // const addSheet = (userId, sheetName) =>
-  //   db.collection('KeyTables').add({
-  //     keyDoc: sheetName,
-  //     user: userId
-  //   });
-
-  const mySheet = async userId =>
-    db
-      .collection("favs")
-      .where("user", "==", userId)
-      .get();
+  const storage = firebase.storage();
 
   const logout = () => {
     firebase.auth().signOut();
   };
 
-  // const [keyCollection, loading, error] = useCollection(db.doc(`admins/${ user && user.email }`));
-
-  const collectionRef =
-    userAuthState.user &&
-    firebase
-      .firestore()
-      .collection("UserKeyTables")
-      .doc(userAuthState.user.uid);
-
-  const [keyCollection] = useDocument(collectionRef);
-
-  // setGlobalState('keyTable', keyCollection);
-
-  // const [globalKeyTable] = useGlobalState('keyTable')
-
-  // const [fbKeyTable, loading, error] = useDocument(vsCodeDocument);
-
   const fbContext = {
     firebase,
+    storage,
     db,
     userAuthState,
     logout

@@ -331,8 +331,8 @@ export const KeySheet = props => {
             />
             <Divider />
 
-            <CardContent style={{ height: 360 }}>
-              Nothing to see
+            <CardContent style={{ height: 360, marginBottom: "30px" }}>
+              {isEmpty(filteredKeyTable) && "Keysheet is empty"}
               {!isEmpty(filteredKeyTable) && (
                 // height: 360
                 <KeyList
