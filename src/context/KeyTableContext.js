@@ -18,7 +18,9 @@ export const KeyTableContext = React.createContext(null);
 export const useKeyTable = () => React.useContext(KeyTableContext);
 
 export default function KeyTableProvider({ children }) {
-  const { firebase, userAuthState } = React.useContext(FirebaseContext);
+  const { firebase, userAuthState, storage } = React.useContext(
+    FirebaseContext
+  );
   const [user, loading, error] = userAuthState;
 
   const userKTColRef =
@@ -101,19 +103,28 @@ export default function KeyTableProvider({ children }) {
     setGlobalState("allKeys", keys);
   };
 
-  const addNewKeyToFirebase = newKey => {
+  const addNewKeyToFirebase = async (newKey, image) => {
     console.log("------------------ Adding New Key------------------------");
+    console.log(`⭐: addNewKeyToFirebase -> image`, image);
 
     const keyID = firebase.firestore.Timestamp.now().toMillis();
-    const keyNum = Object.keys(curKeyTable.data().table).length;
+
+    const url = image && (await handleUpload(image, keyID));
+    if (url) {
+    }
+    const newShortcut = url ? { ...newKey, url } : newKey;
+    console.log(`⭐: addNewKeyToFirebase -> newShortcut`, newShortcut);
+
     const update = {};
-    update[`table.${keyID}`] = newKey;
+    update[`table.${keyID}`] = newShortcut;
 
     curKeyTable.ref.update(update);
+
     setGlobalState("activeKeys", newKey.keys.key1);
     setGlobalState("selectedItem", keyID);
     setGlobalState("newKeys", v => ({ ...v, keys: { key1: {} } }));
     setCurShortcutObjectKey(keyID);
+    setGlobalState("addMode", false);
   };
   const updateKeyToFirebase = newKey => {
     const update = {};
@@ -128,6 +139,54 @@ export default function KeyTableProvider({ children }) {
     setSheetAdded(true);
   };
 
+  const handleUpload = (image, fileName) => {
+    const uploadTask = storage.ref(`key-sheet-images/${fileName}`).put(image);
+    // const downloadURL = await storage
+    //   .ref("key-sheet-images")
+    //   .child(fileName)
+    //   .getDownloadURL();
+    const downloadURL = uploadTask
+      .then(snapshot => {
+        return snapshot.ref.getDownloadURL(); // Will return a promise with the download link
+      })
+      .then(downloadURL => {
+        console.log(
+          `Successfully uploaded file and got download link - ${downloadURL}`
+        );
+        return downloadURL;
+      })
+      .catch(error => {
+        console.log(`Failed to upload file and get link - ${error}`);
+        return null;
+      });
+
+    return downloadURL;
+    //   uploadTask.on(
+    //     "state_changed",
+    //     snapshot => {
+    //       // progress function ...
+    //       const uploadProgress = Math.round(
+    //         (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+    //       );
+    //       // this.setState({ uploadProgress });
+    //     },
+    //     error => {
+    //       // Error function ...
+    //       console.log(error);
+    //     },
+    //     async () => {
+    //       // complete function ...
+    //       url = await storage
+    //         .ref("key-sheet-images")
+    //         .child(fileName)
+    //         .getDownloadURL();
+    //       // .then(url => {
+    //       //   this.setState({ url });
+    //       // });
+    //     }
+    //   );
+    //   return url;
+  };
   const deleteKeySheet = index => {
     setGlobalState("sheetNames", {});
     userKTC.docs[index].ref.delete();

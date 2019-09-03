@@ -64,6 +64,7 @@ import { Button } from "@material-ui/core";
 import _ from "lodash";
 import { motion, AnimatePresence } from "framer-motion";
 import { AutocompleteHashtags } from "./CategoryAutoComplete/CategoryInput";
+import Upload from "./Upload";
 import { AddPhotoAlternateRounded } from "@material-ui/icons";
 import { Avatar } from "@material-ui/core";
 import { Container } from "@material-ui/core";
@@ -83,11 +84,6 @@ import { CardHeader, AppBar } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
-  avatar: {
-    margin: 10,
-    color: "#fff",
-    backgroundColor: theme.palette.primary.main
-  },
   descriptionField: {
     padding: 0,
     background: "white"
@@ -186,7 +182,7 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
     description: null,
     keyDescription: null
   });
-
+  const [shortcutImage, setShortcutImage] = React.useState(null);
   const handleDescriptionChange = event => {
     const description = event.target.value;
     setKeyInfo(v => ({ ...v, description }));
@@ -248,6 +244,8 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
 
   React.useEffect(() => {
     if (saveClicked !== 0) {
+      // trigger upload
+      // save file to state
       if (Object.keys(newKeys.keys.key1).length === 0) {
         setSnackbarMessage("Empty shortcut");
         setSnackbarVariant("error");
@@ -280,13 +278,19 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
       });
     }
   }, [addMode]);
-
-  const handleSaveKeyClick = () => {
+  function handleUploadImage(fileUploaderRef, file) {
+    fileUploaderRef.current.startUpload();
+  }
+  function caserUpper(val) {
+    return new Promise((resolve, reject) => {
+      resolve(val.toUpperCase());
+    });
+  }
+  async function handleSaveKeyClick() {
     console.log(`⭐: handleSaveKeyClick -> keyInfo`, keyInfo);
     const newKey = { ...newKeys, ...keyInfo };
-    addNewKeyToFirebase(newKey);
-    setAddMode(false);
-  };
+    addNewKeyToFirebase(newKey, shortcutImage);
+  }
   // Snack Bar
 
   const [snackbarVariant, setSnackbarVariant] = React.useState("info");
@@ -352,12 +356,7 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
                 >
                   <Grid container item alignItems="center" justify="flex-start">
                     <Grid item>
-                      <Avatar
-                        className={classes.avatar}
-                        style={{ marginRight: "10px" }}
-                      >
-                        <AddPhotoAlternateRounded />
-                      </Avatar>
+                      <Upload setShortcutImage={setShortcutImage} />
                     </Grid>
                     <Grid item xs={10}>
                       <InputBase
