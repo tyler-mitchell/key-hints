@@ -19,6 +19,12 @@ import { CircularProgress } from "@material-ui/core";
 import { green } from "@material-ui/core/colors";
 import styled from "styled-components";
 import { lighten } from "polished";
+import { InputBase } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
+import { Popper } from "@material-ui/core";
+import { Tabs, Tab } from "@material-ui/core";
+
+import { InsertLink } from "@material-ui/icons";
 import {
   AddRounded as AddIcon,
   DeleteRounded as DeleteIcon
@@ -53,7 +59,26 @@ const useStyles = makeStyles(theme => ({
 
     zIndex: 2
   },
+  tabRoot: {
+    textTransform: "none",
+    minWidth: 32,
+    // margin: 0,
+    // maxWidth: 72,
+    fontWeight: theme.typography.fontWeightRegular
+  },
+  linkInput: {
+    backgroundColor: theme.palette.grey[300],
+    borderRadius: 4,
+    fontSize: "14px",
 
+    textJustify: "center",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "0 5px 0 5px",
+    width: "116px",
+    height: "36px"
+  },
   fabRoot: {
     width: 20,
     alignSelf: "baseline",
@@ -92,7 +117,7 @@ const UploadMenuContainer = motion.custom(styled(Fab)`
 `);
 
 const Upload = props => {
-  const { setShortcutImage } = props;
+  const { setShortcutImage, setSnackbarMessage, setSnackbarOpen } = props;
   const [uploadState, setUploadState] = React.useState({
     filename: null,
     downloadURL: null,
@@ -102,91 +127,19 @@ const Upload = props => {
     uploadProgress: 0,
     file: null
   });
-  const { storage } = React.useContext(FirebaseContext);
   const classes = useStyles();
   const fileUploaderRef = React.useRef(null);
 
-  const handleUploadStart = () => {
-    console.log(`⭐: fileUploaderRef`, fileUploaderRef.current);
-    setUploadState({
-      ...uploadState,
-      isUploading: true,
-      uploadProgress: 0
-    });
-  };
-
-  const handleProgress = progress => {
-    console.log(`⭐: Upload -> progress`, progress);
-    setUploadState({
-      ...uploadState,
-      uploadProgress: progress
-    });
-  };
-
-  const handleUploadError = error => {
-    console.log(`⭐: Upload -> error`, error);
-    setUploadState({
-      ...uploadState,
-      isUploading: false
-      // Todo: handle error
-    });
-  };
-  const handleUploadSuccess = async filename => {
-    console.log(
-      `⭐:handleUploadSuccess: fileUploaderRef.current`,
-      fileUploaderRef
-    );
-    const downloadURL = await storage
-      .ref("key-sheet-images")
-      .child(filename)
-      .getDownloadURL();
-
-    console.log(`⭐: BEFORE TIMEOUT: isUploading`, uploadState.isUploading);
-
-    console.log(`⭐: TIMEOUT: isUploading`, uploadState.isUploading);
-    setUploadState({
-      filename: filename,
-      image: null,
-      downloadURL: downloadURL,
-      uploadProgress: 100,
-      isUploading: false
-    });
-  };
+  const popupState = usePopupState({
+    variant: "popover",
+    popupId: "demoPopover"
+  });
 
   const handleChange = e => {
     if (e.target.files[0]) {
       const image = e.target.files[0];
       this.setState(() => ({ image }));
     }
-  };
-
-  const handleUpload = () => {
-    const { image } = uploadState;
-    const uploadTask = storage.ref(`key-sheet-images/${image.name}`).put(image);
-    uploadTask.on(
-      "state_changed",
-      snapshot => {
-        // progress function ...
-        const uploadProgress = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        );
-        this.setState({ uploadProgress });
-      },
-      error => {
-        // Error function ...
-        console.log(error);
-      },
-      () => {
-        // complete function ...
-        storage
-          .ref("key-sheet-images")
-          .child(image.name)
-          .getDownloadURL()
-          .then(url => {
-            this.setState({ url });
-          });
-      }
-    );
   };
 
   const customOnChangeHandler = event => {
@@ -217,7 +170,11 @@ const Upload = props => {
   };
   const fileInputRef = React.useRef(null);
   const [showUploader, setShowUploader] = React.useState(false);
-  const [imgExists, setImgExists] = React.useState(false);
+  const [value, setValue] = React.useState(0);
+  const linkInputRef = React.useRef();
+  function handleTabChange(event, newValue) {
+    setValue(newValue);
+  }
   return (
     <motion.div
       onHoverStart={() => {
@@ -227,13 +184,15 @@ const Upload = props => {
         setShowUploader(false);
       }}
       style={{
-        display: "flex"
+        display: "flex",
+        position: "relative"
         // justifyContent: "center"
         // alignItems: "center"
       }}
     >
       {/* <Button onClick={startUploadManually}>Manual Upload</Button> */}
       <UploadMenuContainer
+        {...bindHover(popupState)}
         color="primary"
         component="label"
         classes={{ root: classes.fabRoot, primary: classes.fabPrimary }}
@@ -251,30 +210,95 @@ const Upload = props => {
         )}
 
         <AddIcon style={{ fontSize: "18px" }} />
-        <input
-          accept="image/*"
-          type="file"
-          name="file-input"
-          onChange={customOnChangeHandler}
-          hidden
-          ref={fileInputRef}
-        />
-        <FileUploader
-          accept="image/*"
-          disabled={true}
-          hidden
-          // as="button"
-          name="key-sheet-icon"
-          randomizeFilename
-          storageRef={storage.ref("key-sheet-images")}
-          onUploadStart={handleUploadStart}
-          onUploadError={handleUploadError}
-          onUploadSuccess={handleUploadSuccess}
-          onProgress={handleProgress}
-          onChange={customOnChangeHandler}
-          ref={fileUploaderRef}
-        />
+        <Popover
+          {...bindPopover(popupState)}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "left"
+          }}
+          transformOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+
+          // disableRestoreFocus
+        >
+          <Paper
+            style={
+              {
+                // justifyContent: "center",
+                // display: "flex",
+                // flexDirection: "column",
+                // alignItems: "center"
+              }
+            }
+          >
+            <Tabs
+              value={value}
+              indicatorColor="primary"
+              textColor="primary"
+              onChange={handleTabChange}
+              aria-label="disabled tabs example"
+              variant="fullWidth"
+              style={{
+                width: "150px"
+              }}
+            >
+              <Tab classes={{ root: classes.tabRoot }} label="Upload" />
+              <Tab classes={{ root: classes.tabRoot }} label="Link" />
+            </Tabs>
+            <div
+              style={{
+                width: "150px",
+                display: "flex",
+                padding: "5px",
+                height: "50px",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            >
+              {value === 0 && (
+                <>
+                  <Button
+                    variant="contained"
+                    component="label"
+                    color="primary"
+                    style={{ textTransform: "none" }}
+                  >
+                    Choose a File
+                    <input
+                      accept="image/*"
+                      type="file"
+                      name="file-input"
+                      onChange={customOnChangeHandler}
+                      hidden
+                      ref={fileInputRef}
+                    />
+                  </Button>
+                </>
+              )}
+              {value === 1 && (
+                <InputBase
+                  className={classes.linkInput}
+                  ref={linkInputRef}
+                  placeholder="Paste a link"
+                  onChange={e => {
+                    setUploadState({
+                      ...uploadState,
+                      previewImage: e.target.value
+                    });
+                    console.log(`⭐: uploadState`, uploadState.previewImage);
+                  }}
+                  inputProps={{
+                    "aria-label": "naked"
+                  }}
+                />
+              )}
+            </div>
+          </Paper>
+        </Popover>
       </UploadMenuContainer>
+
       {uploadState.previewImage && (
         <UploadMenuContainer
           color="secondary"
@@ -307,7 +331,12 @@ const Upload = props => {
               // e.stopPropagation();
 
               console.log(`⭐: fileUploaderRef`, fileUploaderRef.current);
-              fileInputRef.current.value = "";
+              if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+              }
+              if (linkInputRef.current) {
+                linkInputRef.current.value = "";
+              }
               setShortcutImage(null);
               setUploadState({
                 ...uploadState,
@@ -319,10 +348,18 @@ const Upload = props => {
           />
         </UploadMenuContainer>
       )}
+
       <AnimatedAvatar
         src={uploadState.previewImage}
         classes={{ root: classes.avatar, img: classes.img }}
         component="label"
+        imgProps={{
+          onError: e => {
+            setSnackbarMessage("Could not find image");
+            setSnackbarOpen(true);
+            console.log(`⭐: "SHITTT"`, e.target);
+          }
+        }}
         style={{ marginRight: "10px", position: "relative" }}
         animate={
           uploadState.isUploading ? { padding: "9px" } : { padding: "5px" }

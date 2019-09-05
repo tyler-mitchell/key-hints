@@ -293,7 +293,7 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
   }
   // Snack Bar
 
-  const [snackbarVariant, setSnackbarVariant] = React.useState("info");
+  const [snackbarVariant, setSnackbarVariant] = React.useState("error");
   const [snackbarRef] = useGlobalState("snackbarRef");
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
@@ -356,7 +356,11 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
                 >
                   <Grid container item alignItems="center" justify="flex-start">
                     <Grid item>
-                      <Upload setShortcutImage={setShortcutImage} />
+                      <Upload
+                        setSnackbarOpen={setSnackbarOpen}
+                        setShortcutImage={setShortcutImage}
+                        setSnackbarMessage={setSnackbarMessage}
+                      />
                     </Grid>
                     <Grid item xs={10}>
                       <InputBase
@@ -404,41 +408,6 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
                     style={{ position: "absolute" }}
                     newKeys={newKeys.keys}
                   />
-                </Grid>
-                <Grid item style={{ paddingTop: "15px" }}>
-                  {/* <InputBase
-                    classes={classes.keyDescription}
-                    style={{
-                      position: "relative",
-                      borderRadius: "10px",
-                      border: "solid 2px rgba(220,220,220,0.2)",
-                      fontSize: "24px"
-                    }}
-                    inputProps={{
-                      min: 0,
-                      style: {
-                        textAlign: "center"
-                      }
-                    }}
-                    fullWidth
-                    value={keyTopText}
-                    variant="subtitle1"
-                    color="textSecondary"
-                    multiline
-                    rows={1}
-                    rowsMax={10}
-                    placeHolder="enter key top label"
-                    onChange={event => handleKeyDescription(event)}
-                  /> */}
-                  <div className="editor">
-                    <Editor
-                      editorState={editorState}
-                      plugins={plugins}
-                      onChange={onEditorStateChange}
-                      textAlignment={"align-center"}
-                    />
-                  </div>
-                  <InlineToolbar />
                 </Grid>
               </motion.div>
             )}
