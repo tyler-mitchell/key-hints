@@ -202,35 +202,21 @@ export const Key = ({
 
   // Functions
   const addItem = key => {
-    const endIndex = _.size(newKeys.keys.key1);
-    // const individualKeys = { ...newKeys.keys['key1'], [index]: key };
-    // const keys = { key1: individualKeys };
-    // setNewKeys(p => ({ ...p, keys }));
-    setIndex(endIndex);
-    setNewKeys(
-      produce(v => {
-        v.keys["key1"][endIndex] = key;
-      })
-    );
+    const index = _.size(newKeys.keys.key1);
+    const individualKeys = { ...newKeys.keys["key1"], [index]: key };
+    const keys = { key1: individualKeys };
+    setNewKeys(p => ({ ...p, keys }));
   };
-  const removeItem = targetKey => {
-    // const key1 = newKeys.keys.key1;
-    // const newObj = _.filter(key1, function(v) {
-    //   return v !== key;
-    // });
+  const removeItem = key => {
+    const key1 = newKeys.keys.key1;
+    const newObj = _.filter(key1, function(v) {
+      return v !== key;
+    });
 
-    setNewKeys(
-      produce(v => {
-        delete v.keys["key1"][index];
-        // v.splice(v.findIndex(todo => todo.id === "id1"), 1)
-      })
-    );
-    setIndex(null);
-    // const keys = { key1: newObj };
+    const keys = { key1: newObj };
 
-    // setNewKeys(p => ({ ...p, keys }));
+    setNewKeys(p => ({ ...p, keys }));
   };
-
   const toggleKey = isActive => {
     if (isActive) {
       removeItem(label);
@@ -314,26 +300,26 @@ export const Key = ({
               {keyName in iconLabels ? iconLabels[keyName] : label}
             </KeyChar>
           )}
-          {/* {keyMapMode && (
-              <KeyCharCenter
-                ref={keyTopTextRef}
-                // style={{ transform }}
-  
-                // style={{
-                //   // color: x.interpolate(x=>`rgba(0, 0, 0, ${x})`),
-                //   // height: ht * 0.7 * 0.95,
-                //   // width: (wt - 17) * 0.95,
-                //   position: "absolute",
-                //   textAlign: "center",
-                //   alignItems: "center",
-                //   justifyContent: "center",
-                //   overflow: "hidden",
-                //   fontFamily: "Karla, sans-serif"
-                // }}
-              >
-                <KeyText active={active.value} keyTopText={keyTopText} />
-              </KeyCharCenter>
-            )} */}
+          {keyMapMode && (
+            <KeyCharCenter
+              ref={keyTopTextRef}
+              // style={{ transform }}
+
+              // style={{
+              //   // color: x.interpolate(x=>`rgba(0, 0, 0, ${x})`),
+              //   // height: ht * 0.7 * 0.95,
+              //   // width: (wt - 17) * 0.95,
+              //   position: "absolute",
+              //   textAlign: "center",
+              //   alignItems: "center",
+              //   justifyContent: "center",
+              //   overflow: "hidden",
+              //   fontFamily: "Karla, sans-serif"
+              // }}
+            >
+              <KeyText active={active.value} keyTopText={keyTopText} />
+            </KeyCharCenter>
+          )}
 
           {/* {(!keyMapMode) && <KeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</KeyChar>} */}
         </KeyTop>
