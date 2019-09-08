@@ -14,6 +14,7 @@ import {
   clearKeySelection
 } from "../../../state";
 
+import Select from "react-select";
 import styled from "styled-components";
 
 import { Folder as FolderIcon } from "@material-ui/icons";
@@ -38,6 +39,8 @@ import { Checkbox } from "@material-ui/core";
 import { createMuiTheme } from "@material-ui/core";
 import useBoolean from "react-hanger/useBoolean";
 import { motion } from "framer-motion";
+import { lighten } from "polished";
+import { useTheme } from "@material-ui/core";
 import { Snackbar } from "@material-ui/core";
 import { Portal } from "@material-ui/core";
 import { Menu, MenuItem } from "@material-ui/core";
@@ -102,12 +105,13 @@ export const CategoryMenu = () => {
   const [checkedIndex, setCheckedIndex] = React.useState(0);
   const [showMultipleLayers, setShowMultipleLayers] = React.useState(true);
   const [layerIndices, setLayerIndices] = React.useState(initialLayerIndices);
-  console.log(`⭐: CategoryMenu -> initialLayerIndices`, initialLayerIndices);
+
   const [layerState, setState] = React.useState({ index: 0, layer: null });
 
   // Portal ref
   const container = React.useRef(null);
   const didMount = useDidMount();
+  const [options, setOptions] = React.useState(getOptions(tableCategories));
 
   const [activeLayers, setActiveLayers] = useGlobalState("activeLayers");
   React.useEffect(() => {
@@ -123,8 +127,6 @@ export const CategoryMenu = () => {
           setActiveLayers(newActiveLayers);
           setLayerIndices(newIndices);
         } else {
-          console.log(`⭐: CategoryMenu -> layerKeys`, layerKeys);
-          console.log(`⭐: CategoryMenu -> allLayers`, allLayers);
           updateActiveSingleLayer(allLayers, layerKeys, layerState.index);
           setLayerIndices(new Set([layerState.index]));
         }
@@ -146,23 +148,55 @@ export const CategoryMenu = () => {
     setCheckedIndex(index);
     updateActiveSingleLayer(allLayers, layerKeys, index);
   }
-  function handleListCategoryClick(event, index, category) {
+  function handleListCategoryClick(option, index, category) {
     clearKeySelection();
 
-    setSelectedIndex(index);
-    setCurCategory(category);
+    // setSelectedIndex(index);
+    setCurCategory(option.value);
     setGlobalState("addMode", false);
     popupState.setOpen(false);
 
     listRef.current && listRef.current.resetAfterIndex(0, false);
   }
 
+  const theme = useTheme();
+
   function handleMultiLayerOption() {
     setShowMultipleLayers(!showMultipleLayers);
   }
-  return [
-    <div>
-      <ButtonGroup
+  const onCategoryChange = option => {};
+  return (
+    <>
+      <Select
+        // formatOptionLabel={getLabel}
+        isSearchable={false}
+        options={tableCategories}
+        instanceId="HEllo"
+        formatOptionLabel={({ color, label, data, size }) => (
+          <div style={{ display: "flex" }}>
+            <span
+              style={{
+                backgroundColor: color,
+                borderRadius: "15px",
+                alignSelf: "flex-start",
+                padding: "5px 12px"
+              }}
+            >
+              {label}
+            </span>
+          </div>
+        )}
+        // onChange={option => {
+        //   if (option && !Array.isArray(option)) {
+        //     // onChange(option);
+        //   }
+        // }}
+        // value={null}
+        onChange={handleListCategoryClick}
+        placeholder="🎉 All"
+        styles={headerSelectStyles(theme)}
+      />
+      {/* <ButtonGroup
         disableRipple={true}
         style={{ height: "50px" }}
         disableFocusRipple
@@ -207,7 +241,7 @@ export const CategoryMenu = () => {
             ))}
           </Button>
         )}
-      </ButtonGroup>
+      </ButtonGroup> */}
       <Popper
         // className={classes.popper}
         getContentAnchorEl={null}
@@ -282,7 +316,7 @@ export const CategoryMenu = () => {
             </MenuItem>
             {/* <Divider /> */}
 
-            {tableCategories.map((category, index) => (
+            {/* {tableCategories.map((category, index) => (
               <MenuItem
                 button
                 onClick={e => handleListCategoryClick(e, index, category.value)}
@@ -293,10 +327,78 @@ export const CategoryMenu = () => {
                   <ListItemText primary={startCase(toLower(category.value))} />
                 </Badge>
               </MenuItem>
-            ))}
+              
+            ))} */}
           </>
         )}
       </Popper>
+    </>
+  );
+};
+
+function getLabel({ icon, label }) {
+  return (
+    <div style={{ alignItems: "center", display: "flex" }}>
+      <span style={{ fontSize: 18, marginRight: "0.5em" }}>{icon}</span>
+      <span style={{ fontSize: 14 }}>{label}</span>
     </div>
-  ];
+  );
+}
+
+const headerSelectStyles = theme => {
+  return {
+    control: ({ isFocused, ...base }) => ({
+      ...base,
+      height: "40px",
+      overflow: "visible",
+      // backgroundClip: "padding-box",
+      minHeight: 35,
+      borderColor: "rgba(0,0,0,0.1)",
+      boxShadow: isFocused
+        ? `0 0 0 10px ${theme.palette.action.selected} `
+        : null,
+
+      ":hover": {
+        borderColor: "rgba(0,0,0,0.2)"
+      }
+    }),
+    indicatorsContainer: provided => ({
+      ...provided,
+      height: 30
+    }),
+    valueContainer: base => ({
+      ...base,
+      fontWeight: "bold",
+      height: 30,
+      maxHeight: 30
+    }),
+    option: (base, { data, isSelected, isDisabled }) => ({
+      ...base,
+      padding: "4px 12px",
+      background: isSelected ? theme.palette.primary.main : "white",
+      ":hover": {
+        background: !isSelected && lighten(0.3, theme.palette.primary.main)
+      },
+      ":active": {
+        ...base[":active"],
+        backgroundColor:
+          !isDisabled &&
+          (isSelected
+            ? data.color
+            : lighten(0.2, theme.palette.action.selected))
+      }
+    }),
+    placeholder: base => ({
+      ...base,
+      color: "black"
+    })
+  };
+};
+
+const getOptions = categories => {
+  return categories.map(category => ({
+    value: category.value,
+    icon: "🔥",
+    label: category.value
+  }));
 };

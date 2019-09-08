@@ -303,11 +303,6 @@ export function updateActiveLayers(filteredKeyMap, newLayer = null) {
 }
 
 export function updateActiveSingleLayer(filteredKeyMap, layerKeys, index = 0) {
-  console.log(
-    `⭐: _.find(filteredKeyMap, o => o.index === index)`,
-    _.find(filteredKeyMap, o => o.index === index)
-  );
   const activeLayer = [_.find(filteredKeyMap, o => o.index === index)];
-  console.log(`⭐: activeLayer`, activeLayer);
   setGlobalState("activeLayers", activeLayer);
 }

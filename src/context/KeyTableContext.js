@@ -67,18 +67,24 @@ export default function KeyTableProvider({ children }) {
   );
 
   function initializeTableCategories(table) {
-    const categories = new Set([]);
+    const categoriesArr = [];
     _.forEach(table, shortcut => {
+      let size = 0;
       for (let category of shortcut.category) {
-        categories.add(category);
+        size = size + 1;
+        categoriesArr.push({ name: category, size });
       }
     });
+
+    const categories = _.uniqBy(categoriesArr, "name");
     let tableCategories = [];
     let index = 0;
     for (let category of categories) {
       tableCategories.push({
-        value: category,
-        label: "#" + category,
+        value: category.name,
+        size: category.size,
+
+        label: "#" + category.name,
         color: keyMapColors[index % keyMapColors.length]
       });
       index++;
@@ -105,7 +111,6 @@ export default function KeyTableProvider({ children }) {
 
   const addNewKeyToFirebase = async (newKey, image) => {
     console.log("------------------ Adding New Key------------------------");
-    console.log(`⭐: addNewKeyToFirebase -> image`, image);
 
     const keyID = firebase.firestore.Timestamp.now().toMillis();
 
@@ -113,7 +118,6 @@ export default function KeyTableProvider({ children }) {
     if (url) {
     }
     const newShortcut = url ? { ...newKey, url } : newKey;
-    console.log(`⭐: addNewKeyToFirebase -> newShortcut`, newShortcut);
 
     const update = {};
     update[`table.${keyID}`] = newShortcut;

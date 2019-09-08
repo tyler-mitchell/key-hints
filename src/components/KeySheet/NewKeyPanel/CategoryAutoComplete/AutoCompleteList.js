@@ -9,7 +9,7 @@ import { Chip } from "@material-ui/core";
 import Select, { components } from "react-select";
 import styled from "styled-components";
 import { keyMapColors } from "../../../Keyboard/KeyMapData";
-import { RemoveCircleOutlineRounded } from "@material-ui/icons";
+import { RemoveCircleOutlineRounded, Delete } from "@material-ui/icons";
 import { IconButton } from "@material-ui/core";
 import { TextField } from "@material-ui/core";
 import makeAnimated from "react-select/animated";
@@ -18,6 +18,7 @@ import { opacify, lighten, shade } from "polished";
 import { ClearRounded } from "@material-ui/icons";
 import { HighlightOffRounded } from "@material-ui/icons";
 import CreatableSelect from "react-select/creatable";
+import { Remove } from "@material-ui/icons";
 const useStyles = makeStyles(theme => ({
   root: {
     width: 360,
@@ -152,8 +153,6 @@ const StyledMultiValueRemove = styled(motion.div)`
 `;
 
 const MultiValueRemove = ({ selectProps, innerProps, data, options }) => {
-  console.log(`⭐: MultiValueRemove -> data`, data);
-
   const iconColor =
     data.color ||
     (options && keyMapColors[options.length % keyMapColors.length]) ||
@@ -178,8 +177,8 @@ const MultiValueRemove = ({ selectProps, innerProps, data, options }) => {
         onClick={() => innerProps.onClick()}
         style={{
           position: "relative",
-          height: "15px",
-          width: "15px",
+          height: "20px",
+          width: "20px",
           backgroundColor: lighten(0.2, iconColor),
           // backgroundColor: variables.colorPrimaryLighter
 
@@ -187,15 +186,12 @@ const MultiValueRemove = ({ selectProps, innerProps, data, options }) => {
           fontWeight: "bold",
           borderRadius: "50%",
           display: "flex",
-          padding: "1px",
+
           alignItems: "center",
           justifyContent: "center"
         }}
       >
-        <HighlightOffRounded
-          style={{ display: "inline-block", margin: "2px" }}
-          fontSize="small"
-        />
+        <ClearRounded style={{ margin: "2px" }} fontSize="small" />
       </motion.div>
     </div>
   );
@@ -222,7 +218,6 @@ const AutocompleteList = props => {
   // const chipColor = keyMapColors[i % keyMapColors.length]
   const selectStyles = {
     control: ({ borderColor, ...base }, { data, isHovered }) => {
-      console.log(`⭐: CONTROL STYLES: `, base);
       return {
         ...base,
         boxShadow: null,
@@ -240,20 +235,16 @@ const AutocompleteList = props => {
         }
       };
     },
-    container: base => ({
-      ...base,
-      backgroundColor: "grey"
-    }),
+
     dropdownIndicator: base => ({
       ...base,
       padding: 4
     }),
     clearIndicator: base => ({
-      ...base,
-      padding: 4
+      ...base
+      // padding: 4
     }),
     multiValue: (base, { data, options }) => {
-      console.log(`⭐: options`, options);
       return {
         ...base,
 
@@ -291,15 +282,7 @@ const AutocompleteList = props => {
       ...base,
       display: "inline-block"
     }),
-    // option: (styles, { data }) => ({
-    //   ...styles,
-    //   backgroundColor: data.color,
-    //   borderRadius: "15px",
 
-    //   // margin: "5px 0"
-
-    //   backgroundClip: "text"
-    // }),
     placeholder: base => {
       return {
         ...base,
@@ -309,82 +292,6 @@ const AutocompleteList = props => {
         marginLeft: "5px"
       };
     }
-    // multiValue: (styles, { data, options }) => {
-    //   // https://react-select.com/styles#styles
-    //   const color = theme.palette.primary.main;
-
-    //   return {
-    //     ...styles,
-    //     // boxSizing: "border-box",
-    //     // height: "15px",
-
-    //     backgroundColor:
-    //       data.color || keyMapColors[options.length % keyMapColors.length],
-
-    //     borderRadius: "15px"
-    //   };
-    // },
-
-    // control: ({ isFocused, ...styles }, { data }) => {
-    //   return {
-    //     ...styles,
-    //     height: "20px",
-    //     minHeight: "20px",
-
-    //     // boxShadow: isFocused ? "0 0 0 1px #4C9AFF" : null,
-    //     // borderColor: isFocused ? "#4C9AFF" : "#4C9AFF",
-    //     // backgroundClip: "padding-box",
-    //     // minWidth: "100px",
-    //     // minHeight: "20px",
-    //     // height: "20px",
-
-    //     ":hover": {
-    //       // borderColor: styles.borderColor
-    //     }
-    //   };
-    // },
-    // container: (styles, { data }) => ({
-    //   ...styles,
-    //   display: "inline-block"
-    //   // padding: 0,
-    //   // margin: 0,
-    //   // borderColor: "transparent",
-
-    //   // ":hover": {
-    //   //   borderColor: styles.borderColor
-    //   // }
-    // }),
-
-    // valueContainer: (styles, { data }) => ({
-    //   ...styles
-    // }),
-    // multiValueLabel: (styles, { data }) => ({
-    //   // ...styles,
-    //   margin: "0 5px"
-    // }),
-    // placeholder: (styles, { data }) => ({
-    //   ...styles
-    // }),
-    // input: (styles, { data }) => ({
-    //   ...styles
-    // }),
-
-    // option: (styles, { data }) => ({
-    //   ...styles
-    // })
-
-    // multiValueRemove: (styles, { data }) => ({
-    //   ...styles,
-    //   color: theme.palette.text.primary,
-    //   backgroundColor: "transparent",
-    //   opacity: 0.6,
-
-    //   borderRadius: "50%",
-    //   ":hover": {
-    //     backgroundColor: "red",
-    //     color: "white"
-    //   }
-    // })
   };
 
   // if (!InputControl) {

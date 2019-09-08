@@ -1,26 +1,26 @@
-import React from 'react';
-import { useAnimation, motion, AnimatePresence } from 'framer-motion';
+import React from "react";
+import { useAnimation, motion, AnimatePresence } from "framer-motion";
 import {
   bindToggle,
   bindPopper,
   usePopupState
-} from 'material-ui-popup-state/hooks';
+} from "material-ui-popup-state/hooks";
 
-import { CombineAction, ThenAction } from './ActionButtons/ActionButtons';
+import { CombineAction, ThenAction } from "./ActionButtons/ActionButtons";
 
-import theme from '../../../../design-system/theme';
-import { useSequenceStyles } from '../KeySequence.style';
-import { ListItem } from '@material-ui/core';
-import { Paper } from '@material-ui/core';
-import ActionMenu from './ActionMenu/ActionMenu';
-import { bindTrigger } from 'material-ui-popup-state';
-import { bindHover } from 'material-ui-popup-state/core';
-import { hideText } from 'polished';
-import { StyledActionButton } from './ActionButtons/ActionButton.style';
+import theme from "../../../../design-system/theme";
+import { useSequenceStyles } from "../KeySequence.style";
+import { ListItem } from "@material-ui/core";
+import { Paper } from "@material-ui/core";
+import ActionMenu from "./ActionMenu/ActionMenu";
+import { bindTrigger } from "material-ui-popup-state";
+import { bindHover } from "material-ui-popup-state/core";
+import { hideText } from "polished";
+import { StyledActionButton } from "./ActionButtons/ActionButton.style";
 import {
   AddRounded as CombineIcon,
   KeyboardArrowRight as ThenIcon
-} from '@material-ui/icons';
+} from "@material-ui/icons";
 
 const actionButtonVariants = {
   initial: {
@@ -28,7 +28,7 @@ const actionButtonVariants = {
     opacity: 0
   },
   showCombine: {
-    width: '20px',
+    width: "20px",
     scale: 1,
     opacity: 1
   },
@@ -36,7 +36,7 @@ const actionButtonVariants = {
     scale: 1,
     opacity: 1,
 
-    width: '50px'
+    width: "50px"
   }
 };
 const KeySequenceAction = ({
@@ -66,27 +66,27 @@ const KeySequenceAction = ({
     }, 500);
   };
   const popupState = usePopupState({
-    variant: 'popper',
-    popupId: 'demoPopper'
+    variant: "popper",
+    popupId: "demoPopper"
   });
-  const [actionType, setActionType] = React.useState('COMBINE');
+  const [actionType, setActionType] = React.useState("COMBINE");
 
-  const id = 'simple-popper';
+  const id = "simple-popper";
 
   return (
     <>
       <motion.div
-        style={{ width: '30px', display: 'flex', position: 'relative' }}
+        style={{ width: "30px", display: "flex", position: "relative" }}
         {...bindHover(popupState)}
         animate={{}}
       >
         <AnimatePresence exitBeforeEnter>
-          {actionType === 'COMBINE' && (
-            <CombineAction key={'COMBINE'} onClick={handleActionClick} />
+          {actionType === "COMBINE" && (
+            <CombineAction key={"COMBINE"} onClick={handleActionClick} />
           )}
-          {actionType === 'THEN' && (
+          {actionType === "THEN" && (
             <ThenAction
-              key={'THEN'}
+              key={"THEN"}
               onClick={handleActionClick}
               // {...bindHover(popupState)}
             />

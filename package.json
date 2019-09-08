@@ -46,6 +46,7 @@
     "react-select-v2": "^2.4.2",
     "react-spring": "^8.0.27",
     "react-swipeable-views": "^0.13.3",
+    "react-teleporter": "^1.1.0",
     "react-textfit": "^1.1.0",
     "react-use-gesture": "^5.2.4",
     "react-virtualized-auto-sizer": "^1.0.2",

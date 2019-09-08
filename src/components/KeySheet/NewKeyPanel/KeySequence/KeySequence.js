@@ -1,7 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
-import { FlashingContext } from '../../../Key/FlashingContext';
+import { FlashingContext } from "../../../Key/FlashingContext";
 import {
   IconButton,
   ListItem,
@@ -12,39 +12,41 @@ import {
   Typography,
   Chip,
   Grid,
-  TextField
-} from '@material-ui/core';
+  TextField,
+  TextareaAutosize
+} from "@material-ui/core";
 import {
   usePopupState,
   bindToggle,
   bindPopper
-} from 'material-ui-popup-state/hooks';
+} from "material-ui-popup-state/hooks";
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from "@material-ui/core/styles";
 
-import { KeyTable } from '../../SheetData';
+import { KeyTable } from "../../SheetData";
 import {
   ArrowBack as LeftArrowIcon,
   ArrowForward as RightArrowIcon,
   ArrowUpward as UpArrowIcon,
   ArrowDownward as DownArrowIcon,
   Add as AddIcon
-} from '@material-ui/icons';
+} from "@material-ui/icons";
 
-import _ from 'lodash';
-import { useTransition, animated, config, useSpring } from 'react-spring';
-import { motion, AnimatePresence, useAnimation } from 'framer-motion';
-import { usePrevious } from '../../../hooks/helpers';
-import { RenderIcon } from '../../KeyList/KeyListItem';
-import { black } from '../../../design-system/theme/common';
-import theme from '../../../design-system/theme';
-import { CombineAction } from './KeySequenceAction/ActionButtons/ActionButtons';
-import { useSequenceStyles } from './KeySequence.style';
+import _ from "lodash";
+import { useTransition, animated, config, useSpring } from "react-spring";
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import { usePrevious } from "../../../hooks/helpers";
+import { RenderIcon } from "../../KeyList/KeyListItem";
+import { black } from "../../../design-system/theme/common";
+import theme from "../../../design-system/theme";
+import { CombineAction } from "./KeySequenceAction/ActionButtons/ActionButtons";
+import { useSequenceStyles } from "./KeySequence.style";
 
-import TouchRipple from '@material-ui/core/ButtonBase/TouchRipple';
-import { KeySequenceStatus } from './KeySequenceStatus/KeySequenceStatus';
-import KeySequenceAction from './KeySequenceAction/KeySequenceAction';
-import { useGlobalState } from '../../../../state';
+import TouchRipple from "@material-ui/core/ButtonBase/TouchRipple";
+import { KeySequenceStatus } from "./KeySequenceStatus/KeySequenceStatus";
+import KeySequenceAction from "./KeySequenceAction/KeySequenceAction";
+import { useGlobalState } from "../../../../state";
+import { Paper } from "@material-ui/core";
 
 const variants = {
   show: {
@@ -62,7 +64,7 @@ const variants = {
     transition: {
       // when: "beforeCh"
       // duration: 0.3// default
-      ease: 'anticipate',
+      ease: "anticipate",
       delay: 0.15
     }
   }
@@ -72,7 +74,7 @@ const actionVariants = {
     opacity: 1,
     scale: 1,
     transition: {
-      type: 'spring',
+      type: "spring",
       // ease: 'backInOut',
       // duration: 0.3,
       // damping: 10,
@@ -87,8 +89,8 @@ const actionVariants = {
     opacity: 0,
     scale: 0,
     transition: {
-      type: 'tween',
-      ease: 'backInOut',
+      type: "tween",
+      ease: "backInOut",
       velocity: 5,
       // duration: 0.2,
       damping: 400
@@ -115,14 +117,14 @@ const variantContainer = {
     // opacity: 1,
     // scale: 1,
     transition: {
-      when: 'afterChildren',
+      when: "afterChildren",
       staggeredChildren: 1,
       duration: 1
     }
   },
   hide: {
     transition: {
-      when: 'afterChildren',
+      when: "afterChildren",
       // delayChildren: 0.5,
       duration: 1
       // staggerChildren: 0.5, delayChildren: 0.5
@@ -135,8 +137,8 @@ const Sequence = keyItem => {
   const classes = useSequenceStyles();
   const [items, setItems] = React.useState([]);
 
-  const [newKeys, setNewKeys] = useGlobalState('newKeys');
-  const [keyLabelAdded, setKeyLabelAdded] = useGlobalState('keyLabelAdded');
+  const [newKeys, setNewKeys] = useGlobalState("newKeys");
+  const [keyLabelAdded, setKeyLabelAdded] = useGlobalState("keyLabelAdded");
   // const [isActionHovered, setIsActionHovered] = useGlobalState('isActionHovered');
   const [sequence, setSequence] = React.useState([]);
   const [renderSequence, setRenderSequence] = React.useState([]);
@@ -154,9 +156,15 @@ const Sequence = keyItem => {
         const actionHasOptions = index === lastIndex - 1;
         const key = keybind;
 
-        result.push({ kb: keybind, isAction: false, index: index, key });
+        result.push({
+          kb: keybind,
+          isAction: false,
+          index: index,
+          key,
+          isEnd: index === lastIndex
+        });
         if (index !== arr.length - 1) {
-          result.push({ isAction, key: keybind + 'index', actionHasOptions });
+          result.push({ isAction, key: keybind + "index", actionHasOptions });
         }
         return result;
       }, []);
@@ -176,14 +184,35 @@ const Sequence = keyItem => {
             variants={shortcut.isAction ? actionVariants : variants}
             key={shortcut.key}
             style={{
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
             }}
           >
             {shortcut.kb && <RenderIcon keyLabel={shortcut.kb} height="46px" />}
-
+            {/* <AnimatePresence>
+              {shortcut.isEnd && (
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: "100%" }}
+                  exit={{ width: "0" }}
+                >
+                  <div>
+                    <TextareaAutosize
+                      style={{
+                        maxWidth: "200px",
+                        minWidth: "90px",
+                        maxHeight: "60px",
+                        minHeight: "60px"
+                      }}
+                      rowsMax={5}
+                      rows
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence> */}
             {shortcut.isAction && (
               <KeySequenceAction actionHasOptions={shortcut.actionHasOptions} />
             )}
@@ -272,7 +301,7 @@ const Instruction = ({ key, isEmpty }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      style={{ position: 'absolute' }}
+      style={{ position: "absolute" }}
     >
       <Typography color="textSecondary">
         Click the keyboard to add a shortcut

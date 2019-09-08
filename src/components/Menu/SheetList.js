@@ -1,6 +1,12 @@
-import React from 'react';
+import React from "react";
 
-import { ChromeLogo, FigmaLogo, Windows10Logo, SketchLogo, VSCodeLogo } from '../../assets';
+import {
+  ChromeLogo,
+  FigmaLogo,
+  Windows10Logo,
+  SketchLogo,
+  VSCodeLogo
+} from "../../assets";
 
 import {
   Divider,
@@ -10,25 +16,27 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   IconButton
-} from '@material-ui/core';
+} from "@material-ui/core";
 
-import { KeyTableContext } from '../../context/KeyTableContext';
-import { SheetData } from '../KeySheet/SheetData';
+import { KeyTableContext } from "../../context/KeyTableContext";
+import { SheetData } from "../KeySheet/SheetData";
 
-import { Folder as FolderIcon, Delete as DeleteIcon } from '@material-ui/icons';
+import { Folder as FolderIcon, Delete as DeleteIcon } from "@material-ui/icons";
 
-import { clearKeySelection, setGlobalState, useGlobalState } from '../../state';
+import { clearKeySelection, setGlobalState, useGlobalState } from "../../state";
 
 export const SheetList = () => {
-  const [selectedIndex, setSelectedIndex] = useGlobalState('selectedKeySheet');
-  const { userKTC, setDocIndex, docIndex, deleteKeySheet } = React.useContext(KeyTableContext);
+  const [selectedIndex, setSelectedIndex] = useGlobalState("selectedKeySheet");
+  const { userKTC, setDocIndex, docIndex, deleteKeySheet } = React.useContext(
+    KeyTableContext
+  );
 
   function handleListItemClick(event, index) {
     clearKeySelection();
     setSelectedIndex(index);
     setDocIndex(index);
 
-    setGlobalState('addMode', false);
+    setGlobalState("addMode", false);
   }
 
   function handleDeleteClick(index) {
@@ -75,15 +83,15 @@ export const SheetList = () => {
       <List>
         {userKTC &&
           userKTC.docs.map((doc, index) => {
-            setGlobalState('sheetNames', o => ({ ...o, [doc.id]: index }));
+            setGlobalState("sheetNames", o => ({ ...o, [doc.id]: index }));
 
-         
             return (
               <ListItem
                 button
                 key={doc.id}
                 onClick={e => handleListItemClick(e, index)}
                 selected={selectedIndex === index}
+                style={{ borderRadius: "0px 20px 20px 0px" }}
               >
                 <ListItemIcon>
                   <FolderIcon color="primary" />

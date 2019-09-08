@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/accessible-emoji */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import {
@@ -8,6 +9,7 @@ import {
 import { KeyTableContext } from "../../../context/KeyTableContext";
 
 // Editor
+import { createTeleporter } from "react-teleporter";
 
 import { KeySequence } from "./KeySequence/KeySequence";
 import styled from "styled-components";
@@ -65,6 +67,11 @@ import _ from "lodash";
 import { motion, AnimatePresence } from "framer-motion";
 import { AutocompleteHashtags } from "./CategoryAutoComplete/CategoryInput";
 import Upload from "./Upload";
+import { lighten } from "polished";
+
+import { TextareaAutosize } from "@material-ui/core";
+import { Subject } from "@material-ui/icons";
+import { Label } from "@material-ui/icons";
 import { AddPhotoAlternateRounded } from "@material-ui/icons";
 import { Avatar } from "@material-ui/core";
 import { Container } from "@material-ui/core";
@@ -82,6 +89,7 @@ import {
 } from "@material-ui/icons";
 import { CardHeader, AppBar } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
+export const StatusBar = createTeleporter();
 
 const useStyles = makeStyles(theme => ({
   descriptionField: {
@@ -133,6 +141,29 @@ const useStyles = makeStyles(theme => ({
   chip: { button: { marginRight: "15px" } },
   keyDescription: {
     textAlign: "center"
+  },
+  labelButton: {
+    textTransform: "none",
+    zIndex: 4,
+    top: -25,
+    color: theme.palette.common.grey[500]
+  },
+
+  textArea: {
+    border: "1px solid #e2e2e1",
+    // overflow: "hidden",
+    borderRadius: 4,
+    backgroundColor: "#fcfcfb",
+    transition: theme.transitions.create(["border-color", "box-shadow"]),
+    "&:hover": {
+      backgroundColor: "#fff"
+    }
+
+    // "&$focused": {
+    //   backgroundColor: "#fff",
+    //   boxShadow: `${lighten(0.1, theme.palette.primary.main)} 0 0 0 2px`,
+    //   borderColor: theme.palette.primary.main
+    // }
   }
 }));
 
@@ -160,9 +191,10 @@ const { InlineToolbar } = inlineToolbarPlugin;
 
 const KeyMenu = motion.custom(Grid);
 export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
-  console.log(`⭐: NewKeyPanel -> parentHeight`, parentHeight);
   const [newKeys, setNewKeys] = useGlobalState("newKeys");
   const [addMode, setAddMode] = useGlobalState("addMode");
+
+  const [previewImage, setPreviewImage] = React.useState(null);
 
   const [editorState, setEditorState] = React.useState(
     EditorState.createEmpty()
@@ -199,7 +231,6 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
   };
   const handleCategories = values => {
     const category = values.map(o => o.value);
-    console.log(`⭐: NewKeyPanel -> category`, category);
 
     setKeyInfo(v => ({ ...v, category }));
 
@@ -222,7 +253,7 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
   const [isKeyAvailable, setIsKeyAvailable] = React.useState(false);
 
   const [keyTopText, setKeyTopText] = React.useState("");
-  const [keyTopRefs] = useGlobalState("keyTopTextRefs");
+  const [lastKey, setLastKey] = useGlobalState("lastKey");
   const [keyTopRefKey] = useGlobalState("lastKeyRef");
   const [allKeys] = useGlobalState("allKeys");
   // Key Table Context
@@ -235,6 +266,7 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
   // Check for key availability
   React.useEffect(() => {
     const keys = _.values(newKeys.keys.key1);
+    setLastKey(keys[keys.length - 1]);
     if (keys in allKeys) {
       setIsKeyAvailable(false);
     } else {
@@ -276,28 +308,44 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
         description: "",
         keyDescription: ""
       });
+      setKeyLabelAdded(false);
     }
+    return () => setPreviewImage(null);
   }, [addMode]);
-  function handleUploadImage(fileUploaderRef, file) {
-    fileUploaderRef.current.startUpload();
-  }
-  function caserUpper(val) {
-    return new Promise((resolve, reject) => {
-      resolve(val.toUpperCase());
-    });
-  }
+
   async function handleSaveKeyClick() {
-    console.log(`⭐: handleSaveKeyClick -> keyInfo`, keyInfo);
     const newKey = { ...newKeys, ...keyInfo };
     addNewKeyToFirebase(newKey, shortcutImage);
   }
-  // Snack Bar
 
+  function handleAddLabel(type) {
+    if (Object.keys(newKeys.keys.key1).length === 0) {
+      setSnackbarMessage("Empty shortcut");
+      setSnackbarOpen(true);
+    } else if (!isKeyAvailable) {
+      setSnackbarMessage("Shortcut already exists");
+      setSnackbarOpen(true);
+    } else {
+      if (type === "text") {
+        setPreviewImage(null);
+      }
+      setKeyLabelType(type);
+      setKeyLabelAdded(true);
+    }
+  }
+  // Snack Bar
+  const mapInputPopupState = usePopupState({
+    variant: "popover",
+    popupId: "demoPopover"
+  });
   const [snackbarVariant, setSnackbarVariant] = React.useState("error");
   const [snackbarRef] = useGlobalState("snackbarRef");
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
-
+  const [keyLabelAdded, setKeyLabelAdded] = useGlobalState("keyLabelAdded");
+  const [keyLabelType, setKeyLabelType] = React.useState(null);
+  // TODO:
+  // add a panel behind last key that expands rightward when "add label" is clicked
   const onSnackbarClose = (e, reason) => {
     if (reason === "clickaway") {
       return;
@@ -313,7 +361,7 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
           raised
           component={Grid}
           style={{
-            height: parentHeight * 0.91,
+            // height: parentHeight * 0.61,
             borderRadius: 15,
 
             padding: "25px"
@@ -355,35 +403,72 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
                   // alignItems="center"
                 >
                   <Grid container item alignItems="center" justify="flex-start">
-                    <Grid item>
-                      <Upload
-                        setSnackbarOpen={setSnackbarOpen}
-                        setShortcutImage={setShortcutImage}
-                        setSnackbarMessage={setSnackbarMessage}
-                      />
-                    </Grid>
-                    <Grid item xs={10}>
-                      <InputBase
-                        // value={newKeys.description}
+                    <Grid item xs={10} style={{ position: "relative" }}>
+                      <Grid container justify="flex-start">
+                        <Grid item>
+                          <Button
+                            size="small"
+                            variant="text"
+                            {...bindTrigger(mapInputPopupState)}
+                            className={classes.labelButton}
+                            onClick={() => handleAddLabel("text")}
+                          >
+                            <Subject style={{ marginRight: "3px" }} />
+                            Add Text Label
+                          </Button>
+                        </Grid>
+                        <Grid item>
+                          <Button
+                            size="small"
+                            variant="text"
+                            className={classes.labelButton}
+                            onClick={() => handleAddLabel("image")}
+                          >
+                            <Subject style={{ marginRight: "3px" }} />
+                            Add Image Label
+                          </Button>
+                        </Grid>
+                      </Grid>
 
-                        variant="outlined"
-                        style={{
-                          fontSize: "36px",
-                          // margin: 0,
-                          "label + &": {
-                            marginTop: 0
-                          },
+                      <Grid
+                        container
+                        item
+                        alignItems="flex-start"
+                        justify="flex-start"
+                      >
+                        <Grid item>
+                          {keyLabelType === "image" && (
+                            <Upload
+                              setPreviewImage={setPreviewImage}
+                              setSnackbarOpen={setSnackbarOpen}
+                              setShortcutImage={setShortcutImage}
+                              setSnackbarMessage={setSnackbarMessage}
+                            />
+                          )}
+                        </Grid>
+                        <Grid item>
+                          <InputBase
+                            // value={newKeys.description}
 
-                          background: "white"
-                        }}
-                        fullWidth
-                        value={keyInfo.description}
-                        placeholder="untitled"
-                        onChange={event => handleDescriptionChange(event)}
-                        rowsMax={3}
-                      />
+                            variant="outlined"
+                            style={{
+                              padding: 0,
+                              fontSize: "36px",
+                              // margin: 0,
+
+                              background: "white"
+                            }}
+                            // fullWidth
+                            value={keyInfo.description}
+                            placeholder="untitled"
+                            onChange={event => handleDescriptionChange(event)}
+                            rowsMax={3}
+                          />
+                        </Grid>
+                      </Grid>
                     </Grid>
                   </Grid>
+
                   <Grid
                     container
                     justify="flex-start"
@@ -393,10 +478,37 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
                     xs={12}
                   >
                     <Grid item style={{ marginBottom: "15px" }}>
-                      <AutocompleteHashtags
-                        suggestions={suggestions}
-                        onCategorySave={handleCategories}
-                      />
+                      <div
+                        className={classes.textArea}
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "flex-start",
+                          alignItems: "center"
+                        }}
+                      >
+                        <AutocompleteHashtags
+                          suggestions={suggestions}
+                          onCategorySave={handleCategories}
+                        />
+                        {keyLabelType === "text" && (
+                          <InputBase
+                            onChange={handleKeyDescription}
+                            multiline
+                            inputProps={{
+                              disableUnderline: true,
+                              style: { textAlign: "center", padding: "4px" }
+                            }}
+                            style={{ margin: "5px", fontSize: "14px" }}
+                            classes={{ root: classes.textArea }}
+                            rowsMax={3}
+                            placeholder="Enter text label 🔥"
+                            aria-label="newKey"
+                            variant="filled"
+                            rows={1}
+                          />
+                        )}
+                      </div>
                     </Grid>
                   </Grid>
                 </CardHead>
@@ -404,6 +516,7 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
                 <Grid xs={12} style={{ display: "flex" }} item>
                   <KeySequence
                     isKeyAvailable={isKeyAvailable}
+                    popupState={mapInputPopupState}
                     isEmpty={Object.keys(newKeys.keys.key1).length === 0}
                     style={{ position: "absolute" }}
                     newKeys={newKeys.keys}
@@ -414,14 +527,29 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
           </AnimatePresence>
         </Paper>
       </AnimatedPanel>
-      {keyTopRefs[keyTopRefKey] && (
-        <Portal
-          container={keyTopRefs[keyTopRefKey].current}
-          style={{ height: "inherit", width: "inherit" }}
-        >
-          <KeyText keyTopText={keyTopText} />
-        </Portal>
-      )}
+      <StatusBar.Source>
+        {keyLabelType === "text" && <KeyText keyTopText={keyTopText} />}
+        {/* {keyLabelType === "image" && previewImage && ( */}
+        {keyLabelType === "image" && (
+          <img
+            alt="img"
+            style={{
+              // borderRadius: "4px",
+              overflow: "hidden",
+              alignSelf: "center",
+              userDrag: "none",
+
+              borderRadius: "10%",
+              display: "block",
+
+              objectFit: "contain"
+            }}
+            // src={previewImage}
+            src="https://placeimg.com/900/900/animals"
+          />
+        )}
+      </StatusBar.Source>
+
       <Portal container={snackbarRef}>
         <Toast
           snackbarVariant={snackbarVariant}

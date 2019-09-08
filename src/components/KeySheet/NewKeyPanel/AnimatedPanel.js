@@ -6,16 +6,9 @@ import { a } from "react-spring";
 import { useGlobalState } from "../../../state";
 import { motion } from "framer-motion";
 
-// const OFFSET = 420;
-const OFFSET = 103;
-const INITIAL = 780;
-// const SLOW = config.gentle
-const SLOW = { mass: 1, tension: 200, friction: 14 };
-const FAST = { tension: 1000, friction: 100 };
-
 const variants = {
   opened: i => ({
-    y: i * 0.22,
+    y: i * 0.44,
     transition: {
       type: "spring",
       // damping: 50,
@@ -43,12 +36,7 @@ const variants = {
   })
 };
 export const AnimatedPanel = ({ parentHeight, children }) => {
-  console.log(`⭐: AnimatedPanel -> parentHeight`, parentHeight);
-  const [{ y }, set] = useSpring(() => ({ y: INITIAL }));
   const [addMode] = useGlobalState("addMode");
-  const yINITIAL = parentHeight + parentHeight * 0.15;
-  const yOFFSET = 103;
-
   return (
     <>
       {parentHeight && (
@@ -58,15 +46,6 @@ export const AnimatedPanel = ({ parentHeight, children }) => {
           initial={false}
           animate={addMode ? "opened" : "closed"}
           variants={variants}
-          // transition={{
-          //   type: "spring",
-          //   // damping: 50,
-          //   stiffness: 200,
-          //   // velocity: 800
-          //   restDelta: 0.5,
-          //   restSpeed: 0.5
-          //   // mass: 0.1
-          // }}
           style={{
             position: "absolute",
             pointerEvents: "auto",
@@ -76,24 +55,15 @@ export const AnimatedPanel = ({ parentHeight, children }) => {
             top: 0,
             margin: "0 21px",
             flex: 1,
-
-            zIndex: 5000,
-            // height: "600px",
+            zIndex: 6,
             background: "transparent",
             borderTopRightRadius: 15,
             borderTopLeftRadius: 15,
             borderBottomRightRadius: 15,
             borderBottomLeftRadius: 15,
-            // padding: 24,
             userSelect: "none",
-
-            // clipPath: "inset(10px 20px 30px 40px)",
             alignItems: "center"
-
-            // ...props.style
           }}
-
-          // style={{ transform: y.interpolate(y => `translate3d(0,${y}px,0)`) }}
         >
           {children}
         </motion.div>
@@ -117,7 +87,7 @@ export const View = props => (
       margin: "0 21px",
       flex: 1,
 
-      zIndex: 5000,
+      zIndex: 5,
       // height: "600px",
       background: "transparent",
       borderTopRightRadius: 15,

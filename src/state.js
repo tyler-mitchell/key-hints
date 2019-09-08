@@ -71,7 +71,7 @@ const {
   layerKeys: [],
   activeLayerIndices: new Set([]),
   initialLayerIndices: null,
-  keyTopTextRefs: {},
+  lastKey: null,
   activeKeyMapKeys: [],
   lastKeyRef: null,
 

@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
 // Externals
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 // Material components
 import {
@@ -14,10 +14,10 @@ import {
   Button,
   Divider,
   IconButton
-} from '@material-ui/core';
-import { useGlobalState, clearKeySelection, setGlobalState } from '../../state';
-import { KeyTableContext } from '../../context/KeyTableContext';
-import { useNumber } from 'react-hanger';
+} from "@material-ui/core";
+import { useGlobalState, clearKeySelection, setGlobalState } from "../../state";
+import { KeyTableContext } from "../../context/KeyTableContext";
+import { useNumber } from "react-hanger";
 // Material icons
 import {
   Search,
@@ -28,26 +28,26 @@ import {
   Add as AddIcon,
   Keyboard as KeyMapIcon,
   FormatAlignJustify as ShortcutIcon
-} from '@material-ui/icons';
-import styled from 'styled-components';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import { initializeKeyMap } from '../Keyboard/KeyMapData';
-import { motion, useCycle, AnimatePresence } from 'framer-motion';
-import { CategoryMenu } from './CategoryMenu/CategoryMenu';
-import { ButtonGroup } from '@material-ui/core';
-import { InputAdornment } from '@material-ui/core';
-import { Tooltip } from '@material-ui/core';
-import { TextField } from '@material-ui/core';
+} from "@material-ui/icons";
+import styled from "styled-components";
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import { initializeKeyMap } from "../Keyboard/KeyMapData";
+import { motion, useCycle, AnimatePresence } from "framer-motion";
+import { CategoryMenu } from "./CategoryMenu/CategoryMenu";
+import { ButtonGroup } from "@material-ui/core";
+import { InputAdornment } from "@material-ui/core";
+import { Tooltip } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
-    padding: '10px 10px',
-    display: 'flex',
-    borderRadius: '10px 10px 0px 0px',
-    margin: '0px 0px 0px 0px',
+    padding: "10px 10px",
+    display: "flex",
+    borderRadius: "10px 10px 0px 0px",
+    margin: "0px 0px 0px 0px",
 
-    alignItems: 'center'
+    alignItems: "center"
     // borderRadius: 0
   },
   input: {
@@ -59,10 +59,10 @@ const useStyles = makeStyles({
   },
   keyMapButton: {
     padding: 0,
-    width: '10px'
+    width: "10px"
   },
   divider: {
-    width: '1.3px',
+    width: "1.3px",
     height: 33,
     margin: 6
   }
@@ -86,59 +86,33 @@ const SearchBox = styled(motion.div)``;
 export const SearchInput = props => {
   const { theme, className, onChange, style, ...rest } = props;
   const classes = useStyles();
-  const [drawerState, setDrawerState] = useGlobalState('drawerState');
-  const [editMode, setEditMode] = useGlobalState('editMode');
-  const [activeKeys, setActiveKeys] = useGlobalState('activeKeys');
-  const [addMode, setAddMode] = useGlobalState('addMode');
-  const [newKeys] = useGlobalState('newKeys');
-  const [isSelected] = useGlobalState('selectedItem');
-  const [initialLayerIndices] = useGlobalState('initialLayerIndices');
+  const [drawerState, setDrawerState] = useGlobalState("drawerState");
+  const [editMode, setEditMode] = useGlobalState("editMode");
+  const [activeKeys, setActiveKeys] = useGlobalState("activeKeys");
+  const [addMode, setAddMode] = useGlobalState("addMode");
+  const [newKeys] = useGlobalState("newKeys");
+  const [isSelected] = useGlobalState("selectedItem");
+  const [initialLayerIndices] = useGlobalState("initialLayerIndices");
   const {
     curKeyTable,
     addNewKeyToFirebase,
     updateKeyToFirebase
   } = React.useContext(KeyTableContext);
 
-  // React.useEffect(() => {
-
-  //   return () => {
-  //     addMode && clearKeySelection()
-  //   }
-  // },[addMode])
-
-  const handleAddClick = () => {
-    clearKeySelection();
-    setGlobalState('keyMapMode', false);
-    setGlobalState('addMode', v => !v);
-  };
-
-  const handleEditClick = () => {
-    setEditMode(true);
-  };
   const handleSaveEditClick = () => {
     setEditMode(false);
     updateKeyToFirebase(newKeys);
 
-    setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }));
-  };
-
-  const [fonts] = useGlobalState('devFonts');
-  const [currentFont] = useGlobalState('currentFont');
-  const [fontIndex, setFontIndex] = React.useState(0);
-
-  const changeFont = () => {
-    const newIndex = fontIndex === fonts.length - 1 ? 0 : fontIndex + 1;
-    setFontIndex(newIndex);
-    setGlobalState('currentFont', fonts[fontIndex]);
+    setGlobalState("newKeys", v => ({ ...v, keys: { key1: {} } }));
   };
 
   function handleKeyMapMode(event, newView) {
     // initializeKeyMap(curKeyTable.data().table);
     setView(newView);
-    setGlobalState('keyMapMode', true);
+    setGlobalState("keyMapMode", true);
   }
 
-  const [view, setView] = React.useState('shortcutView');
+  const [view, setView] = React.useState("shortcutView");
 
   const handleChange = (event, newView) => {
     setView(newView);
@@ -146,9 +120,9 @@ export const SearchInput = props => {
   const variants = {
     open: {
       opacity: [0, 0.6, 0.9, 1],
-      x: '6px',
+      x: "6px",
 
-      width: '200px'
+      width: "200px"
 
       // transition: {
       //   delay: 1,
@@ -156,7 +130,7 @@ export const SearchInput = props => {
       //   default: { duration: 2 },
       // }
     },
-    closed: { opacity: [0.5, 0, 0, 0], x: '-22px', width: '0px' }
+    closed: { opacity: [0.5, 0, 0, 0], x: "-22px", width: "0px" }
   };
   const [isOpen, toggleOpen] = useCycle(false, true);
   return (
@@ -176,7 +150,9 @@ export const SearchInput = props => {
           direction="row"
           alignItems="center"
         >
-          {initialLayerIndices && <CategoryMenu />}
+          <Grid item xs={6}>
+            {initialLayerIndices && <CategoryMenu />}
+          </Grid>
           {/* <ButtonGroup>
             <Button
               className={classes.iconButton}
@@ -195,8 +171,8 @@ export const SearchInput = props => {
             <IconButton
               onClick={() => toggleOpen()}
               style={{
-                display: 'inline-block',
-                position: 'relative'
+                display: "inline-block",
+                position: "relative"
 
                 // background: 'white'
               }}
@@ -206,7 +182,7 @@ export const SearchInput = props => {
           </motion.div>
           <motion.div
             initial="closed"
-            animate={isOpen ? 'open' : 'closed'}
+            animate={isOpen ? "open" : "closed"}
             variants={variants}
 
             // initial={{ '--width': '0px' }}
@@ -217,7 +193,7 @@ export const SearchInput = props => {
               type="search"
               variant="outlined"
               margin="dense"
-              style={{ width: 'inherit' }}
+              style={{ width: "inherit" }}
               // SelectProps={{
               //   MenuProps: {
               //     className: classes.menu,
@@ -277,10 +253,10 @@ export const SearchInput = props => {
           {/* <ToggleButtonGroup size="small" value={view} onChange={handleChange}> */}
           <ToggleButton
             value="shortcutView"
-            selected={view === 'shortcutView'}
+            selected={view === "shortcutView"}
             onClick={(event, value) => {
               handleChange(event, value);
-              setGlobalState('keyMapMode', false);
+              setGlobalState("keyMapMode", false);
             }}
           >
             <Tooltip title="shortcut view" placement="top">
@@ -288,7 +264,7 @@ export const SearchInput = props => {
             </Tooltip>
           </ToggleButton>
           <ToggleButton
-            selected={view === 'keymapView'}
+            selected={view === "keymapView"}
             value="keymapView"
             onClick={handleKeyMapMode}
           >
