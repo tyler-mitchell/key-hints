@@ -60,6 +60,7 @@ import {
 import { TextField } from "@material-ui/core";
 import { useBoolean } from "react-hanger";
 import theme from "../design-system/theme";
+import { StatusBar } from "../KeySheet/NewKeyPanel/NewKeyPanel";
 
 const ConditionalWrap = ({ condition, wrap, children }) => {
   const [flashing] = React.useContext(FlashingContext);
@@ -194,15 +195,12 @@ export const Key = ({
   }, [activeKeys, addMode, editMode, keyMapMode, activeLayers]);
 
   // UseLayoutEffect Hook
-  React.useLayoutEffect(() => {
-    if (active.value && addMode) {
-      setGlobalState("lastKeyRef", label);
-    }
-  }, [active.value]);
+  const [lastKey, setLastKey] = useGlobalState("lastKey");
 
   // Functions
   const addItem = key => {
     const index = _.size(newKeys.keys.key1);
+
     const individualKeys = { ...newKeys.keys["key1"], [index]: key };
     const keys = { key1: individualKeys };
     setNewKeys(p => ({ ...p, keys }));
@@ -214,7 +212,6 @@ export const Key = ({
     });
 
     const keys = { key1: newObj };
-
     setNewKeys(p => ({ ...p, keys }));
   };
   const toggleKey = isActive => {
@@ -233,8 +230,6 @@ export const Key = ({
     }
   };
 
-  const keyTopTextRef = React.useRef(null);
-  setGlobalState("keyTopTextRefs", v => ({ ...v, [label]: keyTopTextRef }));
   const [isModifier, setIsModifier] = React.useState(false);
 
   const controls = useAnimation();
@@ -248,6 +243,10 @@ export const Key = ({
     }
     controls.start(active.value ? activeVariant : "inactive");
   }, [activeColor, activeLayers, active]);
+  React.useEffect(() => {}, []);
+  // React.useEffect(() => {
+  //   setGlobalState("keyTopTextRefs", v => ({ ...v, [label]: keyTopTextRef }));
+  // }, [keyTopTextRef]);
 
   return (
     <ConditionalWrap
@@ -287,6 +286,8 @@ export const Key = ({
           color={defaultColor}
           wt={wt}
           ht={ht}
+          // ref={keyTopTextRef}
+
           // style={{
           //   background
 
@@ -295,29 +296,34 @@ export const Key = ({
         >
           {/* <KeyChar ref={keyTopTextRef}>Basic Editing the view port</KeyChar> */}
 
-          {!keyMapMode && (
+          {!keyMapMode && !(label === lastKey && keyLabelAdded) && (
             <KeyChar>
               {keyName in iconLabels ? iconLabels[keyName] : label}
             </KeyChar>
           )}
-          {keyMapMode && (
+          {(keyMapMode || addMode) && (
             <KeyCharCenter
-              ref={keyTopTextRef}
-              // style={{ transform }}
+            // ref={keyTopTextRef}
 
-              // style={{
-              //   // color: x.interpolate(x=>`rgba(0, 0, 0, ${x})`),
-              //   // height: ht * 0.7 * 0.95,
-              //   // width: (wt - 17) * 0.95,
-              //   position: "absolute",
-              //   textAlign: "center",
-              //   alignItems: "center",
-              //   justifyContent: "center",
-              //   overflow: "hidden",
-              //   fontFamily: "Karla, sans-serif"
-              // }}
+            // ref={keyTopTextRef}
+            // style={{ transform }}
             >
-              <KeyText active={active.value} keyTopText={keyTopText} />
+              {/* <KeyText active={active.value} keyTopText={keyTopText} /> */}
+              {label === lastKey && keyLabelAdded && (
+                <StatusBar.Target
+                  style={{
+                    // height: `${ht * 0.73}px`,
+                    // width: `${wt - 11}px`,
+                    width: "100%",
+
+                    display: "flex",
+                    height: "100%",
+                    overflow: "hidden",
+                    boxSizing: "content-box",
+                    borderRadius: "5px"
+                  }}
+                />
+              )}
             </KeyCharCenter>
           )}
 

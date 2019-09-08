@@ -33,7 +33,6 @@ import {
 const AnimatedAvatar = motion.custom(Avatar);
 const useStyles = makeStyles(theme => ({
   avatar: {
-    margin: 10,
     width: 55,
     height: 55,
     color: "#fff",
@@ -117,7 +116,12 @@ const UploadMenuContainer = motion.custom(styled(Fab)`
 `);
 
 const Upload = props => {
-  const { setShortcutImage, setSnackbarMessage, setSnackbarOpen } = props;
+  const {
+    setShortcutImage,
+    setSnackbarMessage,
+    setSnackbarOpen,
+    setPreviewImage
+  } = props;
   const [uploadState, setUploadState] = React.useState({
     filename: null,
     downloadURL: null,
@@ -161,6 +165,7 @@ const Upload = props => {
         image: file,
         previewImage: reader.result
       });
+      setPreviewImage(reader.result);
     };
 
     if (file) {
@@ -251,7 +256,7 @@ const Upload = props => {
               style={{
                 width: "150px",
                 display: "flex",
-                padding: "5px",
+
                 height: "50px",
                 alignItems: "center",
                 justifyContent: "center"
@@ -287,6 +292,7 @@ const Upload = props => {
                       ...uploadState,
                       previewImage: e.target.value
                     });
+                    setPreviewImage(e.target.value);
                     console.log(`⭐: uploadState`, uploadState.previewImage);
                   }}
                   inputProps={{
@@ -344,6 +350,7 @@ const Upload = props => {
                 // isUploading: false,
                 previewImage: null
               });
+              setPreviewImage(null);
             }}
           />
         </UploadMenuContainer>
@@ -360,7 +367,7 @@ const Upload = props => {
             console.log(`⭐: "SHITTT"`, e.target);
           }
         }}
-        style={{ marginRight: "10px", position: "relative" }}
+        style={{ position: "relative" }}
         animate={
           uploadState.isUploading ? { padding: "9px" } : { padding: "5px" }
         }
