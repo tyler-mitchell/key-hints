@@ -63,7 +63,7 @@ const {
   selectedCategoryIndex: -1,
   selectedKeySheet: 0,
   addMode: false,
-  keyLabelAdded: false,
+  keyLabel: null,
   keyMapMode: false,
   activeLayers: null,
   allLayers: null,

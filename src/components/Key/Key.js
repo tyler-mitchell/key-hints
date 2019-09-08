@@ -118,13 +118,10 @@ export const Key = ({
   const [keyMapMode] = useGlobalState("keyMapMode");
   const [editMode] = useGlobalState("editMode");
   const [addMode] = useGlobalState("addMode");
-  const [keyLabelAdded] = useGlobalState("keyLabelAdded");
+  const [keyLabel] = useGlobalState("keyLabel");
 
   // global key state
   const [activeLayers] = useGlobalState("activeLayers");
-
-  const [index, setIndex] = React.useState(null);
-
   const [newKeys, setNewKeys] = useGlobalState("newKeys");
   const [activeKeys] = useGlobalState("activeKeys");
   const [isThenSequence, setIsThenSequence] = React.useState({
@@ -133,7 +130,7 @@ export const Key = ({
   });
   // use methods hook
   const [
-    { activeColor, defaultColor, keyTopText }, // <- latest state
+    { activeColor, defaultColor }, // <- latest state
     { setActiveMapKey, setInactiveMapKey } // <- callbacks for modifying state
   ] = useMethods(methods, initialState);
 
@@ -152,8 +149,17 @@ export const Key = ({
   };
 
   // Use Effect Hook
+
+  const [isIncluded, setIsIncluded] = React.useState(false);
   React.useEffect(() => {
-    if (flatMap(activeKeys).includes(uniqueKeyName)) {
+    setIsIncluded(flatMap(activeKeys).includes(uniqueKeyName));
+    return () => {
+      setIsIncluded(false);
+    };
+  }, [activeKeys]);
+
+  React.useEffect(() => {
+    if (isIncluded) {
       if (editMode) {
         setNewKeys(p => ({ ...p, keys: { key1: activeKeys } }));
         active.setTrue();
@@ -161,14 +167,14 @@ export const Key = ({
         active.setTrue();
       }
       // Check for 'THEN' key sequence
-      if (activeKeys["THEN"]) {
-        setIsThenSequence(v => ({ ...v, hasSequence: true }));
-        if (activeKeys["THEN"].includes(uniqueKeyName)) {
-          setIsThenSequence(v => ({ ...v, isSequenceKey: true }));
-        } else {
-          setIsThenSequence(v => ({ ...v, isSequenceKey: false }));
-        }
-      }
+      // if (activeKeys["THEN"]) {
+      //   setIsThenSequence(v => ({ ...v, hasSequence: true }));
+      //   if (activeKeys["THEN"].includes(uniqueKeyName)) {
+      //     setIsThenSequence(v => ({ ...v, isSequenceKey: true }));
+      //   } else {
+      //     setIsThenSequence(v => ({ ...v, isSequenceKey: false }));
+      //   }
+      // }
     }
 
     if (keyMapMode && !editMode && activeLayers && uniqueKeyName) {
@@ -180,7 +186,6 @@ export const Key = ({
           setActiveMapKey(layer.color, layer.keyDescription[mainKeyIndex]);
           active.setTrue();
         } else if (isMod) {
-          setIsModifier(true);
           setActiveMapKey(layer.color, label);
           active.setTrue();
         }
@@ -192,7 +197,7 @@ export const Key = ({
       setInactiveMapKey();
       // setInactive();
     };
-  }, [activeKeys, addMode, editMode, keyMapMode, activeLayers]);
+  }, [isIncluded, addMode, editMode, keyMapMode, activeLayers]);
 
   // UseLayoutEffect Hook
   const [lastKey, setLastKey] = useGlobalState("lastKey");
@@ -225,12 +230,10 @@ export const Key = ({
   };
 
   const keyClicked = () => {
-    if ((editMode || addMode) && keyLabelAdded === false) {
+    if ((editMode || addMode) && !keyLabel) {
       toggleKey(active.value);
     }
   };
-
-  const [isModifier, setIsModifier] = React.useState(false);
 
   const controls = useAnimation();
 
@@ -243,7 +246,7 @@ export const Key = ({
     }
     controls.start(active.value ? activeVariant : "inactive");
   }, [activeColor, activeLayers, active]);
-  React.useEffect(() => {}, []);
+
   // React.useEffect(() => {
   //   setGlobalState("keyTopTextRefs", v => ({ ...v, [label]: keyTopTextRef }));
   // }, [keyTopTextRef]);
@@ -258,19 +261,7 @@ export const Key = ({
         </animated.div>
       )}
     >
-      {/* <motion.div animate={controls} style={{ backfaceVisibility: "hidden" }}> */}
-      {/* <ShadowOverlay
-        width={wt}
-        height={ht}
-        custom={{ activeColor, defaultColor }}
-        animate={controls}
-        variants={keyTopVariants}
-      /> */}
-
       <AnimatedKeyContainer
-        // active={setActive.value}
-        // active={active}
-        // style={{ filter: `opacity(${grayscale})` }}
         margin={margin}
         initial={false}
         custom={{ activeColor, defaultColor, i: 5 }}
@@ -282,21 +273,10 @@ export const Key = ({
         ht={ht}
         onClick={keyClicked}
       >
-        <KeyTop
-          color={defaultColor}
-          wt={wt}
-          ht={ht}
-          // ref={keyTopTextRef}
-
-          // style={{
-          //   background
-
-          //   // backgroundClip: 'content-box',
-          // }}
-        >
+        <KeyTop color={defaultColor} wt={wt} ht={ht}>
           {/* <KeyChar ref={keyTopTextRef}>Basic Editing the view port</KeyChar> */}
 
-          {!keyMapMode && !(label === lastKey && keyLabelAdded) && (
+          {!keyMapMode && !(label === lastKey && keyLabel) && (
             <KeyChar>
               {keyName in iconLabels ? iconLabels[keyName] : label}
             </KeyChar>
@@ -309,7 +289,7 @@ export const Key = ({
             // style={{ transform }}
             >
               {/* <KeyText active={active.value} keyTopText={keyTopText} /> */}
-              {label === lastKey && keyLabelAdded && (
+              {label === lastKey && keyLabel && (
                 <StatusBar.Target
                   style={{
                     // height: `${ht * 0.73}px`,
@@ -329,6 +309,7 @@ export const Key = ({
 
           {/* {(!keyMapMode) && <KeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</KeyChar>} */}
         </KeyTop>
+
         {/* {((setActive.value && !isModifier) || !keyMapMode) && (
             <BottomKeyChar>
               {keyName in iconLabels ? iconLabels[keyName] : label}

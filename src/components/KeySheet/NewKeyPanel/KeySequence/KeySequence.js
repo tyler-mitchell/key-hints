@@ -134,17 +134,11 @@ const variantContainer = {
 
 const Sequence = keyItem => {
   // const items = Object.keys(keyItem).map((k, index) => (keyItem[k]));
-  const classes = useSequenceStyles();
-  const [items, setItems] = React.useState([]);
 
-  const [newKeys, setNewKeys] = useGlobalState("newKeys");
-  const [keyLabelAdded, setKeyLabelAdded] = useGlobalState("keyLabelAdded");
+  const [newKeys] = useGlobalState("newKeys");
+
   // const [isActionHovered, setIsActionHovered] = useGlobalState('isActionHovered');
   const [sequence, setSequence] = React.useState([]);
-  const [renderSequence, setRenderSequence] = React.useState([]);
-  const [len, setLen] = React.useState(null);
-  const prevSequence = usePrevious(sequence);
-  const [curVariant, setCurVariant] = React.useState(actionVariants);
 
   React.useEffect(() => {
     const result = _.chain(newKeys.keys.key1)

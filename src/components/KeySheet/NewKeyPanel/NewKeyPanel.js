@@ -68,6 +68,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { AutocompleteHashtags } from "./CategoryAutoComplete/CategoryInput";
 import Upload from "./Upload";
 import { lighten } from "polished";
+import { ToggleButton } from "@material-ui/lab";
 
 import { TextareaAutosize } from "@material-ui/core";
 import { Subject } from "@material-ui/icons";
@@ -85,10 +86,12 @@ import { InputBase } from "@material-ui/core";
 import {
   CheckCircleRounded as CheckIcon,
   ErrorRounded as ErrorIcon,
-  Close as CloseIcon
+  Close as CloseIcon,
+  ImageRounded as ImageIcon
 } from "@material-ui/icons";
 import { CardHeader, AppBar } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 export const StatusBar = createTeleporter();
 
 const useStyles = makeStyles(theme => ({
@@ -145,25 +148,33 @@ const useStyles = makeStyles(theme => ({
   labelButton: {
     textTransform: "none",
     zIndex: 4,
-    top: -25,
+    top: 3,
     color: theme.palette.common.grey[500]
   },
+  toggleButtonGroupRoot: {
+    textTransform: "none"
+  },
+  toggleButtonGrouped: {
+    padding: "0px 5px 0px 6px",
+    textTransform: "none",
+    background: "red",
+    "&:not(:first-child)": {
+      marginLeft: -1,
+      background: "red",
 
-  textArea: {
-    border: "1px solid #e2e2e1",
-    // overflow: "hidden",
-    borderRadius: 4,
-    backgroundColor: "#fcfcfb",
-    transition: theme.transitions.create(["border-color", "box-shadow"]),
-    "&:hover": {
-      backgroundColor: "#fff"
+      borderLeft: "1px solid transparent",
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0
+    },
+    "&:not(:last-child)": {
+      borderTopRightRadius: 0,
+      background: "red",
+
+      borderBottomRightRadius: 0
     }
-
-    // "&$focused": {
-    //   backgroundColor: "#fff",
-    //   boxShadow: `${lighten(0.1, theme.palette.primary.main)} 0 0 0 2px`,
-    //   borderColor: theme.palette.primary.main
-    // }
+  },
+  toggleButtonSmall: {
+    padding: 0
   }
 }));
 
@@ -251,6 +262,7 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
     { key: 4, label: "Vue.js" }
   ]);
   const [isKeyAvailable, setIsKeyAvailable] = React.useState(false);
+  const [isEmpty, setIsEmpty] = React.useState(true);
 
   const [keyTopText, setKeyTopText] = React.useState("");
   const [lastKey, setLastKey] = useGlobalState("lastKey");
@@ -266,6 +278,7 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
   // Check for key availability
   React.useEffect(() => {
     const keys = _.values(newKeys.keys.key1);
+    setIsEmpty(Object.keys(newKeys.keys.key1).length === 0);
     setLastKey(keys[keys.length - 1]);
     if (keys in allKeys) {
       setIsKeyAvailable(false);
@@ -278,7 +291,7 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
     if (saveClicked !== 0) {
       // trigger upload
       // save file to state
-      if (Object.keys(newKeys.keys.key1).length === 0) {
+      if (isEmpty) {
         setSnackbarMessage("Empty shortcut");
         setSnackbarVariant("error");
       } else if (!keyInfo.description) {
@@ -308,9 +321,10 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
         description: "",
         keyDescription: ""
       });
-      setKeyLabelAdded(false);
+
+      setPreviewImage(null);
+      setKeyLabelType(null);
     }
-    return () => setPreviewImage(null);
   }, [addMode]);
 
   async function handleSaveKeyClick() {
@@ -318,8 +332,8 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
     addNewKeyToFirebase(newKey, shortcutImage);
   }
 
-  function handleAddLabel(type) {
-    if (Object.keys(newKeys.keys.key1).length === 0) {
+  function handleAddLabel(event, type) {
+    if (isEmpty) {
       setSnackbarMessage("Empty shortcut");
       setSnackbarOpen(true);
     } else if (!isKeyAvailable) {
@@ -330,7 +344,6 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
         setPreviewImage(null);
       }
       setKeyLabelType(type);
-      setKeyLabelAdded(true);
     }
   }
   // Snack Bar
@@ -342,8 +355,8 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
   const [snackbarRef] = useGlobalState("snackbarRef");
   const [snackbarMessage, setSnackbarMessage] = React.useState("");
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
-  const [keyLabelAdded, setKeyLabelAdded] = useGlobalState("keyLabelAdded");
-  const [keyLabelType, setKeyLabelType] = React.useState(null);
+
+  const [keyLabelType, setKeyLabelType] = useGlobalState("keyLabel");
   // TODO:
   // add a panel behind last key that expands rightward when "add label" is clicked
   const onSnackbarClose = (e, reason) => {
@@ -404,32 +417,6 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
                 >
                   <Grid container item alignItems="center" justify="flex-start">
                     <Grid item xs={10} style={{ position: "relative" }}>
-                      <Grid container justify="flex-start">
-                        <Grid item>
-                          <Button
-                            size="small"
-                            variant="text"
-                            {...bindTrigger(mapInputPopupState)}
-                            className={classes.labelButton}
-                            onClick={() => handleAddLabel("text")}
-                          >
-                            <Subject style={{ marginRight: "3px" }} />
-                            Add Text Label
-                          </Button>
-                        </Grid>
-                        <Grid item>
-                          <Button
-                            size="small"
-                            variant="text"
-                            className={classes.labelButton}
-                            onClick={() => handleAddLabel("image")}
-                          >
-                            <Subject style={{ marginRight: "3px" }} />
-                            Add Image Label
-                          </Button>
-                        </Grid>
-                      </Grid>
-
                       <Grid
                         container
                         item
@@ -472,19 +459,30 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
                   <Grid
                     container
                     justify="flex-start"
-                    direction="row"
-                    alignItems="center"
+                    direction="column"
+                    alignItems="flex-start"
                     item
                     xs={12}
+                    style={{ marginBottom: "15px" }}
                   >
-                    <Grid item style={{ marginBottom: "15px" }}>
-                      <div
-                        className={classes.textArea}
+                    <Grid item style={{ marginBottom: "10px" }}>
+                      <motion.div
+                        animate={
+                          keyLabelType === "text"
+                            ? { borderColor: "#e2e2e1" }
+                            : { borderColor: "transparent" }
+                        }
                         style={{
+                          border: "1px solid transparent",
+
+                          borderRadius: 4,
+                          backgroundColor: "white",
                           display: "flex",
                           flexDirection: "column",
                           justifyContent: "flex-start",
-                          alignItems: "center"
+                          alignItems: "center",
+                          position: "relative",
+                          zIndex: 8
                         }}
                       >
                         <AutocompleteHashtags
@@ -508,7 +506,54 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
                             rows={1}
                           />
                         )}
-                      </div>
+                      </motion.div>
+                    </Grid>
+                    <Grid item>
+                      <motion.div
+                        animate={
+                          !isEmpty && isKeyAvailable
+                            ? { y: [-25, 0, 0], opacity: 1 }
+                            : { y: [0, -25, -50], opacity: [0.2, 0, 0] }
+                        }
+                      >
+                        <ToggleButtonGroup
+                          onChange={handleAddLabel}
+                          value={keyLabelType}
+                          // size="small"
+                          exclusive
+                          style={{ textTransform: "none" }}
+                          aria-label="text alignment"
+                        >
+                          <ToggleButton
+                            value="image"
+                            variant="text"
+                            style={{ textTransform: "none" }}
+
+                            // classes={{
+                            //   root: classes.toggleButtonGroupRoot
+                            // }}
+                            // classes={{
+                            //   root: classes.labelButton
+                            // }}
+                          >
+                            <ImageIcon style={{ marginRight: "3px" }} />
+                            Add Image Label
+                          </ToggleButton>
+
+                          <ToggleButton
+                            value="text"
+                            variant="text"
+                            style={{ textTransform: "none" }}
+                            {...bindTrigger(mapInputPopupState)}
+                            // classes={{
+                            //   root: classes.labelButton
+                            // }}
+                          >
+                            <Subject style={{ marginRight: "3px" }} />
+                            Add Text Label
+                          </ToggleButton>
+                        </ToggleButtonGroup>
+                      </motion.div>
                     </Grid>
                   </Grid>
                 </CardHead>
@@ -517,7 +562,7 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
                   <KeySequence
                     isKeyAvailable={isKeyAvailable}
                     popupState={mapInputPopupState}
-                    isEmpty={Object.keys(newKeys.keys.key1).length === 0}
+                    isEmpty={isEmpty}
                     style={{ position: "absolute" }}
                     newKeys={newKeys.keys}
                   />

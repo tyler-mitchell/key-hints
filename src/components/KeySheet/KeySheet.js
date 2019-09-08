@@ -370,7 +370,12 @@ export const KeySheet = props => {
 
           <motion.div
             onClick={handleAddClick}
-            initial={{ position: "absolute", right: -20, bottom: -10 }}
+            initial={{
+              position: "absolute",
+              zIndex: 3,
+              right: -20,
+              bottom: -10
+            }}
             custom={1}
             onTransitionEnd={onTransitionEnd}
             animate={!addMode ? "openAddButton" : "closedAddButton"}
@@ -380,7 +385,12 @@ export const KeySheet = props => {
           </motion.div>
           <motion.div
             onClick={handleSaveClick}
-            initial={{ position: "absolute", right: 20, bottom: -10 }}
+            initial={{
+              position: "absolute",
+              right: 20,
+              zIndex: 50,
+              bottom: -10
+            }}
             custom={1.1}
             onTransitionEnd={onTransitionEnd}
             animate={
@@ -392,7 +402,12 @@ export const KeySheet = props => {
           </motion.div>
           <motion.div
             onClick={handleCancelClick}
-            initial={{ position: "absolute", right: -20, bottom: -10 }}
+            initial={{
+              position: "absolute",
+              zIndex: 50,
+              right: -20,
+              bottom: -10
+            }}
             custom={1}
             onTransitionEnd={onTransitionEnd}
             animate={

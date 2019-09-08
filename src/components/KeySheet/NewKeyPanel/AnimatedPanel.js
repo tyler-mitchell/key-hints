@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 
 const variants = {
   opened: i => ({
-    y: i * 0.44,
+    y: i * 0.4,
     transition: {
       type: "spring",
       // damping: 50,
