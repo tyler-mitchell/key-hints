@@ -279,7 +279,7 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
   React.useEffect(() => {
     const keys = _.values(newKeys.keys.key1);
     setIsEmpty(Object.keys(newKeys.keys.key1).length === 0);
-    setLastKey(keys[keys.length - 1]);
+
     if (keys in allKeys) {
       setIsKeyAvailable(false);
     } else {
@@ -321,9 +321,9 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
         description: "",
         keyDescription: ""
       });
-
       setPreviewImage(null);
       setKeyLabelType(null);
+      setKeyTopText(null);
     }
   }, [mode]);
 

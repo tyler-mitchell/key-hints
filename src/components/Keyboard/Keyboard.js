@@ -219,83 +219,82 @@ const KeyboardContainer = () => {
       fixed
     >
       {/* <div className="inner-shadow" style={{ opacity: 0.5 }} /> */}
-      <FlashingProvider>
-        <OuterFrame>
-          <InnerFrame
-            container
-            justify="center"
-            alignItems="center"
-            direction="column"
-            spacing={0}
-          >
-            {/* <ThemeProvider theme={rowTheme}> */}
-            <Row
-              justify="center"
-              container
-              direction="row"
-              wrap="nowrap"
-              item
-              xs={12}
-              zIndex={1}
-            >
-              <KeyRow row={firstRow} />
-            </Row>
-            <Row
-              justify="center"
-              container
-              direction="row"
-              wrap="nowrap"
-              item
-              // justify="space-evenly"
-              // alignItems="stretch"
-              xs={12}
-              zIndex={2}
-            >
-              <KeyRow row={secondRow} />
-            </Row>
-            <Row
-              justify="center"
-              container
-              direction="row"
-              wrap="nowrap"
-              item
-              xs={12}
-              // justify="space-evenly"
 
-              zIndex={3}
-            >
-              <KeyRow row={thirdRow} />
-            </Row>
-            <Row
-              justify="center"
-              container
-              direction="row"
-              wrap="nowrap"
-              item
-              // justify="space-evenly"
-              // alignItems="stretch"
-              xs={12}
-              zIndex={4}
-            >
-              <KeyRow row={fourthRow} />
-            </Row>
-            <Row
-              justify="center"
-              container
-              direction="row"
-              wrap="nowrap"
-              item={true}
-              // justify="space-evenly"
-              // alignItems="stretch"
-              xs={12}
-              zIndex={5}
-            >
-              <KeyRow row={fifthRow} />
-            </Row>
-            {/* </ThemeProvider> */}
-          </InnerFrame>
-        </OuterFrame>
-      </FlashingProvider>
+      <OuterFrame>
+        <InnerFrame
+          container
+          justify="center"
+          alignItems="center"
+          direction="column"
+          spacing={0}
+        >
+          {/* <ThemeProvider theme={rowTheme}> */}
+          <Row
+            justify="center"
+            container
+            direction="row"
+            wrap="nowrap"
+            item
+            xs={12}
+            zIndex={1}
+          >
+            <KeyRow row={firstRow} />
+          </Row>
+          <Row
+            justify="center"
+            container
+            direction="row"
+            wrap="nowrap"
+            item
+            // justify="space-evenly"
+            // alignItems="stretch"
+            xs={12}
+            zIndex={2}
+          >
+            <KeyRow row={secondRow} />
+          </Row>
+          <Row
+            justify="center"
+            container
+            direction="row"
+            wrap="nowrap"
+            item
+            xs={12}
+            // justify="space-evenly"
+
+            zIndex={3}
+          >
+            <KeyRow row={thirdRow} />
+          </Row>
+          <Row
+            justify="center"
+            container
+            direction="row"
+            wrap="nowrap"
+            item
+            // justify="space-evenly"
+            // alignItems="stretch"
+            xs={12}
+            zIndex={4}
+          >
+            <KeyRow row={fourthRow} />
+          </Row>
+          <Row
+            justify="center"
+            container
+            direction="row"
+            wrap="nowrap"
+            item={true}
+            // justify="space-evenly"
+            // alignItems="stretch"
+            xs={12}
+            zIndex={5}
+          >
+            <KeyRow row={fifthRow} />
+          </Row>
+          {/* </ThemeProvider> */}
+        </InnerFrame>
+      </OuterFrame>
     </Cover>
   );
 };

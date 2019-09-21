@@ -126,7 +126,7 @@ export default function KeyTableProvider({ children }) {
 
     setGlobalState("activeKeys", newKey.keys.key1);
     setGlobalState("selectedItem", keyID);
-    setGlobalState("newKeys", v => ({ ...v, keys: { key1: {} } }));
+    setGlobalState("newKeys", v => ({ ...v, keys: { key1: [] } }));
     setCurShortcutObjectKey(keyID);
     setGlobalState("mode", null);
   };

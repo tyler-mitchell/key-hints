@@ -305,27 +305,30 @@ export const KeySheet = props => {
                 // zIndex: 3,
               }}
             />
-            <CardHead
-              className={classes.appBar}
-              indicatorColor="primary"
-              textColor="primary"
-            />
-            <Grid
-              container
-              xs={12}
-              style={{}}
-              justify="center"
-              alignItems="center"
-            />
-            <SearchInput
-              theme={theme}
-              onChange={onChange}
-              placeholder="Search…"
-              inputProps={{ "aria-label": "Search" }}
-            />
+
+            <div
+              style={{
+                position: "relative",
+                zIndex: 9000
+              }}
+            >
+              <SearchInput
+                theme={theme}
+                onChange={onChange}
+                placeholder="Search…"
+                inputProps={{ "aria-label": "Search" }}
+              />
+            </div>
             <Divider />
 
-            <CardContent style={{ height: 360, marginBottom: "30px" }}>
+            <CardContent
+              style={{
+                position: "relative",
+                zIndex: 0,
+                height: 360,
+                marginBottom: "30px"
+              }}
+            >
               {isEmpty(filteredKeyTable) && "Keysheet is empty"}
               {!isEmpty(filteredKeyTable) && (
                 // height: 360

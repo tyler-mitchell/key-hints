@@ -32,31 +32,16 @@ import {
   extrapolate,
   Easing
 } from "react-spring";
-import fitty from "fitty";
-import Typography from "@material-ui/core/Typography";
-import {
-  ArrowBack as LeftArrowIcon,
-  ArrowForward as RightArrowIcon,
-  ArrowUpward as UpArrowIcon,
-  ArrowDownward as DownArrowIcon
-} from "@material-ui/icons";
+
 import "./key.css";
 import useMethods from "use-methods";
-
-import { FlashingKey } from "./FlashingKey";
 
 import { useGlobalState, setGlobalState } from "../../state";
 import _ from "lodash";
 
 import flatMap from "lodash/flatMap";
 import KeyText from "./KeyText/KeyText";
-import {
-  motion,
-  useAnimation,
-  useMotionValue,
-  useTransform,
-  transform
-} from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { TextField } from "@material-ui/core";
 import { useBoolean } from "react-hanger";
 import theme from "../design-system/theme";
@@ -116,39 +101,35 @@ export const Key = ({
 }) => {
   // global mode state
   const [mode] = useGlobalState("mode");
+  // const [lastKey] = useGlobalState("lastKey");
 
   const [keyLabel] = useGlobalState("keyLabel");
-
+  const [isMod, setIsMod] = React.useState(false);
   // global key state
   const [activeLayers] = useGlobalState("activeLayers");
   const [newKeys, setNewKeys] = useGlobalState("newKeys");
+  const isMapKey = React.useMemo(() => {
+    const isLabelKey =
+      label === newKeys.keys.key1[newKeys.keys.key1.length - 1] &&
+      mode &&
+      keyLabel &&
+      uniqueKeyName;
+    if (mode === "KEYMAP_MODE" || isLabelKey) {
+      return true;
+    } else {
+      return false;
+    }
+  }, [mode, keyLabel]);
+
   const [activeKeys] = useGlobalState("activeKeys");
-  const [isThenSequence, setIsThenSequence] = React.useState({
-    hasSequence: false,
-    isSequenceKey: false
-  });
-  // use methods hook
   const [
-    { activeColor, defaultColor }, // <- latest state
+    { activeColor, defaultColor, keyTopText }, // <- latest state
     { setActiveMapKey, setInactiveMapKey } // <- callbacks for modifying state
   ] = useMethods(methods, initialState);
 
-  const active = useBoolean(false);
-  const iconLabels = {
-    LeftArrow: <LeftArrowIcon>{label}</LeftArrowIcon>,
-    RightArrow: <RightArrowIcon>{label}</RightArrowIcon>,
-    UpArrow: <UpArrowIcon>{label}</UpArrowIcon>,
-    DownArrow: <DownArrowIcon>{label}</DownArrowIcon>
-    // LeftClick: <UpArrowIcon>{label}</UpArrowIcon>,
-    // RightClick: <MouseIcon>{label}</MouseIcon>,
-    // MiddleMouseButton: <UpArrowIcon>{label}</UpArrowIcon>,
-    // ScrollUp: <UpArrowIcon>{label}</UpArrowIcon>,
-    // ScrollDown: <UpArrowIcon>{label}</UpArrowIcon>,
-    // DragMouse: <UpArrowIcon>{label}</UpArrowIcon>
-  };
+  const [active, setActive] = React.useState(false);
 
   // Use Effect Hook
-
   const [isIncluded, setIsIncluded] = React.useState(false);
   React.useEffect(() => {
     setIsIncluded(flatMap(activeKeys).includes(uniqueKeyName));
@@ -161,143 +142,96 @@ export const Key = ({
     if (isIncluded) {
       if (mode === "EDIT_MODE") {
         setNewKeys(p => ({ ...p, keys: { key1: activeKeys } }));
-        active.setTrue();
+        setActive(true);
       } else if (mode !== "KEYMAP_MODE") {
-        active.setTrue();
+        setActive(true);
       }
-      // Check for 'THEN' key sequence
-      // if (activeKeys["THEN"]) {
-      //   setIsThenSequence(v => ({ ...v, hasSequence: true }));
-      //   if (activeKeys["THEN"].includes(uniqueKeyName)) {
-      //     setIsThenSequence(v => ({ ...v, isSequenceKey: true }));
-      //   } else {
-      //     setIsThenSequence(v => ({ ...v, isSequenceKey: false }));
-      //   }
-      // }
     }
 
     if (mode === "KEYMAP_MODE" && activeLayers && uniqueKeyName) {
       _.forEach(activeLayers, (layer, colorIndex) => {
         const mainKeyIndex = _.indexOf(layer.mainKeys, label);
-        const isMod = _.includes(layer.layer, label);
+        const curIsMod = !layer.isSingleKey && _.includes(layer.layer, label);
 
-        if (mainKeyIndex >= 0) {
-          setActiveMapKey(layer.color, layer.keyDescription[mainKeyIndex]);
-          active.setTrue();
-        } else if (isMod) {
+        console.log(`⭐: layer.layer`, layer.layer);
+        if (curIsMod) {
+          setIsMod(true);
           setActiveMapKey(layer.color, label);
-          active.setTrue();
+          setActive(true);
+        } else if (mainKeyIndex >= 0) {
+          setActiveMapKey(layer.color, layer.keyDescription[mainKeyIndex]);
+
+          setActive(true);
         }
       });
     }
 
     return () => {
-      active.setFalse();
+      setActive(false);
       setInactiveMapKey();
-      // setInactive();
     };
   }, [isIncluded, mode, activeLayers]);
 
   // UseLayoutEffect Hook
-  const [lastKey, setLastKey] = useGlobalState("lastKey");
 
   // Functions
   const addItem = key => {
-    const index = _.size(newKeys.keys.key1);
-
-    const individualKeys = { ...newKeys.keys["key1"], [index]: key };
-    const keys = { key1: individualKeys };
-    setNewKeys(p => ({ ...p, keys }));
+    setNewKeys(
+      produce(v => {
+        v.keys.key1.push(key);
+      })
+    );
   };
   const removeItem = key => {
-    const key1 = newKeys.keys.key1;
-    const newObj = _.filter(key1, function(v) {
-      return v !== key;
-    });
-
-    const keys = { key1: newObj };
-    setNewKeys(p => ({ ...p, keys }));
+    setNewKeys(
+      produce(v => {
+        v.keys.key1.splice(v.keys.key1.findIndex(k => k === key), 1);
+      })
+    );
   };
   const toggleKey = isActive => {
     if (isActive) {
       removeItem(label);
-      active.setFalse();
+      setActive(false);
     } else {
       addItem(label);
-      active.setTrue();
+      setActive(true);
     }
   };
 
   const keyClicked = () => {
     if ((mode === "EDIT_MODE" || mode === "ADD_MODE") && !keyLabel) {
-      toggleKey(active.value);
+      toggleKey(active);
     }
   };
 
   const controls = useAnimation();
 
   React.useEffect(() => {
-    let activeVariant = "active";
-    if (isThenSequence.isSequenceKey) {
-      activeVariant = ["active", "sequence2"];
-    } else if (isThenSequence.hasSequence) {
-      activeVariant = ["active", "sequence1"];
-    }
-    controls.start(active.value ? activeVariant : "inactive");
+    controls.start(active ? "active" : "inactive");
   }, [activeColor, activeLayers, active]);
-
-  // React.useEffect(() => {
-  //   setGlobalState("keyTopTextRefs", v => ({ ...v, [label]: keyTopTextRef }));
-  // }, [keyTopTextRef]);
-
   return (
-    <ConditionalWrap
-      condition={mode === "EDIT_MODE" && active.value}
-      style={{ backfaceVisibility: "hidden", filter: "blur(0)" }}
-      wrap={(children, flashing) => (
-        <animated.div key={key} style={flashing}>
-          {children}
-        </animated.div>
-      )}
+    <AnimatedKeyContainer
+      margin={margin}
+      initial={false}
+      custom={{ activeColor, defaultColor, i: 5 }}
+      animate={controls}
+      variants={variants}
+      label={label}
+      wt={wt}
+      ht={ht}
+      onClick={keyClicked}
     >
-      <AnimatedKeyContainer
-        margin={margin}
-        initial={false}
-        custom={{ activeColor, defaultColor, i: 5 }}
-        animate={controls}
-        variants={variants}
-        // transition={{ duration: 0.3 }}
-        label={label}
-        wt={wt}
-        ht={ht}
-        onClick={keyClicked}
-      >
-        <KeyTop color={defaultColor} wt={wt} ht={ht}>
-          {/* <KeyChar ref={keyTopTextRef}>Basic Editing the view port</KeyChar> */}
-
-          {!(mode === "KEYMAP_MODE") && !(label === lastKey && keyLabel) && (
-            <KeyChar>
-              {keyName in iconLabels ? iconLabels[keyName] : label}
-            </KeyChar>
-          )}
-          {(mode === "EDIT_MODE" || mode === "ADD_MODE") &&
-            label === lastKey &&
-            keyLabel && (
-              <KeyCharCenter
-
-              // ref={keyTopTextRef}
-
-              // ref={keyTopTextRef}
-              // style={{ transform }}
-              >
-                {/* <KeyText active={active.value} keyTopText={keyTopText} /> */}
-
+      <KeyTop color={defaultColor} wt={wt} ht={ht}>
+        {isMapKey ? (
+          <>
+            <KeyCharCenter>
+              {mode === "KEYMAP_MODE" ? (
+                <KeyText keyTopText={keyTopText} />
+              ) : (
                 <StatusBar.Target
                   style={{
-                    // height: `${ht * 0.73}px`,
-                    // width: `${wt - 11}px`,
                     width: "100%",
-
                     display: "flex",
                     height: "100%",
                     overflow: "hidden",
@@ -305,37 +239,26 @@ export const Key = ({
                     borderRadius: "5px"
                   }}
                 />
-              </KeyCharCenter>
-            )}
+              )}
+            </KeyCharCenter>
+          </>
+        ) : (
+          <KeyChar>{label}</KeyChar>
+        )}
 
-          {/* {(!keyMapMode) && <KeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</KeyChar>} */}
-        </KeyTop>
-
-        {/* {((setActive.value && !isModifier) || !keyMapMode) && (
-            <BottomKeyChar>
-              {keyName in iconLabels ? iconLabels[keyName] : label}
-            </BottomKeyChar>
-          )} */}
-      </AnimatedKeyContainer>
-      {/* </motion.div> */}
-    </ConditionalWrap>
+        {/* {(!keyMapMode) && <KeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</KeyChar>} */}
+      </KeyTop>
+      {isMapKey && !isMod && active && <BottomKeyChar>{label}</BottomKeyChar>}
+    </AnimatedKeyContainer>
   );
 };
 
 const variants = {
   active: ({ activeColor }) => ({
-    // borderRadius: ["20%", "20%", "50%", "50%", "20%"],
-    // rotateY: 180,
-    // rotateX: -160,
     borderTopColor: `${shade(0.02, activeColor)}`,
-    // scale: [1.02, 1, 0.95, 1.1, 1],
-    // opacity: [0.8, 0.9, 1],
     borderBottomColor: `${shade(0.3, activeColor)}`,
     borderLeftColor: `${shade(0.09, activeColor)}`,
     borderRightColor: `${shade(0.09, activeColor)}`,
-    // transition: { type: "spring", mass: 0.5 },
-    // boxShadow: " 0px 0px 0px 3px rgba(0,0,0,0.5)",
-    // boxShadow: " 0px 0px 8px 0px black",
     transition: { duration: 0.3 },
     y: 0,
     filter: `grayscale(${[300, 200, 400]})`,
@@ -352,11 +275,8 @@ const variants = {
   sequence2: ({ activeColor, i }) => ({
     y: 5,
     transition: {
-      // elapsed: 1,
       type: "spring",
-      // restSpeed: 0.5,
       velocity: 5,
-      // flip: Infinity,
       from: 30,
       to: 0
 
@@ -378,7 +298,8 @@ const variants = {
     backgroundImage: `linear-gradient(-30deg, ${shade(
       0.05,
       defaultColor
-    )} 0%, ${lighten(0.2, defaultColor)} 50%)`
+    )} 0%, ${lighten(0.2, defaultColor)} 50%)`,
+    transition: { duration: 0.3 }
   })
 };
 

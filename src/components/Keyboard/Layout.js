@@ -5,6 +5,7 @@ import {
   MouseScrollDownIcon,
   MiddleMouseButtonIcon
 } from "../Key/Icons";
+
 import React from "react";
 // const keySize = 55;
 // const tabSize = 1.5 * keySize;
@@ -24,6 +25,13 @@ import {
   KeyCharTopCenter,
   KeyCharCenter
 } from "../Key/Key.styles";
+
+import {
+  ArrowBack as LeftArrowIcon,
+  ArrowForward as RightArrowIcon,
+  ArrowUpward as UpArrowIcon,
+  ArrowDownward as DownArrowIcon
+} from "@material-ui/icons";
 import { Windows10Logo } from "../../assets";
 
 export const keySize = 70;
@@ -143,7 +151,11 @@ export const fourthRow = {
   Period: { label: ".", size: regularSize, KeyChar: KeyCharTopLeft },
   Slash: { label: "/", size: regularSize, KeyChar: KeyCharTopLeft },
   ShiftRight: { label: "Shift", size: rshiftSize, KeyChar: KeyCharCenter },
-  UpArrow: { label: "↑", size: regularSize, KeyChar: KeyCharCenter },
+  UpArrow: {
+    label: <UpArrowIcon />,
+    size: regularSize,
+    KeyChar: KeyCharCenter
+  },
   Delete: { label: "Delete", size: regularSize, KeyChar: KeyCharCenter }
 };
 export const excludedKeys = {
@@ -169,9 +181,21 @@ export const fifthRow = {
   AltRight: { label: "Alt", size: regularSize, KeyChar: KeyCharCenter },
   ContextMenu: { label: "≣", size: regularSize, KeyChar: KeyCharCenter },
   ControlRight: { label: "Ctrl", size: regularSize, KeyChar: KeyCharCenter },
-  LeftArrow: { label: "←", size: regularSize, KeyChar: KeyCharCenter },
-  DownArrow: { label: "↓", size: regularSize, KeyChar: KeyCharCenter },
-  RightArrow: { label: "→", size: regularSize, KeyChar: KeyCharCenter }
+  LeftArrow: {
+    label: <LeftArrowIcon />,
+    size: regularSize,
+    KeyChar: KeyCharCenter
+  },
+  DownArrow: {
+    label: <DownArrowIcon />,
+    size: regularSize,
+    KeyChar: KeyCharCenter
+  },
+  RightArrow: {
+    label: <RightArrowIcon />,
+    size: regularSize,
+    KeyChar: KeyCharCenter
+  }
 };
 
 export const miscKeys = {

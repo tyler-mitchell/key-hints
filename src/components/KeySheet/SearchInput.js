@@ -40,8 +40,10 @@ import { InputAdornment } from "@material-ui/core";
 import { Tooltip } from "@material-ui/core";
 import { TextField } from "@material-ui/core";
 
+const AnimatedPaper = motion.custom(Paper);
 const useStyles = makeStyles({
   root: {
+    width: "100%",
     padding: "10px 10px",
     display: "flex",
     borderRadius: "10px 10px 0px 0px",
@@ -102,7 +104,7 @@ export const SearchInput = props => {
     setMode(null);
     updateKeyToFirebase(newKeys);
 
-    setGlobalState("newKeys", v => ({ ...v, keys: { key1: {} } }));
+    setGlobalState("newKeys", v => ({ ...v, keys: { key1: [] } }));
   };
 
   const [selected, setSelected] = React.useState(false);
@@ -115,7 +117,11 @@ export const SearchInput = props => {
       setGlobalState("mode", "KEYMAP_MODE");
     }
   }
-
+  React.useEffect(() => {
+    if (mode !== "KEYMAP_MODE" && selected) {
+      setSelected(false);
+    }
+  }, [mode]);
   const [view, setView] = React.useState("shortcutView");
 
   const handleChange = (event, newView) => {};
@@ -136,7 +142,12 @@ export const SearchInput = props => {
   };
   const [isOpen, toggleOpen] = useCycle(false, true);
   return (
-    <Paper className={classes.root}>
+    <motion.dialog
+      open={true}
+      animate={mode === "KEYMAP_MODE" ? "opened" : "closed"}
+      variants={paperVariants}
+      className={classes.root}
+    >
       <Grid
         container
         xs={12}
@@ -265,6 +276,36 @@ export const SearchInput = props => {
           {/* </ToggleButtonGroup> */}
         </Grid>
       </Grid>
-    </Paper>
+    </motion.dialog>
   );
+};
+const paperVariants = {
+  opened: {
+    paddingTop: 100,
+
+    transition: {
+      type: "spring",
+      // damping: 50,
+      stiffness: 250,
+      // velocity: 800
+      damping: 20,
+      mass: 2
+
+      // mass: 0.1
+    }
+  },
+  closed: {
+    paddingTop: 10,
+    transition: {
+      type: "spring",
+
+      stiffness: 200,
+      velocity: 150,
+      damping: 20,
+      mass: 2,
+      delay: 0.1
+      // restSpeed: 0.3
+      // mass: 0.1
+    }
+  }
 };

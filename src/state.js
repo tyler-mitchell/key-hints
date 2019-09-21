@@ -76,7 +76,7 @@ const {
   lastKeyRef: null,
 
   newKeys: {
-    keys: { key1: {} },
+    keys: { key1: [] },
     description: "no description",
     category: [],
     keyDescription: ""
@@ -84,8 +84,6 @@ const {
   sheetCategory: "All",
   sheetNames: {},
   curShortcutObjectKey: null,
-  devFonts: fonts,
-  currentFont: "Encode Sans Expanded, sans-serif",
   selectedItemIndex: null,
   snackbarRef: null
 });
@@ -93,13 +91,13 @@ const {
 export const clearKeySelection = () => {
   setGlobalState("selectedItem", null);
   setGlobalState("activeKeys", {});
-  setGlobalState("newKeys", v => ({ ...v, keys: { key1: {} } }));
+  setGlobalState("newKeys", v => ({ ...v, keys: { key1: [] } }));
 };
 
 export const selectNewSheet = index => {
   setGlobalState("selectedItem", null);
   setGlobalState("activeKeys", {});
-  setGlobalState("newKeys", v => ({ ...v, keys: { key1: {} } }));
+  setGlobalState("newKeys", v => ({ ...v, keys: { key1: [] } }));
   setGlobalState("selectedKeySheet", index);
 };
 
