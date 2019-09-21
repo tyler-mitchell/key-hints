@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
 // Externals
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 // Material components
 import {
@@ -13,9 +13,13 @@ import {
   Button,
   Divider,
   IconButton
-} from '@material-ui/core';
-import { useGlobalState, clearKeySelection, setGlobalState } from '../../../state';
-import { KeyTableContext } from '../../../context/KeyTableContext';
+} from "@material-ui/core";
+import {
+  useGlobalState,
+  clearKeySelection,
+  setGlobalState
+} from "../../../state";
+import { KeyTableContext } from "../../../context/KeyTableContext";
 
 // Material icons
 import {
@@ -25,14 +29,14 @@ import {
   Save as SaveIcon,
   Menu as MenuIcon,
   Add as AddIcon
-} from '@material-ui/icons';
-import styled from 'styled-components';
+} from "@material-ui/icons";
+import styled from "styled-components";
 
 const useStyles = makeStyles({
   root: {
-    padding: '10px 10px',
-    display: 'flex',
-    alignItems: 'center',
+    padding: "10px 10px",
+    display: "flex",
+    alignItems: "center",
     borderRadius: 0
   },
   input: {
@@ -62,33 +66,25 @@ const InputSearch = styled(Input)`
   margin-left: 8px;
 `;
 
-
-
 export const ToolBarAddView = props => {
-  const { theme, className, onChange, style, keyInfo,  ...rest } = props;
+  const { theme, className, onChange, style, keyInfo, ...rest } = props;
   const classes = useStyles();
-  const [drawerState, setDrawerState] = useGlobalState('drawerState');
-  
-  const [addMode, setAddMode] = useGlobalState('addMode');
-  const [newKeys, setNewKeys] = useGlobalState('newKeys');
+  const [drawerState, setDrawerState] = useGlobalState("drawerState");
+
+  const [mode, setMode] = useGlobalState("mode");
+  const [newKeys, setNewKeys] = useGlobalState("newKeys");
   // const [keyDescription, setKeyDescription] = React.useState('')
-  const { curKeyTable, addNewKeyToFirebase, updateKeyToFirebase } = React.useContext(KeyTableContext);
+  const {
+    curKeyTable,
+    addNewKeyToFirebase,
+    updateKeyToFirebase
+  } = React.useContext(KeyTableContext);
 
-  React.useEffect(() => {
-    console.log(`⭐: TOOLBAR EFFECT  -> keyINFO`, keyInfo)
-    console.log(`⭐: TOOL BAR EFFECT-> newKEYS`, newKeys)
-    return () => {
-      // addMode && setGlobalState('newKeys', v => ({ ...v, keys: { key1: {} } }));
-    };
-  }, [addMode, keyInfo, newKeys]);
-
-
-  
   const handleSaveKeyClick = () => {
-    const newKey = {...newKeys, ...keyInfo};
-    console.log(`⭐: handleSaveKeyClick -> newKey`, newKey)
+    const newKey = { ...newKeys, ...keyInfo };
+    console.log(`⭐: handleSaveKeyClick -> newKey`, newKey);
     addNewKeyToFirebase(newKey);
-    setGlobalState('addMode', false);
+    setMode(null);
   };
 
   return (
@@ -108,7 +104,7 @@ export const ToolBarAddView = props => {
               Save
             </Button>
             <Button
-              onClick={() => setAddMode(false)}
+              onClick={() => setMode(null)}
               className={theme.button}
               variant="contained"
               color="secondary"

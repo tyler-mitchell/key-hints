@@ -36,7 +36,7 @@ const variants = {
   })
 };
 export const AnimatedPanel = ({ parentHeight, children }) => {
-  const [addMode] = useGlobalState("addMode");
+  const [mode] = useGlobalState("mode");
   return (
     <>
       {parentHeight && (
@@ -44,7 +44,7 @@ export const AnimatedPanel = ({ parentHeight, children }) => {
           // initial={{ y: yINITIAL }}
           custom={parentHeight}
           initial={false}
-          animate={addMode ? "opened" : "closed"}
+          animate={mode === "ADD_MODE" ? "opened" : "closed"}
           variants={variants}
           style={{
             position: "absolute",

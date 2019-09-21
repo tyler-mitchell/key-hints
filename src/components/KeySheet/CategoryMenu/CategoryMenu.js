@@ -92,11 +92,15 @@ export const CategoryMenu = () => {
   const [selectedIndex, setSelectedIndex] = useGlobalState(
     "selectedCategoryIndex"
   );
+  const [selectedItemIndex, setSelectedItemIndex] = useGlobalState(
+    "selectedItemIndex"
+  );
+
   const [curCategory, setCurCategory] = useGlobalState("sheetCategory");
   const [listRef] = useGlobalState("listRef");
   const { curKeyTable, loadingUKTC } = React.useContext(KeyTableContext);
 
-  const [keyMapMode] = useGlobalState("keyMapMode");
+  const [mode, setMode] = useGlobalState("mode");
   const [allLayers] = useGlobalState("allLayers");
   const [layerKeys] = useGlobalState("layerKeys");
   const [initialLayerIndices] = useGlobalState("initialLayerIndices");
@@ -112,7 +116,11 @@ export const CategoryMenu = () => {
   const container = React.useRef(null);
   const didMount = useDidMount();
   const [options, setOptions] = React.useState(getOptions(tableCategories));
-
+  const AllOption = {
+    value: "All",
+    label: "All",
+    color: "white"
+  };
   const [activeLayers, setActiveLayers] = useGlobalState("activeLayers");
   React.useEffect(() => {
     const delayCalculation =
@@ -151,9 +159,10 @@ export const CategoryMenu = () => {
   function handleListCategoryClick(option, index, category) {
     clearKeySelection();
 
-    // setSelectedIndex(index);
+    console.log(`⭐: handleListCategoryClick -> selectedIndex`, selectedIndex);
+    setSelectedItemIndex(null);
     setCurCategory(option.value);
-    setGlobalState("addMode", false);
+    setMode(null);
     popupState.setOpen(false);
 
     listRef.current && listRef.current.resetAfterIndex(0, false);
@@ -170,7 +179,14 @@ export const CategoryMenu = () => {
       <Select
         // formatOptionLabel={getLabel}
         isSearchable={false}
-        options={tableCategories}
+        options={[
+          {
+            value: "All",
+            label: "All",
+            color: "white"
+          },
+          ...tableCategories
+        ]}
         instanceId="HEllo"
         formatOptionLabel={({ color, label, data, size }) => (
           <div style={{ display: "flex" }}>
@@ -179,6 +195,8 @@ export const CategoryMenu = () => {
                 backgroundColor: color,
                 borderRadius: "15px",
                 alignSelf: "flex-start",
+                width: "200px",
+
                 padding: "5px 12px"
               }}
             >
@@ -193,7 +211,7 @@ export const CategoryMenu = () => {
         // }}
         // value={null}
         onChange={handleListCategoryClick}
-        placeholder="🎉 All"
+        defaultValue={AllOption}
         styles={headerSelectStyles(theme)}
       />
       {/* <ButtonGroup
@@ -250,7 +268,7 @@ export const CategoryMenu = () => {
         transformOrigin={{ vertical: "top", horizontal: "left" }}
         {...bindMenu(popupState)}
       >
-        {keyMapMode ? (
+        {mode === "KEYMAP_MODE" ? (
           <Paper>
             <MenuItem button onClick={handleMultiLayerOption}>
               <ListItemIcon>
@@ -376,16 +394,9 @@ const headerSelectStyles = theme => {
       ...base,
       padding: "4px 12px",
       background: isSelected ? theme.palette.primary.main : "white",
+      color: data.value === "All" && "black",
       ":hover": {
         background: !isSelected && lighten(0.3, theme.palette.primary.main)
-      },
-      ":active": {
-        ...base[":active"],
-        backgroundColor:
-          !isDisabled &&
-          (isSelected
-            ? data.color
-            : lighten(0.2, theme.palette.action.selected))
       }
     }),
     placeholder: base => ({

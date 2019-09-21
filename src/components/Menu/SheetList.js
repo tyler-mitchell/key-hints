@@ -36,7 +36,7 @@ export const SheetList = () => {
     setSelectedIndex(index);
     setDocIndex(index);
 
-    setGlobalState("addMode", false);
+    setGlobalState("mode", null);
   }
 
   function handleDeleteClick(index) {

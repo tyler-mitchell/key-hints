@@ -21,9 +21,9 @@ export const FlashingProvider = ({ children }) => {
   };
 
   const useColorLoop = () => {
-    const [editMode] = useGlobalState("editMode");
+    const [mode] = useGlobalState("mode");
     return useSpringLoop(
-      editMode
+      mode === "EDIT_MODE"
         ? {
             from: { opacity: 0.75 },
             to: { opacity: 1 },

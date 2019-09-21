@@ -87,9 +87,8 @@ export const SearchInput = props => {
   const { theme, className, onChange, style, ...rest } = props;
   const classes = useStyles();
   const [drawerState, setDrawerState] = useGlobalState("drawerState");
-  const [editMode, setEditMode] = useGlobalState("editMode");
+  const [mode, setMode] = useGlobalState("mode");
   const [activeKeys, setActiveKeys] = useGlobalState("activeKeys");
-  const [addMode, setAddMode] = useGlobalState("addMode");
   const [newKeys] = useGlobalState("newKeys");
   const [isSelected] = useGlobalState("selectedItem");
   const [initialLayerIndices] = useGlobalState("initialLayerIndices");
@@ -100,23 +99,26 @@ export const SearchInput = props => {
   } = React.useContext(KeyTableContext);
 
   const handleSaveEditClick = () => {
-    setEditMode(false);
+    setMode(null);
     updateKeyToFirebase(newKeys);
 
     setGlobalState("newKeys", v => ({ ...v, keys: { key1: {} } }));
   };
 
+  const [selected, setSelected] = React.useState(false);
   function handleKeyMapMode(event, newView) {
-    // initializeKeyMap(curKeyTable.data().table);
-    setView(newView);
-    setGlobalState("keyMapMode", true);
+    if (selected) {
+      setSelected(false);
+      setGlobalState("mode", null);
+    } else {
+      setSelected(true);
+      setGlobalState("mode", "KEYMAP_MODE");
+    }
   }
 
   const [view, setView] = React.useState("shortcutView");
 
-  const handleChange = (event, newView) => {
-    setView(newView);
-  };
+  const handleChange = (event, newView) => {};
   const variants = {
     open: {
       opacity: [0, 0.6, 0.9, 1],
@@ -218,7 +220,7 @@ export const SearchInput = props => {
           <KeyboardIcon style={{}}/>
         </Button> */}
         <Grid item xs={3}>
-          {editMode && (
+          {mode === "EDIT_MODE" && (
             <>
               <Grid container spacing={1}>
                 <Grid item>
@@ -250,21 +252,8 @@ export const SearchInput = props => {
           )}
         </Grid>
         <Grid item container justify="flex-end" xs={3}>
-          {/* <ToggleButtonGroup size="small" value={view} onChange={handleChange}> */}
           <ToggleButton
-            value="shortcutView"
-            selected={view === "shortcutView"}
-            onClick={(event, value) => {
-              handleChange(event, value);
-              setGlobalState("keyMapMode", false);
-            }}
-          >
-            <Tooltip title="shortcut view" placement="top">
-              <ShortcutIcon />
-            </Tooltip>
-          </ToggleButton>
-          <ToggleButton
-            selected={view === "keymapView"}
+            selected={selected}
             value="keymapView"
             onClick={handleKeyMapMode}
           >
@@ -272,6 +261,7 @@ export const SearchInput = props => {
               <KeyMapIcon />
             </Tooltip>
           </ToggleButton>
+
           {/* </ToggleButtonGroup> */}
         </Grid>
       </Grid>

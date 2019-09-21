@@ -84,7 +84,7 @@ export default function KeyTableProvider({ children }) {
         value: category.name,
         size: category.size,
 
-        label: "#" + category.name,
+        label: category.name,
         color: keyMapColors[index % keyMapColors.length]
       });
       index++;
@@ -98,7 +98,7 @@ export default function KeyTableProvider({ children }) {
       initializeKeyMap(table);
       getAllKeys(table);
       initializeTableCategories(table);
-      setGlobalState("selectedIndex", null);
+      setGlobalState("selectedItemIndex", null);
     }
   }, [curKeyTable]);
 
@@ -128,7 +128,7 @@ export default function KeyTableProvider({ children }) {
     setGlobalState("selectedItem", keyID);
     setGlobalState("newKeys", v => ({ ...v, keys: { key1: {} } }));
     setCurShortcutObjectKey(keyID);
-    setGlobalState("addMode", false);
+    setGlobalState("mode", null);
   };
   const updateKeyToFirebase = newKey => {
     const update = {};

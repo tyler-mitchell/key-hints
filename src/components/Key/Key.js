@@ -115,9 +115,8 @@ export const Key = ({
   KeyChar
 }) => {
   // global mode state
-  const [keyMapMode] = useGlobalState("keyMapMode");
-  const [editMode] = useGlobalState("editMode");
-  const [addMode] = useGlobalState("addMode");
+  const [mode] = useGlobalState("mode");
+
   const [keyLabel] = useGlobalState("keyLabel");
 
   // global key state
@@ -160,10 +159,10 @@ export const Key = ({
 
   React.useEffect(() => {
     if (isIncluded) {
-      if (editMode) {
+      if (mode === "EDIT_MODE") {
         setNewKeys(p => ({ ...p, keys: { key1: activeKeys } }));
         active.setTrue();
-      } else if (!keyMapMode) {
+      } else if (mode !== "KEYMAP_MODE") {
         active.setTrue();
       }
       // Check for 'THEN' key sequence
@@ -177,7 +176,7 @@ export const Key = ({
       // }
     }
 
-    if (keyMapMode && !editMode && activeLayers && uniqueKeyName) {
+    if (mode === "KEYMAP_MODE" && activeLayers && uniqueKeyName) {
       _.forEach(activeLayers, (layer, colorIndex) => {
         const mainKeyIndex = _.indexOf(layer.mainKeys, label);
         const isMod = _.includes(layer.layer, label);
@@ -197,7 +196,7 @@ export const Key = ({
       setInactiveMapKey();
       // setInactive();
     };
-  }, [isIncluded, addMode, editMode, keyMapMode, activeLayers]);
+  }, [isIncluded, mode, activeLayers]);
 
   // UseLayoutEffect Hook
   const [lastKey, setLastKey] = useGlobalState("lastKey");
@@ -230,7 +229,7 @@ export const Key = ({
   };
 
   const keyClicked = () => {
-    if ((editMode || addMode) && !keyLabel) {
+    if ((mode === "EDIT_MODE" || mode === "ADD_MODE") && !keyLabel) {
       toggleKey(active.value);
     }
   };
@@ -253,7 +252,7 @@ export const Key = ({
 
   return (
     <ConditionalWrap
-      condition={editMode && active.value}
+      condition={mode === "EDIT_MODE" && active.value}
       style={{ backfaceVisibility: "hidden", filter: "blur(0)" }}
       wrap={(children, flashing) => (
         <animated.div key={key} style={flashing}>
@@ -276,20 +275,23 @@ export const Key = ({
         <KeyTop color={defaultColor} wt={wt} ht={ht}>
           {/* <KeyChar ref={keyTopTextRef}>Basic Editing the view port</KeyChar> */}
 
-          {!keyMapMode && !(label === lastKey && keyLabel) && (
+          {!(mode === "KEYMAP_MODE") && !(label === lastKey && keyLabel) && (
             <KeyChar>
               {keyName in iconLabels ? iconLabels[keyName] : label}
             </KeyChar>
           )}
-          {(keyMapMode || addMode) && (
-            <KeyCharCenter
-            // ref={keyTopTextRef}
+          {(mode === "EDIT_MODE" || mode === "ADD_MODE") &&
+            label === lastKey &&
+            keyLabel && (
+              <KeyCharCenter
 
-            // ref={keyTopTextRef}
-            // style={{ transform }}
-            >
-              {/* <KeyText active={active.value} keyTopText={keyTopText} /> */}
-              {label === lastKey && keyLabel && (
+              // ref={keyTopTextRef}
+
+              // ref={keyTopTextRef}
+              // style={{ transform }}
+              >
+                {/* <KeyText active={active.value} keyTopText={keyTopText} /> */}
+
                 <StatusBar.Target
                   style={{
                     // height: `${ht * 0.73}px`,
@@ -303,9 +305,8 @@ export const Key = ({
                     borderRadius: "5px"
                   }}
                 />
-              )}
-            </KeyCharCenter>
-          )}
+              </KeyCharCenter>
+            )}
 
           {/* {(!keyMapMode) && <KeyChar>{keyName in iconLabels ? iconLabels[keyName] : label}</KeyChar>} */}
         </KeyTop>

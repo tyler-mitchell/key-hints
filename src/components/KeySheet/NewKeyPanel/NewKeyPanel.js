@@ -203,7 +203,7 @@ const { InlineToolbar } = inlineToolbarPlugin;
 const KeyMenu = motion.custom(Grid);
 export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
   const [newKeys, setNewKeys] = useGlobalState("newKeys");
-  const [addMode, setAddMode] = useGlobalState("addMode");
+  const [mode, setMode] = useGlobalState("mode");
 
   const [previewImage, setPreviewImage] = React.useState(null);
 
@@ -311,9 +311,9 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
   }, [saveClicked]);
 
   React.useEffect(() => {
-    if (addMode) {
+    if (mode === "ADD_MODE") {
       // deselect any selected item
-      setGlobalState("selectedIndex", null);
+      setGlobalState("selectedItemIndex", null);
     } else {
       // clear input
       setKeyInfo({
@@ -325,7 +325,7 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
       setPreviewImage(null);
       setKeyLabelType(null);
     }
-  }, [addMode]);
+  }, [mode]);
 
   async function handleSaveKeyClick() {
     const newKey = { ...newKeys, ...keyInfo };
@@ -400,7 +400,7 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
           />
 
           <AnimatePresence>
-            {addMode && (
+            {mode === "ADD_MODE" && (
               <motion.div
                 animate={{ opacity: 1, transition: { delay: 0.4 } }}
                 initial={{ opacity: 0 }}

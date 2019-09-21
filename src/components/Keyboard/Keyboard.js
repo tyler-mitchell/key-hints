@@ -211,11 +211,6 @@ const rowTheme = createMuiTheme({
 });
 
 const KeyboardContainer = () => {
-  // React.useEffect(() => {
-  //   editMode ? setChecked(true) : setChecked(false)
-
-  // },[editMode]);
-
   return (
     <Cover
       initial={{ opacity: 0 }}

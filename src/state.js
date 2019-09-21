@@ -47,10 +47,10 @@ const {
   useGlobalState
 } = createGlobalState({
   tableCategories: [],
-
+  mode: null,
   activeKeys: {},
   activeKeysIndex: null,
-  editMode: false,
+
   flashing: {},
   keyTable: null,
   loadingKTC: true,
@@ -62,9 +62,9 @@ const {
   selectedItem: null,
   selectedCategoryIndex: -1,
   selectedKeySheet: 0,
-  addMode: false,
+
   keyLabel: null,
-  keyMapMode: false,
+
   activeLayers: null,
   allLayers: null,
   allKeys: [],
@@ -86,7 +86,7 @@ const {
   curShortcutObjectKey: null,
   devFonts: fonts,
   currentFont: "Encode Sans Expanded, sans-serif",
-  selectedIndex: null,
+  selectedItemIndex: null,
   snackbarRef: null
 });
 

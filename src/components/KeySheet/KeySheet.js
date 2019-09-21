@@ -171,8 +171,8 @@ export const KeySheet = props => {
     KeyTableContext
   );
   const [curCategory, setCurCategory] = useGlobalState("sheetCategory");
-  const [addMode] = useGlobalState("addMode");
-  const [editMode] = useGlobalState("editMode");
+
+  const [mode] = useGlobalState("mode");
 
   // Category Menu popup state
   const popupState = usePopupState({
@@ -243,11 +243,11 @@ export const KeySheet = props => {
   }
   const handleAddClick = () => {
     clearKeySelection();
-    setGlobalState("keyMapMode", false);
-    setGlobalState("addMode", v => !v);
+
+    setGlobalState("mode", "ADD_MODE");
   };
   const handleCancelClick = () => {
-    setGlobalState("addMode", v => !v);
+    setGlobalState("mode", null);
   };
 
   const [saveClicked, setSaveClicked] = React.useState(0);
@@ -257,16 +257,11 @@ export const KeySheet = props => {
 
   const [ref, { x, y, width, height }] = useDimensions();
   console.log(`⭐: height`, height);
-
-  const { filter } = useSpring({ filter: addMode ? [6, 200] : [0, 100] });
   // const actions = useArray([
   //   { id: 'add', add: AddAction, clickFunction: handleAddClick },
   //   { id: 'save', save: SaveAction, clickFunction: handleAddClick },
   //   { id: 'cancel', cancel: CancelAction, clickFunction: handleAddClick }
   // ]);
-  const [actions, setActions] = React.useState([
-    { id: "add", component: AddAction, clickFunction: handleAddClick }
-  ]);
 
   const [zIndex, setZIndex] = React.useState(0);
   return (
@@ -281,7 +276,6 @@ export const KeySheet = props => {
             animate={{ opacity: 1 }}
             ref={anchorRef(popupState)}
             style={{
-              // pointerEvents: addMode ? 'none' : 'auto',
               borderRadius: "10px",
               zIndex: zIndex
             }}
@@ -296,7 +290,7 @@ export const KeySheet = props => {
           >
             <motion.div
               // initial={{ background: '#030303', zIndex: 0 }}
-              animate={addMode ? "openBackDrop" : "closeBackDrop"}
+              animate={mode === "ADD_MODE" ? "openBackDrop" : "closeBackDrop"}
               variants={variants}
               style={{
                 // background: 'rgba(0, 0, 0, 0.66)',
@@ -378,7 +372,9 @@ export const KeySheet = props => {
             }}
             custom={1}
             onTransitionEnd={onTransitionEnd}
-            animate={!addMode ? "openAddButton" : "closedAddButton"}
+            animate={
+              !(mode === "ADD_MODE") ? "openAddButton" : "closedAddButton"
+            }
             variants={actionVariants}
           >
             <AddAction clickFunction={handleAddClick} />
@@ -394,7 +390,9 @@ export const KeySheet = props => {
             custom={1.1}
             onTransitionEnd={onTransitionEnd}
             animate={
-              addMode || editMode ? "openSaveButton" : "closedSaveButton"
+              mode === "ADD_MODE" || mode === "EDIT_MODE"
+                ? "openSaveButton"
+                : "closedSaveButton"
             }
             variants={actionVariants}
           >
@@ -411,7 +409,9 @@ export const KeySheet = props => {
             custom={1}
             onTransitionEnd={onTransitionEnd}
             animate={
-              addMode || editMode ? "openCancelButton" : "closedCancelButton"
+              mode === "ADD_MODE" || mode === "EDIT_MODE"
+                ? "openCancelButton"
+                : "closedCancelButton"
             }
             variants={actionVariants}
           >

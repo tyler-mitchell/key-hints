@@ -353,11 +353,11 @@ export const KeyListItem = props => {
   // const [, , activeKeys, setActiveKeys] = React.useContext(FlashingContext);
 
   const [, setActiveKeys] = useGlobalState("activeKeys");
-  const [, setEditMode] = useGlobalState("editMode");
+  const [, setMode] = useGlobalState("mode");
   const [selectedItem, setSelectedItem] = useGlobalState("selectedItem");
   const [curShortcutObjectKey] = useGlobalState("curShortcutObjectKey");
   const [keybindIndex, setKeybindIndex] = React.useState(1);
-  const [selectedIndex, setSelectedIndex] = useGlobalState("selectedIndex");
+  const [selectedIndex, setSelectedIndex] = useGlobalState("selectedItemIndex");
   // React.useEffect(() => {
   //   if (selectedItem !== shortcutObjectKey) {
   //     setAlreadySelected(false);
@@ -393,7 +393,7 @@ export const KeyListItem = props => {
     setGlobalState("activeKeysIndex", shortcutObjectKey);
 
     if (selectedItem !== shortcutObjectKey) {
-      setEditMode(false);
+      setMode(null);
     }
     // console.log(`⭐: selection`, selectedItem);
     // console.log(`⭐: shortcutobjectKey`, shortcutObjectKey);

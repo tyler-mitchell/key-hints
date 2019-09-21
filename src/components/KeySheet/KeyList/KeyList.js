@@ -1,10 +1,10 @@
-import React from 'react';
-import { VariableSizeList, areEqual } from 'react-window';
-import { List } from '@material-ui/core';
-import KeyListItem from './KeyListItem';
-import { KeyTable } from '../SheetData';
+import React from "react";
+import { VariableSizeList, areEqual } from "react-window";
+import { List } from "@material-ui/core";
+import KeyListItem from "./KeyListItem";
+import { KeyTable } from "../SheetData";
 
-import { setGlobalState, useGlobalState } from '../../../state';
+import { setGlobalState, useGlobalState } from "../../../state";
 
 const itemSize = index => {
   return KeyTable[index].keys.length * 10 + 40;
@@ -33,13 +33,13 @@ const Row = React.memo(({ data, index, style, listRef, ...others }) => {
 const KeyList = props => {
   const { height, ...others } = props;
   let listRef = React.useRef();
-  const [selectedIndex, setSelectedIndex] = useGlobalState('selectedIndex');
+  const [selectedIndex, setSelectedIndex] = useGlobalState("selectedItemIndex");
   const itemCount = others.keyTableKeys.length;
   const [arrowStep, setArrowStep] = React.useState();
   const [arrowPressed, setArrowPressed] = React.useState(false);
 
   const handleKeyDown = event => {
-    if (event.key === 'ArrowDown') {
+    if (event.key === "ArrowDown") {
       event.preventDefault(); // prevent default to prevent unwanted scrolling
       if (selectedIndex === null) {
         setSelectedIndex(0);
@@ -51,7 +51,7 @@ const KeyList = props => {
       }
     }
 
-    if (event.key === 'ArrowUp') {
+    if (event.key === "ArrowUp") {
       event.preventDefault(); // prevent default to prevent unwanted scrolling
       if (selectedIndex === null) {
         setSelectedIndex(0);
@@ -80,7 +80,7 @@ const KeyList = props => {
 
   React.useLayoutEffect(() => {
     listRef.current.resetAfterIndex(0, false);
-    setGlobalState('listRef', listRef);
+    setGlobalState("listRef", listRef);
   }, [others.keyTable]);
 
   return (
