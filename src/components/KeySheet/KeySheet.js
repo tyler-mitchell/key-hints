@@ -67,6 +67,10 @@ import {
 } from "react-hanger";
 import { array } from "prop-types";
 import { animated, useSpring } from "react-spring";
+import {
+  AnimatedPanel,
+  NewKeyPanelContainer
+} from "./NewKeyPanel/AnimatedPanel";
 import { Backdrop } from "@material-ui/core";
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -340,30 +344,15 @@ export const KeySheet = props => {
               )}
             </CardContent>
           </AnimatedCard>
-
-          <div
-            style={{
-              bottom: 0,
-
-              pointerEvents: "none",
-              alignItems: "center",
-              position: "absolute",
-              height: "120%",
-              width: "100%",
-
-              paddingBottom: "100px",
-              // border: 'solid',
-              // borderRadius: "10px 10px 200px 200px",
-
-              // clipPath: 'polygon(1% 0, 99% 0, 99% 99%, 1% 99% )',
-              // clipPath: "polygon(0% 0, 100% 0, 100% 100%, 0% 100% )",
-              overflow: "hidden",
-              left: 0,
-              right: 0
-            }}
-          >
-            <NewKeyPanel parentHeight={height} saveClicked={saveClicked} />
-          </div>
+          {/* <AnimatedPanel
+            animate={mode === "KEYMAP_MODE" ? "openedMap" : "closedMap"}
+            variantType="KeyMapPanel"
+            parentHeight={height}
+          ></AnimatedPanel> */}
+          <NewKeyPanelContainer
+            parentHeight={height}
+            saveClicked={saveClicked}
+          />
 
           <motion.div
             onClick={handleAddClick}

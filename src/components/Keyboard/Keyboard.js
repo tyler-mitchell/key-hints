@@ -61,6 +61,8 @@ import { EditRounded } from "@material-ui/icons";
 import { useSpring, animated, useTransition } from "react-spring";
 import { motion } from "framer-motion";
 import { AnimatedKeyContainer, KeyTop, BottomKeyChar } from "../Key/Key.styles";
+import { AnimatedPanel } from "../KeySheet/NewKeyPanel/AnimatedPanel";
+import { NewKeyPanel } from "../KeySheet/NewKeyPanel/NewKeyPanel";
 import { ThemeProvider } from "@material-ui/styles";
 import { createMuiTheme } from "@material-ui/core";
 
@@ -212,90 +214,92 @@ const rowTheme = createMuiTheme({
 
 const KeyboardContainer = () => {
   return (
-    <Cover
-      initial={{ opacity: 0 }}
-      transition={{ delay: 1 }}
-      animate={{ opacity: 1 }}
-      fixed
-    >
-      {/* <div className="inner-shadow" style={{ opacity: 0.5 }} /> */}
+    <>
+      <Cover
+        initial={{ opacity: 0 }}
+        transition={{ delay: 1 }}
+        animate={{ opacity: 1 }}
+        fixed
+      >
+        {/* <div className="inner-shadow" style={{ opacity: 0.5 }} /> */}
 
-      <OuterFrame>
-        <InnerFrame
-          container
-          justify="center"
-          alignItems="center"
-          direction="column"
-          spacing={0}
-        >
-          {/* <ThemeProvider theme={rowTheme}> */}
-          <Row
-            justify="center"
+        <OuterFrame>
+          <InnerFrame
             container
-            direction="row"
-            wrap="nowrap"
-            item
-            xs={12}
-            zIndex={1}
+            justify="center"
+            alignItems="center"
+            direction="column"
+            spacing={0}
           >
-            <KeyRow row={firstRow} />
-          </Row>
-          <Row
-            justify="center"
-            container
-            direction="row"
-            wrap="nowrap"
-            item
-            // justify="space-evenly"
-            // alignItems="stretch"
-            xs={12}
-            zIndex={2}
-          >
-            <KeyRow row={secondRow} />
-          </Row>
-          <Row
-            justify="center"
-            container
-            direction="row"
-            wrap="nowrap"
-            item
-            xs={12}
-            // justify="space-evenly"
+            {/* <ThemeProvider theme={rowTheme}> */}
+            <Row
+              justify="center"
+              container
+              direction="row"
+              wrap="nowrap"
+              item
+              xs={12}
+              zIndex={1}
+            >
+              <KeyRow row={firstRow} />
+            </Row>
+            <Row
+              justify="center"
+              container
+              direction="row"
+              wrap="nowrap"
+              item
+              // justify="space-evenly"
+              // alignItems="stretch"
+              xs={12}
+              zIndex={2}
+            >
+              <KeyRow row={secondRow} />
+            </Row>
+            <Row
+              justify="center"
+              container
+              direction="row"
+              wrap="nowrap"
+              item
+              xs={12}
+              // justify="space-evenly"
 
-            zIndex={3}
-          >
-            <KeyRow row={thirdRow} />
-          </Row>
-          <Row
-            justify="center"
-            container
-            direction="row"
-            wrap="nowrap"
-            item
-            // justify="space-evenly"
-            // alignItems="stretch"
-            xs={12}
-            zIndex={4}
-          >
-            <KeyRow row={fourthRow} />
-          </Row>
-          <Row
-            justify="center"
-            container
-            direction="row"
-            wrap="nowrap"
-            item={true}
-            // justify="space-evenly"
-            // alignItems="stretch"
-            xs={12}
-            zIndex={5}
-          >
-            <KeyRow row={fifthRow} />
-          </Row>
-          {/* </ThemeProvider> */}
-        </InnerFrame>
-      </OuterFrame>
-    </Cover>
+              zIndex={3}
+            >
+              <KeyRow row={thirdRow} />
+            </Row>
+            <Row
+              justify="center"
+              container
+              direction="row"
+              wrap="nowrap"
+              item
+              // justify="space-evenly"
+              // alignItems="stretch"
+              xs={12}
+              zIndex={4}
+            >
+              <KeyRow row={fourthRow} />
+            </Row>
+            <Row
+              justify="center"
+              container
+              direction="row"
+              wrap="nowrap"
+              item={true}
+              // justify="space-evenly"
+              // alignItems="stretch"
+              xs={12}
+              zIndex={5}
+            >
+              <KeyRow row={fifthRow} />
+            </Row>
+            {/* </ThemeProvider> */}
+          </InnerFrame>
+        </OuterFrame>
+      </Cover>
+    </>
   );
 };
 

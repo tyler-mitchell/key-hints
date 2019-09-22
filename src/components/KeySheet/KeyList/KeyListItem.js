@@ -258,37 +258,16 @@ export const renderCategoryItem = (layerKey, color) => {
   );
 };
 export const RenderSelectedCategory = ({ layerKey, color, active }) => {
-  const [isHovered, setHovered] = React.useState(false);
-
-  React.useEffect(() => {
-    console.log("STate Update! ");
-  }, [isHovered]);
-
   return (
     <KbdKey custom={color} variants={categoryVariants}>
       <SelectedCategoryKBD
         height="30px"
-        // whileHover={'active'}
         // animated={isHovered ? 'active' : 'inactive'}
         // animated={'active'}
-        // whileHover={{ background: shade(0.5, color) }}
+
         // positionTransition
         color={color}
-        animate={
-          active
-            ? {
-                boxShadow: `0px 3px 0px 0px ${darken(
-                  0.1,
-                  color
-                )}, 0px 0px 5px 0px #bbb`
-              }
-            : {
-                boxShadow: `0px 7px 0px 0px ${darken(
-                  0.1,
-                  color
-                )}, 0px 0px 0px 0px #bbb`
-              }
-        }
+
         // transition={{
         //   type: 'spring',
         //   mass: 3,

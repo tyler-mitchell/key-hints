@@ -367,211 +367,178 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
   };
   return (
     <>
-      <AnimatedPanel parentHeight={parentHeight}>
-        {/* <Grid container alignItems="flex-start">  */}
-        <Paper
-          elevation={3}
-          raised
-          component={Grid}
-          style={{
-            // height: parentHeight * 0.61,
-            borderRadius: 15,
-
-            padding: "25px"
-          }}
-        >
-          <div
-            style={{
-              width: 50,
-              height: 4,
-
-              // transform: 'translateY(-10px)',
-              backgroundColor: "rgba(220,220,220,0.2)",
-
-              top: 7,
-              borderRadius: 4,
-              position: "absolute",
-              margin: "0 auto",
-              // marginBottom: 46,
-              left: 0,
-              zIndex: 300,
-              right: 0
-            }}
-          />
-
-          <AnimatePresence>
-            {mode === "ADD_MODE" && (
-              <motion.div
-                animate={{ opacity: 1, transition: { delay: 0.4 } }}
-                initial={{ opacity: 0 }}
-                exit={{ opacity: 0 }}
-              >
-                <CardHead
-                  container
-                  // justify="flex-start"
-                  direction="column"
-                  item
-                  xs={12}
-                  // alignItems="center"
-                  // alignItems="center"
-                >
-                  <Grid container item alignItems="center" justify="flex-start">
-                    <Grid item xs={10} style={{ position: "relative" }}>
-                      <Grid
-                        container
-                        item
-                        alignItems="flex-start"
-                        justify="flex-start"
-                      >
-                        <Grid item>
-                          {keyLabelType === "image" && (
-                            <Upload
-                              setPreviewImage={setPreviewImage}
-                              setSnackbarOpen={setSnackbarOpen}
-                              setShortcutImage={setShortcutImage}
-                              setSnackbarMessage={setSnackbarMessage}
-                            />
-                          )}
-                        </Grid>
-                        <Grid item>
-                          <InputBase
-                            // value={newKeys.description}
-
-                            variant="outlined"
-                            style={{
-                              padding: 0,
-                              fontSize: "36px",
-                              // margin: 0,
-
-                              background: "white"
-                            }}
-                            // fullWidth
-                            value={keyInfo.description}
-                            placeholder="untitled"
-                            onChange={event => handleDescriptionChange(event)}
-                            rowsMax={3}
-                          />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-
+      <AnimatePresence>
+        {mode === "ADD_MODE" && (
+          <motion.div
+            animate={{ opacity: 1, transition: { delay: 0.4 } }}
+            initial={{ opacity: 0 }}
+            exit={{ opacity: 0 }}
+          >
+            <CardHead
+              container
+              // justify="flex-start"
+              direction="column"
+              item
+              xs={12}
+              // alignItems="center"
+              // alignItems="center"
+            >
+              <Grid container item alignItems="center" justify="flex-start">
+                <Grid item xs={10} style={{ position: "relative" }}>
                   <Grid
                     container
-                    justify="flex-start"
-                    direction="column"
-                    alignItems="flex-start"
                     item
-                    xs={12}
-                    style={{ marginBottom: "15px" }}
+                    alignItems="flex-start"
+                    justify="flex-start"
                   >
-                    <Grid item style={{ marginBottom: "10px" }}>
-                      <motion.div
-                        animate={
-                          keyLabelType === "text"
-                            ? { borderColor: "#e2e2e1" }
-                            : { borderColor: "transparent" }
-                        }
-                        style={{
-                          border: "1px solid transparent",
-
-                          borderRadius: 4,
-                          backgroundColor: "white",
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "flex-start",
-                          alignItems: "center",
-                          position: "relative",
-                          zIndex: 8
-                        }}
-                      >
-                        <AutocompleteHashtags
-                          suggestions={suggestions}
-                          onCategorySave={handleCategories}
+                    <Grid item>
+                      {keyLabelType === "image" && (
+                        <Upload
+                          setPreviewImage={setPreviewImage}
+                          setSnackbarOpen={setSnackbarOpen}
+                          setShortcutImage={setShortcutImage}
+                          setSnackbarMessage={setSnackbarMessage}
                         />
-                        {keyLabelType === "text" && (
-                          <InputBase
-                            onChange={handleKeyDescription}
-                            multiline
-                            inputProps={{
-                              disableUnderline: true,
-                              style: { textAlign: "center", padding: "4px" }
-                            }}
-                            style={{ margin: "5px", fontSize: "14px" }}
-                            classes={{ root: classes.textArea }}
-                            rowsMax={3}
-                            placeholder="Enter text label 🔥"
-                            aria-label="newKey"
-                            variant="filled"
-                            rows={1}
-                          />
-                        )}
-                      </motion.div>
+                      )}
                     </Grid>
                     <Grid item>
-                      <motion.div
-                        animate={
-                          !isEmpty && isKeyAvailable
-                            ? { y: [-25, 0, 0], opacity: 1 }
-                            : { y: [0, -25, -50], opacity: [0.2, 0, 0] }
-                        }
-                      >
-                        <ToggleButtonGroup
-                          onChange={handleAddLabel}
-                          value={keyLabelType}
-                          // size="small"
-                          exclusive
-                          style={{ textTransform: "none" }}
-                          aria-label="text alignment"
-                        >
-                          <ToggleButton
-                            value="image"
-                            variant="text"
-                            style={{ textTransform: "none" }}
+                      <InputBase
+                        // value={newKeys.description}
 
-                            // classes={{
-                            //   root: classes.toggleButtonGroupRoot
-                            // }}
-                            // classes={{
-                            //   root: classes.labelButton
-                            // }}
-                          >
-                            <ImageIcon style={{ marginRight: "3px" }} />
-                            Add Image Label
-                          </ToggleButton>
+                        variant="outlined"
+                        style={{
+                          padding: 0,
+                          fontSize: "36px",
+                          // margin: 0,
 
-                          <ToggleButton
-                            value="text"
-                            variant="text"
-                            style={{ textTransform: "none" }}
-                            {...bindTrigger(mapInputPopupState)}
-                            // classes={{
-                            //   root: classes.labelButton
-                            // }}
-                          >
-                            <Subject style={{ marginRight: "3px" }} />
-                            Add Text Label
-                          </ToggleButton>
-                        </ToggleButtonGroup>
-                      </motion.div>
+                          background: "white"
+                        }}
+                        // fullWidth
+                        value={keyInfo.description}
+                        placeholder="untitled"
+                        onChange={event => handleDescriptionChange(event)}
+                        rowsMax={3}
+                      />
                     </Grid>
                   </Grid>
-                </CardHead>
-
-                <Grid xs={12} style={{ display: "flex" }} item>
-                  <KeySequence
-                    isKeyAvailable={isKeyAvailable}
-                    popupState={mapInputPopupState}
-                    isEmpty={isEmpty}
-                    style={{ position: "absolute" }}
-                    newKeys={newKeys.keys}
-                  />
                 </Grid>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </Paper>
-      </AnimatedPanel>
+              </Grid>
+
+              <Grid
+                container
+                justify="flex-start"
+                direction="column"
+                alignItems="flex-start"
+                item
+                xs={12}
+                style={{ marginBottom: "15px" }}
+              >
+                <Grid item style={{ marginBottom: "10px" }}>
+                  <motion.div
+                    animate={
+                      keyLabelType === "text"
+                        ? { borderColor: "#e2e2e1" }
+                        : { borderColor: "transparent" }
+                    }
+                    style={{
+                      border: "1px solid transparent",
+
+                      borderRadius: 4,
+                      backgroundColor: "white",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
+                      position: "relative",
+                      zIndex: 8
+                    }}
+                  >
+                    <AutocompleteHashtags
+                      suggestions={suggestions}
+                      onCategorySave={handleCategories}
+                    />
+                    {keyLabelType === "text" && (
+                      <InputBase
+                        onChange={handleKeyDescription}
+                        multiline
+                        inputProps={{
+                          disableUnderline: true,
+                          style: { textAlign: "center", padding: "4px" }
+                        }}
+                        style={{ margin: "5px", fontSize: "14px" }}
+                        classes={{ root: classes.textArea }}
+                        rowsMax={3}
+                        placeholder="Enter text label 🔥"
+                        aria-label="newKey"
+                        variant="filled"
+                        rows={1}
+                      />
+                    )}
+                  </motion.div>
+                </Grid>
+                <Grid item>
+                  <motion.div
+                    animate={
+                      !isEmpty && isKeyAvailable
+                        ? { y: [-25, 0, 0], opacity: 1 }
+                        : { y: [0, -25, -50], opacity: [0.2, 0, 0] }
+                    }
+                  >
+                    <ToggleButtonGroup
+                      onChange={handleAddLabel}
+                      value={keyLabelType}
+                      // size="small"
+                      exclusive
+                      style={{ textTransform: "none" }}
+                      aria-label="text alignment"
+                    >
+                      <ToggleButton
+                        value="image"
+                        variant="text"
+                        style={{ textTransform: "none" }}
+
+                        // classes={{
+                        //   root: classes.toggleButtonGroupRoot
+                        // }}
+                        // classes={{
+                        //   root: classes.labelButton
+                        // }}
+                      >
+                        <ImageIcon style={{ marginRight: "3px" }} />
+                        Add Image Label
+                      </ToggleButton>
+
+                      <ToggleButton
+                        value="text"
+                        variant="text"
+                        style={{ textTransform: "none" }}
+                        {...bindTrigger(mapInputPopupState)}
+                        // classes={{
+                        //   root: classes.labelButton
+                        // }}
+                      >
+                        <Subject style={{ marginRight: "3px" }} />
+                        Add Text Label
+                      </ToggleButton>
+                    </ToggleButtonGroup>
+                  </motion.div>
+                </Grid>
+              </Grid>
+            </CardHead>
+
+            <Grid xs={12} style={{ display: "flex" }} item>
+              <KeySequence
+                isKeyAvailable={isKeyAvailable}
+                popupState={mapInputPopupState}
+                isEmpty={isEmpty}
+                style={{ position: "absolute" }}
+                newKeys={newKeys.keys}
+              />
+            </Grid>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <StatusBar.Source>
         {keyLabelType === "text" && <KeyText keyTopText={keyTopText} />}
         {/* {keyLabelType === "image" && previewImage && ( */}

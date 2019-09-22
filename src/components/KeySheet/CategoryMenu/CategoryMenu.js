@@ -122,26 +122,26 @@ export const CategoryMenu = () => {
     color: "white"
   };
   const [activeLayers, setActiveLayers] = useGlobalState("activeLayers");
-  React.useEffect(() => {
-    const delayCalculation =
-      didMount &&
-      activeLayers &&
-      setTimeout(() => {
-        if (showMultipleLayers) {
-          const {
-            layerIndices: newIndices,
-            activeLayers: newActiveLayers
-          } = updateActiveLayers(allLayers, layerState.layer);
-          setActiveLayers(newActiveLayers);
-          setLayerIndices(newIndices);
-        } else {
-          updateActiveSingleLayer(allLayers, layerKeys, layerState.index);
-          setLayerIndices(new Set([layerState.index]));
-        }
-      }, 100);
+  // React.useEffect(() => {
+  //   const delayCalculation =
+  //     didMount &&
+  //     activeLayers &&
+  //     setTimeout(() => {
+  //       if (showMultipleLayers) {
+  //         const {
+  //           layerIndices: newIndices,
+  //           activeLayers: newActiveLayers
+  //         } = updateActiveLayers(allLayers, layerState.layer);
+  //         setActiveLayers(newActiveLayers);
+  //         setLayerIndices(newIndices);
+  //       } else {
+  //         updateActiveSingleLayer(allLayers, layerKeys, layerState.index);
+  //         setLayerIndices(new Set([layerState.index]));
+  //       }
+  //     }, 100);
 
-    return () => clearTimeout(delayCalculation);
-  }, [layerState, showMultipleLayers]);
+  //   return () => clearTimeout(delayCalculation);
+  // }, [layerState, showMultipleLayers]);
 
   const switchClasses = useSwitchStyles();
 

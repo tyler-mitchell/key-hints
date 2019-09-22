@@ -9,6 +9,7 @@ import Box from "@material-ui/core/Box";
 import React from "react";
 import { motion } from "framer-motion";
 import { useSpring, animated, Keyframes } from "react-spring";
+import { GridList } from "@material-ui/core";
 
 export const Row = styled(Grid)`
   z-index: ${({ zIndex }) => zIndex};
@@ -75,41 +76,24 @@ export const InnerFrame = styled(Grid)`
   border-radius: 10px;
 `;
 
-export const NumpadCover = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+export const NumpadCover = styled(GridList)`
+  /* box-sizing: content-box;
+  display: inline-block;
   background: radial-gradient(
     ellipse at center,
     rgba(0, 0, 0, 0.6) 0,
     rgba(39, 37, 37, 0.74) 60%
   );
   position: relative;
-  margin: 10px;
-  width: 230px;
-  height: inherit;
 
-  padding: 75px 20px 20px 20px;
+  padding: 5px;
   background: #f9f9f9;
   border: 1px solid white;
 
-  box-shadow: 0 0 0 2px rgb(221, 221, 221);
-  /* 0 1px 0px 3px  rgb(128, 128, 128) */
+  box-shadow: 0 0 0 2px rgb(221, 221, 221); */
 
   border-radius: 10px;
-  /* &::before {
-  width:  calc(100% - 13px);
-  height: calc(100% - 10px);
-  top: 0;
-  position: absolute;
- 
-  content: '';
-
-  border-radius: 15px;
-  box-shadow: inset 0 0 0 5px rgb(219, 219, 219);
- 
-  z-index: 1;
-} */
+  background: #f9f9f9;
 `;
 export const NumpadInnerFrame = styled(Grid)`
   position: relative;
@@ -118,7 +102,7 @@ export const NumpadInnerFrame = styled(Grid)`
 
   margin: 1px;
   background: ${shade(0.7, "#f9f9f9")};
-  padding: 3px;
+  padding: 3px 0px;
   border-radius: 10px;
 
   &::before {

@@ -219,8 +219,10 @@ export function initializeKeyMap(keyTable) {
 
   setGlobalState("allLayers", allLayers);
   setGlobalState("activeLayers", activeLayers);
+  console.log(`⭐: initializeKeyMap -> activeLayers`, activeLayers);
   setGlobalState("layerKeys", layerKeys);
   setGlobalState("initialLayerIndices", layerIndices);
+  console.log(`⭐: initializeKeyMap -> layerIndices`, layerIndices);
 }
 
 function swap(keyMap, newActiveLayer) {

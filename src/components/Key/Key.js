@@ -153,7 +153,6 @@ export const Key = ({
         const mainKeyIndex = _.indexOf(layer.mainKeys, label);
         const curIsMod = !layer.isSingleKey && _.includes(layer.layer, label);
 
-        console.log(`⭐: layer.layer`, layer.layer);
         if (curIsMod) {
           setIsMod(true);
           setActiveMapKey(layer.color, label);

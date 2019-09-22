@@ -15,11 +15,12 @@ import clsx from "clsx";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import { Content } from "mui-layout";
+import { AnimatedPanel } from "./components/KeySheet/NewKeyPanel/AnimatedPanel";
+import { NewKeyPanel } from "./components/KeySheet/NewKeyPanel/NewKeyPanel";
 import { Box } from "@material-ui/core";
+import KeyMapLayersPanel from "./components/KeySheet/KeyMapLayersPanel";
 function Dashboard() {
   useLockBodyScroll();
-  const style = useStyles();
-
   return (
     <Content
       style={{
@@ -37,15 +38,17 @@ function Dashboard() {
         flexDirection="column"
         justifyContent="center"
       >
-        <Box mt={10}>
+        <Box mt={10} zIndex={3}>
           <Keyboard />
         </Box>
+        <Box display="inline-block" zIndex={2} width="100%" position="relative">
+          <KeyMapLayersPanel />
+        </Box>
 
-        <Box mt={3} width="100%" display="inline-block">
+        <Box mt={3} zIndex={1} width="100%" display="inline-block">
           <KeySheet category="All Keys" />
         </Box>
       </Box>
-      {/* </Container> */}
     </Content>
   );
 }
