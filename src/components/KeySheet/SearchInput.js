@@ -142,8 +142,7 @@ export const SearchInput = props => {
   };
   const [isOpen, toggleOpen] = useCycle(false, true);
   return (
-    <motion.dialog
-      open={true}
+    <Paper
       animate={mode === "KEYMAP_MODE" ? "opened" : "closed"}
       variants={paperVariants}
       className={classes.root}
@@ -276,7 +275,7 @@ export const SearchInput = props => {
           {/* </ToggleButtonGroup> */}
         </Grid>
       </Grid>
-    </motion.dialog>
+    </Paper>
   );
 };
 const paperVariants = {
