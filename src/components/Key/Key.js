@@ -14,7 +14,8 @@ import {
   linearGradient,
   lighten,
   transparentize,
-  grayscale
+  grayscale,
+  readableColor
 } from "polished";
 import Layer from "@material-ui/core/Box";
 import produce from "immer";
@@ -46,6 +47,7 @@ import { TextField } from "@material-ui/core";
 import { useBoolean } from "react-hanger";
 import theme from "../design-system/theme";
 import { StatusBar } from "../KeySheet/NewKeyPanel/NewKeyPanel";
+import { useTheme } from "@material-ui/core";
 
 const ConditionalWrap = ({ condition, wrap, children }) => {
   const [flashing] = React.useContext(FlashingContext);
@@ -81,6 +83,7 @@ const methods = state => {
     },
     resetActiveColor() {
       state.activeColor = defaultActiveColor;
+
       // this.setInactive();
     }
   };
@@ -166,8 +169,8 @@ export const Key = ({
     }
 
     return () => {
-      setActive(false);
       setInactiveMapKey();
+      setActive(false);
     };
   }, [isIncluded, mode, activeLayers]);
 
@@ -221,12 +224,32 @@ export const Key = ({
       ht={ht}
       onClick={keyClicked}
     >
-      <KeyTop color={defaultColor} wt={wt} ht={ht}>
+      <KeyTop
+        // animate={isMod && active ? { backgroundPosition: "10px 10px" } : {}}
+        transition={{ loop: Infinity, ease: "linear", duration: 0.5 }}
+        defaultColor={defaultColor}
+        activeColor={activeColor}
+        // bg={
+        //   isMapKey &&
+        //   !isMod &&
+        //   `linear-gradient(-30deg, ${shade(0.05, defaultColor)} 0%, ${lighten(
+        //     0.2,
+        //     defaultColor
+        //   )} 50%)`
+        // }
+        isMod={isMod && active}
+        wt={wt}
+        ht={ht}
+      >
         {isMapKey ? (
           <>
             <KeyCharCenter>
               {mode === "KEYMAP_MODE" ? (
-                <KeyText keyTopText={keyTopText} />
+                <KeyText
+                  isMod={isMod}
+                  color={readableColor(activeColor)}
+                  keyTopText={keyTopText}
+                />
               ) : (
                 <StatusBar.Target
                   style={{

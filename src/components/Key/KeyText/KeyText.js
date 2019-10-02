@@ -13,7 +13,9 @@ const KeyText = ({
   keyTopText,
   fontOpacity,
   children,
-  active
+  active,
+  isMod,
+  color
 }) => {
   return (
     <Textfit
@@ -28,7 +30,9 @@ const KeyText = ({
         justifyContent: "center",
         margin: "0 auto",
         overflow: "hidden",
-        fontFamily: "Karla, sans-serif"
+        fontFamily: "Karla, sans-serif",
+        fontWeight: isMod && "bold",
+        color: color
       }}
       min={10}
       max={18}

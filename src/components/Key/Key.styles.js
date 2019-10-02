@@ -113,7 +113,21 @@ export const KeyTop = styled(motion.div)`
   box-sizing: border-box;
   border-radius: 8px;
   backface-visibility: hidden;
-  background-image: inherit;
+  /* background-image: inherit; */
+  background-image: ${({ isMod, defaultColor, activeColor }) =>
+    isMod
+      ? `linear-gradient(-45deg, ${lighten(
+          0.08,
+          activeColor
+        )} 25%, ${activeColor} 25%,
+          ${activeColor} 50%, ${lighten(0.08, activeColor)} 50%, ${lighten(
+          0.08,
+          activeColor
+        )} 75%,
+          ${activeColor} 75%, ${activeColor})`
+      : "inherit"};
+  background-size: ${({ isMod }) => (isMod ? "20px 20px" : "initial")};
+
   z-index: 10;
   /* padding: 5px; */
   /* padding-bottom: auto; */

@@ -38,7 +38,7 @@ const variants = {
     }
   }),
   openedMap: i => ({
-    y: -10,
+    y: 25,
     transition: {
       type: "spring",
       // damping: 50,
@@ -51,7 +51,7 @@ const variants = {
     }
   }),
   closedMap: i => ({
-    y: -145,
+    y: -160,
     transition: {
       type: "spring",
 
@@ -109,7 +109,19 @@ export const NewKeyPanelContainer = ({ parentHeight, saveClicked }) => {
           }}
           parentHeight={parentHeight}
         >
-          <NewKeyPanel saveClicked={saveClicked} />
+          <Paper
+            elevation={3}
+            raised
+            style={{
+              // height: parentHeight * 0.61,
+              borderRadius: 15,
+
+              margin: "0 21px",
+              padding: "25px"
+            }}
+          >
+            <NewKeyPanel saveClicked={saveClicked} />
+          </Paper>
         </AnimatedPanel>
       )}
     </div>
@@ -157,21 +169,8 @@ export const AnimatedPanel = ({
         alignItems: "center"
       }}
     >
-      <Paper
-        elevation={3}
-        raised
-        style={{
-          // height: parentHeight * 0.61,
-          borderRadius: 15,
-
-          padding,
-          height,
-          ...customStyle
-        }}
-      >
-        <TabIndicator />
-        {children}
-      </Paper>
+      <TabIndicator />
+      {children}
     </motion.div>
   );
 };
