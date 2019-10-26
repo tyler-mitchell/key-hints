@@ -38,7 +38,8 @@ import {
   MenuList,
   MenuItem,
   ListItemText,
-  ListItemIcon
+  ListItemIcon,
+  Tooltip
 } from "@material-ui/core";
 
 import { ExitToApp } from "@material-ui/icons";
@@ -62,8 +63,8 @@ const useStyles = makeStyles(theme => ({
     width: 500
   },
   popper: {
-    zIndex: theme.zIndex.appBar + 1
-    // width: "300px"
+    zIndex: theme.zIndex.appBar + 1,
+    maxWidth: "300px"
   },
   avatar: {
     cursor: "pointer",
@@ -80,14 +81,20 @@ export const FocusContext = React.createContext({});
 
 export default function SignInDialog() {
   const classes = useStyles();
-  const [width, setWidth] = React.useState("300px");
   const { firebase, userAuthState, logout } = React.useContext(FirebaseContext);
+  const [user, loading, error] = userAuthState;
+  const [width, setWidth] = React.useState("auto");
+
+  React.useState(() => {
+    if (user) {
+      setWidth("auto");
+    }
+  }, [user]);
   function handleLogout() {
     popupState.close();
     setWidth("300px");
     logout();
   }
-  const [user, loading, error] = userAuthState;
   const [onboarding, setOnboarding] = React.useState(false);
   function handleOnboardClose() {
     setOnboarding(false);
@@ -119,11 +126,13 @@ export default function SignInDialog() {
     <>
       <div {...bindToggle(popupState)}>
         {user ? (
-          <Avatar
-            alt="profile picture"
-            className={classes.avatar}
-            src={firebase.auth().currentUser.photoURL}
-          />
+          <Tooltip title={firebase.auth().currentUser.email} placement="left">
+            <Avatar
+              alt="profile picture"
+              className={classes.avatar}
+              src={firebase.auth().currentUser.photoURL}
+            />
+          </Tooltip>
         ) : (
           <Button variant="contained" color="primary">
             Sign In
