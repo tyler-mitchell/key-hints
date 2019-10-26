@@ -16,7 +16,9 @@ import {
   ListItemIcon,
   ListItemText,
   Fab,
-  ButtonIcon
+  ButtonIcon,
+  Badge,
+  Chip
 } from "@material-ui/core";
 import Dashboard from "./Dashboard";
 import Login from "./components/SignIn/Login";
@@ -127,6 +129,9 @@ const useRouteStyles = makeStyles(theme => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3)
+  },
+  badge: {
+    height: 5
   }
 }));
 
@@ -155,7 +160,7 @@ export default function Routes() {
             className={routeClasses.menuButton}
           />
           <Typography
-            style={{ userSelect: "none" }}
+            style={{ userSelect: "none", overflow: "visible" }}
             component="h1"
             variant="h5"
             color="inherit"
@@ -166,6 +171,12 @@ export default function Routes() {
               💡
             </span>
             Key Hints
+            <Chip
+              style={{ marginLeft: 5 }}
+              color="secondary"
+              size="small"
+              label="beta"
+            />
           </Typography>
           <SignInDialog />
         </Toolbar>
