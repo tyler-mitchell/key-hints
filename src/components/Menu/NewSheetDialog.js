@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
-import Button from '@material-ui/core/Button';
+import Button from "@material-ui/core/Button";
 
 import {
   Dialog,
@@ -9,17 +9,28 @@ import {
   DialogContent,
   DialogActions,
   DialogContentText,
-  TextField
-} from '@material-ui/core';
-import { useGlobalState } from '../../state';
+  TextField,
+  makeStyles,
+  Typography
+} from "@material-ui/core";
+import { useGlobalState } from "../../state";
 
+const useStyles = makeStyles(theme => ({
+  dialogHeader: {
+    backgroundImage: `radial-gradient( circle 800px at 48.9% -25.3%,  ${theme.palette.primary.main} 0%, rgba(247,246,246,1.01) 98.5% )`
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1)
+  }
+}));
 export const NewSheetDialog = props => {
   const { handleClose, value: valueProp, open, ...other } = props;
   const [value, setValue] = React.useState(valueProp);
-  const [sheetNames] = useGlobalState('sheetNames');
+  const [sheetNames] = useGlobalState("sheetNames");
   const [duplicateError, setDuplicateError] = React.useState(false);
   let textInput = React.useRef(null);
-
+  const classes = useStyles();
   React.useEffect(() => {
     if (!open) {
       setValue(valueProp);
@@ -34,7 +45,7 @@ export const NewSheetDialog = props => {
 
   function handleCancel() {
     handleClose();
-    setValue('');
+    setValue("");
   }
 
   function handleOk() {
@@ -45,7 +56,7 @@ export const NewSheetDialog = props => {
       }, 3000);
     } else {
       handleClose(value);
-      setValue('');
+      setValue("");
     }
   }
 
@@ -56,6 +67,9 @@ export const NewSheetDialog = props => {
   }
   return (
     <Dialog
+      PaperProps={{
+        style: { borderRadius: "20px" }
+      }}
       disableBackdropClick
       disableEscapeKeyDown
       maxWidth="xs"
@@ -64,21 +78,33 @@ export const NewSheetDialog = props => {
       open={open}
       {...other}
     >
-      <DialogTitle id="confirmation-dialog-title">New Key Sheet</DialogTitle>
+      <DialogTitle
+        className={classes.dialogHeader}
+        id="confirmation-dialog-title"
+        disableTypography
+      >
+        <Typography style={{ color: "white" }} variant="h4">
+          New Key Sheet
+        </Typography>
+      </DialogTitle>
       <DialogContent dividers>
-        <DialogContentText>Add a new key sheet</DialogContentText>
-        <h1>{value}</h1>
         <TextField
+          id="keysheet-name"
+          className={classes.textField}
           error={duplicateError}
           autoFocus={true}
           inputRef={textInput}
-          margin="dense"
           id="name"
           value={value}
-          helperText={duplicateError ? 'Already Exists' : ''}
-          label="Sheet Name"
+          helperText={duplicateError ? "Already Exists" : ""}
           onChange={event => handleOnChange(event)}
           fullWidth
+          margin="normal"
+          inputProps={{
+            "aria-label": "bare",
+            style: { fontWeight: 700, fontSize: "20px" }
+          }}
+          variant="outlined"
         />
       </DialogContent>
       <DialogActions>

@@ -1,20 +1,18 @@
-import { makeStyles } from '@material-ui/core/styles';
-
-
+import { makeStyles } from "@material-ui/core/styles";
 
 const drawerWidth = 240;
 
 export const useDrawerStyles = makeStyles(theme => ({
   root: {
-    display: 'flex'
+    display: "flex"
   },
   appBar: {
-    fontSize: '90px',
-    height: '50px',
+    fontSize: "90px",
+    height: "50px",
     zIndex: theme.zIndex.drawer + 1,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center'
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center"
   },
   appBarShift: {
     marginLeft: drawerWidth
@@ -23,43 +21,44 @@ export const useDrawerStyles = makeStyles(theme => ({
     marginRight: 36
   },
   hide: {
-    display: 'none'
+    display: "none"
   },
   drawer: {
     // width: drawerWidth,
-    height: '300px',
-    top: '100px',
+    height: "300px",
+    top: "100px",
 
     flexShrink: 0,
-    whiteSpace: 'nowrap'
+    whiteSpace: "nowrap"
   },
   paper: {
-    height: '870px',
-    marginBottom: '30px',
+    // height: '870px',
+    maxHeight: "calc(100vh - 102px)",
+    marginBottom: "30px",
     width: drawerWidth,
 
     elevation: 9,
-    borderRadius: '0px 12px 12px 0px',
+    borderRadius: "0px 12px 12px 0px",
     top: 73,
 
-    whiteSpace: 'nowrap'
+    whiteSpace: "nowrap"
   },
   drawerTab: {
-    height: '60px',
-    width: '80px',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    height: "60px",
+    width: "80px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
 
     elevation: 9,
-    borderRadius: '0px 35px 35px 0px',
+    borderRadius: "0px 35px 35px 0px",
     top: 75
   },
   toolbar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 8px',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    padding: "0 8px",
     ...theme.mixins.toolbar
   },
   content: {

@@ -1,41 +1,39 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { NewSheetDialog } from './NewSheetDialog';
-import { Fab, Button, IconButton } from '@material-ui/core';
-import { AddCircleRounded as AddIcon } from '@material-ui/icons';
-import { KeyTableContext } from '../../context/KeyTableContext';
-import { useGlobalState } from '../../state';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { NewSheetDialog } from "./NewSheetDialog";
+import { Fab, Button, IconButton } from "@material-ui/core";
+import { AddCircleRounded as AddIcon } from "@material-ui/icons";
+import { KeyTableContext } from "../../context/KeyTableContext";
+import { useGlobalState } from "../../state";
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '100%',
+    width: "100%",
     maxWidth: 360,
     backgroundColor: theme.palette.background.paper
   },
   paper: {
-    width: '80%',
+    width: "80%",
     maxHeight: 435
   },
 
   button: {
-    textTransform: 'none',
-   borderRadius: '15px',
-   textTransfom: 'none',
-   
-
-
+    textTransform: "none",
+    borderRadius: "15px",
+    textTransfom: "none"
   },
   icon: {
-    marginRight: theme.spacing(1),
-
+    marginRight: theme.spacing(1)
   }
 }));
 
 export const NewSheetButton = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState('');
-  const { addNewKeySheet, setDocIndex, docIndex } = React.useContext(KeyTableContext);
-  const [sheetNames] = useGlobalState('sheetNames');
+  const [value, setValue] = React.useState("");
+  const { addNewKeySheet, setDocIndex, docIndex } = React.useContext(
+    KeyTableContext
+  );
+  const [sheetNames] = useGlobalState("sheetNames");
 
   function handleButtonClick() {
     setOpen(true);
@@ -56,12 +54,12 @@ export const NewSheetButton = () => {
         variant="contained"
         size="small"
         className={classes.button}
-        style={{ bottom: '17px', position: 'absolute' }}
+        style={{ bottom: "17px", position: "absolute" }}
         onClick={handleButtonClick}
       >
         {/* <div className={classes.icon}><AddIcon /></div> */}
         <AddIcon className={classes.icon} />
-        Add New Collection
+        Add New Key Sheet
       </Button>
 
       <NewSheetDialog
@@ -77,4 +75,3 @@ export const NewSheetButton = () => {
     </>
   );
 };
-
