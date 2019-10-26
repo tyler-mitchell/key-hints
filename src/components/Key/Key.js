@@ -34,7 +34,6 @@ import {
   Easing
 } from "react-spring";
 
-import "./key.css";
 import useMethods from "use-methods";
 
 import { useGlobalState, setGlobalState } from "../../state";

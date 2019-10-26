@@ -1,41 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import styled, { keyframes, css } from "styled-components";
-import { findAll } from "styled-components/test-utils";
-import React from "react";
-import { Box } from "@rebass/grid";
-import { shade, linearGradient, lighten } from "polished";
-import Layer from "@material-ui/core/Box";
-import { FlashingContext } from "./FlashingContext";
-import { Card, Grid, Paper } from "@material-ui/core";
-import { Textfit } from "react-textfit";
-import {
-  useSpring,
-  animated,
-  useTransition,
-  config,
-  interpolate,
-  extrapolate,
-  Easing
-} from "react-spring";
-import fitty from "fitty";
-import Typography from "@material-ui/core/Typography";
-import {
-  ArrowBack as LeftArrowIcon,
-  ArrowForward as RightArrowIcon,
-  ArrowUpward as UpArrowIcon,
-  ArrowDownward as DownArrowIcon
-} from "@material-ui/icons";
-import "./key.css";
-
-import { FlashingKey } from "./FlashingKey";
-
-import { useGlobalState, setGlobalState } from "../../state";
-import _ from "lodash";
-
-import flatMap from "lodash/flatMap";
-import KeyText from "./KeyText/KeyText";
 import { motion } from "framer-motion";
-import { TextField } from "@material-ui/core";
+import { lighten, shade } from "polished";
+import { animated } from "react-spring";
+import styled from "styled-components";
 
 export const AnimatedKeyContainer = styled(motion.div)`
   /* transform: scaleX(0.95); */
