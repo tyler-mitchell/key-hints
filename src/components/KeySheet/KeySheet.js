@@ -156,7 +156,7 @@ const CardStyle = styled(Card)`
 
 const AnimatedCard = motion.custom(CardStyle);
 
-export const KeySheet = props => {
+export const KeySheet = ({ vh }) => {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -271,7 +271,7 @@ export const KeySheet = props => {
   return (
     <React.Fragment>
       {/* {loadingUKTC && <CircularProgress className={classes.progress} />} */}
-      {loadingUKTC && <Skeleton height={470} />}
+      {/* {loadingUKTC && <Skeleton height={470} />} */}
 
       {curKeyTable && (
         <div style={{ position: "relative" }} ref={ref}>
@@ -281,7 +281,9 @@ export const KeySheet = props => {
             ref={anchorRef(popupState)}
             style={{
               borderRadius: "10px",
-              zIndex: zIndex
+              zIndex: zIndex,
+              // height: "30vh"
+              height: "inherit"
             }}
 
             // style={{
@@ -299,7 +301,8 @@ export const KeySheet = props => {
               style={{
                 // background: 'rgba(0, 0, 0, 0.66)',
                 width: "100%",
-                height: "100%",
+                // height: "30vh",
+
                 backgroundClip: "context-box",
 
                 top: 0,
@@ -329,15 +332,16 @@ export const KeySheet = props => {
               style={{
                 position: "relative",
                 zIndex: 0,
-                height: 360,
-                marginBottom: "30px"
+                height: vh - 5,
+                // minHeight: vh
+                marginBottom: 5
               }}
             >
               {isEmpty(filteredKeyTable) && "Keysheet is empty"}
               {!isEmpty(filteredKeyTable) && (
                 // height: 360
                 <KeyList
-                  height={360}
+                  height={vh - 10}
                   keyTableKeys={Object.keys(filteredKeyTable).sort()}
                   keyTable={filteredKeyTable}
                 />

@@ -4,7 +4,7 @@ import "./App.css";
 
 import { useStyles } from "./components/design-system/styles";
 import { KeySheet } from "./components/KeySheet/KeySheet";
-import useLockBodyScroll from "./components/hooks/useLockScroll";
+import { useWindowDimensions } from "./components/hooks/useLockScroll";
 // Local
 import Keyboard from "./components/Keyboard";
 
@@ -20,10 +20,13 @@ import { NewKeyPanel } from "./components/KeySheet/NewKeyPanel/NewKeyPanel";
 import { Box } from "@material-ui/core";
 import KeyMapLayersPanel from "./components/KeySheet/KeyMapLayersPanel";
 function Dashboard() {
-  useLockBodyScroll();
+  // useLockBodyScroll();
+  const { height, width } = useWindowDimensions();
   return (
     <Content
       style={{
+        // height: "100vh",
+
         display: "flex",
         alignItems: "center",
         justifyContent: "center"
@@ -41,12 +44,12 @@ function Dashboard() {
         <Box mt={10} zIndex={3}>
           <Keyboard />
         </Box>
-        <Box display="inline-block" zIndex={2} width="100%" position="relative">
+        <Box display="inline-block" zIndex={2} position="relative">
           <KeyMapLayersPanel />
         </Box>
 
         <Box mt={3} zIndex={1} width="100%" display="inline-block">
-          <KeySheet category="All Keys" />
+          <KeySheet vh={height - 595} category="All Keys" />
         </Box>
       </Box>
     </Content>
