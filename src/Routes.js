@@ -155,12 +155,16 @@ export default function Routes() {
             className={routeClasses.menuButton}
           />
           <Typography
+            style={{ userSelect: "none" }}
             component="h1"
             variant="h5"
             color="inherit"
             noWrap
             className={style.title}
           >
+            <span style={{ marginRight: "3px" }} role="img" aria-label="idea">
+              💡
+            </span>
             Key Hints
           </Typography>
           <SignInDialog />

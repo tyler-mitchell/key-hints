@@ -1,24 +1,27 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
+import React from "react";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
 
-import PropTypes from 'prop-types';
-import SwipeableViews from 'react-swipeable-views';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Login from './Login';
-import Register from './Register';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-import { FirebaseContext } from '../utils/firebase';
-import useMenu from './useMenu';
-import { usePopupState, bindToggle, bindPopper } from 'material-ui-popup-state/hooks';
-
+import PropTypes from "prop-types";
+import SwipeableViews from "react-swipeable-views";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Typography from "@material-ui/core/Typography";
+import Login from "./Login";
+import Register from "./Register";
+import { useAuthState } from "react-firebase-hooks/auth";
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
+import { FirebaseContext } from "../utils/firebase";
+import useMenu from "./useMenu";
+import {
+  usePopupState,
+  bindToggle,
+  bindPopper
+} from "material-ui-popup-state/hooks";
 
 import {
   Paper,
@@ -31,8 +34,14 @@ import {
   Icon,
   IconButton,
   Divider,
-  Fade
-} from '@material-ui/core';
+  Fade,
+  MenuList,
+  MenuItem,
+  ListItemText,
+  ListItemIcon
+} from "@material-ui/core";
+
+import { ExitToApp } from "@material-ui/icons";
 
 function TabContainer({ children, dir }) {
   return (
@@ -54,109 +63,148 @@ const useStyles = makeStyles(theme => ({
   },
   popper: {
     zIndex: theme.zIndex.appBar + 1
+    // width: "300px"
   },
   avatar: {
+    cursor: "pointer",
     width: 35,
     height: 35
   },
   papwer: {
-    width: '300px'
-  }
+    width: "300px"
+  },
+  signInStyle: {}
 }));
 
 export const FocusContext = React.createContext({});
 
 export default function SignInDialog() {
-
-
   const classes = useStyles();
-
-
-
+  const [width, setWidth] = React.useState("300px");
   const { firebase, userAuthState, logout } = React.useContext(FirebaseContext);
+  function handleLogout() {
+    popupState.close();
+    setWidth("300px");
+    logout();
+  }
   const [user, loading, error] = userAuthState;
-  
+  const [onboarding, setOnboarding] = React.useState(false);
+  function handleOnboardClose() {
+    setOnboarding(false);
+  }
   // const [user] = useAuthState(firebase.auth());
-  const popupState = usePopupState({ variant: 'popper', popupId: 'demoPopper' });
+  const popupState = usePopupState({
+    variant: "popper",
+    popupId: "demoPopper"
+  });
   const uiConfig = {
     // state: { user },
-    signInFlow: 'popup',
+    signInFlow: "popup",
     signInOptions: [
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
       firebase.auth.EmailAuthProvider.PROVIDER_ID
       // firebase.auth.GithubAuthProvider.PROVIDER_ID,
     ],
     callbacks: {
-      signInSuccess: () => setTimeout(popupState.close, 900)
+      signInSuccess: () => {
+        setOnboarding(true);
+
+        popupState.close();
+        setWidth("auto");
+      }
     }
   };
 
-
-
-  
-
   return (
     <>
-      
       <div {...bindToggle(popupState)}>
         {user ? (
-          <Fab color="primary" size="small">
-            <Avatar
-              alt="profile picture"
-              className={classes.avatar}
-              src={firebase.auth().currentUser.photoURL}
-            />
-            
-          </Fab>
+          <Avatar
+            alt="profile picture"
+            className={classes.avatar}
+            src={firebase.auth().currentUser.photoURL}
+          />
         ) : (
           <Button variant="contained" color="primary">
             Sign In
           </Button>
         )}
       </div>
-      <Popper className={classes.popper} {...bindPopper(popupState)}>
-
-          <Fade in={popupState} timeout={250}>
-            <Paper className={classes.paper} >
-              {user ? (
-                <>
-                  <DialogTitle>Welcome {firebase.auth().currentUser.displayName}!</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText>Let Google help apps determine location.</DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      color="secondary"
-                      // component={Link}
-                      // to="/register"
-                      onClick={logout}
-                      className={classes.submit}
-                    >
-                      Logout
-                    </Button>
-                  </DialogActions>
-                </>
-              ) : (
-                <>
-                  <DialogTitle>{'Welcome to Key'}</DialogTitle>
-                  <DialogContent>
-                    <Divider />
-                    <DialogContentText>Let Google help apps determine location.</DialogContentText>
-                    <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
-                  </DialogContent>
-                </>
-              )}
+      <Popper
+        className={classes.popper}
+        style={{ width }}
+        {...bindPopper(popupState)}
+        placement="bottom-end"
+      >
+        <Fade in={popupState} timeout={250}>
+          {user ? (
+            <Paper>
+              <MenuList
+                style={{
+                  padding: 0,
+                  margin: 0,
+                  overflow: "hidden",
+                  borderRadius: "5px"
+                }}
+              >
+                <MenuItem
+                  type="submit"
+                  fullWidth
+                  variant="outlined"
+                  // color="secondary"
+                  // component={Link}
+                  // to="/register"
+                  onClick={handleLogout}
+                  className={classes.submit}
+                >
+                  <ExitToApp fontSize="small" style={{ marginRight: "10px" }} />
+                  Logout
+                </MenuItem>
+              </MenuList>
             </Paper>
-          </Fade>
+          ) : (
+            <Paper className={classes.paper}>
+              <DialogTitle>
+                <Typography variant="h4" align="center">
+                  Welcome
+                  <span
+                    style={{ marginLeft: "5px" }}
+                    role="img"
+                    aria-label="smile"
+                  >
+                    😄
+                  </span>
+                </Typography>
+              </DialogTitle>
 
+              <DialogContent>
+                <Typography
+                  variant="body1"
+                  align="center"
+                  color="textSecondary"
+                >
+                  To create your own Key Sheets, please sign in with one of the
+                  following methods
+                </Typography>
+                <StyledFirebaseAuth
+                  uiConfig={uiConfig}
+                  firebaseAuth={firebase.auth()}
+                />
+              </DialogContent>
+            </Paper>
+          )}
+        </Fade>
       </Popper>
 
-      {/* <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title"> */}
-
-      {/* </Dialog> */}
+      {onboarding && (
+        <Dialog
+          open={onboarding}
+          onClose={handleOnboardClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle>WELCOME</DialogTitle>
+        </Dialog>
+      )}
     </>
   );
 }
