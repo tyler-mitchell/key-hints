@@ -150,6 +150,7 @@ export const SheetList = () => {
                     }
                   }}
                   PaperProps={{
+                    elevation: 0,
                     style: {
                       borderRadius: "30px",
                       padding: "5px",
@@ -163,11 +164,10 @@ export const SheetList = () => {
                     dense
                     initial={{ color: "white", opacity: 1 }}
                     whileHover={{
-                      backgroundColor: "lightpink",
-                      color: "black",
-                      opacity: 0.5
+                      backgroundColor: "red"
                     }}
                     style={{
+                      boxShadow: "none",
                       backgroundColor: "transparent",
                       borderRadius: "30px",
                       padding: "1px",
@@ -191,8 +191,4 @@ export const SheetList = () => {
       </List>
     </>
   );
-};
-
-const SheetItem = () => {
-  return <></>;
 };
