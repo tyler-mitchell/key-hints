@@ -347,6 +347,7 @@ export const KeySheet = ({ vh }) => {
                     <KeyMapLayersPanel height={vh - 10} />
                   ) : (
                     <KeyList
+                      interactive={true}
                       height={vh - 10}
                       keyTableKeys={Object.keys(filteredKeyTable).sort()}
                       keyTable={filteredKeyTable}

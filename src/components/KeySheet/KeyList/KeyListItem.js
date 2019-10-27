@@ -300,7 +300,8 @@ export const KeyListItem = props => {
     keybind,
     category,
     shortcutObjectKey,
-    arrowPressed
+    arrowPressed,
+    interactive
   } = props;
 
   // const [, , activeKeys, setActiveKeys] = React.useContext(FlashingContext);
@@ -363,7 +364,7 @@ export const KeyListItem = props => {
   // }, [arrowPressed])
   return (
     <ListItem
-      button
+      button={interactive}
       style={{ ...styles }}
       divider
       // dense
@@ -373,7 +374,7 @@ export const KeyListItem = props => {
 
       focusRipple
       key={index}
-      onClick={() => itemClicked(shortcutObjectKey)}
+      onClick={() => interactive && itemClicked(shortcutObjectKey)}
       selected={selectedIndex === index}
     >
       {/* <Grid  item direction="row" xs={12} alignItems="center" justify="flex-end" wrap="nowrap"> */}

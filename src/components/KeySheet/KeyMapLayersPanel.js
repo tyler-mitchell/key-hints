@@ -50,12 +50,14 @@ const useStyles = makeStyles(theme => ({
     borderRadius: "12px"
   },
   tab: {
+    transition: ".3s",
     justifyContent: "flex-start",
     alignItems: "flex-start",
     opacity: 1,
     borderBottom: `1px solid ${theme.palette.divider}`,
     "&:hover": {
-      opacity: 1
+      opacity: 1,
+      backgroundColor: "#f0f0f0"
     },
     "&$selected": {
       color: "#1890ff",
@@ -138,15 +140,13 @@ const KeyMapLayersPanel = ({ height }) => {
   function handleMultiLayerOption() {
     setShowMultipleLayers(!showMultipleLayers);
   }
-  function filterMap() {
-    const arr = activeLayers.map(o => {
-      console.log(`⭐: OOOOOOOOOOOOOOO`, o.data);
+  function reduceLayers() {
+    const reduced = activeLayers.reduce((result, cur) => {
+      return { ...result, ...cur.data };
+    }, {});
+    console.log(`⭐: reduced`, reduced);
 
-      return o.data;
-    });
-    const zipped = _.zipObject(...arr);
-    console.log(`⭐: filterMap -> arr`, zipped);
-    return zipped;
+    return reduced;
   }
   return (
     <div className={classes.root}>
@@ -245,22 +245,15 @@ const KeyMapLayersPanel = ({ height }) => {
         </Tabs>
       )}
 
-      {activeLayers.map((o, index) => {
-        console.log(`⭐: o.data`, o.data);
-
-        return (
-          <TabPanel value={value} index={index}>
-            HEOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-            <CardContent>
-              <KeyList
-                height={height}
-                keyTableKeys={Object.keys(o.data).sort()}
-                keyTable={o.data}
-              />
-            </CardContent>
-          </TabPanel>
-        );
-      })}
+      <Box flexGrow={1} width={1000}>
+        <CardContent>
+          <KeyList
+            height={height}
+            keyTableKeys={Object.keys(reduceLayers()).sort()}
+            keyTable={reduceLayers()}
+          />
+        </CardContent>
+      </Box>
     </div>
   );
 };

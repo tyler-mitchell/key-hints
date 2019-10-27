@@ -115,8 +115,11 @@ export const SearchInput = props => {
   function handleKeyMapMode(event, newView) {
     if (selected) {
       setSelected(false);
+
       setGlobalState("mode", null);
     } else {
+      clearKeySelection();
+      setGlobalState("selectedItemIndex", null);
       setSelected(true);
       setGlobalState("mode", "KEYMAP_MODE");
     }
