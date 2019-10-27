@@ -1,53 +1,121 @@
+import {
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  GridList,
+  GridListTile,
+  useTheme,
+  Card,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  ExpansionPanelActions,
+  Typography,
+  makeStyles,
+  Box,
+  Tabs,
+  CircularProgress,
+  LinearProgress,
+  Tab,
+  Paper,
+  Fade
+} from "@material-ui/core";
+import { ExpandMore as ExpandMoreIcon } from "@material-ui/icons";
+import { AnimatePresence, motion } from "framer-motion";
+import { lighten, shade } from "polished";
 import React from "react";
-import { AnimatedPanel } from "./NewKeyPanel/AnimatedPanel";
-
-import { useGlobalState } from "../../state";
-import { AnimatedKeyContainer, KeyCharCenter } from "../Key/Key.styles";
 import styled from "styled-components";
+import { useGlobalState } from "../../state";
 import {
   updateActiveLayers,
   updateActiveSingleLayer
 } from "../Keyboard/KeyMapData";
-import { motion, useAnimation, AnimatePresence } from "framer-motion";
 import { renderCategoryIcon } from "./KeyList/KeyListItem";
-import { shade, lighten } from "polished";
-import { NumpadInnerFrame, NumpadCover } from "../Keyboard/Keyboard.styles";
-import { useTheme } from "@material-ui/core";
-import { Checkbox } from "@material-ui/core";
-import { FormControlLabel } from "@material-ui/core";
-import { GridList } from "@material-ui/core";
-import { GridListTile } from "@material-ui/core";
-import { Button } from "@material-ui/core";
-import { Grid } from "@material-ui/core";
+import { AnimatedPanel } from "./NewKeyPanel/AnimatedPanel";
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+    display: "flex",
+    opacity: 1,
+    height: "100%"
+  },
+  tabs: {
+    borderRight: `1px solid ${theme.palette.divider}`
+  },
+  tab: {
+    opacity: 1,
+    "&:hover": {
+      opacity: 1
+    },
+    "&$selected": {
+      color: "#1890ff",
+      opacity: 1,
+      fontWeight: theme.typography.fontWeightMedium
+    }
+  }
+}));
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <Typography
+      component="div"
+      role="tabpanel"
+      hidden={value !== index}
+      id={`vertical-tabpanel-${index}`}
+      aria-labelledby={`vertical-tab-${index}`}
+      {...other}
+    >
+      <Box p={3}>{children}</Box>
+    </Typography>
+  );
+}
+
 const AnimatedTile = motion.custom(GridListTile);
-const AnimatedGridList = motion.custom(GridList);
+const AnimatedPaper = motion.custom(Paper);
 const KeyMapLayersPanel = () => {
-  const [showMultipleLayers, setShowMultipleLayers] = React.useState(true);
+  const [showMultipleLayers, setShowMultipleLayers] = useGlobalState(
+    "showMultipleLayers"
+  );
   const [layerState, setState] = React.useState({ index: 0, layer: null });
   const [activeLayers, setActiveLayers] = useGlobalState("activeLayers");
   const [allLayers] = useGlobalState("allLayers");
   const [layerKeys] = useGlobalState("layerKeys");
   const [initialLayerIndices] = useGlobalState("initialLayerIndices");
+  const classes = useStyles();
+  const [loading, setLoading] = React.useState(false);
 
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   React.useEffect(() => {
-    const delayCalculation =
-      activeLayers &&
-      setTimeout(() => {
+    activeLayers &&
+      (async () => {
         if (showMultipleLayers) {
           const {
             layerIndices: newIndices,
             activeLayers: newActiveLayers
-          } = updateActiveLayers(allLayers, layerState.layer);
+          } = await updateActiveLayers(allLayers, layerState.layer);
+
           setActiveLayers(newActiveLayers);
           setLayerIndices(newIndices);
+          setLoading(false);
+          return newIndices;
         } else {
-          console.log(`⭐: KeyMapLayersPanel -> TEST`);
-          updateActiveSingleLayer(allLayers, layerKeys, layerState.index);
+          const x = await updateActiveSingleLayer(
+            allLayers,
+            layerKeys,
+            layerState.index
+          );
           setLayerIndices(new Set([layerState.index]));
+          setLoading(false);
+          return x;
         }
-      }, 100);
-
-    return () => clearTimeout(delayCalculation);
+      })();
   }, [layerState, showMultipleLayers]);
 
   React.useEffect(() => {
@@ -56,116 +124,143 @@ const KeyMapLayersPanel = () => {
     }
   }, [initialLayerIndices]);
 
-  console.log(
-    `⭐: KeyMapLayersPanel -> initialLayerIndices`,
-    initialLayerIndices
-  );
   const [layerIndices, setLayerIndices] = React.useState(initialLayerIndices);
-  console.log(`⭐: KeyMapLayersPanel -> layerIndices`, layerIndices);
-  const theme = useTheme();
 
+  const theme = useTheme();
+  const [tabIndicatorColor, setTabIndicatorColor] = React.useState(
+    theme.palette.action.selected
+  );
   const [mode] = useGlobalState("mode");
   function handleMultiLayerOption() {
     setShowMultipleLayers(!showMultipleLayers);
   }
   return (
-    <AnimatedPanel
-      customStyle={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-      }}
-      GridProps={{ container: true, justify: "flex-start" }}
-      padding="50px 25px 10px 25px"
-      variantInfo={{
-        type: "KeyMapPanel",
-        opened: "openedMap",
-        closed: "closedMap",
-        mode: "KEYMAP_MODE"
-      }}
-    >
-      <Grid container justify="center">
-        <GridListContainer item xs={12}>
-          <Grid item xs={3}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  onChange={() => setShowMultipleLayers(!showMultipleLayers)}
-                  value="checkedC"
-                  checked={showMultipleLayers}
-                />
-              }
-              label="Multiple Layers"
-            />
-          </Grid>
-          <GridListInnerFrame
-            bgColor={theme.palette.primary.main}
-            container
-            item
-            xs={12}
-          >
-            <AnimatePresence>
-              {mode === "KEYMAP_MODE" && (
-                <AnimatedGridList
-                  style={{ width: "100%" }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: [1, 0, 0, 0], y: -60 }}
-                  initial={{ opacity: 0 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 100,
-                    damping: 30,
-                    mass: 2
+    <div className={classes.root}>
+      <FormControlLabel
+        control={
+          <Checkbox
+            onChange={() => setShowMultipleLayers(!showMultipleLayers)}
+            value="checkedC"
+            checked={showMultipleLayers}
+          />
+        }
+        label="Multiple Layers"
+      />
+
+      {mode === "KEYMAP_MODE" && (
+        <Tabs
+          // centered={false}
+          className={classes.tabs}
+          orientation="vertical"
+          variant="scrollable"
+          value={value}
+          onChange={handleChange}
+          TabIndicatorProps={{
+            style: {
+              backgroundColor: tabIndicatorColor
+            }
+          }}
+          aria-label="Vertical tabs example"
+          // className={classes.tabs}
+        >
+          {initialLayerIndices &&
+            layerKeys.map((layer, index) => {
+              return (
+                <Tab
+                  classes={{ root: classes.tab }}
+                  disableFocusRipple
+                  textColor="primary"
+                  disableRipple={layerIndices.has(layer.id)}
+                  onClick={() => {
+                    // setState({ index, layer: layer.keybind });
+                    setTabIndicatorColor(layer.color);
+
+                    if (!layerIndices.has(layer.id)) {
+                      setLoading(true);
+                      setTimeout(() => {
+                        setState({ index, layer: layer.keybind });
+                        // setTabIndicatorColor(layer.color);
+                      }, 300);
+                    }
                   }}
-                  cellHeight={50}
-                  spacing={3}
-                  cols={6}
-                >
-                  {initialLayerIndices &&
-                    layerKeys.map((layer, index) => {
-                      return (
-                        <AnimatedTile
-                          cols={layer.keybind.length}
-                          row={1}
-                          item
-                          key={layer.keybind}
-                          style={{
-                            transform: "translateZ(0)",
-                            backfaceVisibility: "hidden"
-                          }}
-                          whileHover={{
-                            transition: {
-                              type: "spring",
-                              damping: 100,
-                              stiffness: 400
-                            }
-                          }}
-                          onClick={() =>
-                            setState({ index, layer: layer.keybind })
+                  label={
+                    <motion.div
+                      cols={layer.keybind.length}
+                      row={1}
+                      item
+                      key={layer.keybind}
+                      style={{
+                        transform: "translateZ(0)",
+                        backfaceVisibility: "hidden"
+                      }}
+                      whileHover={{
+                        transition: {
+                          type: "spring",
+                          damping: 100,
+                          stiffness: 400
+                        }
+                      }}
+                      whileTap={{
+                        transition: {
+                          type: "spring",
+                          damping: 100,
+                          stiffness: 400
+                        }
+                      }}
+                    >
+                      <RenderSelectedCategory
+                        layerKey={layer.keybind}
+                        color={layer.color}
+                        active={layerIndices.has(layer.id)}
+                      >
+                        <Fade
+                          unmountOnExit={true}
+                          in={
+                            loading &&
+                            value === index &&
+                            !layerIndices.has(layer.id)
                           }
-                          whileTap={{
-                            transition: {
-                              type: "spring",
-                              damping: 100,
-                              stiffness: 400
-                            }
-                          }}
                         >
-                          <RenderSelectedCategory
-                            layerKey={layer.keybind}
-                            color={layer.color}
-                            active={layerIndices.has(layer.id)}
-                          />
-                        </AnimatedTile>
-                      );
-                    })}
-                </AnimatedGridList>
-              )}
-            </AnimatePresence>
-          </GridListInnerFrame>
-        </GridListContainer>
-      </Grid>
-    </AnimatedPanel>
+                          <Box color={tabIndicatorColor}>
+                            <CircularProgress
+                              size={30}
+                              thickness={5}
+                              disableShrink
+                              color="inherit"
+                            />
+                          </Box>
+                        </Fade>
+                      </RenderSelectedCategory>
+                    </motion.div>
+                  }
+                />
+              );
+            })}
+        </Tabs>
+      )}
+
+      <TabPanel value={value} index={0}>
+        Item One
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        Item Two
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        Item Three
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+        Item Four
+      </TabPanel>
+      <TabPanel value={value} index={4}>
+        Item Five
+      </TabPanel>
+      <TabPanel value={value} index={5}>
+        Item Six
+      </TabPanel>
+      <TabPanel value={value} index={6}>
+        Item Seven
+      </TabPanel>
+    </div>
   );
 };
 
@@ -173,7 +268,8 @@ export const RenderSelectedCategory = ({
   layerKey,
   color,
   active,
-  setState
+  setState,
+  children
 }) => {
   console.log(`⭐: RenderSelectedCategory -> active`, active);
   console.log(`⭐: layerKey`, layerKey);
@@ -186,11 +282,28 @@ export const RenderSelectedCategory = ({
       color={color}
       whileTap={"active"}
     >
+      <Box
+        position="absolute"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        zIndex={50}
+      >
+        {children}
+      </Box>
       <KeyTop bgColor={color} active={active}>
-        <Grid container justify="space-around" alignItems="center" xs={4}>
+        <Grid
+          container
+          justify="space-around"
+          alignItems="center"
+          wrap="nowrap"
+          xs={4}
+          flexGrow={1}
+        >
           {layerKey.map((kb, index, array) => {
             return (
               <>
+                {/* <Box>{iconLoad()}</Box> */}
                 <Grid
                   style={{
                     textAlign: "center"
@@ -219,13 +332,14 @@ const KeyTop = styled(motion.div)`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: auto;
+  height: 30px;
   box-sizing: border-box;
   border-radius: 3px;
   backface-visibility: hidden;
   background-image: inherit;
   z-index: 10;
   padding: 10px;
+  text-transform: none;
   /* padding-bottom: auto; */
   margin: -2px;
   /* text-align: left; */

@@ -74,7 +74,7 @@ const {
   lastKey: null,
   activeKeyMapKeys: [],
   lastKeyRef: null,
-
+  showMultipleLayers: true,
   newKeys: {
     keys: { key1: [] },
     description: "no description",

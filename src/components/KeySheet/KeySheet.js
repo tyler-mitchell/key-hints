@@ -15,6 +15,7 @@ import KeyList from "./KeyList/KeyList";
 
 import Paper from "@material-ui/core/Paper";
 import Skeleton from "@material-ui/lab/Skeleton";
+import KeyMapLayersPanel from "./KeyMapLayersPanel";
 
 import { KeyTableContext } from "../../context/KeyTableContext";
 import { usePopupState, anchorRef } from "material-ui-popup-state/hooks";
@@ -338,14 +339,17 @@ export const KeySheet = ({ vh }) => {
               }}
             >
               {isEmpty(filteredKeyTable) && "Keysheet is empty"}
-              {!isEmpty(filteredKeyTable) && (
+              {!isEmpty(filteredKeyTable) &&
                 // height: 360
-                <KeyList
-                  height={vh - 10}
-                  keyTableKeys={Object.keys(filteredKeyTable).sort()}
-                  keyTable={filteredKeyTable}
-                />
-              )}
+                (mode === "KEYMAP_MODE" ? (
+                  <KeyMapLayersPanel />
+                ) : (
+                  <KeyList
+                    height={vh - 10}
+                    keyTableKeys={Object.keys(filteredKeyTable).sort()}
+                    keyTable={filteredKeyTable}
+                  />
+                ))}
             </CardContent>
           </AnimatedCard>
           {/* <AnimatedPanel

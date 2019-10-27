@@ -43,9 +43,6 @@ function Dashboard() {
         <Box mt={10} zIndex={3}>
           <Keyboard />
         </Box>
-        <Box display="inline-block" zIndex={2} width="100%" position="relative">
-          <KeyMapLayersPanel />
-        </Box>
 
         <Box mt={3} zIndex={1} width="100%" display="inline-block">
           <KeySheet vh={height - 595} category="All Keys" />
