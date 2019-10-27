@@ -41,10 +41,16 @@ const useStyles = makeStyles(theme => ({
     height: "100%"
   },
   tabs: {
-    borderRight: `1px solid ${theme.palette.divider}`
+    // borderRight: `1px solid ${theme.palette.divider}`,
+    // borderBottom: `1px solid ${theme.palette.divider}`
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: "12px"
   },
   tab: {
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
     opacity: 1,
+    borderBottom: `1px solid ${theme.palette.divider}`,
     "&:hover": {
       opacity: 1
     },
@@ -79,13 +85,14 @@ const KeyMapLayersPanel = () => {
   const [showMultipleLayers, setShowMultipleLayers] = useGlobalState(
     "showMultipleLayers"
   );
-  const [layerState, setState] = React.useState({ index: 0, layer: null });
+  const [layerState, setState] = React.useState(null);
   const [activeLayers, setActiveLayers] = useGlobalState("activeLayers");
   const [allLayers] = useGlobalState("allLayers");
   const [layerKeys] = useGlobalState("layerKeys");
   const [initialLayerIndices] = useGlobalState("initialLayerIndices");
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
+  const [mode] = useGlobalState("mode");
 
   const [value, setValue] = React.useState(0);
 
@@ -93,36 +100,31 @@ const KeyMapLayersPanel = () => {
     setValue(newValue);
   };
   React.useEffect(() => {
-    activeLayers &&
-      (async () => {
-        if (showMultipleLayers) {
-          const {
-            layerIndices: newIndices,
-            activeLayers: newActiveLayers
-          } = await updateActiveLayers(allLayers, layerState.layer);
-
-          setActiveLayers(newActiveLayers);
-          setLayerIndices(newIndices);
-          setLoading(false);
-          return newIndices;
-        } else {
-          const x = await updateActiveSingleLayer(
-            allLayers,
-            layerKeys,
-            layerState.index
-          );
-          setLayerIndices(new Set([layerState.index]));
-          setLoading(false);
-          return x;
-        }
-      })();
-  }, [layerState, showMultipleLayers]);
-
-  React.useEffect(() => {
     if (initialLayerIndices) {
       setLayerIndices(initialLayerIndices);
     }
   }, [initialLayerIndices]);
+
+  React.useEffect(() => {
+    activeLayers &&
+      layerState !== null &&
+      (() => {
+        if (showMultipleLayers) {
+          const {
+            layerIndices: newIndices,
+            activeLayers: newActiveLayers
+          } = updateActiveLayers(allLayers, layerState.layer);
+
+          setActiveLayers(newActiveLayers);
+          setLayerIndices(newIndices);
+          setLoading(false);
+        } else {
+          updateActiveSingleLayer(allLayers, layerKeys, layerState.index);
+          setLayerIndices(new Set([layerState.index]));
+          setLoading(false);
+        }
+      })();
+  }, [layerState, showMultipleLayers, mode]);
 
   const [layerIndices, setLayerIndices] = React.useState(initialLayerIndices);
 
@@ -130,23 +132,11 @@ const KeyMapLayersPanel = () => {
   const [tabIndicatorColor, setTabIndicatorColor] = React.useState(
     theme.palette.action.selected
   );
-  const [mode] = useGlobalState("mode");
   function handleMultiLayerOption() {
     setShowMultipleLayers(!showMultipleLayers);
   }
   return (
     <div className={classes.root}>
-      <FormControlLabel
-        control={
-          <Checkbox
-            onChange={() => setShowMultipleLayers(!showMultipleLayers)}
-            value="checkedC"
-            checked={showMultipleLayers}
-          />
-        }
-        label="Multiple Layers"
-      />
-
       {mode === "KEYMAP_MODE" && (
         <Tabs
           // centered={false}
@@ -165,6 +155,9 @@ const KeyMapLayersPanel = () => {
         >
           {initialLayerIndices &&
             layerKeys.map((layer, index) => {
+              if (layerState === null && index === 0) {
+                setState({ index: 0, layer: layer.keybind });
+              }
               return (
                 <Tab
                   classes={{ root: classes.tab }}

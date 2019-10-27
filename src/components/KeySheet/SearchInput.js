@@ -13,6 +13,8 @@ import {
   Grid,
   Button,
   Divider,
+  FormControlLabel,
+  Checkbox,
   IconButton
 } from "@material-ui/core";
 import { useGlobalState, clearKeySelection, setGlobalState } from "../../state";
@@ -99,7 +101,9 @@ export const SearchInput = props => {
     addNewKeyToFirebase,
     updateKeyToFirebase
   } = React.useContext(KeyTableContext);
-
+  const [showMultipleLayers, setShowMultipleLayers] = useGlobalState(
+    "showMultipleLayers"
+  );
   const handleSaveEditClick = () => {
     setMode(null);
     updateKeyToFirebase(newKeys);
@@ -162,62 +166,60 @@ export const SearchInput = props => {
           direction="row"
           alignItems="center"
         >
-          <Grid item xs={6}>
-            {initialLayerIndices && <CategoryMenu />}
-          </Grid>
-          {/* <ButtonGroup>
-            <Button
-              className={classes.iconButton}
-              aria-label="Menu"
-              // style={{ marginRight: '10px' }}
-              onClick={() => setDrawerState(!drawerState)}
-            >
-              <MenuIcon />
-            </Button>
-          </ButtonGroup> */}
-
-          <Divider className={classes.divider} />
-
-          {/* <InputSearch {...rest} disableUnderline onChange={onChange} onFocus={()=> console.log("HELLO WORLDDDDD")} /> */}
-          <motion.div>
-            <IconButton
-              onClick={() => toggleOpen()}
-              style={{
-                display: "inline-block",
-                position: "relative"
-
-                // background: 'white'
-              }}
-            >
-              <Search size="small" />
-            </IconButton>
-          </motion.div>
-          <motion.div
-            initial="closed"
-            animate={isOpen ? "open" : "closed"}
-            variants={variants}
-
-            // initial={{ '--width': '0px' }}
-
-            // style={{ display: 'inline-block', margin: '10px' }}
-          >
-            <TextField
-              type="search"
-              variant="outlined"
-              margin="dense"
-              style={{ width: "inherit" }}
-              // SelectProps={{
-              //   MenuProps: {
-              //     className: classes.menu,
-              //   },
-              // }}
-
-              disabled={!isOpen}
-              {...rest}
-              disableUnderline
-              onChange={onChange}
+          {mode === "KEYMAP_MODE" ? (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  onChange={() => setShowMultipleLayers(!showMultipleLayers)}
+                  value="checkedC"
+                  checked={showMultipleLayers}
+                />
+              }
+              label="Multiple Layers"
             />
-          </motion.div>
+          ) : (
+            <>
+              <Grid item xs={6}>
+                {initialLayerIndices && <CategoryMenu />}
+              </Grid>
+              <Divider className={classes.divider} />
+              <motion.div>
+                <IconButton
+                  onClick={() => toggleOpen()}
+                  style={{
+                    display: "inline-block",
+                    position: "relative"
+
+                    // background: 'white'
+                  }}
+                >
+                  <Search size="small" />
+                </IconButton>
+              </motion.div>
+              <motion.div
+                initial="closed"
+                animate={isOpen ? "open" : "closed"}
+                variants={variants}
+              >
+                <TextField
+                  type="search"
+                  variant="outlined"
+                  margin="dense"
+                  style={{ width: "inherit" }}
+                  // SelectProps={{
+                  //   MenuProps: {
+                  //     className: classes.menu,
+                  //   },
+                  // }}
+
+                  disabled={!isOpen}
+                  {...rest}
+                  disableUnderline
+                  onChange={onChange}
+                />
+              </motion.div>
+            </>
+          )}
         </Grid>
 
         {/* <Button
