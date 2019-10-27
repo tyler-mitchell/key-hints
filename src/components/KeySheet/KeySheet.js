@@ -339,17 +339,21 @@ export const KeySheet = ({ vh }) => {
               }}
             >
               {isEmpty(filteredKeyTable) && "Keysheet is empty"}
-              {!isEmpty(filteredKeyTable) &&
+              {!isEmpty(filteredKeyTable) && (
                 // height: 360
-                (mode === "KEYMAP_MODE" ? (
-                  <KeyMapLayersPanel />
-                ) : (
-                  <KeyList
-                    height={vh - 10}
-                    keyTableKeys={Object.keys(filteredKeyTable).sort()}
-                    keyTable={filteredKeyTable}
-                  />
-                ))}
+
+                <>
+                  {mode === "KEYMAP_MODE" ? (
+                    <KeyMapLayersPanel height={vh - 10} />
+                  ) : (
+                    <KeyList
+                      height={vh - 10}
+                      keyTableKeys={Object.keys(filteredKeyTable).sort()}
+                      keyTable={filteredKeyTable}
+                    />
+                  )}
+                </>
+              )}
             </CardContent>
           </AnimatedCard>
           {/* <AnimatedPanel

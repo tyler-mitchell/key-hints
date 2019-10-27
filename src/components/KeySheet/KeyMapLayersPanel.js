@@ -16,6 +16,7 @@ import {
   Tabs,
   CircularProgress,
   LinearProgress,
+  CardContent,
   Tab,
   Paper,
   Fade
@@ -25,6 +26,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { lighten, shade } from "polished";
 import React from "react";
 import styled from "styled-components";
+import _ from "lodash-es";
 import { useGlobalState } from "../../state";
 import {
   updateActiveLayers,
@@ -32,6 +34,7 @@ import {
 } from "../Keyboard/KeyMapData";
 import { renderCategoryIcon } from "./KeyList/KeyListItem";
 import { AnimatedPanel } from "./NewKeyPanel/AnimatedPanel";
+import KeyList from "./KeyList/KeyList";
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -74,14 +77,14 @@ function TabPanel(props) {
       aria-labelledby={`vertical-tab-${index}`}
       {...other}
     >
-      <Box p={3}>{children}</Box>
+      <Box pwidth={"100%"}>{children}</Box>
     </Typography>
   );
 }
 
 const AnimatedTile = motion.custom(GridListTile);
 const AnimatedPaper = motion.custom(Paper);
-const KeyMapLayersPanel = () => {
+const KeyMapLayersPanel = ({ height }) => {
   const [showMultipleLayers, setShowMultipleLayers] = useGlobalState(
     "showMultipleLayers"
   );
@@ -134,6 +137,16 @@ const KeyMapLayersPanel = () => {
   );
   function handleMultiLayerOption() {
     setShowMultipleLayers(!showMultipleLayers);
+  }
+  function filterMap() {
+    const arr = activeLayers.map(o => {
+      console.log(`⭐: OOOOOOOOOOOOOOO`, o.data);
+
+      return o.data;
+    });
+    const zipped = _.zipObject(...arr);
+    console.log(`⭐: filterMap -> arr`, zipped);
+    return zipped;
   }
   return (
     <div className={classes.root}>
@@ -232,27 +245,22 @@ const KeyMapLayersPanel = () => {
         </Tabs>
       )}
 
-      <TabPanel value={value} index={0}>
-        Item One
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        Item Two
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        Item Three
-      </TabPanel>
-      <TabPanel value={value} index={3}>
-        Item Four
-      </TabPanel>
-      <TabPanel value={value} index={4}>
-        Item Five
-      </TabPanel>
-      <TabPanel value={value} index={5}>
-        Item Six
-      </TabPanel>
-      <TabPanel value={value} index={6}>
-        Item Seven
-      </TabPanel>
+      {activeLayers.map((o, index) => {
+        console.log(`⭐: o.data`, o.data);
+
+        return (
+          <TabPanel value={value} index={index}>
+            HEOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+            <CardContent>
+              <KeyList
+                height={height}
+                keyTableKeys={Object.keys(o.data).sort()}
+                keyTable={o.data}
+              />
+            </CardContent>
+          </TabPanel>
+        );
+      })}
     </div>
   );
 };
