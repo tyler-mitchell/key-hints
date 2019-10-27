@@ -1,50 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from "react";
-import styled from "styled-components";
-
-import { FlashingContext } from "../../Key/FlashingContext";
-
 import {
-  Button,
-  ListItem,
-  ListItemSecondaryAction,
-  ListItemText,
-  List,
-  Badge,
-  Typography,
-  Chip,
   Grid,
-  TextField,
-  makeStyles,
-  Popover,
-  Menu,
-  MenuItem,
-  IconButton,
-  ToolTip,
-  ClickAwayListener
+  List,
+  ListItem,
+  ListItemText,
+  Typography
 } from "@material-ui/core";
-import { shade, lighten, darken } from "polished";
-import { useGlobalState, setGlobalState } from "../../../state";
-import { KeyTable } from "../SheetData";
 import {
   ArrowBack as LeftArrowIcon,
-  ArrowForward as RightArrowIcon,
-  ArrowUpward as UpArrowIcon,
   ArrowDownward as DownArrowIcon,
-  Delete as DeleteIcon,
-  Edit as EditIcon
+  ArrowForward as RightArrowIcon,
+  ArrowUpward as UpArrowIcon
 } from "@material-ui/icons";
-
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import {
-  usePopupState,
-  bindHover,
-  bindMenu,
-  bindTrigger
-} from "material-ui-popup-state/hooks";
-import ListItemAction from "./ListItemAction";
 import { motion } from "framer-motion";
-import { Fab } from "@material-ui/core";
+import { lighten, shade } from "polished";
+import React from "react";
+import styled from "styled-components";
+import { setGlobalState, useGlobalState } from "../../../state";
+import ListItemAction from "./ListItemAction";
+
 export const KBD = styled.div`
   /* display: inline-block; */
   display: inline-flex;
@@ -392,7 +366,7 @@ export const KeyListItem = props => {
       button
       style={{ ...styles }}
       divider
-      dense
+      // dense
       container
       direction="row"
       // justify="center"
@@ -405,7 +379,7 @@ export const KeyListItem = props => {
       {/* <Grid  item direction="row" xs={12} alignItems="center" justify="flex-end" wrap="nowrap"> */}
       <Grid item xs={4} justify="flext-start">
         <ListItemText
-          primary={<Typography variant="listItem">{text}</Typography>}
+          primary={<Typography variant="body1">{text}</Typography>}
         />
       </Grid>
 

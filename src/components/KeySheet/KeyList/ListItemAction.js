@@ -70,6 +70,7 @@ const ListItemAction = () => {
     <>
       <IconButton
         edge="end"
+        size="small"
         aria-label="Edit-shortcut"
         onClick={e => e.stopPropagation()}
         {...bindTrigger(popupState)}
