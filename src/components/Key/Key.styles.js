@@ -81,7 +81,13 @@ export const KeyTop = styled(motion.div)`
   border-radius: 8px;
   backface-visibility: hidden;
   /* background-image: inherit; */
-  background-image: ${({ isMod, defaultColor, activeColor }) =>
+  background-image: ${({
+    isMod,
+    defaultColor,
+    isActive,
+    isKeymapMode,
+    activeColor
+  }) =>
     isMod
       ? `linear-gradient(-45deg, ${lighten(
           0.08,
@@ -92,7 +98,10 @@ export const KeyTop = styled(motion.div)`
           activeColor
         )} 75%,
           ${activeColor} 75%, ${activeColor})`
+      : isKeymapMode && isActive
+      ? "linear-gradient(to top right, rgb(250, 250, 250), rgb(250, 250, 250), rgb(251, 251, 251), rgb(251, 251, 251), rgb(252, 252, 252), rgb(252, 252, 252), rgb(253, 253, 253), rgb(253, 253, 253), rgb(254, 254, 254), rgb(254, 254, 254), rgb(255, 255, 255), rgb(255, 255, 255));"
       : "inherit"};
+
   background-size: ${({ isMod }) => (isMod ? "20px 20px" : "initial")};
 
   z-index: 10;

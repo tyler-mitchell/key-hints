@@ -240,7 +240,9 @@ export const Key = ({
         //     defaultColor
         //   )} 50%)`
         // }
+        isActive={active}
         isMod={isMod && active}
+        isKeymapMode={mode === "KEYMAP_MODE"}
         wt={wt}
         ht={ht}
       >
