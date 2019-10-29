@@ -29,6 +29,7 @@ const KeyText = ({
         alignItems: "center",
         justifyContent: "center",
         margin: "0 auto",
+        padding: "3px",
         overflow: "hidden",
         fontFamily: "Karla, sans-serif",
         fontWeight: isMod && "bold",
