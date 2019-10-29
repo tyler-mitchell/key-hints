@@ -14,6 +14,7 @@ import { createTeleporter } from "react-teleporter";
 import { KeySequence } from "./KeySequence/KeySequence";
 import styled from "styled-components";
 import Toast from "./Toast";
+import { Image as ImageIconPreview } from "@material-ui/icons";
 
 // import Editor from "draft-js-plugins-editor";
 import { ItalicButton, BoldButton, UnderlineButton } from "draft-js-buttons";
@@ -175,6 +176,10 @@ const useStyles = makeStyles(theme => ({
   },
   toggleButtonSmall: {
     padding: 0
+  },
+  previewImage: {
+    width: 70,
+    height: 70
   }
 }));
 
@@ -201,10 +206,11 @@ const plugins = [inlineToolbarPlugin];
 const { InlineToolbar } = inlineToolbarPlugin;
 
 const KeyMenu = motion.custom(Grid);
+const placeHolder = "https://via.placeholder.com/70";
+
 export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
   const [newKeys, setNewKeys] = useGlobalState("newKeys");
   const [mode, setMode] = useGlobalState("mode");
-
   const [previewImage, setPreviewImage] = React.useState(null);
 
   const [editorState, setEditorState] = React.useState(
@@ -329,6 +335,10 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
 
   async function handleSaveKeyClick() {
     const newKey = { ...newKeys, ...keyInfo };
+
+    // if (previewImage === placeHolder) {
+    //   setPreviewImage(null);
+    // }
     addNewKeyToFirebase(newKey, shortcutImage);
   }
 
@@ -343,6 +353,7 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
       if (type === "text") {
         setPreviewImage(null);
       }
+
       setKeyLabelType(type);
     }
   }
@@ -542,24 +553,41 @@ export const NewKeyPanel = ({ saveClicked, parentHeight, ...props }) => {
       <StatusBar.Source>
         {keyLabelType === "text" && <KeyText keyTopText={keyTopText} />}
         {/* {keyLabelType === "image" && previewImage && ( */}
-        {keyLabelType === "image" && (
-          <img
-            alt="img"
-            style={{
-              // borderRadius: "4px",
-              overflow: "hidden",
-              alignSelf: "center",
-              userDrag: "none",
+        {keyLabelType === "image" &&
+          (previewImage ? (
+            <img
+              alt="img"
+              style={{
+                // borderRadius: "4px",
+                overflow: "hidden",
+                alignSelf: "center",
+                userDrag: "none",
 
-              borderRadius: "10%",
-              display: "block",
+                borderRadius: "10%",
+                display: "block",
 
-              objectFit: "contain"
-            }}
-            // src={previewImage}
-            src="https://placeimg.com/900/900/animals"
-          />
-        )}
+                objectFit: "contain"
+              }}
+              src={previewImage}
+              // src="https://placeimg.com/900/900/animals"
+            />
+          ) : (
+            <img
+              alt="img"
+              style={{
+                // borderRadius: "4px",
+                overflow: "hidden",
+                alignSelf: "center",
+                userDrag: "none",
+
+                borderRadius: "10%",
+                display: "block",
+
+                objectFit: "contain"
+              }}
+              src="https://dummyimage.com/70x70/fff/aaa"
+            />
+          ))}
       </StatusBar.Source>
 
       <Portal container={snackbarRef}>

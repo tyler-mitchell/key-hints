@@ -312,7 +312,6 @@ const Upload = props => {
           classes={{ root: classes.fabRoot, primary: classes.fabPrimary }}
           initial={{
             opacity: 0,
-
             zIndex: 3,
             position: "absolute"
           }}
@@ -321,7 +320,7 @@ const Upload = props => {
               ? {
                   opacity: 1,
                   scale: 1,
-                  x: 20
+                  x: 0
                   // top: 0,
                 }
               : { scale: 0, opacity: 0 }
