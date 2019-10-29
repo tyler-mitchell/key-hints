@@ -46,8 +46,7 @@ const useStyles = makeStyles(theme => ({
   tabs: {
     // borderRight: `1px solid ${theme.palette.divider}`,
     // borderBottom: `1px solid ${theme.palette.divider}`
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: "12px"
+    // border: `1px solid ${theme.palette.divider}`,
   },
   tab: {
     transition: ".3s",
@@ -148,104 +147,122 @@ const KeyMapLayersPanel = ({ height }) => {
     return reduced;
   }
   return (
-    // <div className={classes.root}>
-    <Grid container>
-      {mode === "KEYMAP_MODE" && (
-        <Grid item xs={2}>
-          <Tabs
-            // centered={false}
-            className={classes.tabs}
-            orientation="vertical"
-            variant="scrollable"
-            value={value}
-            onChange={handleChange}
-            TabIndicatorProps={{
-              style: {
-                backgroundColor: tabIndicatorColor
+    <Grid
+      container
+      // style={{
+      //   display: "flex",
+      //   flexGrow: 1,
+      //   height: "300px",
+      //   overflow: "hidden"
+      // }}
+    >
+      {/* {mode === "KEYMAP_MODE" && ( */}
+      <Grid
+        item
+        xs={2}
+        style={{
+          display: "flex",
+          flexGrow: 1,
+          height: height - 35
+        }}
+      >
+        <Tabs
+          // centered={false}
+          scrollButtons="off"
+          className={classes.tabs}
+          orientation="vertical"
+          variant="scrollable"
+          value={value}
+          onChange={handleChange}
+          TabIndicatorProps={{
+            style: {
+              backgroundColor: tabIndicatorColor,
+              width: "4px",
+              borderRadius: "5px"
+            }
+          }}
+          aria-label="Vertical tabs example"
+          // className={classes.tabs}
+        >
+          {initialLayerIndices &&
+            layerKeys.map((layer, index) => {
+              if (layerState === null && index === 0) {
+                setState({ index: 0, layer: layer.keybind });
               }
-            }}
-            aria-label="Vertical tabs example"
-            // className={classes.tabs}
-          >
-            {initialLayerIndices &&
-              layerKeys.map((layer, index) => {
-                if (layerState === null && index === 0) {
-                  setState({ index: 0, layer: layer.keybind });
-                }
-                return (
-                  <Tab
-                    classes={{ root: classes.tab }}
-                    disableFocusRipple
-                    textColor="primary"
-                    disableRipple={layerIndices.has(layer.id)}
-                    onClick={() => {
-                      // setState({ index, layer: layer.keybind });
-                      setTabIndicatorColor(layer.color);
+              return (
+                <Tab
+                  classes={{ root: classes.tab }}
+                  disableFocusRipple
+                  textColor="primary"
+                  disableRipple={layerIndices.has(layer.id)}
+                  onClick={() => {
+                    // setState({ index, layer: layer.keybind });
+                    setTabIndicatorColor(layer.color);
 
-                      if (!layerIndices.has(layer.id)) {
-                        setLoading(true);
-                        setTimeout(() => {
-                          setState({ index, layer: layer.keybind });
-                          // setTabIndicatorColor(layer.color);
-                        }, 300);
-                      }
-                    }}
-                    label={
-                      <motion.div
-                        cols={layer.keybind.length}
-                        row={1}
-                        item
-                        key={layer.keybind}
-                        style={{
-                          transform: "translateZ(0)",
-                          backfaceVisibility: "hidden"
-                        }}
-                        whileHover={{
-                          transition: {
-                            type: "spring",
-                            damping: 100,
-                            stiffness: 400
-                          }
-                        }}
-                        whileTap={{
-                          transition: {
-                            type: "spring",
-                            damping: 100,
-                            stiffness: 400
-                          }
-                        }}
-                      >
-                        <RenderSelectedCategory
-                          layerKey={layer.keybind}
-                          color={layer.color}
-                          active={layerIndices.has(layer.id)}
-                        >
-                          <Fade
-                            unmountOnExit={true}
-                            in={
-                              loading &&
-                              value === index &&
-                              !layerIndices.has(layer.id)
-                            }
-                          >
-                            <Box color={tabIndicatorColor}>
-                              <CircularProgress
-                                size={30}
-                                thickness={5}
-                                disableShrink
-                                color="inherit"
-                              />
-                            </Box>
-                          </Fade>
-                        </RenderSelectedCategory>
-                      </motion.div>
+                    if (!layerIndices.has(layer.id)) {
+                      setLoading(true);
+                      setTimeout(() => {
+                        setState({ index, layer: layer.keybind });
+                        // setTabIndicatorColor(layer.color);
+                      }, 400);
                     }
-                  />
-                );
-              })}
-          </Tabs>
-        </Grid>
-      )}
+                  }}
+                  label={
+                    <motion.div
+                      cols={layer.keybind.length}
+                      row={1}
+                      item
+                      key={layer.keybind}
+                      style={{
+                        transform: "translateZ(0)",
+                        backfaceVisibility: "hidden"
+                      }}
+                      whileHover={{
+                        transition: {
+                          type: "spring",
+                          damping: 100,
+                          stiffness: 400
+                        }
+                      }}
+                      whileTap={{
+                        transition: {
+                          type: "spring",
+                          damping: 100,
+                          stiffness: 400
+                        }
+                      }}
+                    >
+                      <RenderSelectedCategory
+                        layerKey={layer.keybind}
+                        color={layer.color}
+                        active={layerIndices.has(layer.id)}
+                      >
+                        <Fade
+                          unmountOnExit={true}
+                          in={
+                            loading &&
+                            value === index &&
+                            !layerIndices.has(layer.id)
+                          }
+                        >
+                          <Box color={tabIndicatorColor}>
+                            <CircularProgress
+                              size={30}
+                              thickness={5}
+                              disableShrink
+                              color="inherit"
+                            />
+                          </Box>
+                        </Fade>
+                      </RenderSelectedCategory>
+                    </motion.div>
+                  }
+                />
+              );
+            })}
+        </Tabs>
+      </Grid>
+      {/* )} */}
 
       <Grid item xs={10}>
         <KeyList
