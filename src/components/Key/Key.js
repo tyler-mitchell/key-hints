@@ -160,7 +160,11 @@ export const Key = ({
           setActiveMapKey(layer.color, label);
           setActive(true);
         } else if (mainKeyIndex >= 0) {
-          setActiveMapKey(layer.color, layer.keyDescription[mainKeyIndex]);
+          const keyLabel =
+            layer.keyDescription[mainKeyIndex] ||
+            layer.data[layer.keys[mainKeyIndex]].description;
+          setActiveMapKey(layer.color, keyLabel);
+          console.log(`⭐:  layer`, layer);
 
           setActive(true);
         }
