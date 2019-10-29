@@ -87,7 +87,7 @@ const KeyList = props => {
   return (
     <Virtuoso
       item={index => <Row index={index} {...others} />}
-      style={{ width: "100%", height: "400px" }}
+      style={{ width: "100%", height: height - 30 }}
       totalCount={itemCount}
 
       // height={height}
