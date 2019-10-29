@@ -336,18 +336,32 @@ export const KeySheet = ({ vh }) => {
                 </div>
               )}
               {!isEmpty(filteredKeyTable) && (
-                <>
+                <AnimatePresence exitBeforeEnter>
                   {mode === "KEYMAP_MODE" ? (
-                    <KeyMapLayersPanel height={vh - 10} />
+                    <motion.div
+                      key="standard_view"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                    >
+                      <KeyMapLayersPanel height={vh - 10} />
+                    </motion.div>
                   ) : (
-                    <KeyList
-                      interactive={true}
-                      height={vh - 10}
-                      keyTableKeys={Object.keys(filteredKeyTable).sort()}
-                      keyTable={filteredKeyTable}
-                    />
+                    <motion.div
+                      key="keymap_view"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                    >
+                      <KeyList
+                        interactive={true}
+                        height={vh - 10}
+                        keyTableKeys={Object.keys(filteredKeyTable).sort()}
+                        keyTable={filteredKeyTable}
+                      />
+                    </motion.div>
                   )}
-                </>
+                </AnimatePresence>
               )}
             </CardContent>
           </AnimatedCard>
