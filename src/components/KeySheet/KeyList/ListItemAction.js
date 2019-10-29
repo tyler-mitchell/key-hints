@@ -72,7 +72,10 @@ const ListItemAction = () => {
         edge="end"
         size="small"
         aria-label="Edit-shortcut"
-        onClick={e => e.stopPropagation()}
+        onClick={e => {
+          // e.stopPropagation();
+          e.preventDefault();
+        }}
         {...bindTrigger(popupState)}
       >
         <MoreVertIcon />

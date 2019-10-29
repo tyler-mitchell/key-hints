@@ -3,32 +3,33 @@ import { VariableSizeList, areEqual } from "react-window";
 import { List } from "@material-ui/core";
 import KeyListItem from "./KeyListItem";
 import { KeyTable } from "../SheetData";
-
+import { Virtuoso } from "react-virtuoso";
 import { setGlobalState, useGlobalState } from "../../../state";
 
 const itemSize = index => {
   return KeyTable[index].keys.length * 10 + 40;
 };
-const Row = React.memo(({ data, index, style, listRef, ...others }) => {
-  const { keyTableKeys, keyTable } = data;
+const Row = React.memo(
+  ({ keyTableKeys, keyTable, data, index, style, listRef, ...others }) => {
+    const shortcutObjectKey = keyTableKeys[index];
 
-  const shortcutObjectKey = keyTableKeys[index];
+    // _.orderBy
 
-  // _.orderBy
-
-  return (
-    <KeyListItem
-      index={index}
-      styles={style}
-      listRef={listRef}
-      text={keyTable[shortcutObjectKey].description}
-      keybind={keyTable[shortcutObjectKey].keys}
-      category={keyTable[shortcutObjectKey].category}
-      shortcutObjectKey={shortcutObjectKey}
-      {...data}
-    />
-  );
-}, areEqual);
+    return (
+      <KeyListItem
+        index={index}
+        styles={style}
+        listRef={listRef}
+        text={keyTable[shortcutObjectKey].description}
+        keybind={keyTable[shortcutObjectKey].keys}
+        category={keyTable[shortcutObjectKey].category}
+        shortcutObjectKey={shortcutObjectKey}
+        {...others}
+      />
+    );
+  },
+  areEqual
+);
 
 const KeyList = props => {
   const { height, ...others } = props;
@@ -79,27 +80,27 @@ const KeyList = props => {
   // }, [arrowPressed, selectedIndex]);
 
   React.useLayoutEffect(() => {
-    listRef.current.resetAfterIndex(0, false);
+    // listRef.current.resetAfterIndex(0, false);
     setGlobalState("listRef", listRef);
   }, [others.keyTable]);
 
   return (
-    <div tabIndex={0} onKeyDown={handleKeyDown}>
-      <VariableSizeList
-        // height={height}
-        height={360}
-        itemCount={itemCount}
-        itemSize={index => {
-          return 50;
-        }}
-        minIndex
-        outerElementType={List}
-        ref={listRef}
-        itemData={others}
-      >
-        {Row}
-      </VariableSizeList>
-    </div>
+    <Virtuoso
+      item={index => <Row index={index} {...others} />}
+      style={{ width: "100%", height: "400px" }}
+      totalCount={itemCount}
+
+      // height={height}
+      // // height={360}
+      // itemCount={itemCount}
+      // itemSize={index => {
+      //   return 50;
+      // }}
+      // minIndex
+      // outerElementType={List}
+      // ref={listRef}
+      // itemData={others}
+    />
   );
 };
 

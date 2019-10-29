@@ -367,7 +367,7 @@ export const KeyListItem = props => {
       button={interactive}
       style={{ ...styles }}
       divider
-      // dense
+      dense
       container
       direction="row"
       // justify="center"
@@ -377,22 +377,28 @@ export const KeyListItem = props => {
       onClick={() => interactive && itemClicked(shortcutObjectKey)}
       selected={selectedIndex === index}
     >
-      {/* <Grid  item direction="row" xs={12} alignItems="center" justify="flex-end" wrap="nowrap"> */}
-      <Grid item xs={4} justify="flext-start">
+      <Grid item xs={5} justify="flext-start">
         <ListItemText
-          primary={<Typography variant="body1">{text}</Typography>}
+          primary={
+            <Typography
+              style={{
+                fontSize: "16px"
+                // fontWeight: 600
+              }}
+            >
+              {text}
+            </Typography>
+          }
         />
       </Grid>
 
-      <Grid xs={8} container item justify="flex-end" direction="row">
+      <Grid xs={7} container item justify="flex-end" direction="row">
         <List>
           <SheetKeys onOrKeyClick={onOrKeyClick} keybind={keybind} />
         </List>
       </Grid>
 
-      <ListItemAction />
-
-      {/* </Grid> */}
+      {interactive && <ListItemAction />}
     </ListItem>
   );
 };
