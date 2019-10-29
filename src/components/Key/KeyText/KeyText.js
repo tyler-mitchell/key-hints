@@ -22,6 +22,7 @@ const KeyText = ({
       style={{
         pointerEvents: "none",
         display: "flex",
+
         // width: '90%',
         // height: '90%',
         width: "inherit",
@@ -29,11 +30,15 @@ const KeyText = ({
         alignItems: "center",
         justifyContent: "center",
         margin: "0 auto",
-        padding: "3px",
+        padding: "4px",
         overflow: "hidden",
-        fontFamily: "Karla, sans-serif",
+        // fontFamily: "Poppins, sans-serif",
+        // fontFamily: "'Work Sans', sans-serif",
+        fontFamily: isMod
+          ? "'Poppins', sans-serif"
+          : "'PT Sans Caption', sans-serif",
         fontWeight: isMod && "bold",
-        color: color
+        color: "black"
       }}
       min={10}
       max={18}
