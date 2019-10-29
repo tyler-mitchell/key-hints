@@ -144,117 +144,117 @@ const KeyMapLayersPanel = ({ height }) => {
     const reduced = activeLayers.reduce((result, cur) => {
       return { ...result, ...cur.data };
     }, {});
-    console.log(`⭐: reduced`, reduced);
 
     return reduced;
   }
   return (
-    <div className={classes.root}>
+    // <div className={classes.root}>
+    <Grid container>
       {mode === "KEYMAP_MODE" && (
-        <Tabs
-          // centered={false}
-          className={classes.tabs}
-          orientation="vertical"
-          variant="scrollable"
-          value={value}
-          onChange={handleChange}
-          TabIndicatorProps={{
-            style: {
-              backgroundColor: tabIndicatorColor
-            }
-          }}
-          aria-label="Vertical tabs example"
-          // className={classes.tabs}
-        >
-          {initialLayerIndices &&
-            layerKeys.map((layer, index) => {
-              if (layerState === null && index === 0) {
-                setState({ index: 0, layer: layer.keybind });
+        <Grid item xs={2}>
+          <Tabs
+            // centered={false}
+            className={classes.tabs}
+            orientation="vertical"
+            variant="scrollable"
+            value={value}
+            onChange={handleChange}
+            TabIndicatorProps={{
+              style: {
+                backgroundColor: tabIndicatorColor
               }
-              return (
-                <Tab
-                  classes={{ root: classes.tab }}
-                  disableFocusRipple
-                  textColor="primary"
-                  disableRipple={layerIndices.has(layer.id)}
-                  onClick={() => {
-                    // setState({ index, layer: layer.keybind });
-                    setTabIndicatorColor(layer.color);
+            }}
+            aria-label="Vertical tabs example"
+            // className={classes.tabs}
+          >
+            {initialLayerIndices &&
+              layerKeys.map((layer, index) => {
+                if (layerState === null && index === 0) {
+                  setState({ index: 0, layer: layer.keybind });
+                }
+                return (
+                  <Tab
+                    classes={{ root: classes.tab }}
+                    disableFocusRipple
+                    textColor="primary"
+                    disableRipple={layerIndices.has(layer.id)}
+                    onClick={() => {
+                      // setState({ index, layer: layer.keybind });
+                      setTabIndicatorColor(layer.color);
 
-                    if (!layerIndices.has(layer.id)) {
-                      setLoading(true);
-                      setTimeout(() => {
-                        setState({ index, layer: layer.keybind });
-                        // setTabIndicatorColor(layer.color);
-                      }, 300);
-                    }
-                  }}
-                  label={
-                    <motion.div
-                      cols={layer.keybind.length}
-                      row={1}
-                      item
-                      key={layer.keybind}
-                      style={{
-                        transform: "translateZ(0)",
-                        backfaceVisibility: "hidden"
-                      }}
-                      whileHover={{
-                        transition: {
-                          type: "spring",
-                          damping: 100,
-                          stiffness: 400
-                        }
-                      }}
-                      whileTap={{
-                        transition: {
-                          type: "spring",
-                          damping: 100,
-                          stiffness: 400
-                        }
-                      }}
-                    >
-                      <RenderSelectedCategory
-                        layerKey={layer.keybind}
-                        color={layer.color}
-                        active={layerIndices.has(layer.id)}
-                      >
-                        <Fade
-                          unmountOnExit={true}
-                          in={
-                            loading &&
-                            value === index &&
-                            !layerIndices.has(layer.id)
+                      if (!layerIndices.has(layer.id)) {
+                        setLoading(true);
+                        setTimeout(() => {
+                          setState({ index, layer: layer.keybind });
+                          // setTabIndicatorColor(layer.color);
+                        }, 300);
+                      }
+                    }}
+                    label={
+                      <motion.div
+                        cols={layer.keybind.length}
+                        row={1}
+                        item
+                        key={layer.keybind}
+                        style={{
+                          transform: "translateZ(0)",
+                          backfaceVisibility: "hidden"
+                        }}
+                        whileHover={{
+                          transition: {
+                            type: "spring",
+                            damping: 100,
+                            stiffness: 400
                           }
+                        }}
+                        whileTap={{
+                          transition: {
+                            type: "spring",
+                            damping: 100,
+                            stiffness: 400
+                          }
+                        }}
+                      >
+                        <RenderSelectedCategory
+                          layerKey={layer.keybind}
+                          color={layer.color}
+                          active={layerIndices.has(layer.id)}
                         >
-                          <Box color={tabIndicatorColor}>
-                            <CircularProgress
-                              size={30}
-                              thickness={5}
-                              disableShrink
-                              color="inherit"
-                            />
-                          </Box>
-                        </Fade>
-                      </RenderSelectedCategory>
-                    </motion.div>
-                  }
-                />
-              );
-            })}
-        </Tabs>
+                          <Fade
+                            unmountOnExit={true}
+                            in={
+                              loading &&
+                              value === index &&
+                              !layerIndices.has(layer.id)
+                            }
+                          >
+                            <Box color={tabIndicatorColor}>
+                              <CircularProgress
+                                size={30}
+                                thickness={5}
+                                disableShrink
+                                color="inherit"
+                              />
+                            </Box>
+                          </Fade>
+                        </RenderSelectedCategory>
+                      </motion.div>
+                    }
+                  />
+                );
+              })}
+          </Tabs>
+        </Grid>
       )}
 
-      <Box flexGrow={1} width={1000}>
-        <CardContent>
-          <KeyList
-            height={height}
-            keyTableKeys={Object.keys(reduceLayers()).sort()}
-            keyTable={reduceLayers()}
-          />
-        </CardContent>
-      </Box>
-    </div>
+      <Grid item xs={10}>
+        <KeyList
+          height={height}
+          keyTableKeys={Object.keys(reduceLayers()).sort()}
+          keyTable={reduceLayers()}
+        />
+      </Grid>
+    </Grid>
   );
 };
 
@@ -265,8 +265,6 @@ export const RenderSelectedCategory = ({
   setState,
   children
 }) => {
-  console.log(`⭐: RenderSelectedCategory -> active`, active);
-  console.log(`⭐: layerKey`, layerKey);
   return (
     <KeyContainer
       custom={color}
@@ -297,7 +295,6 @@ export const RenderSelectedCategory = ({
           {layerKey.map((kb, index, array) => {
             return (
               <>
-                {/* <Box>{iconLoad()}</Box> */}
                 <Grid
                   style={{
                     textAlign: "center"

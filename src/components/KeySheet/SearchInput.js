@@ -15,6 +15,7 @@ import {
   Divider,
   FormControlLabel,
   Checkbox,
+  Typography,
   IconButton
 } from "@material-ui/core";
 import { useGlobalState, clearKeySelection, setGlobalState } from "../../state";
@@ -47,6 +48,7 @@ const useStyles = makeStyles({
   root: {
     width: "100%",
     padding: "10px 10px",
+    height: "70px",
     display: "flex",
     borderRadius: "10px 10px 0px 0px",
     margin: "0px 0px 0px 0px",
@@ -104,6 +106,7 @@ export const SearchInput = props => {
   const [showMultipleLayers, setShowMultipleLayers] = useGlobalState(
     "showMultipleLayers"
   );
+  const [checked, setChecked] = React.useState(true);
   const handleSaveEditClick = () => {
     setMode(null);
     updateKeyToFirebase(newKeys);
@@ -171,14 +174,25 @@ export const SearchInput = props => {
         >
           {mode === "KEYMAP_MODE" ? (
             <FormControlLabel
+              style={{ marginLeft: "7px" }}
               control={
                 <Checkbox
-                  onChange={() => setShowMultipleLayers(!showMultipleLayers)}
+                  onChange={() => {
+                    setChecked(!showMultipleLayers);
+                    setTimeout(() => {
+                      setShowMultipleLayers(!showMultipleLayers);
+                    }, 100);
+                  }}
                   value="checkedC"
-                  checked={showMultipleLayers}
+                  color="primary"
+                  checked={checked}
                 />
               }
-              label="Multiple Layers"
+              label={
+                <Typography style={{ userSelect: "none" }} variant="h6">
+                  Show Multiple Layers
+                </Typography>
+              }
             />
           ) : (
             <>

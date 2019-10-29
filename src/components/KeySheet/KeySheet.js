@@ -262,7 +262,6 @@ export const KeySheet = ({ vh }) => {
   };
 
   const [ref, { x, y, width, height }] = useDimensions();
-  console.log(`⭐: height`, height);
 
   const [zIndex, setZIndex] = React.useState(0);
   return (
@@ -279,14 +278,6 @@ export const KeySheet = ({ vh }) => {
               // height: "30vh"
               height: "inherit"
             }}
-
-            // style={{
-            //   height: '470px',
-            //   position: 'relative',
-            //   filter: `blur(${blur}px)`,
-            //   zIndex: zIndex,
-            //   borderRadius: '10px'
-            // }}
           >
             <motion.div
               animate={mode === "ADD_MODE" ? "openBackDrop" : "closeBackDrop"}
@@ -334,9 +325,9 @@ export const KeySheet = ({ vh }) => {
                     justifyContent: "center"
                   }}
                 >
-                  <div>
+                  <div style={{ userSelect: "none" }}>
                     <Typography variant="h5" gutterBottom>
-                      Keysheet is empty
+                      Key Sheet is empty
                     </Typography>
                     <Typography variant="caption">
                       Click on the bottom right button to add shortcuts
