@@ -24,6 +24,7 @@ import {
   Divider,
   CircularProgress,
   Grid,
+  Typography,
   CardActionArea
 } from "@material-ui/core";
 
@@ -262,18 +263,10 @@ export const KeySheet = ({ vh }) => {
 
   const [ref, { x, y, width, height }] = useDimensions();
   console.log(`⭐: height`, height);
-  // const actions = useArray([
-  //   { id: 'add', add: AddAction, clickFunction: handleAddClick },
-  //   { id: 'save', save: SaveAction, clickFunction: handleAddClick },
-  //   { id: 'cancel', cancel: CancelAction, clickFunction: handleAddClick }
-  // ]);
 
   const [zIndex, setZIndex] = React.useState(0);
   return (
     <React.Fragment>
-      {/* {loadingUKTC && <CircularProgress className={classes.progress} />} */}
-      {/* {loadingUKTC && <Skeleton height={470} />} */}
-
       {curKeyTable && (
         <div style={{ position: "relative" }} ref={ref}>
           <AnimatedCard
@@ -296,21 +289,14 @@ export const KeySheet = ({ vh }) => {
             // }}
           >
             <motion.div
-              // initial={{ background: '#030303', zIndex: 0 }}
               animate={mode === "ADD_MODE" ? "openBackDrop" : "closeBackDrop"}
               variants={variants}
               style={{
-                // background: 'rgba(0, 0, 0, 0.66)',
                 width: "100%",
-                // height: "30vh",
-
                 backgroundClip: "context-box",
-
                 top: 0,
                 left: 0,
-
                 position: "absolute"
-                // zIndex: 3,
               }}
             />
 
@@ -334,14 +320,31 @@ export const KeySheet = ({ vh }) => {
                 position: "relative",
                 zIndex: 0,
                 height: vh - 5,
-                // minHeight: vh
                 marginBottom: 5
               }}
             >
-              {isEmpty(filteredKeyTable) && "Keysheet is empty"}
+              {isEmpty(filteredKeyTable) && (
+                <div
+                  style={{
+                    textAlign: "center",
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                >
+                  <div>
+                    <Typography variant="h5" gutterBottom>
+                      Keysheet is empty
+                    </Typography>
+                    <Typography variant="caption">
+                      Click on the bottom right button to add shortcuts
+                    </Typography>
+                  </div>
+                </div>
+              )}
               {!isEmpty(filteredKeyTable) && (
-                // height: 360
-
                 <>
                   {mode === "KEYMAP_MODE" ? (
                     <KeyMapLayersPanel height={vh - 10} />
@@ -357,16 +360,10 @@ export const KeySheet = ({ vh }) => {
               )}
             </CardContent>
           </AnimatedCard>
-          {/* <AnimatedPanel
-            animate={mode === "KEYMAP_MODE" ? "openedMap" : "closedMap"}
-            variantType="KeyMapPanel"
-            parentHeight={height}
-          ></AnimatedPanel> */}
           <NewKeyPanelContainer
             parentHeight={height}
             saveClicked={saveClicked}
           />
-
           <motion.div
             onClick={handleAddClick}
             initial={{
